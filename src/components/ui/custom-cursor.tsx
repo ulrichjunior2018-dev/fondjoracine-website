@@ -2,15 +2,32 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 type CursorState = "default" | "hover" | "rotate";
 
 const SPRING = { stiffness: 300, damping: 30 };
 
+function getPointerSnapshot() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+function getServerPointerSnapshot() {
+  return true;
+}
+
+function subscribePointerChange(callback: () => void) {
+  const query = window.matchMedia("(pointer: coarse)");
+  query.addEventListener("change", callback);
+
+  return () => query.removeEventListener("change", callback);
+}
+
 export function CustomCursor() {
-  const [isTouch] = useState(() =>
-    typeof window === "undefined" ? true : window.matchMedia("(pointer: coarse)").matches,
+  const isTouch = useSyncExternalStore(
+    subscribePointerChange,
+    getPointerSnapshot,
+    getServerPointerSnapshot,
   );
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<CursorState>("default");
@@ -105,7 +122,7 @@ export function CustomCursor() {
   }, [isTouch, rawX, rawY, visible]);
 
   // Skip entirely on touch devices or during SSR check
-  if (isTouch === null || isTouch) return null;
+  if (isTouch) return null;
 
   const isExpanded = state !== "default";
 

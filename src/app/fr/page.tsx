@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import { StorefrontPage } from "@/features/elixir/components/storefront-page";
+import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 
@@ -64,7 +64,7 @@ export default async function FrenchHomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
-      <StorefrontPage content={content} locale="fr" />
+      <PremiumStorefrontPage content={content} locale="fr" />
     </>
   );
 }
