@@ -1,0 +1,301 @@
+@import "@fontsource/cormorant-garamond/300.css";
+@import "@fontsource/inter/300.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: dark;
+  --obsidian: #0a0905;
+  --obsidian-card: #0f0e0a;
+  --obsidian-raised: #161410;
+  --gold: #c8a951;
+  --gold-bright: #f0d860;
+  --gold-dark: #8c7435;
+  --gold-muted: #a08040;
+  --ivory: #f5f0e8;
+  --ivory-dim: #c8c0b0;
+  --ivory-ghost: #888070;
+  --green-whatsapp: #25d366;
+
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --display-hero-size: clamp(64px, 10vw, 120px);
+  --display-large-size: clamp(40px, 6vw, 72px);
+  --display-medium-size: clamp(28px, 4vw, 48px);
+  --display-small-size: clamp(20px, 3vw, 32px);
+  --display-weight: 300;
+
+  --eyebrow-size: 10px;
+  --eyebrow-weight: 500;
+  --eyebrow-tracking: 0.4em;
+
+  --body-large-size: 16px;
+  --body-large-leading: 1.9;
+  --body-size: 14px;
+  --body-leading: 1.8;
+  --body-small-size: 12px;
+  --body-small-leading: 1.7;
+  --body-weight: 300;
+
+  --caption-size: 10px;
+  --caption-weight: 400;
+  --caption-tracking: 0.2em;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --space-160: 160px;
+
+  --border-gold-hairline: 1px solid rgba(200, 169, 81, 0.15);
+  --border-gold-subtle: 1px solid rgba(200, 169, 81, 0.25);
+  --border-gold-medium: 1px solid rgba(200, 169, 81, 0.45);
+  --border-gold-strong: 1px solid rgba(200, 169, 81, 0.8);
+
+  --shadow-gold-glow-sm: 0 0 16px rgba(200, 169, 81, 0.2);
+  --shadow-gold-glow-md: 0 0 32px rgba(200, 169, 81, 0.3);
+  --shadow-gold-glow-lg: 0 0 64px rgba(200, 169, 81, 0.25);
+  --shadow-elevation-sm: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-md: 0 8px 48px rgba(0, 0, 0, 0.5);
+  --shadow-elevation-lg: 0 16px 80px rgba(0, 0, 0, 0.6);
+
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 700ms;
+  --duration-slower: 1000ms;
+  --ease-luxury: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --background: var(--obsidian);
+  --foreground: var(--ivory);
+  --surface: var(--obsidian-card);
+  --surface-elevated: var(--obsidian-raised);
+  --surface-muted: #1d1a14;
+  --surface-inverse: var(--ivory);
+  --border: rgba(200, 169, 81, 0.15);
+  --border-strong: rgba(200, 169, 81, 0.45);
+  --accent: var(--gold);
+  --accent-foreground: var(--obsidian);
+  --accent-muted: rgba(200, 169, 81, 0.16);
+  --sage: #7da66f;
+  --sage-muted: rgba(125, 166, 111, 0.18);
+  --rose: #c89283;
+  --rose-muted: rgba(200, 146, 131, 0.16);
+  --ink: var(--ivory);
+  --ink-muted: rgba(245, 240, 232, 0.14);
+  --destructive: #ee8a86;
+  --destructive-muted: rgba(238, 138, 134, 0.16);
+  --success: var(--green-whatsapp);
+  --success-muted: rgba(37, 211, 102, 0.14);
+  --warning: var(--gold-bright);
+  --warning-muted: rgba(240, 216, 96, 0.14);
+  --ring: var(--gold-bright);
+  --shadow-soft: var(--shadow-elevation-sm);
+  --shadow-lifted: var(--shadow-elevation-md);
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --container-sm: 40rem;
+  --container-md: 48rem;
+  --container-lg: 64rem;
+  --container-xl: 80rem;
+  --container-2xl: 90rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-muted: var(--accent-muted);
+  --color-sage: var(--sage);
+  --color-sage-muted: var(--sage-muted);
+  --color-rose: var(--rose);
+  --color-rose-muted: var(--rose-muted);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-destructive: var(--destructive);
+  --color-destructive-muted: var(--destructive-muted);
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-body);
+  --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
+  --font-serif: var(--font-display);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lifted: var(--shadow-lifted);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --animate-enter: enter var(--duration-base) var(--ease-luxury);
+  --animate-exit: exit var(--duration-fast) ease-in;
+  --animate-slide-up: slide-up var(--duration-base) var(--ease-luxury);
+  --animate-shimmer: shimmer 1.8s linear infinite;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-width: 320px;
+  background: var(--obsidian);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  font-weight: var(--body-weight);
+  line-height: var(--body-leading);
+  letter-spacing: 0;
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1,
+    "calt" 1;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  image-rendering: auto;
+}
+
+::selection {
+  background: rgba(200, 169, 81, 0.3);
+  color: #f5f0e8;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--obsidian);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 999px;
+}
+
+* {
+  scrollbar-color: var(--gold) var(--obsidian);
+  scrollbar-width: thin;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes meshShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes rippleOut {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

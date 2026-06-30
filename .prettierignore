@@ -1,0 +1,7 @@
+.next
+.npm-cache
+node_modules
+coverage
+public
+package-lock.json
+supabase/migrations/*.sql
