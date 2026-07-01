@@ -7,7 +7,7 @@ import { Heading, Kicker, Text } from "@/components/ui/typography";
 export const metadata: Metadata = {
   title: "Privacy Policy | FONDJO RACINE",
   description:
-    "How FONDJO RACINE collects and protects preorder, payment, consultation, and support information.",
+    "How FONDJO RACINE collects and protects order, payment, consultation, and support information.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -19,10 +19,10 @@ export default function PrivacyPolicyPage() {
           Privacy Policy
         </Heading>
         <Text className="mt-5" tone="muted">
-          FONDJO RACINE collects the information needed to process SÈVE preorders, verify manual
-          Mobile Money payments, deliver orders, respond on WhatsApp, and improve the hair
-          consultation experience. This may include name, phone, optional email, city, address,
-          order details, payment reference, consultation answers, and support messages.
+          FONDJO RACINE collects the information needed to process SÈVE orders, verify payments,
+          coordinate delivery, respond on WhatsApp, and improve the hair consultation experience.
+          This may include name, phone, optional email, city, address, order details, payment
+          reference, consultation answers, and support messages.
         </Text>
         <Text className="mt-5" tone="muted">
           Card payments, when enabled, are handled by Stripe. Manual MTN Mobile Money and Orange

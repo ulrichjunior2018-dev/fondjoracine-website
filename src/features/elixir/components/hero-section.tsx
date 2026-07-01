@@ -14,6 +14,9 @@ type HeroSectionProps = {
   locale: Locale;
 };
 
+const blurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PC9zdmc+";
+
 export function HeroSection({ content, locale }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -32,11 +35,13 @@ export function HeroSection({ content, locale }: HeroSectionProps) {
       <div className="absolute inset-0">
         <Image
           alt="Mount Cameroon inspired botanical landscape in Buea"
+          blurDataURL={blurDataUrl}
           className="object-cover opacity-42"
           fill
+          placeholder="blur"
           priority
           sizes="100vw"
-          src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=2200&q=82"
+          src="/images/hero-volcanic-bottle.jpg"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#0D0D0D_0%,rgb(13_13_13/.88)_36%,rgb(27_94_32/.42)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(0deg,#0D0D0D,transparent)]" />

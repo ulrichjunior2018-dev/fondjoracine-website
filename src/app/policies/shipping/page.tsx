@@ -6,7 +6,7 @@ import { Heading, Kicker, Text } from "@/components/ui/typography";
 
 export const metadata: Metadata = {
   title: "Shipping Policy | FONDJO RACINE",
-  description: "Shipping information for FONDJO RACINE SÈVE Batch #001.",
+  description: "Shipping information for FONDJO RACINE SÈVE.",
 };
 
 export default function ShippingPage() {
@@ -18,12 +18,11 @@ export default function ShippingPage() {
           Shipping Policy
         </Heading>
         <Text className="mt-5" tone="muted">
-          Batch #001 ships from July 6, 2026. Cameroon deliveries are coordinated through WhatsApp
-          after payment verification. Customers must provide accurate city, address, and phone
-          details before dispatch.
+          National delivery is available across Cameroon. Customers should provide accurate city,
+          address, and phone details so the team can coordinate dispatch and delivery support.
         </Text>
         <Text className="mt-5" tone="muted">
-          International payment and delivery support is Stripe-ready for future rollout. Shipping
+          International shipping is available for diaspora customers and global buyers. Shipping
           fees, timelines, and courier options may vary by city and destination.
         </Text>
         <Link className="mt-8 inline-flex text-sm font-semibold text-accent" href="/">

@@ -110,6 +110,13 @@ export const adminTestimonialApprovalSchema = z.object({
   index: z.number().int().min(0),
 });
 
+const imageSrcSchema = z
+  .string()
+  .refine(
+    (value) => value.startsWith("/images/") || z.string().url().safeParse(value).success,
+    "Expected an absolute URL or a local /images/ asset path",
+  );
+
 export const adminImageUpdateSchema = z.object({
   altEn: z.string().min(1).max(240),
   altFr: z.string().min(1).max(240),
@@ -117,7 +124,7 @@ export const adminImageUpdateSchema = z.object({
   index: z.number().int().min(0),
   kind: z.enum(["product", "before", "after", "founder"]),
   pairIndex: z.number().int().min(0).optional(),
-  src: z.string().url(),
+  src: imageSrcSchema,
   width: z.number().int().positive(),
 });
 

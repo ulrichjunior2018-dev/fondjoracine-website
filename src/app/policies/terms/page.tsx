@@ -6,7 +6,7 @@ import { Heading, Kicker, Text } from "@/components/ui/typography";
 
 export const metadata: Metadata = {
   title: "Terms of Service | FONDJO RACINE",
-  description: "Terms for using fondjoracine.com and preordering FONDJO RACINE SÈVE.",
+  description: "Terms for using fondjoracine.com and ordering FONDJO RACINE SÈVE.",
 };
 
 export default function TermsPage() {
@@ -18,10 +18,9 @@ export default function TermsPage() {
           Terms of Service
         </Heading>
         <Text className="mt-5" tone="muted">
-          By placing a preorder, you agree to provide accurate delivery and payment information.
-          Batch #001 contains only 30 bottles. Preorder price is 8,500 XAF; the standard price after
-          preorder is 9,500 XAF. Orders ship from July 6, 2026, subject to payment confirmation and
-          delivery coordination.
+          By ordering or contacting FONDJO RACINE for delivery, you agree to provide accurate
+          delivery and payment information. Orders are subject to payment confirmation, product
+          availability, and delivery coordination.
         </Text>
         <Text className="mt-5" tone="muted">
           SÈVE is a cosmetic hair treatment oil for external use only. It does not diagnose, treat,

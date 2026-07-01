@@ -5,7 +5,7 @@ import {
 
 export const metadata = buildRouteMetadata(
   "FAQ",
-  "Answers about SÈVE preorder, shipping, safety, ingredients, and WhatsApp-assisted ordering.",
+  "Answers about SÈVE shipping, safety, ingredients, and WhatsApp-assisted support.",
 );
 
 export default function FaqPage() {

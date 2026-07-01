@@ -11,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/how-to-use",
     "/ingredients",
     "/origin-story",
-    "/pre-order",
     "/faq",
     "/contact",
     "/policies/privacy",
@@ -24,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${siteConfig.url}${route}`,
     lastModified: new Date(),
     changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : route === "/pre-order" || route === "/product" ? 0.9 : 0.7,
+    priority: route === "" ? 1 : route === "/product" ? 0.9 : 0.7,
     ...(route === "" || route === "/fr"
       ? {
           alternates: {

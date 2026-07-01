@@ -55,7 +55,7 @@ function getStatusTone(status: string) {
 function getStatusMessage(status: string) {
   switch (status) {
     case "pending_payment":
-      return "Your order is created. Send payment using the instructions below, then submit your transaction reference from the preorder form or WhatsApp.";
+      return "Your order is created. Send payment using the instructions below, then submit your transaction reference through the order support flow or WhatsApp.";
     case "payment_submitted":
       return "Your payment reference was received and is waiting for admin verification.";
     case "confirmed":

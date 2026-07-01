@@ -6,7 +6,7 @@ import { Heading, Kicker, Text } from "@/components/ui/typography";
 
 export const metadata: Metadata = {
   title: "Return & Exchange Policy | FONDJO RACINE",
-  description: "Return and exchange terms for FONDJO RACINE SÈVE preorders.",
+  description: "Return and exchange terms for FONDJO RACINE SÈVE orders.",
 };
 
 export default function ReturnsPage() {
@@ -24,8 +24,8 @@ export default function ReturnsPage() {
           refund.
         </Text>
         <Text className="mt-5" tone="muted">
-          Preorders may be cancelled before payment is confirmed. After payment confirmation,
-          cancellation is reviewed case by case before packing or dispatch.
+          Cancellation requests are reviewed case by case before packing or dispatch. After an order
+          is dispatched, delivery and hygiene conditions may limit cancellation options.
         </Text>
         <Link className="mt-8 inline-flex text-sm font-semibold text-accent" href="/">
           Return home

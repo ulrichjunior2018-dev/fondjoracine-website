@@ -8,6 +8,9 @@ type ProductGalleryProps = {
   locale: Locale;
 };
 
+const blurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PC9zdmc+";
+
 export function ProductGallery({ content, locale }: ProductGalleryProps) {
   const primary = getPrimaryElixirImage(content);
   const secondary = content.images.at(1);
@@ -17,8 +20,10 @@ export function ProductGallery({ content, locale }: ProductGalleryProps) {
       <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-surface-muted shadow-lifted">
         <Image
           alt={t(primary.alt, locale)}
-          className="object-cover"
+          blurDataURL={blurDataUrl}
+          className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
           fill
+          placeholder="blur"
           priority
           sizes="(min-width: 1024px) 46vw, 100vw"
           src={primary.src}
@@ -38,9 +43,11 @@ export function ProductGallery({ content, locale }: ProductGalleryProps) {
           <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-surface-muted">
             <Image
               alt={t(secondary.alt, locale)}
-              className="object-cover"
+              blurDataURL={blurDataUrl}
+              className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
               fill
               loading="lazy"
+              placeholder="blur"
               sizes="(min-width: 1024px) 22vw, 55vw"
               src={secondary.src}
             />

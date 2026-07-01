@@ -158,8 +158,6 @@
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -182,6 +180,11 @@ body {
     "kern" 1,
     "liga" 1,
     "calt" 1;
+}
+
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
 }
 
 img,
@@ -224,6 +227,60 @@ img {
 :focus-visible {
   outline: 3px solid var(--ring);
   outline-offset: 3px;
+}
+
+button,
+[role="button"],
+a[class*="inline-flex"],
+a[class*="rounded"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  transition:
+    transform 100ms ease,
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    opacity var(--duration-fast) ease;
+}
+
+button:active:not(:disabled),
+[role="button"]:active,
+a[class*="inline-flex"]:active,
+a[class*="rounded"]:active,
+input[type="button"]:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+input[type="reset"]:active:not(:disabled) {
+  transform: scale(0.98) !important;
+}
+
+.is-pressing {
+  transform: scale(0.98) !important;
+  transition: transform 100ms ease !important;
+}
+
+a:not([class*="inline-flex"]):not([class*="flex"]):not([class*="rounded"]):not([class*="bg-"]):not(
+    [class*="border"]
+  ) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  text-decoration: none;
+  transition:
+    background-size 180ms ease,
+    color var(--duration-fast) ease,
+    opacity var(--duration-fast) ease;
+}
+
+a:not([class*="inline-flex"]):not([class*="flex"]):not([class*="rounded"]):not([class*="bg-"]):not(
+    [class*="border"]
+  ):hover {
+  background-size: 100% 1px;
+}
+
+section[id] {
+  scroll-margin-top: 5.5rem;
 }
 
 @keyframes enter {

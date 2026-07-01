@@ -7,11 +7,18 @@ const localizedTextSchema = z
   })
   .strict();
 
+const imageSrcSchema = z
+  .string()
+  .refine(
+    (value) => value.startsWith("/images/") || z.string().url().safeParse(value).success,
+    "Expected an absolute URL or a local /images/ asset path",
+  );
+
 const imageSchema = z
   .object({
     alt: localizedTextSchema,
     height: z.number().int().positive(),
-    src: z.string().url(),
+    src: imageSrcSchema,
     width: z.number().int().positive(),
   })
   .strict();

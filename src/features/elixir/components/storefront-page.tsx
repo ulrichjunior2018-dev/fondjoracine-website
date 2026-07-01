@@ -46,6 +46,9 @@ type StorefrontPageProps = {
   locale: Locale;
 };
 
+const blurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PC9zdmc+";
+
 function getCopy(locale: Locale) {
   return {
     before: locale === "fr" ? "Avant" : "Before",
@@ -343,9 +346,11 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
             <Reveal className="relative min-h-[34rem] overflow-hidden">
               <Image
                 alt={t(primaryImage.alt, locale)}
-                className="object-cover"
+                blurDataURL={blurDataUrl}
+                className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
                 fill
                 loading="lazy"
+                placeholder="blur"
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 src={primaryImage.src}
               />
@@ -409,9 +414,11 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                         <div className="relative aspect-[4/5]" key={entry.label}>
                           <Image
                             alt={t(entry.image.alt, locale)}
-                            className="object-cover"
+                            blurDataURL={blurDataUrl}
+                            className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
                             fill
                             loading="lazy"
+                            placeholder="blur"
                             sizes="(min-width: 1024px) 25vw, 50vw"
                             src={entry.image.src}
                           />
@@ -589,9 +596,11 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               <Reveal className="relative aspect-[4/5] overflow-hidden rounded-lg bg-surface-muted shadow-lifted">
                 <Image
                   alt={t(content.founder.image.alt, locale)}
-                  className="object-cover"
+                  blurDataURL={blurDataUrl}
+                  className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
                   fill
                   loading="lazy"
+                  placeholder="blur"
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   src={content.founder.image.src}
                 />

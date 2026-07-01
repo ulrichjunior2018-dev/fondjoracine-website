@@ -9,7 +9,7 @@ import { getElixirContent } from "@/features/elixir/lib/cms";
 export const metadata: Metadata = {
   title: "Contact | FONDJO RACINE",
   description:
-    "Contact FONDJO RACINE for SÈVE preorder support, payment verification, consultation follow-up, press, and product safety questions.",
+    "Contact FONDJO RACINE for SÈVE product support, delivery assistance, consultation follow-up, press, and product safety questions.",
 };
 
 export default async function ContactPage() {
@@ -25,12 +25,12 @@ export default async function ContactPage() {
       <Container>
         <Kicker>Contact</Kicker>
         <Heading as="h1" className="mt-3 max-w-4xl" level="h2">
-          Payment verification, preorder support, press, and product safety.
+          Product support, delivery assistance, press, and product safety.
         </Heading>
         <Text className="mt-5 max-w-3xl" tone="muted">
-          FONDJO RACINE is founded and made in Buea, Cameroon. For Batch #001, WhatsApp is the
-          fastest way to verify payment references, confirm delivery details, and request human
-          follow-up after the hair consultation.
+          FONDJO RACINE is founded and made in Buea, Cameroon. WhatsApp is the fastest way to
+          confirm delivery details, ask shipping questions, and request human follow-up after the
+          hair consultation.
         </Text>
 
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
@@ -40,7 +40,7 @@ export default async function ContactPage() {
               icon: <MessageCircle className="h-5 w-5" aria-hidden="true" />,
               label: "WhatsApp",
               text: content.whatsapp.phone,
-              title: "Preorder and payment support",
+              title: "Delivery and product support",
             },
             {
               href: `mailto:${email}`,

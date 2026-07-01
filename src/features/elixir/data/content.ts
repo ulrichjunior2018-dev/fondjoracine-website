@@ -1,3 +1,5 @@
+import { fondjoProductPricing } from "@/config/product-pricing";
+
 export type Locale = "en" | "fr";
 
 export type LocalizedText = Record<Locale, string>;
@@ -170,7 +172,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Cheveux textures brillants apres routine",
           },
           height: 1200,
-          src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=82",
+          src: "/images/barbershop.jpg",
           width: 900,
         },
         before: {
@@ -179,7 +181,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Routine capillaire texturee avant soin",
           },
           height: 1200,
-          src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=82",
+          src: "/images/market-lifestyle.jpg",
           width: 900,
         },
         caption: {
@@ -195,7 +197,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Cheveux finis avec pointes lumineuses",
           },
           height: 1200,
-          src: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1200&q=82",
+          src: "/images/night-routine.jpg",
           width: 900,
         },
         before: {
@@ -204,7 +206,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Detail coiffage avant routine huile",
           },
           height: 1200,
-          src: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=82",
+          src: "/images/mount-cameroon-origin.jpg",
           width: 900,
         },
         caption: {
@@ -291,7 +293,7 @@ export const defaultElixirContent: ElixirContent = {
         fr: "Portrait fondateur ambiance botanique editoriale",
       },
       height: 1200,
-      src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1200&q=82",
+      src: "/images/mount-cameroon-origin.jpg",
       width: 900,
     },
     intro: {
@@ -413,20 +415,20 @@ export const defaultElixirContent: ElixirContent = {
   images: [
     {
       alt: {
-        en: "Luxury FONDJO RACINE SÈVE hair treatment oil bottle",
-        fr: "Rendu luxe du flacon FONDJO SÈVE",
+        en: "FONDJO RACINE bottle front label",
+        fr: "Etiquette avant du flacon FONDJO RACINE",
       },
       height: 1600,
-      src: "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=1400&q=82",
+      src: "/images/front-label.jpg",
       width: 1200,
     },
     {
       alt: {
-        en: "African botanical oil texture and hair wellness ingredients",
-        fr: "Texture huile botanique africaine et ingredients capillaires",
+        en: "FONDJO RACINE bottle back label",
+        fr: "Etiquette arriere du flacon FONDJO RACINE",
       },
       height: 1200,
-      src: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=1400&q=82",
+      src: "/images/back-label.jpg",
       width: 1200,
     },
   ],
@@ -598,8 +600,8 @@ export const defaultElixirContent: ElixirContent = {
       },
     ],
   },
-  priceCents: 1500,
-  priceXaf: "8,500 XAF",
+  priceCents: fondjoProductPricing.preorderUsd * 100,
+  priceXaf: fondjoProductPricing.preorderLocalDisplay,
   problem: {
     concerns: [
       {

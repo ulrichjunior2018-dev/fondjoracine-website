@@ -5,10 +5,8 @@ export const hero = {
     "FONDJO pairs clinical scalp science with sensorial botanical rituals for healthier-looking density, shine, and softness.",
   primaryCta: "Explore the ritual",
   secondaryCta: "Discover the science",
-  image:
-    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1800&q=85",
-  videoPoster:
-    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1800&q=85",
+  image: "/images/hero-volcanic-bottle.jpg",
+  videoPoster: "/images/hero-volcanic-bottle.jpg",
   videoSrc: "",
 } as const;
 
@@ -17,22 +15,19 @@ export const featuredProducts = [
     name: "Root Renewal Scalp Serum",
     description: "A concentrated leave-in treatment for balanced roots and glossy lengths.",
     price: "$88",
-    image:
-      "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=900&q=85",
+    image: "/images/front-label.jpg",
   },
   {
     name: "Botanical Density Oil",
     description: "A featherweight oil blend for pre-wash massage and high-shine finishing.",
     price: "$72",
-    image:
-      "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=85",
+    image: "/images/studio-reflection.jpg",
   },
   {
     name: "Silk Repair Hair Masque",
     description: "A weekly cream masque that cushions strands with slip, softness, and resilience.",
     price: "$64",
-    image:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=85",
+    image: "/images/night-routine.jpg",
   },
 ] as const;
 
@@ -58,14 +53,12 @@ export const ingredients = [
 export const transformations = [
   {
     label: "Week 1",
-    image:
-      "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=85",
+    image: "/images/market-lifestyle.jpg",
     caption: "A clarified scalp ritual focused on comfort and balance.",
   },
   {
     label: "Week 8",
-    image:
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=85",
+    image: "/images/barbershop.jpg",
     caption: "Hair appears softer, glossier, and more light-reflective.",
   },
 ] as const;
@@ -92,10 +85,10 @@ export const testimonials = [
 ] as const;
 
 export const instagramGallery = [
-  "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=700&q=85",
-  "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=700&q=85",
-  "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=700&q=85",
-  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=85",
+  "/images/market-lifestyle.jpg",
+  "/images/barbershop.jpg",
+  "/images/night-routine.jpg",
+  "/images/packing-orders.jpg",
 ] as const;
 
 export const trustBadges = [

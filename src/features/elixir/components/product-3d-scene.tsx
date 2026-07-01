@@ -32,6 +32,9 @@ type NavigatorWithPerformanceHints = Navigator & {
 
 type SceneMode = "loading" | "webgl" | "fallback";
 
+const blurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PC9zdmc+";
+
 const PARTICLES = [
   { delay: 0, duration: 9, left: "12%", scale: 0.78, top: "22%" },
   { delay: 1.4, duration: 10, left: "82%", scale: 0.92, top: "18%" },
@@ -114,8 +117,10 @@ function LayeredBottleFallback({ fallbackImage, label }: Product3DSceneProps) {
       {fallbackImage ? (
         <Image
           alt={fallbackImage.alt}
+          blurDataURL={blurDataUrl}
           className="absolute inset-0 object-cover opacity-10 mix-blend-screen"
           fill
+          placeholder="blur"
           priority
           sizes="(min-width: 1024px) 42vw, 100vw"
           src={fallbackImage.src}

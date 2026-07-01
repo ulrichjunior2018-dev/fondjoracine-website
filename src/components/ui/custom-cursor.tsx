@@ -1,12 +1,9 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { RotateCcw } from "lucide-react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-type CursorState = "default" | "hover" | "rotate";
-
-const SPRING = { stiffness: 300, damping: 30 };
+type CursorState = "default" | "hover";
 
 function getPointerSnapshot() {
   return window.matchMedia("(pointer: coarse)").matches;
@@ -31,28 +28,15 @@ export function CustomCursor() {
   );
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<CursorState>("default");
-  const [label, setLabel] = useState<string | null>(null);
-
-  // Raw mouse position (no spring)
   const rawX = useMotionValue(-100);
   const rawY = useMotionValue(-100);
-
-  // Spring-lagged position for both layers
-  const springX = useSpring(rawX, SPRING);
-  const springY = useSpring(rawY, SPRING);
-
-  // Offset positions — dot centered on 8px, ring centered on 48px
-  const dotX = useTransform(springX, (v) => v - 4);
-  const dotY = useTransform(springY, (v) => v - 4);
-  const ringX = useTransform(springX, (v) => v - 24);
-  const ringY = useTransform(springY, (v) => v - 24);
+  const dotX = useTransform(rawX, (v) => v - 3.5);
+  const dotY = useTransform(rawY, (v) => v - 3.5);
 
   useEffect(() => {
-    // Detect touch/coarse pointer and bail immediately
     if (isTouch) return;
 
-    // Hide default cursor
-    document.body.style.cursor = "none";
+    document.documentElement.classList.add("custom-cursor-active");
 
     function onMove(e: MouseEvent) {
       rawX.set(e.clientX);
@@ -77,20 +61,10 @@ export function CustomCursor() {
 
       if (!el) {
         setState("default");
-        setLabel(null);
         return;
       }
 
-      const cursorAttr = el.getAttribute("data-cursor");
-      const labelAttr = el.getAttribute("data-cursor-label");
-
-      if (cursorAttr === "rotate") {
-        setState("rotate");
-      } else {
-        setState("hover");
-      }
-
-      setLabel(labelAttr ?? null);
+      setState("hover");
     }
 
     function onOut(e: MouseEvent) {
@@ -101,7 +75,6 @@ export function CustomCursor() {
         )
       ) {
         setState("default");
-        setLabel(null);
       }
     }
 
@@ -112,7 +85,7 @@ export function CustomCursor() {
     document.addEventListener("mouseout", onOut);
 
     return () => {
-      document.body.style.cursor = "";
+      document.documentElement.classList.remove("custom-cursor-active");
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
@@ -121,42 +94,19 @@ export function CustomCursor() {
     };
   }, [isTouch, rawX, rawY, visible]);
 
-  // Skip entirely on touch devices or during SSR check
   if (isTouch) return null;
-
-  const isExpanded = state !== "default";
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]">
-      {/* Gold dot — visible in default state */}
       <motion.div
         animate={{
-          opacity: isExpanded ? 0 : visible ? 1 : 0,
-          scale: isExpanded ? 0.2 : 1,
+          opacity: visible ? 1 : 0,
+          scale: state === "hover" ? 1.7 : 1,
         }}
-        className="absolute left-0 top-0 rounded-full bg-[#c8a951]"
-        style={{ width: 8, height: 8, x: dotX, y: dotY }}
-        transition={{ duration: 0.15, ease: "easeOut" }}
+        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#d6b75b] shadow-[0_0_14px_rgb(214_183_91/.28)]"
+        style={{ x: dotX, y: dotY }}
+        transition={{ duration: 0.1, ease: "easeOut" }}
       />
-
-      {/* Expanded ring — visible on hover / rotate */}
-      <motion.div
-        animate={{
-          opacity: isExpanded && visible ? 1 : 0,
-          scale: isExpanded ? 1 : 0.4,
-        }}
-        className="absolute left-0 top-0 flex items-center justify-center rounded-full border border-[#c8a951] bg-[#c8a951]/6"
-        style={{ width: 48, height: 48, x: ringX, y: ringY }}
-        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {state === "rotate" ? (
-          <RotateCcw className="h-4 w-4 text-[#c8a951]" strokeWidth={1.5} />
-        ) : label ? (
-          <span className="text-[0.5rem] font-semibold uppercase tracking-[0.14em] text-[#c8a951]">
-            {label}
-          </span>
-        ) : null}
-      </motion.div>
     </div>
   );
 }

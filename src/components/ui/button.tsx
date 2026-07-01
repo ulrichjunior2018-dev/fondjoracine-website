@@ -1,7 +1,6 @@
 "use client";
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
@@ -15,8 +14,6 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   trailingIcon?: ReactNode;
   isLoading?: boolean;
 };
-
-type Ripple = { id: number; x: number; y: number; size: number };
 
 function getVariantClassName(variant: ButtonVariant) {
   switch (variant) {
@@ -57,32 +54,8 @@ export function Button({
   type = "button",
   ...props
 }: ButtonProps) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [ripples, setRipples] = useState<Ripple[]>([]);
-
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    // Only ripple on primary variant
-    if (variant === "primary" && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height) * 2.2;
-      const x = e.clientX - rect.left - size / 2;
-      const y = e.clientY - rect.top - size / 2;
-      const id = Date.now();
-
-      setRipples((prev) => [...prev, { id, x, y, size }]);
-
-      // Remove this ripple after animation completes
-      setTimeout(() => {
-        setRipples((prev) => prev.filter((r) => r.id !== id));
-      }, 420);
-    }
-
-    onClick?.(e);
-  }
-
   return (
     <button
-      ref={buttonRef}
       className={cn(
         "relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap font-medium transition-colors",
         "disabled:pointer-events-none disabled:opacity-50",
@@ -93,7 +66,7 @@ export function Button({
       )}
       disabled={disabled || isLoading}
       type={type}
-      onClick={handleClick}
+      onClick={onClick}
       {...props}
     >
       {isLoading ? (
@@ -103,21 +76,6 @@ export function Button({
       )}
       {children}
       {trailingIcon}
-
-      {/* Gold ripple on click */}
-      {ripples.map((ripple) => (
-        <span
-          key={ripple.id}
-          aria-hidden="true"
-          className="pointer-events-none absolute animate-[rippleOut_400ms_ease-out_forwards] rounded-full bg-[#c8a951]/30"
-          style={{
-            left: ripple.x,
-            top: ripple.y,
-            width: ripple.size,
-            height: ripple.size,
-          }}
-        />
-      ))}
     </button>
   );
 }
