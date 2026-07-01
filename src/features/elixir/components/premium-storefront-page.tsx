@@ -66,52 +66,38 @@ const campaignImages = {
   packing: siteImages.packingOrders,
   profileLogo: siteImages.profileLogo,
   reflection: siteImages.studioBottle,
+  ingredientAvocadoOil: siteImages.ingredientAvocadoOil,
+  ingredientCastorOil: siteImages.ingredientCastorOil,
+  ingredientCoconutOil: siteImages.ingredientCoconutOil,
+  ingredientJojobaOil: siteImages.ingredientJojobaOil,
+  ingredientOliveOil: siteImages.ingredientOliveOil,
+  ingredientSheaOil: siteImages.ingredientSheaOil,
 } as const;
 
 const ingredientTimelineDetails = [
   {
-    image: campaignImages.frontLabel,
+    image: campaignImages.ingredientCastorOil,
     region: "West Africa",
   },
   {
-    image: campaignImages.reflection,
-    region: "East Africa",
+    image: campaignImages.ingredientSheaOil,
+    region: "West Africa",
   },
   {
-    image: campaignImages.hero,
+    image: campaignImages.ingredientCoconutOil,
     region: "Tropics",
   },
   {
-    image: campaignImages.origin,
-    region: "Sonoran Desert",
+    image: campaignImages.ingredientJojobaOil,
+    region: "Americas",
   },
   {
-    image: campaignImages.market,
-    region: "Central America",
+    image: campaignImages.ingredientAvocadoOil,
+    region: "Tropical Americas",
   },
   {
-    image: campaignImages.night,
+    image: campaignImages.ingredientOliveOil,
     region: "Mediterranean",
-  },
-  {
-    image: campaignImages.packing,
-    region: "Morocco",
-  },
-  {
-    image: campaignImages.backLabel,
-    region: "African + Ayurvedic",
-  },
-  {
-    image: campaignImages.barbershop,
-    region: "Australia",
-  },
-  {
-    image: campaignImages.facebookCover,
-    region: "North Africa",
-  },
-  {
-    image: campaignImages.reflection,
-    region: "Botanical lab",
   },
 ] as const;
 
@@ -353,6 +339,10 @@ export function IngredientCarousel({
   const activeDetails =
     ingredientTimelineDetails.find((_, detailIndex) => detailIndex === activeIndex) ??
     ingredientTimelineDetails[0];
+  const activeIngredientImage = activeIngredient?.image ?? activeDetails.image;
+  const activeIngredientImageAlt = activeIngredient?.imageAlt
+    ? t(activeIngredient.imageAlt, locale)
+    : `${activeIngredient ? t(activeIngredient.name, locale) : "Ingredient"} botanical oil artwork`;
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1023px)").matches;
@@ -407,13 +397,13 @@ export function IngredientCarousel({
             >
               <div className="relative aspect-[16/10] bg-[#17130e]">
                 <Image
-                  alt={`${t(activeIngredient.name, locale)} macro botanical texture`}
+                  alt={activeIngredientImageAlt}
                   blurDataURL={blurDataUrl}
                   className="object-cover"
                   fill
                   placeholder="blur"
                   sizes="(min-width: 1024px) 38vw, 92vw"
-                  src={activeDetails.image}
+                  src={activeIngredientImage}
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(8_7_6/.74)_100%)]" />
                 <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-[#d6b75b]/28 bg-[#080706]/72 px-3 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b] backdrop-blur">
@@ -443,7 +433,7 @@ export function IngredientCarousel({
         >
           <div className="relative w-max min-w-full px-1 py-6 lg:w-auto lg:px-2 lg:py-8">
             <div className="absolute left-5 right-5 top-[2.55rem] h-px bg-[#d6b75b]/36 lg:left-8 lg:right-8 lg:top-[3.25rem]" />
-            <div className="grid auto-cols-[8.5rem] grid-flow-col gap-3 lg:grid-flow-row lg:grid-cols-11 lg:auto-cols-auto">
+            <div className="grid auto-cols-[8.5rem] grid-flow-col gap-3 lg:grid-flow-row lg:grid-cols-6 lg:auto-cols-auto">
               {ingredients.map((ingredient, index) => {
                 const details =
                   ingredientTimelineDetails.find((_, detailIndex) => detailIndex === index) ??

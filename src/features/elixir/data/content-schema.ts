@@ -128,6 +128,8 @@ export const elixirContentSchema = z
       ingredients: z.array(
         z
           .object({
+            image: z.string().min(1).optional(),
+            imageAlt: localizedTextSchema.optional(),
             name: localizedTextSchema,
             note: localizedTextSchema,
           })

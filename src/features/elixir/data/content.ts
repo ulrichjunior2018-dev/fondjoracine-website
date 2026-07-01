@@ -1,4 +1,5 @@
 import { fondjoProductPricing } from "@/config/product-pricing";
+import { siteImages } from "@/lib/site-images";
 
 export type Locale = "en" | "fr";
 
@@ -81,6 +82,8 @@ export type ElixirContent = {
   images: ElixirImage[];
   ingredientScience: CmsSection & {
     ingredients: Array<{
+      image?: string | undefined;
+      imageAlt?: LocalizedText | undefined;
       name: LocalizedText;
       note: LocalizedText;
     }>;
@@ -446,80 +449,75 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: { en: "Ingredients", fr: "Ingredients" },
     ingredients: [
       {
-        name: { en: "Shea oil", fr: "Huile de karite" },
+        name: { en: "Castor oil", fr: "Huile de ricin" },
+        image: siteImages.ingredientCastorOil,
+        imageAlt: {
+          en: "Castor oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile de ricin avec le flacon FONDJO RACINE SEVE",
+        },
         note: {
-          en: "A rich emollient selected to support softness and a conditioned finish.",
-          fr: "Huile riche pour sceller, apporter brillance et accompagner les routines anti-casse.",
+          en: "Strengthens roots, nourishes the scalp, and helps reduce breakage.",
+          fr: "Renforce les racines, nourrit le cuir chevelu et aide a reduire la casse.",
         },
       },
       {
-        name: { en: "Castor oil", fr: "Huile de ricin" },
+        name: { en: "Shea oil", fr: "Huile de karite" },
+        image: siteImages.ingredientSheaOil,
+        imageAlt: {
+          en: "Shea oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile de karite avec le flacon FONDJO RACINE SEVE",
+        },
         note: {
-          en: "A dense oil traditionally used in root-focused grooming rituals.",
-          fr: "Douceur botanique riche en acides gras pour longueurs seches.",
+          en: "Deeply moisturizes, softens hair, and supports dry scalp comfort.",
+          fr: "Hydrate en profondeur, adoucit les cheveux et aide au confort du cuir chevelu sec.",
         },
       },
       {
         name: { en: "Coconut oil", fr: "Huile de coco" },
+        image: siteImages.ingredientCoconutOil,
+        imageAlt: {
+          en: "Coconut oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile de coco avec le flacon FONDJO RACINE SEVE",
+        },
         note: {
-          en: "Chosen for slip, softness, and wash-day familiarity.",
-          fr: "Botanique classique du cuir chevelu au profil tonifiant.",
+          en: "Hydrates the hair shaft, protects against dryness, and adds natural shine.",
+          fr: "Hydrate la fibre capillaire, protege contre la secheresse et apporte une brillance naturelle.",
         },
       },
       {
         name: { en: "Jojoba oil", fr: "Huile de jojoba" },
+        image: siteImages.ingredientJojobaOil,
+        imageAlt: {
+          en: "Jojoba oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile de jojoba avec le flacon FONDJO RACINE SEVE",
+        },
         note: {
-          en: "A lightweight oil that helps hair feel balanced rather than heavy.",
-          fr: "Fraicheur sensorielle pour une sensation de cuir chevelu propre.",
+          en: "Balances scalp oils, keeps hair lightweight, and supports a healthy scalp environment.",
+          fr: "Equilibre les huiles du cuir chevelu, garde les cheveux legers et soutient un environnement sain.",
         },
       },
       {
         name: { en: "Avocado oil", fr: "Huile d avocat" },
+        image: siteImages.ingredientAvocadoOil,
+        imageAlt: {
+          en: "Avocado oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile d avocat avec le flacon FONDJO RACINE SEVE",
+        },
         note: {
-          en: "A cushiony botanical oil for dry-feeling strands and ends.",
-          fr: "Choisie pour la glisse, la douceur et les soins hebdomadaires.",
+          en: "Rich in nutrients and fatty acids to nourish, repair, and condition hair.",
+          fr: "Riche en nutriments et acides gras pour nourrir, reparer et conditionner les cheveux.",
         },
       },
       {
         name: { en: "Olive oil", fr: "Huile d olive" },
-        note: {
-          en: "A heritage oil selected for softness, shine, and protective styling routines.",
-          fr: "Brillance raffinee et emollience premium pour la finition visible.",
+        image: siteImages.ingredientOliveOil,
+        imageAlt: {
+          en: "Olive oil ingredient artwork with FONDJO RACINE SEVE bottle",
+          fr: "Visuel ingredient huile d olive avec le flacon FONDJO RACINE SEVE",
         },
-      },
-      {
-        name: { en: "Argan oil", fr: "Huile d argan" },
         note: {
-          en: "Premium emollience for a polished visible finish.",
-          fr: "Support antioxydant pour integrite de la formule et finition cheveux.",
-        },
-      },
-      {
-        name: { en: "Botanical extracts", fr: "Extraits botaniques" },
-        note: {
-          en: "Amla, fenugreek, moringa, neem, eclipta, and black seed for a heritage-inspired care ritual.",
-          fr: "Amla, fenugrec, moringa, neem, eclipta et nigelle pour un rituel inspire du patrimoine botanique.",
-        },
-      },
-      {
-        name: { en: "Tea tree oil", fr: "Huile d arbre a the" },
-        note: {
-          en: "A crisp aromatic accent for a fresh-feeling scalp ritual. Patch test recommended.",
-          fr: "Une note aromatique fraiche pour le rituel cuir chevelu. Test cutane recommande.",
-        },
-      },
-      {
-        name: { en: "Peppermint oil", fr: "Huile de menthe poivree" },
-        note: {
-          en: "Cooling sensorial freshness; use sparingly and avoid eyes.",
-          fr: "Fraicheur sensorielle; utilisez avec mesure et evitez les yeux.",
-        },
-      },
-      {
-        name: { en: "Vitamin E", fr: "Vitamine E" },
-        note: {
-          en: "Antioxidant support for formula integrity and visible hair polish.",
-          fr: "Huile patrimoniale africaine pour douceur et soin protecteur.",
+          en: "Seals in moisture, improves softness, and helps protect hair from dryness.",
+          fr: "Scelle l hydratation, ameliore la douceur et aide a proteger les cheveux de la secheresse.",
         },
       },
     ],

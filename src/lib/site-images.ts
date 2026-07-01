@@ -18,6 +18,12 @@ export const siteImages = {
   mountCameroonRiverBottle: "/images/mount-cameroon-river-bottle.png",
   postpartumShedding: "/images/postpartum-shedding.png",
   riverBottleOrigin: "/images/river-bottle-origin.png",
+  ingredientCastorOil: "/images/ingredient-castor-oil.png",
+  ingredientSheaOil: "/images/ingredient-shea-oil.png",
+  ingredientCoconutOil: "/images/ingredient-coconut-oil.png",
+  ingredientJojobaOil: "/images/ingredient-jojoba-oil.png",
+  ingredientAvocadoOil: "/images/ingredient-avocado-oil.png",
+  ingredientOliveOil: "/images/ingredient-olive-oil.png",
 } as const;
 
 export type SiteImageKey = keyof typeof siteImages;

@@ -19,6 +19,12 @@ Additional clean assets currently available:
 
 - `global-hero-reference.png`
 - `hair-texture-lifestyle.png`
+- `ingredient-avocado-oil.png`
+- `ingredient-castor-oil.png`
+- `ingredient-coconut-oil.png`
+- `ingredient-jojoba-oil.png`
+- `ingredient-olive-oil.png`
+- `ingredient-shea-oil.png`
 - `mount-cameroon-river-bottle.png`
 - `postpartum-shedding.png`
 - `river-bottle-origin.png`
