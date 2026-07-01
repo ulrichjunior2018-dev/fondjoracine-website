@@ -3,11 +3,11 @@
 import {
   ArrowRight,
   CreditCard,
-  Globe2,
+  Droplets,
+  Leaf,
   Languages,
-  MessageCircle,
+  ShieldCheck,
   Sparkles,
-  Truck,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -15,12 +15,12 @@ import { HairTexturePanels } from "@/components/HairTexturePanels";
 import { siteImages } from "@/lib/site-images";
 
 const trustItems = [
-  "Founded & Made in Buea, Cameroon",
-  "National Delivery",
-  "International Shipping",
+  "Made in Cameroon",
+  "Premium Botanical Oils",
+  "Suitable for All Hair Types",
+  "100ml",
+  "Cruelty Free",
   "Secure Payments",
-  "All Hair Types",
-  "EN | FR | ES",
 ] as const;
 
 type CinematicHeroProps = {
@@ -31,15 +31,15 @@ type CinematicHeroProps = {
 function getTrustIcon(index: number) {
   switch (index) {
     case 1:
-      return Truck;
+      return Leaf;
     case 2:
-      return Globe2;
-    case 3:
-      return CreditCard;
-    case 5:
       return Languages;
+    case 3:
+      return Droplets;
+    case 5:
+      return CreditCard;
     case 4:
-      return MessageCircle;
+      return ShieldCheck;
     case 0:
     default:
       return Sparkles;
@@ -58,12 +58,12 @@ export function CinematicHero({
         id="hero"
       >
         <Image
-          alt="FONDJO RACINE botanical oil macro background"
-          className="object-cover opacity-44"
+          alt="FONDJO RACINE Mount Cameroon botanical atmosphere"
+          className="object-cover opacity-42"
           fill
           priority
           sizes="100vw"
-          src={siteImages.backLabel}
+          src={siteImages.heroOrigin}
         />
         <div className="absolute inset-0 bg-[#0D0D0D]/42" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_61%_52%,rgb(212_175_55/.18),transparent_28%),radial-gradient(circle_at_84%_38%,rgb(27_94_32/.3),transparent_36%),linear-gradient(102deg,#0D0D0D_0%,rgb(13_13_13/.92)_36%,rgb(27_94_32/.58)_68%,#0D0D0D_100%)]" />
@@ -76,17 +76,16 @@ export function CinematicHero({
         <div className="relative z-20 mx-auto grid min-h-[92svh] w-full max-w-[1440px] items-center gap-7 px-5 pb-10 pt-28 text-center md:min-h-screen md:grid-cols-[minmax(0,0.94fr)_minmax(18rem,0.72fr)_minmax(12rem,0.28fr)] md:px-10 md:py-24 md:text-left xl:px-20">
           <div className="mx-auto max-w-[43rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D4AF37]">
-              FONDJO RACINE · SÈVE HAIR TREATMENT OIL
+              FONDJO RACINE · MADE IN BUEA, CAMEROON
             </p>
             <h1 className="mt-6 font-serif text-[clamp(3.1rem,13vw,5.6rem)] font-light leading-[0.91] tracking-normal text-[#F7F4EB] md:text-[clamp(4rem,6.2vw,7rem)]">
-              One Universal Oil.
-              <span className="block text-[#D4AF37]">Infinite Textures.</span>
-              <span className="block">Born in Buea.</span>
+              Healthy Hair
+              <span className="block text-[#D4AF37]">Begins at</span>
+              <span className="block">the Root.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-[40rem] text-base leading-8 text-[#F7F4EB]/78 md:mx-0 md:text-lg">
-              Crafted in Buea, Cameroon using carefully selected botanical oils to nourish the
-              scalp, strengthen roots, and care for every hair texture. Trusted locally. Designed
-              for the world.
+              Crafted in Buea, Cameroon using carefully selected botanical oils chosen to nourish
+              the scalp, strengthen strands, and restore healthy-looking hair.
             </p>
 
             <div className="mt-9 grid gap-3 sm:inline-grid sm:grid-cols-2 md:mt-10">
@@ -94,14 +93,14 @@ export function CinematicHero({
                 className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#D4AF37] px-7 text-sm font-semibold text-[#0D0D0D] shadow-[0_22px_80px_rgb(212_175_55/.28)] transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
                 href={productHref}
               >
-                Discover SÈVE
+                Shop SÈVE
                 <ArrowRight className="size-4" aria-hidden="true" />
               </a>
               <a
                 className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F7F4EB]/24 bg-[#0D0D0D]/32 px-7 text-sm font-semibold text-[#F7F4EB] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
                 href={consultationHref}
               >
-                Free Hair Consultation
+                Discover the Formula
               </a>
             </div>
           </div>

@@ -24,8 +24,8 @@ export const en = {
   footerPolicy: "Policies",
   formula: "Formula",
   formulaBody:
-    "Botanical oils chosen to nourish, soften, and protect the hair fiber without medical claims.",
-  formulaTitle: "An ingredient map, composed like fragrance notes.",
+    "Six carefully selected oils, each chosen for a clear role across scalp comfort, strand nourishment, moisture, softness, and shine.",
+  formulaTitle: "Six oils. One precise ritual.",
   gallery: "Gallery",
   heroEyebrow: "FONDJO RACINE · Hair ritual oil",
   heroStory:
@@ -66,4 +66,14 @@ export const en = {
   ritualTitle: "A night routine with a slow gold finish.",
   scroll: "Scroll",
   whatsapp: "WhatsApp assistance",
+  whyBody:
+    "SÈVE layers six botanical oils into one ritual: scalp comfort first, then strand nourishment, then a softened finish through the ends.",
+  whyEyebrow: "Why it works",
+  whySteps: [
+    ["Root", "Castor and shea support a stronger-feeling foundation."],
+    ["Scalp", "Jojoba helps balance the feel of scalp oils without heaviness."],
+    ["Hair shaft", "Coconut and avocado condition the fiber and improve softness."],
+    ["Ends", "Olive oil helps seal moisture where dryness shows first."],
+  ],
+  whyTitle: "A formula built from root to ends.",
 } as const;

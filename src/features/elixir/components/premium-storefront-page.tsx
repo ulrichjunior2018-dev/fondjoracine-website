@@ -76,30 +76,40 @@ const campaignImages = {
 
 const ingredientTimelineDetails = [
   {
+    benefits: ["Strengthens roots", "Nourishes scalp", "Helps reduce breakage"],
     image: campaignImages.ingredientCastorOil,
     region: "West Africa",
   },
   {
+    benefits: ["Deep moisture", "Softens hair", "Comforts dry scalp"],
     image: campaignImages.ingredientSheaOil,
     region: "West Africa",
   },
   {
+    benefits: ["Hydrates shaft", "Protects dryness", "Adds natural shine"],
     image: campaignImages.ingredientCoconutOil,
     region: "Tropics",
   },
   {
+    benefits: ["Balances scalp oils", "Lightweight finish", "Healthy scalp feel"],
     image: campaignImages.ingredientJojobaOil,
     region: "Americas",
   },
   {
+    benefits: ["Nutrient-rich", "Repairs feel", "Conditions hair"],
     image: campaignImages.ingredientAvocadoOil,
     region: "Tropical Americas",
   },
   {
+    benefits: ["Seals moisture", "Improves softness", "Protects from dryness"],
     image: campaignImages.ingredientOliveOil,
     region: "Mediterranean",
   },
 ] as const;
+
+function getIngredientDetails(index: number) {
+  return ingredientTimelineDetails.at(index) ?? ingredientTimelineDetails[0];
+}
 
 function FadeUp({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={className}>{children}</div>;
@@ -331,163 +341,146 @@ export function IngredientCarousel({
     0,
     ingredientTimelineDetails.length,
   );
-  const [activeIndex, setActiveIndex] = useState(0);
-  const nodeRefs = useRef(new Map<number, HTMLButtonElement>());
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const activeIngredient =
-    ingredients.find((_, ingredientIndex) => ingredientIndex === activeIndex) ?? ingredients[0];
-  const activeDetails =
-    ingredientTimelineDetails.find((_, detailIndex) => detailIndex === activeIndex) ??
-    ingredientTimelineDetails[0];
-  const activeIngredientImage = activeIngredient?.image ?? activeDetails.image;
-  const activeIngredientImageAlt = activeIngredient?.imageAlt
-    ? t(activeIngredient.imageAlt, locale)
-    : `${activeIngredient ? t(activeIngredient.name, locale) : "Ingredient"} botanical oil artwork`;
-
-  useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const mostVisible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        const index = Number(mostVisible?.target.getAttribute("data-ingredient-index"));
-
-        if (Number.isInteger(index)) {
-          setActiveIndex(index);
-        }
-      },
-      {
-        root: isMobile ? scrollerRef.current : null,
-        rootMargin: isMobile ? "0px -38% 0px -38%" : "-42% 0px -42% 0px",
-        threshold: isMobile ? [0.42, 0.62, 0.82] : [0.2, 0.45, 0.7],
-      },
-    );
-
-    nodeRefs.current.forEach((node) => {
-      observer.observe(node);
-    });
-
-    return () => observer.disconnect();
-  }, [ingredients.length]);
 
   return (
     <section
-      className="bg-[#080706] py-20 text-[#f6f0e4] sm:py-28"
+      className="overflow-hidden bg-[#080706] py-20 text-[#f6f0e4] sm:py-28"
       data-mobile-cta-section="formula"
       id="formula"
     >
-      <Container className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-        <FadeUp className="lg:sticky lg:top-28">
+      <Container>
+        <FadeUp className="max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
             {copy.formula}
           </p>
-          <h2 className="mt-4 font-serif text-5xl font-light leading-[0.9] sm:text-6xl lg:text-7xl">
+          <h2 className="mt-4 max-w-3xl font-serif text-5xl font-light leading-[0.9] sm:text-6xl lg:text-7xl">
             {copy.formulaTitle}
           </h2>
-          <p className="mt-5 text-sm leading-8 text-[#f6f0e4]/65">{copy.formulaBody}</p>
-
-          {activeIngredient ? (
-            <motion.article
-              className="mt-8 overflow-hidden rounded-md border border-[#d6b75b]/20 bg-white/[0.035] shadow-[0_30px_90px_rgb(0_0_0/.28)]"
-              key={t(activeIngredient.name, locale)}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="relative aspect-[16/10] bg-[#17130e]">
-                <Image
-                  alt={activeIngredientImageAlt}
-                  blurDataURL={blurDataUrl}
-                  className="object-cover"
-                  fill
-                  placeholder="blur"
-                  sizes="(min-width: 1024px) 38vw, 92vw"
-                  src={activeIngredientImage}
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(8_7_6/.74)_100%)]" />
-                <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-[#d6b75b]/28 bg-[#080706]/72 px-3 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b] backdrop-blur">
-                  <MapPinIcon />
-                  {activeDetails.region}
-                </div>
-              </div>
-              <div className="p-5 sm:p-6">
-                <p className="font-mono text-xs text-[#d6b75b]">
-                  {String(activeIndex + 1).padStart(2, "0")} / {ingredients.length}
-                </p>
-                <h3 className="mt-3 font-serif text-4xl text-[#f6f0e4]">
-                  {t(activeIngredient.name, locale)}
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-[#f6f0e4]/66">
-                  {t(activeIngredient.note, locale)}
-                </p>
-              </div>
-            </motion.article>
-          ) : null}
+          <p className="mt-5 max-w-2xl text-sm leading-8 text-[#f6f0e4]/65">{copy.formulaBody}</p>
         </FadeUp>
 
         <div
-          aria-label="Ingredient timeline"
-          className="relative -mx-5 snap-x snap-mandatory overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:snap-none lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
-          ref={scrollerRef}
+          aria-label="Featured ingredient cards"
+          className="-mx-5 mt-12 snap-x snap-mandatory overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10 [&::-webkit-scrollbar]:hidden"
         >
-          <div className="relative w-max min-w-full px-1 py-6 lg:w-auto lg:px-2 lg:py-8">
-            <div className="absolute left-5 right-5 top-[2.55rem] h-px bg-[#d6b75b]/36 lg:left-8 lg:right-8 lg:top-[3.25rem]" />
-            <div className="grid auto-cols-[8.5rem] grid-flow-col gap-3 lg:grid-flow-row lg:grid-cols-6 lg:auto-cols-auto">
-              {ingredients.map((ingredient, index) => {
-                const details =
-                  ingredientTimelineDetails.find((_, detailIndex) => detailIndex === index) ??
-                  ingredientTimelineDetails[0];
-                const isActive = index === activeIndex;
+          <div className="grid w-max auto-cols-[82vw] grid-flow-col gap-4 sm:auto-cols-[26rem] lg:auto-cols-[30rem]">
+            {ingredients.map((ingredient, index) => {
+              const details = getIngredientDetails(index);
+              const name = t(ingredient.name, locale);
+              const note = t(ingredient.note, locale);
+              const image = ingredient.image ?? details.image;
+              const imageAlt = ingredient.imageAlt
+                ? t(ingredient.imageAlt, locale)
+                : `${name} botanical oil artwork`;
 
-                return (
-                  <button
-                    aria-expanded={isActive}
-                    aria-label={`${t(ingredient.name, locale)}. ${details.region}`}
-                    className="group relative grid min-h-[8.75rem] snap-center content-start gap-3 rounded-md px-1 py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d6b75b] lg:min-h-[12rem] lg:rounded-none lg:px-0 lg:py-0"
-                    data-ingredient-index={index}
-                    key={t(ingredient.name, locale)}
-                    onClick={() => setActiveIndex(index)}
-                    onFocus={() => setActiveIndex(index)}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    ref={(node) => {
-                      if (node) {
-                        nodeRefs.current.set(index, node);
-                      } else {
-                        nodeRefs.current.delete(index);
-                      }
-                    }}
-                    type="button"
-                  >
-                    <span
-                      className={`relative z-10 grid size-9 place-items-center rounded-full border transition-all duration-300 lg:size-8 ${
-                        isActive
-                          ? "border-[#d6b75b] bg-[#d6b75b] text-[#080706] shadow-[0_0_32px_rgb(214_183_91/.38)]"
-                          : "border-[#d6b75b]/45 bg-[#080706] text-[#d6b75b] group-hover:border-[#d6b75b]"
-                      }`}
+              return (
+                <motion.article
+                  className="group relative snap-start overflow-hidden rounded-md border border-[#d6b75b]/18 bg-white/[0.035] shadow-[0_30px_90px_rgb(0_0_0/.24)]"
+                  initial={{ opacity: 0, y: 18 }}
+                  key={name}
+                  transition={{ duration: 0.45, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                  viewport={{ once: true, margin: "-12%" }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[#17130e]">
+                    <Image
+                      alt={imageAlt}
+                      blurDataURL={blurDataUrl}
+                      className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.035]"
+                      fill
+                      loading="lazy"
+                      placeholder="blur"
+                      sizes="(min-width: 1024px) 30rem, (min-width: 640px) 26rem, 82vw"
+                      src={image}
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_54%,rgb(8_7_6/.86)_100%)]" />
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-[#d6b75b]/28 bg-[#080706]/72 px-3 py-2 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-[#d6b75b] backdrop-blur">
+                        <MapPinIcon />
+                        {details.region}
+                      </span>
+                      <span className="font-mono text-xs text-[#f6f0e4]/58">
+                        {String(index + 1).padStart(2, "0")} / {ingredients.length}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-5 sm:p-6">
+                    <h3 className="font-serif text-4xl font-light leading-none text-[#f6f0e4]">
+                      {name}
+                    </h3>
+                    <p className="mt-4 min-h-21 text-sm leading-7 text-[#f6f0e4]/66">{note}</p>
+                    <div className="mt-6 h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-50" />
+                    <ul
+                      aria-label={`${name} benefits`}
+                      className="mt-5 grid gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#f6f0e4]/72"
                     >
-                      <span className="size-2 rounded-full bg-current" />
-                    </span>
-                    <span className="block min-h-11 pr-2 font-serif text-base leading-tight text-[#f6f0e4] lg:min-h-16 lg:text-xl lg:leading-none">
-                      {t(ingredient.name, locale)}
-                    </span>
-                    <span className="flex items-start gap-1.5 pr-2 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-[#d6b75b]/74 lg:gap-2 lg:text-[0.62rem] lg:tracking-[0.18em]">
-                      <MapPinIcon />
-                      {details.region}
-                    </span>
-                    <motion.span
-                      className="pointer-events-none absolute left-0 right-0 top-[7.2rem] hidden rounded-md border border-[#d6b75b]/18 bg-[#15110c]/92 p-3 text-xs leading-5 text-[#f6f0e4]/68 shadow-[0_24px_70px_rgb(0_0_0/.34)] backdrop-blur lg:block"
-                      animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
-                      transition={{ duration: 0.22 }}
-                    >
-                      {t(ingredient.note, locale)}
-                    </motion.span>
-                  </button>
-                );
-              })}
-            </div>
+                      {details.benefits.map((benefit) => (
+                        <li className="flex items-center gap-2" key={benefit}>
+                          <span className="size-1.5 rounded-full bg-[#d6b75b]" />
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,#d6b75b,transparent)] opacity-0 transition-opacity duration-500 group-hover:opacity-80"
+                  />
+                </motion.article>
+              );
+            })}
           </div>
         </div>
+      </Container>
+    </section>
+  );
+}
+
+export function WhyItWorksSection({ copy }: { copy: Copy }) {
+  return (
+    <section
+      className="relative overflow-hidden bg-[#0d0b08] py-20 text-[#f6f0e4] sm:py-28"
+      data-mobile-cta-section="mechanism"
+      id="why-it-works"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,rgb(214_183_91/.12),transparent_28%),linear-gradient(180deg,#0d0b08,#080706)]"
+      />
+      <Container className="relative grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+        <FadeUp>
+          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
+            {copy.whyEyebrow}
+          </p>
+          <h2 className="mt-4 max-w-2xl font-serif text-[clamp(2.7rem,7vw,6.4rem)] font-light leading-[0.88]">
+            {copy.whyTitle}
+          </h2>
+          <p className="mt-6 max-w-xl text-sm leading-8 text-[#f6f0e4]/66">{copy.whyBody}</p>
+        </FadeUp>
+
+        <FadeUp className="relative">
+          <div className="relative overflow-hidden rounded-md border border-[#d6b75b]/18 bg-white/[0.035] p-5 sm:p-8">
+            <div className="absolute inset-x-8 top-1/2 hidden h-px bg-[linear-gradient(90deg,transparent,#d6b75b,transparent)] lg:block" />
+            <div className="grid gap-4 lg:grid-cols-4">
+              {copy.whySteps.map(([title, body], index) => (
+                <article
+                  className="group relative rounded-md border border-[#d6b75b]/14 bg-[#080706]/72 p-5 transition-transform duration-300 hover:-translate-y-1"
+                  key={title}
+                >
+                  <span className="relative z-10 grid size-12 place-items-center rounded-full border border-[#d6b75b]/36 bg-[#0d0b08] font-mono text-xs text-[#d6b75b] shadow-[0_0_34px_rgb(214_183_91/.12)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-8 font-serif text-3xl leading-none text-[#f6f0e4]">{title}</h3>
+                  <p className="mt-4 text-sm leading-7 text-[#f6f0e4]/62">{body}</p>
+                  <div
+                    aria-hidden="true"
+                    className="mt-6 h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-45"
+                  />
+                </article>
+              ))}
+            </div>
+          </div>
+        </FadeUp>
       </Container>
     </section>
   );
@@ -1022,6 +1015,7 @@ export function PremiumStorefrontPage({ content, locale }: PremiumStorefrontPage
       <OriginSection copy={copy} />
       <FounderStorySection content={content} locale={contentLocale} />
       <IngredientCarousel content={content} copy={copy} locale={contentLocale} />
+      <WhyItWorksSection copy={copy} />
       <RitualSection copy={copy} />
       <LifestyleGallery copy={copy} />
       <DeliveryShippingSection copy={copy} whatsappUrl={whatsappUrl} />

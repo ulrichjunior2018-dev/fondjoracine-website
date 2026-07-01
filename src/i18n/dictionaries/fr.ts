@@ -24,8 +24,8 @@ export const fr = {
   footerPolicy: "Politiques",
   formula: "Formule",
   formulaBody:
-    "Des huiles botaniques choisies pour nourrir, assouplir et proteger la fibre sans promesse medicale.",
-  formulaTitle: "Une carte d'ingredients composee comme des notes de parfum.",
+    "Six huiles soigneusement choisies, chacune avec un role clair pour le cuir chevelu, la fibre, l'hydratation, la douceur et la brillance.",
+  formulaTitle: "Six huiles. Un rituel precis.",
   gallery: "Galerie",
   heroEyebrow: "FONDJO RACINE · Huile rituel capillaire",
   heroStory:
@@ -66,4 +66,14 @@ export const fr = {
   ritualTitle: "Une routine du soir avec une finition or lente.",
   scroll: "Defiler",
   whatsapp: "Assistance WhatsApp",
+  whyBody:
+    "SÈVE associe six huiles botaniques dans un seul rituel : confort du cuir chevelu, nutrition de la fibre, puis finition douce jusqu'aux pointes.",
+  whyEyebrow: "Pourquoi ca fonctionne",
+  whySteps: [
+    ["Racine", "Ricin et karite soutiennent une base qui parait plus forte."],
+    ["Cuir chevelu", "Le jojoba aide a equilibrer la sensation des huiles du cuir chevelu."],
+    ["Fibre capillaire", "Coco et avocat conditionnent la fibre et ameliorent la douceur."],
+    ["Pointes", "L'olive aide a sceller l'hydratation la ou la secheresse apparait d'abord."],
+  ],
+  whyTitle: "Une formule pensee des racines aux pointes.",
 } as const;

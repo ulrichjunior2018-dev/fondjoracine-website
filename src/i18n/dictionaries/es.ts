@@ -27,8 +27,8 @@ export const es = {
   footerPolicy: "Politicas",
   formula: "Formula",
   formulaBody:
-    "Aceites botanicos elegidos para nutrir, suavizar y proteger la fibra capilar sin afirmaciones medicas.",
-  formulaTitle: "Un mapa de ingredientes compuesto como notas de fragancia.",
+    "Seis aceites cuidadosamente seleccionados, cada uno con un rol claro para el cuero cabelludo, la fibra, la hidratacion, la suavidad y el brillo.",
+  formulaTitle: "Seis aceites. Un ritual preciso.",
   gallery: "Galeria",
   heroEyebrow: "FONDJO RACINE · Aceite ritual capilar",
   heroStory:
@@ -69,4 +69,14 @@ export const es = {
   ritualTitle: "Una rutina nocturna con un acabado dorado lento.",
   scroll: "Desplazar",
   whatsapp: "Asistencia por WhatsApp",
+  whyBody:
+    "SÈVE une seis aceites botanicos en un solo ritual: confort del cuero cabelludo, nutricion de la fibra y un acabado suave hasta las puntas.",
+  whyEyebrow: "Por que funciona",
+  whySteps: [
+    ["Raiz", "Ricino y karite apoyan una base con sensacion mas fuerte."],
+    ["Cuero cabelludo", "La jojoba ayuda a equilibrar la sensacion de aceites sin peso."],
+    ["Fibra capilar", "Coco y aguacate acondicionan la fibra y mejoran la suavidad."],
+    ["Puntas", "El aceite de oliva ayuda a sellar la humedad donde aparece primero la sequedad."],
+  ],
+  whyTitle: "Una formula creada de la raiz a las puntas.",
 } as const;
