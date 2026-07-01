@@ -41,7 +41,7 @@ export function HeroSection({ content, locale }: HeroSectionProps) {
           placeholder="blur"
           priority
           sizes="100vw"
-          src="/images/hero-volcanic-bottle.jpg"
+          src="/images/volcanic-bottle.png"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#0D0D0D_0%,rgb(13_13_13/.88)_36%,rgb(27_94_32/.42)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(0deg,#0D0D0D,transparent)]" />

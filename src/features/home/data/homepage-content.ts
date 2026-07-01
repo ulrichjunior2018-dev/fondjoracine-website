@@ -5,8 +5,8 @@ export const hero = {
     "FONDJO pairs clinical scalp science with sensorial botanical rituals for healthier-looking density, shine, and softness.",
   primaryCta: "Explore the ritual",
   secondaryCta: "Discover the science",
-  image: "/images/hero-volcanic-bottle.jpg",
-  videoPoster: "/images/hero-volcanic-bottle.jpg",
+  image: "/images/volcanic-bottle.png",
+  videoPoster: "/images/volcanic-bottle.png",
   videoSrc: "",
 } as const;
 
@@ -15,19 +15,19 @@ export const featuredProducts = [
     name: "Root Renewal Scalp Serum",
     description: "A concentrated leave-in treatment for balanced roots and glossy lengths.",
     price: "$88",
-    image: "/images/front-label.jpg",
+    image: "/images/front-label.png",
   },
   {
     name: "Botanical Density Oil",
     description: "A featherweight oil blend for pre-wash massage and high-shine finishing.",
     price: "$72",
-    image: "/images/studio-reflection.jpg",
+    image: "/images/studio-reflection.png",
   },
   {
     name: "Silk Repair Hair Masque",
     description: "A weekly cream masque that cushions strands with slip, softness, and resilience.",
     price: "$64",
-    image: "/images/night-routine.jpg",
+    image: "/images/night-routine.png",
   },
 ] as const;
 
@@ -53,12 +53,12 @@ export const ingredients = [
 export const transformations = [
   {
     label: "Week 1",
-    image: "/images/market-lifestyle.jpg",
+    image: "/images/market-lifestyle.png",
     caption: "A clarified scalp ritual focused on comfort and balance.",
   },
   {
     label: "Week 8",
-    image: "/images/barbershop.jpg",
+    image: "/images/barbershop.png",
     caption: "Hair appears softer, glossier, and more light-reflective.",
   },
 ] as const;
@@ -85,10 +85,10 @@ export const testimonials = [
 ] as const;
 
 export const instagramGallery = [
-  "/images/market-lifestyle.jpg",
-  "/images/barbershop.jpg",
-  "/images/night-routine.jpg",
-  "/images/packing-orders.jpg",
+  "/images/market-lifestyle.png",
+  "/images/barbershop.png",
+  "/images/night-routine.png",
+  "/images/packing-orders.png",
 ] as const;
 
 export const trustBadges = [

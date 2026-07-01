@@ -12,6 +12,8 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().optional().or(z.literal("")),
   STRIPE_HAIR_ELIXIR_PRICE_ID: z.string().optional().or(z.literal("")),
   STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional().or(z.literal("")),
   MTN_MOMO_NUMBER: z.string().optional().or(z.literal("")),
   ORANGE_MONEY_NUMBER: z.string().optional().or(z.literal("")),

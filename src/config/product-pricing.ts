@@ -1,5 +1,6 @@
 export const fondjoProductPricing = {
   preorderUsd: 16,
+  usdCents: 1600,
   preorderXaf: 8500,
   originalXaf: 9500,
   preorderDisplay: "$16 USD / 8,500 XAF",

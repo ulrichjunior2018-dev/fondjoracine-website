@@ -1,23 +1,22 @@
 # FONDJO RACINE Production Image Slots
 
 These filenames are the canonical website image slots. The files currently inspected in this
-folder are branded title-card placeholders that say "UPLOAD FINAL IMAGE HERE"; replace each file
-with the final exported photo or logo using the same filename.
+folder are the production campaign image assets used by the FONDJO RACINE website.
 
-- `hero-volcanic-bottle.jpg` - hero image and volcanic stone bottle slot
-- `studio-reflection.jpg` - clean reflective studio product slot
-- `mount-cameroon-origin.jpg` - Mount Cameroon / Buea origin slot
-- `market-lifestyle.jpg` - market lifestyle slot
-- `night-routine.jpg` - nighttime self-care candle slot
-- `barbershop.jpg` - barbershop grooming slot
-- `packing-orders.jpg` - packaging / order fulfillment slot
-- `front-label.jpg` - bottle front label slot
-- `back-label.jpg` - bottle back label slot
-- `facebook-cover.jpg` - wide social/about banner slot
-- `profile-logo.jpg` - navigation and social profile logo slot
+- `volcanic-bottle.png` - hero image and volcanic stone bottle slot
+- `studio-reflection.png` - clean reflective studio product slot
+- `hero-origin.png` - Mount Cameroon / Buea origin slot
+- `market-lifestyle.png` - market lifestyle slot
+- `night-routine.png` - nighttime self-care candle slot
+- `barbershop.png` - barbershop grooming slot
+- `packing-orders.png` - packaging / order fulfillment slot
+- `front-label.png` - bottle front label slot
+- `back-label.png` - bottle back label slot
+- `facebook-cover.png` - wide social/about banner slot
+- `profile-logo.png` - navigation and social profile logo slot
 
-Keep exports compressed for web: JPG, sRGB, 1600-2400px wide for campaign images, quality 75-85.
-Next.js serves optimized AVIF/WebP variants from these originals.
+Keep future replacements lowercase and web-safe. Next.js serves optimized AVIF/WebP variants from
+these originals.
 
 Ingredient timeline nodes use local FONDJO campaign slots instead of stock photography. For the
 final macro-photo version, replace the mapped files in

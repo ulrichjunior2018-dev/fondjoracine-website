@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { CheckoutTrustBar } from "@/features/elixir/components/CheckoutTrustBar";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -69,13 +70,13 @@ const campaignImages = {
   barbershop: siteImages.barbershop,
   facebookCover: siteImages.facebookCover,
   frontLabel: siteImages.frontLabel,
-  hero: siteImages.hero,
+  hero: siteImages.volcanicBottle,
   market: siteImages.marketLifestyle,
   night: siteImages.nightRoutine,
-  origin: siteImages.originMountCameroon,
+  origin: siteImages.heroOrigin,
   packing: siteImages.packingOrders,
   profileLogo: siteImages.profileLogo,
-  reflection: siteImages.studioBottle,
+  reflection: siteImages.studioReflection,
 } as const;
 
 const ingredientTimelineDetails = [
@@ -354,6 +355,7 @@ export function CinematicHero({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: 
             <MessageCircle className="size-4" aria-hidden="true" />
             {copy.whatsapp}
           </a>
+          <CheckoutTrustBar className="mt-3" compact whatsappUrl={whatsappUrl} />
         </motion.div>
 
         <motion.a
@@ -1042,6 +1044,10 @@ export function PreorderCheckout({
         <div className="mt-10 rounded-md border border-[#7b622d]/18 bg-[#fffaf0] p-3 shadow-[0_22px_90px_rgb(20_17_11/.12)] sm:p-5">
           <OrderFlow content={content} locale={locale} />
         </div>
+        <CheckoutTrustBar
+          className="mt-5 border-[#7b622d]/16 bg-[#14110b] shadow-[0_18px_70px_rgb(20_17_11/.14)]"
+          whatsappUrl={getWhatsAppUrl(content, locale)}
+        />
       </Container>
     </section>
   );

@@ -27,6 +27,8 @@
     "@radix-ui/react-toast": "^1.2.17",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
+    "@stripe/react-stripe-js": "^6.6.0",
+    "@stripe/stripe-js": "^9.8.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",

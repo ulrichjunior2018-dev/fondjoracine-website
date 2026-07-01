@@ -1,15 +1,15 @@
 export const siteImages = {
-  backLabel: "/images/back-label.jpg",
-  barbershop: "/images/barbershop.jpg",
-  facebookCover: "/images/facebook-cover.jpg",
-  frontLabel: "/images/front-label.jpg",
-  hero: "/images/hero-volcanic-bottle.jpg",
-  marketLifestyle: "/images/market-lifestyle.jpg",
-  nightRoutine: "/images/night-routine.jpg",
-  originMountCameroon: "/images/mount-cameroon-origin.jpg",
-  packingOrders: "/images/packing-orders.jpg",
-  profileLogo: "/images/profile-logo.jpg",
-  studioBottle: "/images/studio-reflection.jpg",
+  heroOrigin: "/images/hero-origin.png",
+  studioReflection: "/images/studio-reflection.png",
+  volcanicBottle: "/images/volcanic-bottle.png",
+  marketLifestyle: "/images/market-lifestyle.png",
+  nightRoutine: "/images/night-routine.png",
+  barbershop: "/images/barbershop.png",
+  packingOrders: "/images/packing-orders.png",
+  frontLabel: "/images/front-label.png",
+  backLabel: "/images/back-label.png",
+  facebookCover: "/images/facebook-cover.png",
+  profileLogo: "/images/profile-logo.png",
 } as const;
 
 export type SiteImageKey = keyof typeof siteImages;

@@ -172,7 +172,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Cheveux textures brillants apres routine",
           },
           height: 1200,
-          src: "/images/barbershop.jpg",
+          src: "/images/barbershop.png",
           width: 900,
         },
         before: {
@@ -181,7 +181,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Routine capillaire texturee avant soin",
           },
           height: 1200,
-          src: "/images/market-lifestyle.jpg",
+          src: "/images/market-lifestyle.png",
           width: 900,
         },
         caption: {
@@ -197,7 +197,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Cheveux finis avec pointes lumineuses",
           },
           height: 1200,
-          src: "/images/night-routine.jpg",
+          src: "/images/night-routine.png",
           width: 900,
         },
         before: {
@@ -206,7 +206,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Detail coiffage avant routine huile",
           },
           height: 1200,
-          src: "/images/mount-cameroon-origin.jpg",
+          src: "/images/hero-origin.png",
           width: 900,
         },
         caption: {
@@ -293,7 +293,7 @@ export const defaultElixirContent: ElixirContent = {
         fr: "Portrait fondateur ambiance botanique editoriale",
       },
       height: 1200,
-      src: "/images/mount-cameroon-origin.jpg",
+      src: "/images/hero-origin.png",
       width: 900,
     },
     intro: {
@@ -419,7 +419,7 @@ export const defaultElixirContent: ElixirContent = {
         fr: "Etiquette avant du flacon FONDJO RACINE",
       },
       height: 1600,
-      src: "/images/front-label.jpg",
+      src: "/images/front-label.png",
       width: 1200,
     },
     {
@@ -428,7 +428,7 @@ export const defaultElixirContent: ElixirContent = {
         fr: "Etiquette arriere du flacon FONDJO RACINE",
       },
       height: 1200,
-      src: "/images/back-label.jpg",
+      src: "/images/back-label.png",
       width: 1200,
     },
   ],
