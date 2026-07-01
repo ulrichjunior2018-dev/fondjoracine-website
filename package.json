@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "diagnose": "node scripts/diagnose.mjs",
+    "prebuild": "npm run diagnose",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
