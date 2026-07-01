@@ -1,24 +1,26 @@
 # FONDJO RACINE Production Image Slots
 
-These filenames are the canonical website image slots. The files currently inspected in this
-folder are the production campaign image assets used by the FONDJO RACINE website.
+These filenames are the canonical website image slots. Keep replacements lowercase,
+web-safe, and inside `public/images`.
 
-- `volcanic-bottle.png` - hero image and volcanic stone bottle slot
-- `studio-reflection.png` - clean reflective studio product slot
-- `hero-origin.png` - Mount Cameroon / Buea origin slot
-- `market-lifestyle.png` - market lifestyle slot
-- `night-routine.png` - nighttime self-care candle slot
-- `barbershop.png` - barbershop grooming slot
-- `packing-orders.png` - packaging / order fulfillment slot
-- `front-label.png` - bottle front label slot
-- `back-label.png` - bottle back label slot
-- `facebook-cover.png` - wide social/about banner slot
-- `profile-logo.png` - navigation and social profile logo slot
+- `volcanic-bottle.png` - hero bottle on volcanic stone
+- `hero-origin.png` - Mount Cameroon / Buea origin bottle
+- `studio-reflection.png` - reflective black studio product shot
+- `market-lifestyle.png` - Buea market lifestyle shot
+- `night-routine.png` - nighttime self-care candle shot
+- `barbershop.png` - barbershop grooming campaign shot
+- `packing-orders.png` - current referral/order campaign fallback
+- `front-label.png` - current front label product detail fallback
+- `back-label.png` - current back label product detail fallback
+- `facebook-cover.png` - current social/about banner fallback
+- `profile-logo.png` - brand profile logo
 
-Keep future replacements lowercase and web-safe. Next.js serves optimized AVIF/WebP variants from
-these originals.
+Additional clean assets currently available:
 
-Ingredient timeline nodes use local FONDJO campaign slots instead of stock photography. For the
-final macro-photo version, replace the mapped files in
-`src/features/elixir/components/premium-storefront-page.tsx` with actual FONDJO RACINE ingredient
-macro exports under `/public/images`.
+- `hair-texture-lifestyle.png`
+- `homepage-reference-screenshot.png`
+- `mount-cameroon-river-bottle.png`
+- `postpartum-shedding.png`
+- `river-bottle-origin.png`
+
+Next.js serves optimized image variants from these originals at runtime.

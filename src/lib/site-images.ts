@@ -13,6 +13,11 @@ export const siteImages = {
   heroOrigin: "/images/hero-origin.png",
   studioReflection: "/images/studio-reflection.png",
   volcanicBottle: "/images/volcanic-bottle.png",
+  hairTextureLifestyle: "/images/hair-texture-lifestyle.png",
+  homepageReferenceScreenshot: "/images/homepage-reference-screenshot.png",
+  mountCameroonRiverBottle: "/images/mount-cameroon-river-bottle.png",
+  postpartumShedding: "/images/postpartum-shedding.png",
+  riverBottleOrigin: "/images/river-bottle-origin.png",
 } as const;
 
 export type SiteImageKey = keyof typeof siteImages;
