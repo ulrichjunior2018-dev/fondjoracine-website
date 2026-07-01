@@ -1,17 +1,26 @@
 "use client";
 
-import { ArrowRight, Globe2, MessageCircle, Sparkles, Truck } from "lucide-react";
+import {
+  ArrowRight,
+  CreditCard,
+  Globe2,
+  Languages,
+  MessageCircle,
+  Sparkles,
+  Truck,
+} from "lucide-react";
 import Image from "next/image";
 
-import { HeroVideoBackground } from "@/components/HeroVideoBackground";
+import { HairTexturePanels } from "@/components/HairTexturePanels";
 import { siteImages } from "@/lib/site-images";
 
 const trustItems = [
   "Founded & Made in Buea, Cameroon",
   "National Delivery",
   "International Shipping",
-  "All Hair Types | Unisex",
-  "Free Hair Consultation",
+  "Secure Payments",
+  "All Hair Types",
+  "EN | FR | ES",
 ] as const;
 
 type CinematicHeroProps = {
@@ -25,10 +34,13 @@ function getTrustIcon(index: number) {
       return Truck;
     case 2:
       return Globe2;
+    case 3:
+      return CreditCard;
+    case 5:
+      return Languages;
     case 4:
       return MessageCircle;
     case 0:
-    case 3:
     default:
       return Sparkles;
   }
@@ -45,34 +57,36 @@ export function CinematicHero({
         data-mobile-cta-section="hero"
         id="hero"
       >
-        <HeroVideoBackground
-          fallbackAlt="Mount Cameroon origin landscape for FONDJO RACINE in Buea"
-          fallbackSrc={siteImages.originMountCameroon}
-          posterSrc={siteImages.originMountCameroon}
-          textureAlt="FONDJO RACINE lifestyle hair texture campaign"
-          textureSrc={siteImages.barbershop}
+        <Image
+          alt="FONDJO RACINE botanical oil macro background"
+          className="object-cover opacity-44"
+          fill
+          priority
+          sizes="100vw"
+          src={siteImages.backLabel}
         />
-
-        <div className="absolute inset-0 bg-[#0D0D0D]/35" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_42%,rgb(212_175_55/.22),transparent_34%),linear-gradient(105deg,#0D0D0D_0%,rgb(27_94_32/.82)_32%,rgb(13_13_13/.42)_61%,#0D0D0D_100%)]" />
+        <div className="absolute inset-0 bg-[#0D0D0D]/42" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_61%_52%,rgb(212_175_55/.18),transparent_28%),radial-gradient(circle_at_84%_38%,rgb(27_94_32/.3),transparent_36%),linear-gradient(102deg,#0D0D0D_0%,rgb(13_13_13/.92)_36%,rgb(27_94_32/.58)_68%,#0D0D0D_100%)]" />
         <div
           aria-hidden="true"
           className="absolute left-5 top-24 h-px w-28 bg-[linear-gradient(90deg,transparent,#D4AF37,transparent)] opacity-90 md:left-[7vw] md:top-28 md:w-48"
         />
+        <HairTexturePanels />
 
-        <div className="relative z-10 mx-auto grid min-h-[92svh] w-full max-w-[1440px] items-center gap-8 px-5 pb-12 pt-28 text-center md:min-h-screen md:grid-cols-[0.96fr_0.9fr] md:px-10 md:py-24 md:text-left xl:px-20">
-          <div className="mx-auto max-w-[42rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.36em] text-[#D4AF37]">
+        <div className="relative z-20 mx-auto grid min-h-[92svh] w-full max-w-[1440px] items-center gap-7 px-5 pb-10 pt-28 text-center md:min-h-screen md:grid-cols-[minmax(0,0.94fr)_minmax(18rem,0.72fr)_minmax(12rem,0.28fr)] md:px-10 md:py-24 md:text-left xl:px-20">
+          <div className="mx-auto max-w-[43rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
+            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D4AF37]">
               FONDJO RACINE · SÈVE HAIR TREATMENT OIL
             </p>
-            <h1 className="mt-6 font-serif text-[clamp(3.15rem,14vw,5.85rem)] font-light leading-[0.9] tracking-normal text-[#F7F4EB] md:text-[clamp(4.5rem,7vw,7.5rem)]">
+            <h1 className="mt-6 font-serif text-[clamp(3.1rem,13vw,5.6rem)] font-light leading-[0.91] tracking-normal text-[#F7F4EB] md:text-[clamp(4rem,6.2vw,7rem)]">
               One Universal Oil.
               <span className="block text-[#D4AF37]">Infinite Textures.</span>
               <span className="block">Born in Buea.</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-[39rem] text-base leading-8 text-[#F7F4EB]/78 md:mx-0 md:text-lg">
-              SÈVE is a botanical hair treatment oil crafted in Buea, Cameroon to nourish the scalp,
-              strengthen roots, and restore softness across every hair type.
+            <p className="mx-auto mt-6 max-w-[40rem] text-base leading-8 text-[#F7F4EB]/78 md:mx-0 md:text-lg">
+              Crafted in Buea, Cameroon using carefully selected botanical oils to nourish the
+              scalp, strengthen roots, and care for every hair texture. Trusted locally. Designed
+              for the world.
             </p>
 
             <div className="mt-9 grid gap-3 sm:inline-grid sm:grid-cols-2 md:mt-10">
@@ -87,23 +101,27 @@ export function CinematicHero({
                 className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F7F4EB]/24 bg-[#0D0D0D]/32 px-7 text-sm font-semibold text-[#F7F4EB] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
                 href={consultationHref}
               >
-                Start Hair Consultation
+                Free Hair Consultation
               </a>
             </div>
           </div>
 
-          <div className="relative mx-auto aspect-[4/5] w-[min(74vw,18.5rem)] animate-[fondjoFadeUp_1s_ease-out_.18s_both] md:w-full md:max-w-[31rem]">
-            <div className="absolute inset-[12%] rounded-full bg-[#D4AF37]/28 blur-3xl motion-safe:animate-[fondjoGlow_5.5s_ease-in-out_infinite]" />
-            <div className="absolute inset-[5%] rounded-full bg-[#1B5E20]/28 blur-2xl" />
+          <div className="relative mx-auto aspect-[4/5] w-[min(70vw,18.5rem)] animate-[fondjoFadeUp_1s_ease-out_.18s_both] md:mx-0 md:w-full md:max-w-[30rem]">
+            <div className="absolute inset-[11%] rounded-full bg-[#D4AF37]/24 blur-3xl motion-safe:animate-[fondjoGlow_5.5s_ease-in-out_infinite]" />
+            <div className="absolute inset-x-[15%] bottom-[5%] h-[16%] rounded-full bg-[#D4AF37]/16 blur-2xl" />
+            <div className="absolute inset-[3%] rounded-full bg-[#1B5E20]/22 blur-2xl" />
             <Image
               alt="FONDJO RACINE SÈVE botanical hair treatment oil bottle"
-              className="object-contain drop-shadow-[0_34px_70px_rgb(0_0_0/.55)] md:motion-safe:animate-[fondjoFloat_7s_ease-in-out_infinite]"
+              className="object-contain drop-shadow-[0_34px_70px_rgb(0_0_0/.6)] md:motion-safe:animate-[fondjoFloat_7s_ease-in-out_infinite]"
               fill
               priority
-              sizes="(min-width: 1024px) 34vw, 74vw"
-              src={siteImages.hero}
+              sizes="(min-width: 1024px) 28vw, 70vw"
+              src={siteImages.studioBottle}
             />
+            <div className="pointer-events-none absolute inset-x-[22%] bottom-[1%] h-px bg-[linear-gradient(90deg,transparent,#D4AF37,transparent)] opacity-80" />
           </div>
+
+          <div aria-hidden="true" className="hidden md:block" />
         </div>
       </section>
 
@@ -111,7 +129,7 @@ export function CinematicHero({
         aria-label="FONDJO RACINE trust signals"
         className="border-y border-[#D4AF37]/16 bg-[#0D0D0D] px-4 py-4 text-[#F7F4EB]"
       >
-        <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-2 lg:grid-cols-6">
           {trustItems.map((item, index) => {
             const Icon = getTrustIcon(index);
 

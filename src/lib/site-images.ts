@@ -14,7 +14,7 @@ export const siteImages = {
   studioReflection: "/images/studio-reflection.png",
   volcanicBottle: "/images/volcanic-bottle.png",
   hairTextureLifestyle: "/images/hair-texture-lifestyle.png",
-  homepageReferenceScreenshot: "/images/homepage-reference-screenshot.png",
+  globalHeroReference: "/images/global-hero-reference.png",
   mountCameroonRiverBottle: "/images/mount-cameroon-river-bottle.png",
   postpartumShedding: "/images/postpartum-shedding.png",
   riverBottleOrigin: "/images/river-bottle-origin.png",

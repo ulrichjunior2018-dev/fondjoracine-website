@@ -17,8 +17,8 @@ web-safe, and inside `public/images`.
 
 Additional clean assets currently available:
 
+- `global-hero-reference.png`
 - `hair-texture-lifestyle.png`
-- `homepage-reference-screenshot.png`
 - `mount-cameroon-river-bottle.png`
 - `postpartum-shedding.png`
 - `river-bottle-origin.png`
