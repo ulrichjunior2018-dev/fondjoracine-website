@@ -12,7 +12,7 @@ export function getStripeClient() {
 
   stripe ??= new Stripe(env.STRIPE_SECRET_KEY, {
     appInfo: {
-      name: "Lumiroot",
+      name: "FONDJO RACINE",
     },
   });
 

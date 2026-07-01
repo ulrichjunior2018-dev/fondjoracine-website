@@ -261,7 +261,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <div className="rounded-md bg-[#f4eddf] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {locale === "fr" ? "Prix preorder" : "Preorder price"}
+                {locale === "fr" ? "Prix" : "Price"}
               </p>
               <p className="mt-2 font-serif text-5xl font-light leading-none text-[#14110b]">
                 {usdPrice}
@@ -274,10 +274,12 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             </div>
 
             <div className="grid gap-3 text-sm leading-6 text-[#14110b]/70 sm:grid-cols-3">
-              <p className="rounded-md border border-[#7b622d]/12 p-3">Batch #001</p>
+              <p className="rounded-md border border-[#7b622d]/12 p-3">Botanical ritual</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">100ml</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">
-                {locale === "fr" ? "Expedition 6 juillet" : "Ships July 6"}
+                {locale === "fr"
+                  ? "Livraison nationale et internationale"
+                  : "National and international shipping"}
               </p>
             </div>
 

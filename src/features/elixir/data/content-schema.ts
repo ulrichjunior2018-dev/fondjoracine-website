@@ -50,6 +50,15 @@ export const elixirContentSchema = z
             after: imageSchema,
             before: imageSchema,
             caption: localizedTextSchema,
+            customer: z
+              .object({
+                city: z.string().min(1),
+                name: z.string().min(1),
+                week: z.number().int().nonnegative(),
+              })
+              .strict()
+              .optional(),
+            isPlaceholder: z.boolean().optional(),
             label: localizedTextSchema,
           })
           .strict(),

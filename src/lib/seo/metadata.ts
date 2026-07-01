@@ -17,12 +17,22 @@ export const defaultMetadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     locale: siteConfig.locale,
+    // facebook-cover.png: 1640×624 — close to recommended OG 1.91:1 ratio
+    images: [
+      {
+        url: `${siteConfig.url}/images/facebook-cover.png`,
+        width: 1640,
+        height: 624,
+        alt: "FONDJO RACINE — Sève 100ml botanical hair oil, founded and made in Buea, Cameroon",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     site: siteConfig.twitterHandle,
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [`${siteConfig.url}/images/studio-reflection.png`],
   },
   robots: {
     index: true,

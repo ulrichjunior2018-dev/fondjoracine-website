@@ -1,139 +1,189 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, MessageCircle } from "lucide-react";
-import Image from "next/image";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
-import { Container } from "@/components/ui/container";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
-import { t } from "@/features/elixir/data/content";
+
+// ─── Production note ───────────────────────────────────────────────────────────
+//
+// FLAGGED FOR CLIENT — BOTH VIDEO PANELS NEED AN ORIGINAL SHOOT IN BUEA.
+// Do NOT use stock footage. Poster images below are temporary stand-ins only.
+//
+//   Left panel : Macro botanical sourcing — hands harvesting botanicals,
+//                distillation process, plant close-ups in Buea / SW Region.
+//   Right panel: Fast-cut montage — Sève applied across 4 hair patterns:
+//                fine/straight, waves, curly/thick, coiled 4C.
+//
+// Recommended specs: 1920×1080 H.264 MP4 + WebM fallback, ≤ 8 MB each.
+// Drop files at /public/videos/ and uncomment the src props below.
+
+// ─── Video panel ───────────────────────────────────────────────────────────────
+
+type VideoPanelProps = {
+  poster: string;
+  side: "left" | "right";
+  // FIXME(client): uncomment and point to real footage once available
+  // src: string;
+};
+
+function VideoPanel({ poster, side }: VideoPanelProps) {
+  // Static poster fills the space until video files exist.
+  // Replace <img> with <video autoPlay muted loop playsInline poster={poster}> when ready.
+  return (
+    <div className="relative h-full overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt={
+          side === "left"
+            ? "Botanical sourcing in Buea, Cameroon (video placeholder)"
+            : "Sève oil applied across hair textures (video placeholder)"
+        }
+        className="absolute inset-0 h-full w-full object-cover"
+        src={poster}
+      />
+
+      {/* Gradient pulls edges toward void for text legibility */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            side === "left"
+              ? "linear-gradient(to right, var(--fr-void) 0%, transparent 50%)"
+              : "linear-gradient(to left,  var(--fr-void) 0%, transparent 50%)",
+        }}
+      />
+    </div>
+  );
+}
+
+// ─── Hero section ──────────────────────────────────────────────────────────────
 
 type HeroSectionProps = {
   content: ElixirContent;
   locale: Locale;
 };
 
-const blurDataUrl =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PC9zdmc+";
-
-export function HeroSection({ content, locale }: HeroSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const bottleY = useTransform(scrollYProgress, [0, 1], ["0%", "9%"]);
-  const bottleRotate = useTransform(scrollYProgress, [0, 1], [-2, 4]);
+export function HeroSection(_props: HeroSectionProps) {
+  void _props;
 
   return (
     <section
-      className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-[#0D0D0D] text-[#F7F4EB]"
+      className="relative flex min-h-svh flex-col overflow-hidden"
       id="hero"
-      ref={containerRef}
+      style={{ backgroundColor: "var(--fr-void)" }}
     >
-      <div className="absolute inset-0">
-        <Image
-          alt="Mount Cameroon inspired botanical landscape in Buea"
-          blurDataURL={blurDataUrl}
-          className="object-cover opacity-42"
-          fill
-          placeholder="blur"
-          priority
-          sizes="100vw"
-          src="/images/volcanic-bottle.png"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#0D0D0D_0%,rgb(13_13_13/.88)_36%,rgb(27_94_32/.42)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(0deg,#0D0D0D,transparent)]" />
+      {/* ── Split-screen video (50 / 50 desktop, stacked mobile) ──────── */}
+      <div aria-hidden="true" className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2">
+        <VideoPanel poster="/images/hero-origin.png" side="left" />
+        <VideoPanel poster="/images/barbershop.png" side="right" />
       </div>
 
-      <Container
-        className="relative grid min-h-[calc(100svh-5rem)] gap-10 pb-24 pt-14 sm:pt-18 lg:grid-cols-[0.9fr_1.1fr] lg:items-center"
-        size="2xl"
-      >
+      {/* 1 px gold vertical divider — desktop only */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0 left-1/2 z-10 hidden w-px sm:block"
+        style={{ backgroundColor: "var(--fr-gold)", opacity: 0.65 }}
+      />
+
+      {/* Unified dark overlay for text legibility */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-10"
+        style={{ backgroundColor: "var(--fr-void)", opacity: 0.52 }}
+      />
+
+      {/* ── Centred overlay content ───────────────────────────────────── */}
+      <div className="relative z-20 flex flex-1 flex-col items-center justify-center px-5 pb-24 pt-28 text-center">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-3xl"
-          initial={{ opacity: 0, y: 18 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-[56rem]"
+          initial={{ opacity: 0, y: 24 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#D4AF37]">
-            {t(content.hero.eyebrow, locale)}
+          {/* Eyebrow — JetBrains Mono */}
+          <p
+            className="mb-7 font-jetbrains text-[0.62rem] font-medium uppercase tracking-[0.38em]"
+            style={{ color: "var(--fr-gold)" }}
+          >
+            FONDJO RACINE · SÈVE · 100&thinsp;ml
           </p>
-          <h1 className="mt-6 font-serif text-[3.2rem] font-light leading-[0.92] text-[#F7F4EB] sm:text-[5.8rem] lg:text-[7rem]">
-            FROM THE SOIL TO THE BOTTLE
+
+          {/* H1 — Fraunces display, italic on "Buea" */}
+          <h1
+            className="font-fraunces text-[2.6rem] font-light leading-[1.04] sm:text-[4rem] lg:text-[5.5rem]"
+            style={{ color: "var(--fr-ivory)" }}
+          >
+            One universal oil. <span className="block sm:inline">Infinite textures.</span>{" "}
+            <span className="block sm:inline">
+              Born in{" "}
+              <em
+                className="font-fraunces not-italic"
+                style={{ color: "var(--fr-gold)", fontStyle: "italic" }}
+              >
+                Buea.
+              </em>
+            </span>
           </h1>
-          <p className="mt-7 max-w-xl text-base leading-8 text-[#F7F4EB]/76">
-            {t(content.description, locale)}
+
+          {/* H2 subheadline — Inter body, ivory at 80% opacity, max 42ch */}
+          <p
+            className="mx-auto mt-7 max-w-[42ch] text-base leading-[1.85]"
+            style={{ color: "color-mix(in srgb, var(--fr-ivory) 80%, transparent)" }}
+          >
+            Sève is a single-source, raw botanical treatment engineered to repair, hydrate, and
+            protect every hair pattern — cultivated in Cameroon, delivered worldwide.
           </p>
-          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
-            <a
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#D4AF37] px-6 text-sm font-semibold text-[#0D0D0D] shadow-[0_18px_44px_rgb(212_175_55/.26)]"
+
+          {/* CTAs */}
+          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <motion.a
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 rounded-sm px-7 py-3.5 text-sm font-semibold tracking-wide transition-opacity hover:opacity-88"
               href="#order"
+              initial={{ opacity: 0, y: 10 }}
+              style={{ backgroundColor: "var(--fr-gold)", color: "var(--fr-void)" }}
+              transition={{ delay: 0.3, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             >
-              {t(content.hero.primaryCta, locale)}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-[#D4AF37]/45 bg-[#F7F4EB]/8 px-6 text-sm font-semibold text-[#F7F4EB] backdrop-blur"
+              Discover SÈVE
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </motion.a>
+
+            <motion.a
+              animate={{ opacity: 1 }}
+              className="text-sm font-medium underline underline-offset-4 hover:no-underline"
               href="#diagnosis"
+              initial={{ opacity: 0 }}
+              style={{ color: "color-mix(in srgb, var(--fr-ivory) 65%, transparent)" }}
+              transition={{ delay: 0.55, duration: 0.5 }}
             >
-              {t(content.hero.secondaryCta, locale)}
-              <MessageCircle className="h-4 w-4" aria-hidden="true" />
-            </a>
+              Start free hair diagnosis →
+            </motion.a>
           </div>
-          <dl className="mt-9 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-            {content.highlights.map((item) => (
-              <div className="border-l border-[#D4AF37]/40 pl-3" key={t(item.label, locale)}>
-                <dt className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
-                  {t(item.label, locale)}
-                </dt>
-                <dd className="mt-2 text-sm leading-5 text-[#F7F4EB]/82">
-                  {t(item.value, locale)}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </motion.div>
 
+        {/* Scroll hint */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="relative mx-auto w-full max-w-[34rem]"
-          initial={{ opacity: 0, y: 26 }}
-          transition={{ delay: 0.12, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ opacity: 1 }}
+          aria-hidden="true"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          transition={{ delay: 1.3, duration: 0.8 }}
         >
-          <div className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#D4AF37]/24 shadow-[0_0_120px_rgb(212_175_55/.22)]" />
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            className="relative mx-auto aspect-[3/4] w-[58%] max-w-80 overflow-visible"
-            style={{ rotate: bottleRotate, y: bottleY }}
-            transition={{ duration: 5.4, ease: "easeInOut", repeat: Infinity }}
+          <div
+            className="flex h-9 w-5 items-start justify-center rounded-full border pt-1.5"
+            style={{ borderColor: "color-mix(in srgb, var(--fr-ivory) 28%, transparent)" }}
           >
-            <div className="absolute left-1/2 top-0 h-[10%] w-[38%] -translate-x-1/2 rounded-t-sm border border-[#D4AF37]/45 bg-[#0D0D0D] shadow-[inset_0_10px_22px_rgb(212_175_55/.16)]" />
-            <div className="absolute inset-x-[9%] top-[8%] h-[88%] overflow-hidden rounded-t-[2rem] rounded-b-md border border-[#D4AF37]/45 bg-[linear-gradient(105deg,#07180b_0%,#1B5E20_34%,#0D0D0D_66%,#234f21_100%)] shadow-[0_38px_100px_rgb(0_0_0/.42),inset_18px_0_40px_rgb(255_255_255/.05),inset_-28px_0_50px_rgb(0_0_0/.34)]">
-              <div className="absolute inset-y-0 left-[18%] w-[18%] bg-[linear-gradient(90deg,transparent,rgb(247_244_235/.18),transparent)] blur-sm" />
-              <div className="absolute left-1/2 top-[18%] h-[62%] w-[78%] -translate-x-1/2 border border-[#D4AF37]/55 bg-[#F7F4EB]/96 px-5 py-8 text-center text-[#0D0D0D] shadow-[0_20px_60px_rgb(0_0_0/.24)]">
-                <p className="font-serif text-3xl leading-none tracking-[0.16em]">FONDJO</p>
-                <p className="mt-3 text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#1B5E20]">
-                  Racine
-                </p>
-                <div className="mx-auto my-7 h-px w-16 bg-[#D4AF37]" />
-                <p className="font-serif text-5xl leading-none text-[#1B5E20]">SÈVE</p>
-                <p className="mt-5 text-[0.62rem] font-semibold uppercase tracking-[0.18em]">
-                  Hair Treatment Oil
-                </p>
-                <p className="mt-6 font-mono text-xs">100ml / 3.38 fl oz</p>
-              </div>
-            </div>
-          </motion.div>
-          <div className="absolute bottom-6 left-0 right-0 mx-auto w-[86%] rounded-md border border-[#D4AF37]/28 bg-[#0D0D0D]/82 p-4 text-center backdrop-blur">
-            <p className="font-serif text-2xl text-[#D4AF37]">FONDJO RACINE SÈVE</p>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#F7F4EB]/72">
-              Batch #001 · 100ml · 8,500 XAF
-            </p>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              className="h-1.5 w-1 rounded-full"
+              style={{ backgroundColor: "var(--fr-gold)" }}
+              transition={{ duration: 1.7, ease: "easeInOut", repeat: Infinity }}
+            />
           </div>
         </motion.div>
-      </Container>
+      </div>
     </section>
   );
 }

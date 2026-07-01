@@ -1,24 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import {
-  ArrowRight,
-  Bot,
-  ChevronDown,
-  Globe2,
-  Menu,
-  MessageCircle,
-  PackageCheck,
-  Sparkles,
-  Store,
-  Truck,
-  X,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Globe2, Menu, MessageCircle, PackageCheck, Sparkles, Store, Truck, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
+import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { CheckoutTrustBar } from "@/features/elixir/components/CheckoutTrustBar";
@@ -70,13 +59,13 @@ const campaignImages = {
   barbershop: siteImages.barbershop,
   facebookCover: siteImages.facebookCover,
   frontLabel: siteImages.frontLabel,
-  hero: siteImages.volcanicBottle,
+  hero: siteImages.hero,
   market: siteImages.marketLifestyle,
   night: siteImages.nightRoutine,
-  origin: siteImages.heroOrigin,
+  origin: siteImages.originMountCameroon,
   packing: siteImages.packingOrders,
   profileLogo: siteImages.profileLogo,
-  reflection: siteImages.studioReflection,
+  reflection: siteImages.studioBottle,
 } as const;
 
 const ingredientTimelineDetails = [
@@ -176,200 +165,6 @@ function MapPinIcon() {
       />
       <circle cx="8" cy="6" r="1.55" fill="currentColor" />
     </svg>
-  );
-}
-
-function useIsMobileViewport() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => media.removeEventListener("change", update);
-  }, []);
-
-  return isMobile;
-}
-
-export function CinematicHero({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string }) {
-  const heroRef = useRef<HTMLElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobileViewport();
-  const useMotion = !prefersReducedMotion && !isMobile;
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end end"],
-  });
-  const landscapeScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.08, 1.16]);
-  const landscapeOpacity = useTransform(scrollYProgress, [0, 0.55, 0.86], [1, 0.82, 0.24]);
-  const landscapeY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
-  const productOpacity = useTransform(scrollYProgress, [0.26, 0.58], [0, 1]);
-  const productScale = useTransform(scrollYProgress, [0, 0.78, 1], [0.72, 1.03, 1.1]);
-  const productY = useTransform(scrollYProgress, [0, 1], ["12%", "-8%"]);
-  const toBottleOpacity = useTransform(scrollYProgress, [0.34, 0.42, 0.82], [0, 1, 1]);
-  const toBottleY = useTransform(scrollYProgress, [0.36, 0.72], ["14%", "0%"]);
-  const storyOpacity = useTransform(scrollYProgress, [0.12, 0.3, 0.72], [0, 1, 0.28]);
-  const ctaOpacity = useTransform(scrollYProgress, [0.72, 0.8], [0, 1]);
-  const ctaY = useTransform(scrollYProgress, [0.72, 0.8], [18, 0]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.6, 0.74], [1, 1, 0]);
-  const goldGlowScale = useTransform(scrollYProgress, [0.2, 0.86], [0.72, 1.18]);
-
-  return (
-    <section
-      className="relative min-h-[100svh] bg-[#080706] text-[#f5f0e8] md:h-[125svh]"
-      data-mobile-cta-section="hero"
-      id="hero"
-      ref={heroRef}
-    >
-      <div className="sticky top-0 h-[100svh] min-h-[40rem] overflow-hidden">
-        <motion.div
-          className="absolute inset-0 origin-center"
-          style={
-            useMotion ? { opacity: landscapeOpacity, scale: landscapeScale, y: landscapeY } : {}
-          }
-        >
-          <ImagePanel
-            alt="FONDJO RACINE volcanic stone bottle hero image"
-            className="absolute inset-0"
-            priority
-            sizes="100vw"
-            src={campaignImages.hero}
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.78)_38%,rgb(8_7_6/.2)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(8_7_6/.2)_0%,transparent_40%,#080706_100%)]" />
-        </motion.div>
-
-        <motion.div
-          className="absolute inset-0"
-          style={
-            useMotion
-              ? { opacity: productOpacity, scale: productScale, y: productY }
-              : { opacity: 0 }
-          }
-        >
-          <ImagePanel
-            alt="FONDJO RACINE isolated bottle in reflective black studio"
-            className="absolute inset-0"
-            sizes="100vw"
-            src={campaignImages.reflection}
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.68)_35%,rgb(8_7_6/.08)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,#080706_100%)]" />
-        </motion.div>
-
-        <motion.div
-          aria-hidden="true"
-          className="absolute left-1/2 top-[45%] size-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d6b75b]/26 blur-3xl sm:size-[32rem] lg:left-[67%]"
-          style={{ scale: goldGlowScale }}
-        />
-
-        <Container className="relative z-10 grid h-full content-center gap-8 pb-32 pt-28 lg:grid-cols-[0.86fr_1.14fr] lg:items-center lg:pb-24">
-          <div className="max-w-5xl">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.42em] text-[#d6b75b]">
-              {copy.heroEyebrow}
-            </p>
-            <div
-              aria-label={`${copy.heroTitleFirst} ${copy.heroTitleSecond}`}
-              className="mt-5 font-serif font-light leading-[0.82]"
-            >
-              <p className="max-w-[9ch] text-[3.35rem] text-[#f6f0e4] sm:text-8xl lg:text-[8.5rem]">
-                {copy.heroTitleFirst}
-              </p>
-              <motion.p
-                className="mt-1 max-w-[9ch] text-[3.35rem] text-[#d6b75b] sm:text-8xl lg:text-[8.5rem]"
-                style={useMotion ? { opacity: toBottleOpacity, y: toBottleY } : {}}
-              >
-                {copy.heroTitleSecond}
-              </motion.p>
-            </div>
-            <motion.p
-              className="mt-7 max-w-xl text-base leading-8 text-[#f6f0e4]/74 sm:text-lg"
-              style={useMotion ? { opacity: storyOpacity } : {}}
-            >
-              {copy.heroStory}
-            </motion.p>
-          </div>
-
-          <motion.div
-            className="relative mx-auto hidden aspect-[4/5] w-full max-w-[28rem] lg:block"
-            style={useMotion ? { opacity: productOpacity, scale: productScale, y: productY } : {}}
-          >
-            <div className="absolute inset-[9%] border border-[#d6b75b]/26 shadow-[0_44px_140px_rgb(0_0_0/.62)]" />
-            <motion.div
-              className="absolute inset-[12%] overflow-hidden rounded-md"
-              animate={{ y: [0, -10, 0], rotate: [-0.5, 0.5, -0.5] }}
-              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Image
-                alt="FONDJO RACINE bottle floating as the hero transitions into product focus"
-                blurDataURL={blurDataUrl}
-                className="object-cover"
-                fill
-                placeholder="blur"
-                sizes="36vw"
-                src={campaignImages.hero}
-              />
-              <div className="absolute inset-y-0 left-[18%] w-[12%] bg-white/14 blur-xl" />
-            </motion.div>
-          </motion.div>
-        </Container>
-
-        <motion.div
-          className="absolute inset-x-4 bottom-5 z-20 mx-auto max-w-5xl border border-[#d6b75b]/24 bg-[#080706]/82 p-3 backdrop-blur-xl sm:bottom-7 sm:p-4"
-          style={{ opacity: ctaOpacity, y: ctaY }}
-        >
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-center">
-            <div>
-              <p className="font-serif text-2xl leading-none text-[#d6b75b] sm:text-3xl">
-                FONDJO RACINE
-              </p>
-              <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-[#f6f0e4]/72">
-                {copy.productSpecOne[1]} · {copy.productSpecTwo[1]}
-              </p>
-            </div>
-            <a
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-[#d6b75b] px-5 text-sm font-semibold text-[#080706] shadow-[0_20px_70px_rgb(214_183_91/.28)] transition-transform hover:-translate-y-0.5"
-              href="#product"
-            >
-              {copy.ctaDiscover}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </a>
-            <a
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-[#d6b75b]/45 bg-white/8 px-5 text-sm font-semibold text-[#f6f0e4] backdrop-blur-md transition-transform hover:-translate-y-0.5"
-              href="#diagnosis"
-            >
-              {copy.ctaConsultation}
-              <Bot className="size-4" aria-hidden="true" />
-            </a>
-          </div>
-          <a
-            className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-white/14 bg-black/20 px-5 text-sm font-semibold text-[#f6f0e4] backdrop-blur-md sm:hidden"
-            href={whatsappUrl}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <MessageCircle className="size-4" aria-hidden="true" />
-            {copy.whatsapp}
-          </a>
-          <CheckoutTrustBar className="mt-3" compact whatsappUrl={whatsappUrl} />
-        </motion.div>
-
-        <motion.a
-          className="absolute bottom-8 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-[#f6f0e4]/58 md:inline-flex"
-          href="#origin"
-          style={{ opacity: cueOpacity }}
-        >
-          {copy.scroll}
-          <motion.span animate={{ y: [0, 7, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
-            <ChevronDown className="size-4" aria-hidden="true" />
-          </motion.span>
-        </motion.a>
-      </div>
-    </section>
   );
 }
 
@@ -925,72 +720,6 @@ export function DeliveryShippingSection({
   );
 }
 
-export function BatchCountdown({ copy }: { copy: Copy }) {
-  const target = new Date("2026-07-06T09:00:00+01:00").getTime();
-  const [remaining, setRemaining] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setRemaining(target - Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [target]);
-
-  const clamped = Math.max(0, remaining);
-  const days = Math.floor(clamped / 86_400_000);
-  const hours = Math.floor((clamped % 86_400_000) / 3_600_000);
-  const minutes = Math.floor((clamped % 3_600_000) / 60_000);
-
-  return (
-    <section
-      className="bg-[#080706] py-20 text-[#f6f0e4] sm:py-28"
-      data-mobile-cta-section="batch"
-      id="batch"
-    >
-      <Container className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-        <FadeUp>
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
-            FONDJO RACINE
-          </p>
-          <h2 className="mt-4 font-serif text-[clamp(3rem,8vw,7rem)] font-light leading-[0.82]">
-            30 bottles. No silent restock.
-          </h2>
-          <p className="mt-6 max-w-xl text-sm leading-8 text-[#f6f0e4]/68">{copy.productText}</p>
-        </FadeUp>
-        <FadeUp className="border border-[#d6b75b]/18 bg-white/[0.035] p-5 sm:p-8">
-          <div className="grid grid-cols-3 gap-3 text-center">
-            {[
-              ["Days", days],
-              ["Hours", hours],
-              ["Minutes", minutes],
-            ].map(([label, value]) => (
-              <div className="border border-[#d6b75b]/14 bg-[#080706]/60 p-4" key={label}>
-                <p className="font-mono text-3xl text-[#d6b75b] sm:text-5xl">{value}</p>
-                <p className="mt-2 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#f6f0e4]/58">
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6">
-            <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[#f6f0e4]/58">
-              <span>Reserved</span>
-              <span>30 total</span>
-            </div>
-            <div className="mt-3 h-2 overflow-hidden bg-white/10">
-              <motion.div
-                className="h-full bg-[linear-gradient(90deg,#8c7435,#f0d860,#8c7435)]"
-                initial={{ width: "8%" }}
-                whileInView={{ width: "43%" }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </div>
-          </div>
-        </FadeUp>
-      </Container>
-    </section>
-  );
-}
-
 export function AIConsultationPreview({
   copy,
   locale,
@@ -1018,7 +747,7 @@ export function AIConsultationPreview({
   );
 }
 
-export function PreorderCheckout({
+export function ContactCheckout({
   content,
   copy,
   locale,
@@ -1298,7 +1027,7 @@ export function PremiumStorefrontPage({ content, locale }: PremiumStorefrontPage
   return (
     <main className="min-h-screen overflow-x-clip bg-[#080706]">
       <PremiumHeader copy={copy} language={language} setLanguage={setLanguage} />
-      <CinematicHero copy={copy} whatsappUrl={whatsappUrl} />
+      <CinematicHero />
       <ProductShowcase copy={copy} />
       <OriginSection copy={copy} />
       <FounderStorySection content={content} locale={contentLocale} />

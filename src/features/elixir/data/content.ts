@@ -24,6 +24,14 @@ export type ElixirContent = {
       after: ElixirImage;
       before: ElixirImage;
       caption: LocalizedText;
+      customer?:
+        | {
+            city: string;
+            name: string;
+            week: number;
+          }
+        | undefined;
+      isPlaceholder?: boolean | undefined;
       label: LocalizedText;
     }>;
   };
@@ -161,58 +169,60 @@ export const defaultElixirContent: ElixirContent = {
   beforeAfter: {
     eyebrow: { en: "Before and after", fr: "Avant / apres" },
     intro: {
-      en: "Batch #001 photos, customer quotes, and founder updates will be published transparently as the first customers begin the journey.",
-      fr: "Les photos, avis et nouvelles du fondateur du Lot #001 seront publies avec transparence au debut du parcours client.",
+      en: "Customer photos, care notes, and founder updates will be published transparently as the community grows.",
+      fr: "Les photos, avis et nouvelles du fondateur seront publies avec transparence a mesure que la communaute grandit.",
     },
     items: [
       {
         after: {
           alt: {
-            en: "Healthy glossy textured hair after routine",
-            fr: "Cheveux textures brillants apres routine",
+            en: "Grooming and styling at a Cameroonian barbershop — hair texture detail",
+            fr: "Coiffage et soin dans un salon camerounais — detail texture capillaire",
           },
-          height: 1200,
+          height: 1300,
           src: "/images/barbershop.png",
-          width: 900,
+          width: 1800,
         },
         before: {
           alt: {
-            en: "Textured hair care routine before treatment",
-            fr: "Routine capillaire texturee avant soin",
+            en: "Everyday market lifestyle scene in Buea, Cameroon — context for FONDJO RACINE",
+            fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie FONDJO RACINE",
           },
-          height: 1200,
+          height: 1300,
           src: "/images/market-lifestyle.png",
-          width: 900,
+          width: 1800,
         },
         caption: {
           en: "A guided routine designed to support scalp comfort, softness, and visible shine.",
           fr: "Une routine accompagnee pour soutenir confort du cuir chevelu, douceur et brillance visible.",
         },
+        isPlaceholder: true,
         label: { en: "Scalp comfort and shine", fr: "Confort cuir chevelu et brillance" },
       },
       {
         after: {
           alt: {
-            en: "Finished hair with luminous ends",
-            fr: "Cheveux finis avec pointes lumineuses",
+            en: "Evening self-care ritual with Sève oil by candlelight — nighttime hair care routine",
+            fr: "Rituel de soin du soir avec huile Seve a la bougie — routine capillaire nocturne",
           },
-          height: 1200,
+          height: 1300,
           src: "/images/night-routine.png",
-          width: 900,
+          width: 1800,
         },
         before: {
           alt: {
-            en: "Hair styling detail before oil routine",
-            fr: "Detail coiffage avant routine huile",
+            en: "Mount Cameroon and Buea landscape at dusk — origin of FONDJO RACINE botanical sourcing",
+            fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques FONDJO RACINE",
           },
-          height: 1200,
+          height: 1300,
           src: "/images/hero-origin.png",
-          width: 900,
+          width: 1800,
         },
         caption: {
           en: "Botanical care that helps hair look polished without a heavy finish.",
           fr: "Un soin botanique pour une finition soignee sans effet lourd.",
         },
+        isPlaceholder: true,
         label: { en: "Visible polish", fr: "Finition visible" },
       },
     ],
@@ -272,7 +282,7 @@ export const defaultElixirContent: ElixirContent = {
   },
   finalCta: {
     button: {
-      en: "Pre-order Batch #001",
+      en: "Start Hair Consultation",
       fr: "Demarrer le diagnostic gratuit sur WhatsApp",
     },
     eyebrow: { en: "Start today", fr: "Commencez aujourd hui" },
@@ -289,15 +299,15 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: { en: "Founder story", fr: "Histoire fondatrice" },
     image: {
       alt: {
-        en: "Founder portrait editorial botanical setting",
-        fr: "Portrait fondateur ambiance botanique editoriale",
+        en: "Mount Cameroon from Buea — the landscape where FONDJO RACINE botanicals are sourced",
+        fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques FONDJO RACINE",
       },
-      height: 1200,
+      height: 1300,
       src: "/images/hero-origin.png",
-      width: 900,
+      width: 1800,
     },
     intro: {
-      en: "FONDJO RACINE is a heritage hair care brand carrying the founder's family name, created by Kamyou Ulrich Fondjo and rooted in African provenance, small-batch production, and documented customer results.",
+      en: "FONDJO RACINE is a heritage hair care brand carrying the founder's family name, created by Kamyou Ulrich Fondjo and rooted in African provenance, careful production, and documented customer results.",
       fr: "FONDJO RACINE porte le nom de famille du fondateur Kamyou Ulrich Fondjo, avec un ancrage africain, une production en petite serie et des resultats clients documentes.",
     },
     name: "Kamyou Ulrich Fondjo",
@@ -332,11 +342,11 @@ export const defaultElixirContent: ElixirContent = {
   },
   hero: {
     eyebrow: {
-      en: "FONDJO RACINE · Batch #001",
+      en: "FONDJO RACINE · SÈVE",
       fr: "Soin capillaire botanique africain premium",
     },
     primaryCta: {
-      en: "Pre-order Batch #001",
+      en: "Start Hair Consultation",
       fr: "Demarrer le diagnostic gratuit sur WhatsApp",
     },
     secondaryCta: {
@@ -358,12 +368,12 @@ export const defaultElixirContent: ElixirContent = {
       value: { en: "100ml / 3.38 fl oz", fr: "100ml / 3,38 fl oz" },
     },
     {
-      label: { en: "Batch", fr: "Lot" },
-      value: { en: "Only 30 bottles made", fr: "Seulement 30 flacons" },
+      label: { en: "Availability", fr: "Disponibilite" },
+      value: { en: "National delivery available", fr: "Livraison nationale disponible" },
     },
     {
-      label: { en: "Ships", fr: "Expedition" },
-      value: { en: "July 6, 2026", fr: "6 juillet 2026" },
+      label: { en: "Delivery", fr: "Livraison" },
+      value: { en: "Cameroon and international", fr: "Cameroun et international" },
     },
   ],
   howToUse: {
@@ -424,10 +434,10 @@ export const defaultElixirContent: ElixirContent = {
     },
     {
       alt: {
-        en: "FONDJO RACINE bottle back label",
-        fr: "Etiquette arriere du flacon FONDJO RACINE",
+        en: "FONDJO RACINE Sève bottle back label — ingredients and directions",
+        fr: "Etiquette arriere du flacon Seve FONDJO RACINE — ingredients et mode d emploi",
       },
-      height: 1200,
+      height: 1600,
       src: "/images/back-label.png",
       width: 1200,
     },
@@ -524,7 +534,7 @@ export const defaultElixirContent: ElixirContent = {
   },
   innerCircle: {
     benefits: [
-      { en: "Priority Batch #001 confirmation", fr: "Confirmation prioritaire Lot #001" },
+      { en: "Priority product guidance", fr: "Conseil produit prioritaire" },
       { en: "WhatsApp follow-up if requested", fr: "Suivi WhatsApp si souhaite" },
       {
         en: "Founder updates and customer results journey",
@@ -532,14 +542,14 @@ export const defaultElixirContent: ElixirContent = {
       },
     ],
     cta: { en: "DM OIL on WhatsApp", fr: "Envoyer OIL sur WhatsApp" },
-    eyebrow: { en: "Batch #001 preorder", fr: "Precommande Lot #001" },
+    eyebrow: { en: "Product and delivery support", fr: "Conseil produit et livraison" },
     intro: {
-      en: "Only 30 bottles are made for the first documented founder-led batch from Buea.",
-      fr: "Pour les clientes qui veulent regularite, reassort et suivi sans recommander chaque mois.",
+      en: "Contact the team for guidance, delivery timelines, shipping rates, and order support.",
+      fr: "Contactez l'equipe pour conseils, delais, tarifs de livraison et assistance commande.",
     },
-    priceXaf: "8,500 XAF preorder",
+    priceXaf: "8,500 XAF local equivalent",
     title: {
-      en: "Batch #001 - preorder open.",
+      en: "Botanical ritual - contact available.",
       fr: "Restez reguliere pour moins chaque mois.",
     },
   },
@@ -549,24 +559,24 @@ export const defaultElixirContent: ElixirContent = {
   },
   launchAnnouncement: {
     badge: {
-      en: "Batch #001 - preorder open",
-      fr: "Lot de lancement ouvert",
+      en: "Botanical ritual - contact available",
+      fr: "Conseil disponible",
     },
     cta: {
-      en: "Lock yours in",
-      fr: "Reserver votre flacon",
+      en: "Contact the team",
+      fr: "Contacter l equipe",
     },
     enabled: true,
     eyebrow: {
-      en: "Only 30 bottles made",
+      en: "National delivery available",
       fr: "Diagnostics et commandes ouverts",
     },
     intro: {
-      en: "Preorder price is 8,500 XAF. After preorder, the bottle returns to 9,500 XAF. Ships July 6, 2026.",
-      fr: "Les quantites de lancement sont mises a jour regulierement pour afficher l offre actuelle avant commande.",
+      en: "SÈVE is available with WhatsApp-assisted product guidance, Cameroon delivery, and international shipping support.",
+      fr: "SÈVE est disponible avec conseil WhatsApp, livraison au Cameroun et assistance expedition internationale.",
     },
     title: {
-      en: "The first FONDJO RACINE SÈVE batch is available now.",
+      en: "FONDJO RACINE SÈVE is available with direct support.",
       fr: "Le premier lot FONDJO SÈVE est disponible maintenant.",
     },
   },
@@ -787,7 +797,7 @@ export const defaultElixirContent: ElixirContent = {
     fr: "SÈVE",
   },
   trust: [
-    { en: "Only 30 bottles made", fr: "Seulement 30 flacons" },
+    { en: "National delivery available", fr: "Livraison nationale disponible" },
     { en: "Free WhatsApp hair diagnosis", fr: "Diagnostic WhatsApp gratuit" },
     { en: "MTN MoMo and Orange Money", fr: "MTN MoMo et Orange Money" },
     { en: "Cameroonian botanical ritual", fr: "Rituel botanique camerounais" },

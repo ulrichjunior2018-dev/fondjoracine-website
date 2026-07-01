@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fraunces, JetBrains_Mono } from "next/font/google";
 
 import { AppProviders } from "@/providers/app-providers";
 import { env } from "@/config/env";
@@ -6,6 +7,23 @@ import { DocumentLanguage } from "@/components/seo/document-language";
 import { buildOrganizationJsonLd, defaultMetadata } from "@/lib/seo/metadata";
 
 import "@/styles/globals.css";
+
+// Fraunces: light display face with italic support for luxury headings.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+  variable: "--fr-font-display",
+  display: "swap",
+});
+
+// JetBrains Mono: used for data labels, batch numbers, mono copy.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--fr-font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -15,7 +33,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`h-full antialiased ${fraunces.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <script
           type="application/ld+json"

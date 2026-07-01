@@ -33,6 +33,8 @@ import { Reveal } from "@/features/home/components/reveal";
 
 import { GuaranteeSection } from "./guarantee-section";
 import { HeroSection } from "./hero-section";
+import { ImageCompareSlider } from "./image-compare-slider";
+import { TextureGrid } from "./texture-grid";
 import { IngredientGallery } from "./ingredient-gallery";
 import { LuxuryCard } from "./luxury-card";
 import { HairConsultationAgent } from "./hair-consultation-agent";
@@ -58,7 +60,7 @@ function getCopy(locale: Locale) {
     navHome: locale === "fr" ? "Accueil" : "Home",
     navDiagnosis: locale === "fr" ? "Diagnostic" : "Diagnosis",
     navHow: locale === "fr" ? "Routine" : "How It Works",
-    navInnerCircle: locale === "fr" ? "Lot #001" : "Batch #001",
+    navInnerCircle: locale === "fr" ? "Rituel botanique" : "Botanical ritual",
     navIngredients: locale === "fr" ? "Ingredients" : "Ingredients",
     navProduct: locale === "fr" ? "L Elixir" : "The Elixir",
     navResults: locale === "fr" ? "Resultats" : "Results",
@@ -162,6 +164,9 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
 
       {/* z-[2] ensures these sections slide over the sticky hero (z-[1]) as user scrolls */}
       <div className="relative z-[2]">
+        {/* TextureGrid: directly below the fold, first thing after the hero */}
+        <TextureGrid />
+
         <section className="border-y border-[#ded3bf] bg-[#FAF7F0]">
           <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-5" size="2xl">
             {heroBadges.map((badge) => (
@@ -402,39 +407,74 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                 </Text>
               ) : null}
             </Reveal>
-            <div className="mt-10 grid gap-5 lg:grid-cols-2">
+
+            <div className="mt-10 grid gap-6 lg:grid-cols-2">
               {content.beforeAfter.items.map((item) => (
                 <Reveal key={t(item.label, locale)}>
-                  <Card className="overflow-hidden p-0" variant="elevated">
-                    <div className="grid grid-cols-2">
-                      {[
-                        { image: item.before, label: copy.before },
-                        { image: item.after, label: copy.after },
-                      ].map((entry) => (
-                        <div className="relative aspect-[4/5]" key={entry.label}>
-                          <Image
-                            alt={t(entry.image.alt, locale)}
-                            blurDataURL={blurDataUrl}
-                            className="object-cover transition-transform duration-700 ease-out hover:scale-[1.035]"
-                            fill
-                            loading="lazy"
-                            placeholder="blur"
-                            sizes="(min-width: 1024px) 25vw, 50vw"
-                            src={entry.image.src}
-                          />
-                          <span className="absolute left-3 top-3 rounded-md bg-foreground/72 px-2.5 py-1 text-xs font-semibold text-background backdrop-blur">
-                            {entry.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-soft">
+                    {/* Interactive comparison slider */}
+                    <ImageCompareSlider
+                      afterAlt={t(item.after.alt, locale)}
+                      afterSrc={item.after.src}
+                      beforeAlt={t(item.before.alt, locale)}
+                      beforeSrc={item.before.src}
+                      locale={locale}
+                    />
+
+                    {/* Customer info or placeholder CTA */}
                     <div className="p-5">
-                      <Badge tone="sage">{t(item.label, locale)}</Badge>
-                      <p className="mt-3 text-sm leading-6 text-foreground/68">
-                        {t(item.caption, locale)}
-                      </p>
+                      {item.customer ? (
+                        <>
+                          <div className="flex items-baseline gap-2">
+                            <p className="text-sm font-semibold text-foreground">
+                              {item.customer.name}
+                            </p>
+                            <span className="text-foreground/36" aria-hidden="true">
+                              ·
+                            </span>
+                            <p className="text-sm text-foreground/68">{item.customer.city}</p>
+                            <span className="text-foreground/36" aria-hidden="true">
+                              ·
+                            </span>
+                            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+                              {locale === "fr"
+                                ? `Semaine ${item.customer.week}`
+                                : `Week ${item.customer.week}`}
+                            </p>
+                          </div>
+                          <p className="mt-2 text-xs leading-5 text-foreground/58">
+                            {t(item.caption, locale)}
+                          </p>
+                        </>
+                      ) : (
+                        /* Placeholder: real customer photos not yet available */
+                        <div className="flex items-start gap-4">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                              {item.isPlaceholder
+                                ? locale === "fr"
+                                  ? "Rituel botanique — bientôt disponible"
+                                  : "Botanical ritual — launching soon"
+                                : t(item.label, locale)}
+                            </p>
+                            <p className="mt-2 text-sm leading-6 text-foreground/68">
+                              {t(item.caption, locale)}
+                            </p>
+                          </div>
+                          {item.isPlaceholder ? (
+                            <a
+                              className="mt-0.5 shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-accent underline underline-offset-4 hover:no-underline"
+                              href="#diagnosis"
+                            >
+                              {locale === "fr"
+                                ? "Rejoindre les 100 premiers"
+                                : "Be among the first 100"}
+                            </a>
+                          ) : null}
+                        </div>
+                      )}
                     </div>
-                  </Card>
+                  </div>
                 </Reveal>
               ))}
             </div>

@@ -8,6 +8,14 @@
 
 :root {
   color-scheme: dark;
+
+  /* ── FONDJO brand tokens ─────────────────────────────────────── */
+  --fr-forest: #0e2a1c;
+  --fr-void: #07120c;
+  --fr-gold: #c9a24b;
+  --fr-ivory: #f5f0e6;
+  --fr-clay: #b5793f;
+
   --obsidian: #0a0905;
   --obsidian-card: #0f0e0a;
   --obsidian-raised: #161410;
@@ -140,6 +148,18 @@
   --color-warning: var(--warning);
   --color-warning-muted: var(--warning-muted);
   --color-ring: var(--ring);
+
+  /* FONDJO color utilities: text-fr-gold, bg-fr-forest, etc. */
+  --color-fr-forest: var(--fr-forest);
+  --color-fr-void: var(--fr-void);
+  --color-fr-gold: var(--fr-gold);
+  --color-fr-ivory: var(--fr-ivory);
+  --color-fr-clay: var(--fr-clay);
+
+  /* FONDJO font utilities: font-fraunces, font-jetbrains */
+  --font-fraunces: var(--fr-font-display, ui-serif), ui-serif, Georgia, serif;
+  --font-jetbrains: var(--fr-font-mono, ui-monospace), ui-monospace, monospace;
+
   --font-sans: var(--font-body);
   --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
   --font-serif: var(--font-display);
@@ -343,6 +363,39 @@ section[id] {
   100% {
     transform: scale(1);
     opacity: 0;
+  }
+}
+
+@keyframes fondjoFadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fondjoFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-0.4deg);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(0.45deg);
+  }
+}
+
+@keyframes fondjoGlow {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
   }
 }
 

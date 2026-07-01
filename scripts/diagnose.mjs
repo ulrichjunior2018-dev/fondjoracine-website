@@ -19,9 +19,9 @@ const requiredImages = [
 ];
 
 const requiredSiteImageKeys = [
-  "heroOrigin",
-  "studioReflection",
-  "volcanicBottle",
+  "hero",
+  "originMountCameroon",
+  "studioBottle",
   "marketLifestyle",
   "nightRoutine",
   "barbershop",
