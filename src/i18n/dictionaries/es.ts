@@ -1,7 +1,26 @@
 export const es = {
   aiTitle: "Una consulta capilar antes del frasco.",
-  barbershopText: "Cuidado, bordes, barba, cuero cabelludo y acabado pulido.",
-  barbershopTitle: "Rutina de barberia",
+  barbershopText:
+    "Un acabado medido para cuero cabelludo, barba, contornos y zonas que necesitan control sin peso.",
+  barbershopTitle: "Mesa de grooming",
+  closingBody:
+    "El recorrido de compra es simple: orientacion cuando hace falta, informacion de envio antes del pago y asistencia directa para Camerun y compradores internacionales.",
+  closingCards: [
+    [
+      "Consulta capilar",
+      "Responda unas preguntas antes de decidir como integrar SÈVE en su rutina.",
+    ],
+    [
+      "Envio",
+      "Revise la entrega en Camerun y la informacion de envio internacional antes de ordenar.",
+    ],
+    [
+      "Soporte directo",
+      "Hable con el equipo FONDJO RACINE sobre tiempos, tarifas y orientacion de producto.",
+    ],
+  ],
+  closingEyebrow: "Siguiente paso",
+  closingTitle: "Servicio tranquilo. Decisiones claras.",
   contact: "Contacto",
   coverEyebrow: "Sobre FONDJO RACINE",
   coverSubtitle: "Entrega nacional. Envio internacional. Asistencia directa.",
@@ -27,8 +46,8 @@ export const es = {
   footerPolicy: "Politicas",
   formula: "Formula",
   formulaBody:
-    "Seis aceites cuidadosamente seleccionados, cada uno con un rol claro para el cuero cabelludo, la fibra, la hidratacion, la suavidad y el brillo.",
-  formulaTitle: "Seis aceites. Un ritual preciso.",
+    "La formula se reduce a seis aceites reconocibles. Nada se agrega para decorar el relato; cada ingrediente aporta textura, deslizamiento, suavidad o confort del cuero cabelludo.",
+  formulaTitle: "Una formula corta, editada con cuidado.",
   gallery: "Galeria",
   heroEyebrow: "FONDJO RACINE · Aceite ritual capilar",
   heroStory:
@@ -36,41 +55,51 @@ export const es = {
   heroTitleFirst: "DE LA TIERRA",
   heroTitleSecond: "AL FRASCO",
   lifestyle: "Estilo de vida",
-  lifestyleTitle: "Hecho para la vida real, presentado como una campana.",
-  marketText: "Movimiento diario, calor, polvo, trenzas y diligencias.",
-  marketTitle: "Textura del mercado de Buea",
+  lifestyleTitle: "El producto deja la repisa y entra en rutinas reales.",
+  marketText:
+    "Un frasco frente al ritmo de Buea: calor, movimiento, diligencias y estilos protectores.",
+  marketTitle: "En la ciudad",
   menu: "Menu",
   nav: [
-    ["Producto", "#product"],
+    ["Objeto", "#product"],
+    ["Origen", "#origin"],
     ["Formula", "#formula"],
-    ["Entrega", "#delivery"],
-    ["FAQ", "#diagnosis"],
+    ["Ritual", "#ritual"],
     ["Contacto", "#contact"],
   ],
-  nightText: "Luz de vela, masaje del cuero cabelludo y un final tranquilo antes de dormir.",
-  nightTitle: "Rutina nocturna",
+  nightText:
+    "Unas gotas calentadas en las manos y trabajadas lentamente en el cuero cabelludo al cerrar el dia.",
+  nightTitle: "Uso nocturno",
   originBody:
-    "Nacido en Buea, cerca del Monte Camerun, FONDJO RACINE convierte el cuidado capilar en un ritual arraigado, moderno y preciso.",
-  originEyebrow: "Historia del producto · Buea / Monte Camerun",
-  originTitle: "Origen con altura.",
-  packingText: "Pedidos preparados con cuidado para entrega nacional y envio internacional.",
-  packingTitle: "Pedidos desde Buea",
+    "Buea le da a la marca clima y contencion: suelo volcanico, lluvia, altitud tranquila y la presencia del Monte Camerun sin teatralidad.",
+  originEyebrow: "Buea / Monte Camerun",
+  originTitle: "Lugar, no decorado.",
+  packingText:
+    "Preparado para clientes que esperan que el cuidado continue despues de salir del estudio.",
+  packingTitle: "Preparado con cuidado",
   productEyebrow: "FONDJO RACINE SEVE",
-  productSpecOne: ["Acabado", "Aceite capilar botanico"],
-  productSpecThree: ["Asistencia", "Soporte por WhatsApp"],
-  productSpecTwo: ["Entrega", "Camerun + internacional"],
+  productSpecOne: ["Volumen", "100ml"],
+  productSpecThree: ["Uso", "Cuero cabelludo, largos, barba"],
+  productSpecTwo: ["Textura", "Aceite botanico ligero"],
   productText:
-    "Un aceite capilar botanico premium para el cuidado diario, masaje del cuero cabelludo y acabado pulido.",
-  productTitle: "Un frasco. Un ritual completo.",
+    "Un aceite de tratamiento para cuero cabelludo y largos, creado para brillo controlado, puntas secas, estilos protectores y rutinas de grooming precisas.",
+  productTitle: "El objeto es simple. El uso es exacto.",
   ritual: "Ritual",
   ritualBody:
-    "Aplique unas gotas por la noche, masajee el cuero cabelludo y deje que la suavidad vuelva lentamente a los largos.",
-  ritualSteps: ["Calentar tres gotas", "Masajear el cuero cabelludo", "Sellar las puntas"],
-  ritualTitle: "Una rutina nocturna con un acabado dorado lento.",
+    "SÈVE no esta hecho para saturar el cabello. Se aplica en pequenas cantidades, se calienta entre las manos y se coloca donde el cabello se siente seco, tirante o sin acabado.",
+  ritualSteps: [
+    "Calentar una pequena cantidad",
+    "Trabajar el cuero cabelludo",
+    "Terminar largos o barba",
+  ],
+  ritualTitle: "Usar menos. Colocar mejor.",
   scroll: "Desplazar",
+  textureText:
+    "Un recordatorio de que SÈVE no esta creado para un solo tipo de cabello; se coloca segun necesidad, textura y rutina.",
+  textureTitle: "Estudio de textura",
   whatsapp: "Asistencia por WhatsApp",
   whyBody:
-    "SÈVE une seis aceites botanicos en un solo ritual: confort del cuero cabelludo, nutricion de la fibra y un acabado suave hasta las puntas.",
+    "El ritual avanza en orden: raiz, cuero cabelludo, fibra y puntas. Cada etapa recibe un apoyo distinto para que el aceite se sienta deliberado, no pesado.",
   whyEyebrow: "Por que funciona",
   whySteps: [
     ["Raiz", "Ricino y karite apoyan una base con sensacion mas fuerte."],

@@ -1,7 +1,26 @@
 export const en = {
   aiTitle: "A hair consultation before the bottle.",
-  barbershopText: "Grooming, edges, beards, scalp, polished finish.",
-  barbershopTitle: "Barbershop grooming",
+  barbershopText:
+    "A measured finish for scalp, beard, edges, and the places that need control without weight.",
+  barbershopTitle: "Grooming table",
+  closingBody:
+    "The purchase path is intentionally simple: product guidance when needed, shipping clarity before payment, and direct support for Cameroon and international buyers.",
+  closingCards: [
+    [
+      "Hair consultation",
+      "Answer a few questions before choosing how SÈVE fits into your routine.",
+    ],
+    [
+      "Shipping",
+      "Review Cameroon delivery and international shipping information before ordering.",
+    ],
+    [
+      "Direct support",
+      "Speak with the FONDJO RACINE team for timing, rates, and product guidance.",
+    ],
+  ],
+  closingEyebrow: "Next step",
+  closingTitle: "Quiet service, clear decisions.",
   contact: "Contact Us",
   coverEyebrow: "About FONDJO RACINE",
   coverSubtitle: "National delivery. International shipping. Direct support.",
@@ -24,8 +43,8 @@ export const en = {
   footerPolicy: "Policies",
   formula: "Formula",
   formulaBody:
-    "Six carefully selected oils, each chosen for a clear role across scalp comfort, strand nourishment, moisture, softness, and shine.",
-  formulaTitle: "Six oils. One precise ritual.",
+    "The formula is reduced to six recognizable oils. Nothing decorative is added to the story; each ingredient earns its place through texture, slip, softness, or scalp comfort.",
+  formulaTitle: "A short formula, edited carefully.",
   gallery: "Gallery",
   heroEyebrow: "FONDJO RACINE · Hair ritual oil",
   heroStory:
@@ -33,41 +52,46 @@ export const en = {
   heroTitleFirst: "FROM THE SOIL",
   heroTitleSecond: "TO THE BOTTLE",
   lifestyle: "Lifestyle",
-  lifestyleTitle: "Built for real life, styled like a campaign.",
-  marketText: "Daily movement, heat, dust, braids, errands.",
-  marketTitle: "Buea market texture",
+  lifestyleTitle: "The product leaves the shelf and enters real routines.",
+  marketText:
+    "A bottle held against the pace of Buea: heat, movement, errands, and protective styles.",
+  marketTitle: "In the city",
   menu: "Menu",
   nav: [
-    ["Product", "#product"],
+    ["Object", "#product"],
+    ["Origin", "#origin"],
     ["Formula", "#formula"],
-    ["Delivery", "#delivery"],
-    ["FAQ", "#diagnosis"],
+    ["Ritual", "#ritual"],
     ["Contact", "#contact"],
   ],
-  nightText: "Candlelight, scalp massage, and a quiet finish before sleep.",
-  nightTitle: "Night routine",
+  nightText: "A few drops, warmed by hand, worked slowly into the scalp before the day closes.",
+  nightTitle: "Evening use",
   originBody:
-    "Born in Buea near Mount Cameroon, FONDJO RACINE turns hair care into a rooted, modern, precise ritual.",
-  originEyebrow: "Product story · Buea / Mount Cameroon",
-  originTitle: "Origin with altitude.",
-  packingText: "Orders prepared with care for national delivery and global shipping.",
-  packingTitle: "Orders leaving Buea",
+    "Buea gives the brand its climate and restraint: volcanic ground, high rainfall, quiet altitude, and the presence of Mount Cameroon without spectacle.",
+  originEyebrow: "Buea / Mount Cameroon",
+  originTitle: "Place, not theatre.",
+  packingText:
+    "Prepared for customers who expect care to continue after the product leaves the studio.",
+  packingTitle: "Handled with care",
   productEyebrow: "FONDJO RACINE SEVE",
-  productSpecOne: ["Finish", "Botanical hair oil"],
-  productSpecThree: ["Support", "WhatsApp assistance"],
-  productSpecTwo: ["Delivery", "Cameroon + international"],
+  productSpecOne: ["Volume", "100ml"],
+  productSpecThree: ["Use", "Scalp, strands, beard"],
+  productSpecTwo: ["Texture", "Light botanical oil"],
   productText:
-    "A premium botanical hair oil designed for daily grooming, scalp massage, and a polished finish.",
-  productTitle: "One bottle. A complete ritual.",
+    "A treatment oil for the scalp and lengths, built for controlled shine, dry ends, protective styles, and grooming routines that need precision rather than excess.",
+  productTitle: "The object is simple. The use is exact.",
   ritual: "Ritual",
   ritualBody:
-    "Apply a few drops at night, massage the scalp, then let softness and light return slowly through the lengths.",
-  ritualSteps: ["Warm three drops", "Massage the scalp", "Seal the ends"],
-  ritualTitle: "A night routine with a slow gold finish.",
+    "SÈVE is not meant to flood the hair. It is applied in small amounts, warmed between the hands, then placed where the hair feels dry, tight, or unfinished.",
+  ritualSteps: ["Warm a small amount", "Work into the scalp", "Finish the lengths or beard"],
+  ritualTitle: "Use less. Place it better.",
   scroll: "Scroll",
+  textureText:
+    "A reminder that SÈVE is not built around one hair type; it is placed by need, texture, and routine.",
+  textureTitle: "Texture study",
   whatsapp: "WhatsApp assistance",
   whyBody:
-    "SÈVE layers six botanical oils into one ritual: scalp comfort first, then strand nourishment, then a softened finish through the ends.",
+    "The ritual moves in order: root, scalp, fiber, ends. Each stage receives a different kind of support, so the oil feels deliberate instead of heavy.",
   whyEyebrow: "Why it works",
   whySteps: [
     ["Root", "Castor and shea support a stronger-feeling foundation."],

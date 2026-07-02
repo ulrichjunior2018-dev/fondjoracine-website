@@ -1,16 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Globe2, Menu, MessageCircle, PackageCheck, Sparkles, Store, Truck, X } from "lucide-react";
+import { Menu, MessageCircle, Sparkles, Truck, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { CheckoutTrustBar } from "@/features/elixir/components/CheckoutTrustBar";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -30,27 +28,6 @@ type PremiumStorefrontPageProps = {
 
 type Copy = SiteDictionary;
 
-const HairConsultationAgent = dynamic(
-  () =>
-    import("./hair-consultation-agent").then((module) => ({
-      default: module.HairConsultationAgent,
-    })),
-  {
-    loading: () => (
-      <div className="min-h-[24rem] rounded-md border border-[#d6b75b]/18 bg-white/[0.035]" />
-    ),
-    ssr: false,
-  },
-);
-
-const OrderFlow = dynamic(
-  () => import("./order-flow").then((module) => ({ default: module.OrderFlow })),
-  {
-    loading: () => <div className="min-h-[28rem] rounded-md bg-[#fff6e5]" />,
-    ssr: false,
-  },
-);
-
 const blurDataUrl =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PHBhdGggZD0nTTAgMTZMMTYgME0tNCAxMkwxMi00TTQgMjBMMjAgNCcgc3Ryb2tlPScjYzhhOTUxJyBzdHJva2Utb3BhY2l0eT0nLjE2Jy8+PC9zdmc+";
 
@@ -60,6 +37,7 @@ const campaignImages = {
   facebookCover: siteImages.facebookCover,
   frontLabel: siteImages.frontLabel,
   hero: siteImages.hero,
+  hairTexture: siteImages.hairTextureLifestyle,
   market: siteImages.marketLifestyle,
   night: siteImages.nightRoutine,
   origin: siteImages.originMountCameroon,
@@ -112,7 +90,17 @@ function getIngredientDetails(index: number) {
 }
 
 function FadeUp({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 18 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: "-12%" }}
+      whileInView={{ opacity: 1, y: 0 }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 function ImagePanel({
@@ -540,9 +528,9 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
       title: copy.barbershopTitle,
     },
     {
-      src: campaignImages.packing,
-      text: copy.packingText,
-      title: copy.packingTitle,
+      src: campaignImages.hairTexture,
+      text: copy.textureText,
+      title: copy.textureTitle,
     },
   ] as const;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -649,117 +637,72 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
   );
 }
 
-export function DeliveryShippingSection({
-  copy,
-  whatsappUrl,
-}: {
-  copy: Copy;
-  whatsappUrl: string;
-}) {
-  const icons = [Truck, Globe2, MessageCircle, Store] as const;
+export function ClosingChapter({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string }) {
+  const [consultationCard, shippingCard, supportCard] = copy.closingCards;
+  const actions = [
+    {
+      body: consultationCard?.[1] ?? "",
+      href: "/hair-consultation",
+      icon: Sparkles,
+      title: consultationCard?.[0] ?? "",
+    },
+    {
+      body: shippingCard?.[1] ?? "",
+      href: "/policies/shipping",
+      icon: Truck,
+      title: shippingCard?.[0] ?? "",
+    },
+    {
+      body: supportCard?.[1] ?? "",
+      href: whatsappUrl,
+      icon: MessageCircle,
+      title: supportCard?.[0] ?? "",
+    },
+  ] as const;
 
   return (
     <section
-      className="bg-[#0d0b08] py-20 text-[#f6f0e4] sm:py-28"
-      data-mobile-cta-section="delivery"
-      id="delivery"
+      className="relative overflow-hidden bg-[#080706] py-20 text-[#f6f0e4] sm:py-28"
+      data-mobile-cta-section="contact"
+      id="contact"
     >
-      <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <FadeUp>
+      <ImagePanel
+        alt="FONDJO RACINE campaign banner"
+        className="absolute inset-0 opacity-42"
+        sizes="100vw"
+        src={campaignImages.facebookCover}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.74)_48%,#080706_100%),linear-gradient(180deg,rgb(8_7_6/.1),#080706_100%)]" />
+      <Container className="relative">
+        <FadeUp className="max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
-            {copy.delivery.eyebrow}
+            {copy.closingEyebrow}
           </p>
-          <h2 className="mt-4 font-serif text-[clamp(2.8rem,8vw,7rem)] font-light leading-[0.86]">
-            {copy.delivery.title}
+          <h2 className="mt-4 max-w-3xl font-serif text-[clamp(3rem,8vw,7rem)] font-light leading-[0.86]">
+            {copy.closingTitle}
           </h2>
-          <p className="mt-6 max-w-xl text-sm leading-8 text-[#f6f0e4]/68">{copy.delivery.body}</p>
-          <a
-            className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-[#d6b75b] px-5 text-sm font-semibold text-[#080706]"
-            href={whatsappUrl}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <MessageCircle className="size-4" aria-hidden="true" />
-            {copy.whatsapp}
-          </a>
+          <p className="mt-6 max-w-2xl text-sm leading-8 text-[#f6f0e4]/68">{copy.closingBody}</p>
         </FadeUp>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {copy.delivery.cards.map(([title, body], index) => {
-            const Icon = icons[index] ?? PackageCheck;
+        <div className="mt-12 grid gap-3 lg:grid-cols-3">
+          {actions.map(({ body, href, icon: Icon, title }) => {
+            const external = href.startsWith("http");
 
             return (
-              <FadeUp key={title}>
-                <article className="min-h-48 rounded-md border border-[#d6b75b]/16 bg-white/[0.035] p-5">
-                  <Icon className="size-6 text-[#d6b75b]" aria-hidden="true" />
-                  <h3 className="mt-5 font-serif text-3xl leading-none">{title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-[#f6f0e4]/62">{body}</p>
-                </article>
-              </FadeUp>
+              <a
+                className="group min-h-48 rounded-md border border-[#d6b75b]/16 bg-[#080706]/72 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+                href={href}
+                key={title}
+                rel={external ? "noreferrer" : undefined}
+                target={external ? "_blank" : undefined}
+              >
+                <Icon className="size-6 text-[#d6b75b]" aria-hidden="true" />
+                <h3 className="mt-6 font-serif text-3xl leading-none">{title}</h3>
+                <p className="mt-4 text-sm leading-7 text-[#f6f0e4]/62">{body}</p>
+                <span className="mt-6 block h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-45 transition-opacity group-hover:opacity-90" />
+              </a>
             );
           })}
         </div>
-      </Container>
-    </section>
-  );
-}
-
-export function AIConsultationPreview({
-  copy,
-  locale,
-}: PremiumStorefrontPageProps & { copy: Copy }) {
-  return (
-    <section
-      className="bg-[#100d0a] py-20 text-[#f6f0e4] sm:py-28"
-      data-mobile-cta-section="diagnosis"
-      id="diagnosis"
-    >
-      <Container>
-        <FadeUp className="mb-10 max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
-            {copy.diagnosis}
-          </p>
-          <h2 className="mt-4 font-serif text-[clamp(2.5rem,7vw,6rem)] font-light leading-[0.9]">
-            {copy.aiTitle}
-          </h2>
-        </FadeUp>
-        <FadeUp>
-          <HairConsultationAgent locale={locale} />
-        </FadeUp>
-      </Container>
-    </section>
-  );
-}
-
-export function ContactCheckout({
-  content,
-  copy,
-  locale,
-}: PremiumStorefrontPageProps & { copy: Copy }) {
-  return (
-    <section
-      className="bg-[#f4eddf] py-20 text-[#14110b] sm:py-28"
-      data-mobile-cta-section="checkout"
-      id="checkout"
-    >
-      <Container>
-        <FadeUp className="max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#7b622d]">
-            {copy.contact}
-          </p>
-          <h2 className="mt-4 font-serif text-[clamp(2.8rem,8vw,7rem)] font-light leading-[0.86]">
-            Contact FONDJO RACINE.
-          </h2>
-          <p className="mt-5 text-sm leading-8 text-[#14110b]/68">
-            Contact the team directly for product guidance, delivery timelines, and payment support.
-          </p>
-        </FadeUp>
-        <div className="mt-10 rounded-md border border-[#7b622d]/18 bg-[#fffaf0] p-3 shadow-[0_22px_90px_rgb(20_17_11/.12)] sm:p-5">
-          <OrderFlow content={content} locale={locale} />
-        </div>
-        <CheckoutTrustBar
-          className="mt-5 border-[#7b622d]/16 bg-[#14110b] shadow-[0_18px_70px_rgb(20_17_11/.14)]"
-          whatsappUrl={getWhatsAppUrl(content, locale)}
-        />
       </Container>
     </section>
   );
@@ -946,9 +889,9 @@ function PremiumHeader({
           <LanguageSwitcher language={language} setLanguage={setLanguage} />
           <a
             className="inline-flex h-10 items-center rounded-md bg-[#d6b75b] px-4 text-sm font-semibold text-[#080706]"
-            href="#delivery"
+            href="#contact"
           >
-            {copy.ctaShipping}
+            {copy.contact}
           </a>
         </div>
 
@@ -1018,32 +961,7 @@ export function PremiumStorefrontPage({ content, locale }: PremiumStorefrontPage
       <WhyItWorksSection copy={copy} />
       <RitualSection copy={copy} />
       <LifestyleGallery copy={copy} />
-      <DeliveryShippingSection copy={copy} whatsappUrl={whatsappUrl} />
-      <AIConsultationPreview content={content} copy={copy} locale={contentLocale} />
-      <section
-        className="relative min-h-[28rem] overflow-hidden bg-[#080706]"
-        data-mobile-cta-section="contact"
-        id="contact"
-      >
-        <ImagePanel
-          alt="FONDJO RACINE Facebook campaign cover"
-          className="absolute inset-0 opacity-78"
-          sizes="100vw"
-          src={campaignImages.facebookCover}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.54),#080706_100%)]" />
-        <Container className="relative flex min-h-[28rem] items-center justify-center text-center text-[#f6f0e4]">
-          <FadeUp>
-            <Sparkles className="mx-auto size-6 text-[#d6b75b]" aria-hidden="true" />
-            <p className="mt-5 font-serif text-[clamp(2.5rem,8vw,7rem)] font-light leading-none">
-              {copy.coverTitle}
-            </p>
-            <p className="mt-4 text-sm uppercase tracking-[0.32em] text-[#f6f0e4]/58">
-              {copy.coverSubtitle}
-            </p>
-          </FadeUp>
-        </Container>
-      </section>
+      <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />
       <LuxuryFooter
         content={content}
         copy={copy}

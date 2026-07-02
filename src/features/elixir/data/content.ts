@@ -237,12 +237,12 @@ export const defaultElixirContent: ElixirContent = {
   brand: "FONDJO",
   brandPositioning: {
     primary: {
-      en: "Founded and made in Buea, Cameroon.",
-      fr: "Enracine en Afrique. Cree pour le monde.",
+      en: "A precise hair treatment oil founded and made in Buea, Cameroon.",
+      fr: "Une huile de soin capillaire precise fondee et fabriquee a Buea, Cameroun.",
     },
     secondary: {
-      en: "African heritage hair treatment for all hair types.",
-      fr: "Enracine au Cameroun. Concu pour durer une generation.",
+      en: "The FONDJO family name, a root-led formula, and a quieter standard of care.",
+      fr: "Le nom de famille FONDJO, une formule pensee par la racine et une exigence calme du soin.",
     },
   },
   currency: "USD",
@@ -310,17 +310,17 @@ export const defaultElixirContent: ElixirContent = {
       width: 1800,
     },
     intro: {
-      en: "FONDJO RACINE is a heritage hair care brand carrying the founder's family name, created by Kamyou Ulrich Fondjo and rooted in African provenance, careful production, and documented customer results.",
-      fr: "FONDJO RACINE porte le nom de famille du fondateur Kamyou Ulrich Fondjo, avec un ancrage africain, une production en petite serie et des resultats clients documentes.",
+      en: "FONDJO is the family name. RACINE means root. Together they set the discipline of the brand: begin with the scalp, respect the material, and make every bottle with the restraint expected of something carrying a name.",
+      fr: "FONDJO est le nom de famille. RACINE signifie racine. Ensemble, ils donnent la discipline de la marque : commencer par le cuir chevelu, respecter la matiere et fabriquer chaque flacon avec la retenue qu'exige un nom.",
     },
     name: "Kamyou Ulrich Fondjo",
     signature: {
-      en: "Founded and made in Buea, Cameroon, at the base of Mount Cameroon.",
-      fr: "Enracine au Cameroun. Cree pour chaque femme qui veut preuve, soin et beaute dans le meme flacon.",
+      en: "Buea is not decoration in this story. It is the place where the product is made, tested, handled, and held to a standard.",
+      fr: "Buea n'est pas un decor dans cette histoire. C'est le lieu ou le produit est fabrique, teste, manipule et tenu a une exigence.",
     },
     title: {
-      en: "Founded and made in Buea, Cameroon.",
-      fr: "Un rituel beaute camerounais pense pour voyager.",
+      en: "A family name, carried carefully.",
+      fr: "Un nom de famille, porte avec soin.",
     },
   },
   guarantee: {
