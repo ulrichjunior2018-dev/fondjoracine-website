@@ -53,12 +53,12 @@ export const ingredients = [
 export const transformations = [
   {
     label: "Week 1",
-    image: "/images/market-lifestyle.png",
+    image: "/images/hero-origin.png",
     caption: "A clarified scalp ritual focused on comfort and balance.",
   },
   {
     label: "Week 8",
-    image: "/images/barbershop.png",
+    image: "/images/hair-texture-lifestyle.png",
     caption: "Hair appears softer, glossier, and more light-reflective.",
   },
 ] as const;
@@ -85,8 +85,8 @@ export const testimonials = [
 ] as const;
 
 export const instagramGallery = [
-  "/images/market-lifestyle.png",
-  "/images/barbershop.png",
+  "/images/hero-origin.png",
+  "/images/hair-texture-lifestyle.png",
   "/images/night-routine.png",
   "/images/packing-orders.png",
 ] as const;

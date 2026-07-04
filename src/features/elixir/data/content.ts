@@ -183,7 +183,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Coiffage et soin dans un salon camerounais — detail texture capillaire",
           },
           height: 1300,
-          src: "/images/barbershop.png",
+          src: "/images/hair-texture-lifestyle.png",
           width: 1800,
         },
         before: {
@@ -192,7 +192,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie FONDJO RACINE",
           },
           height: 1300,
-          src: "/images/market-lifestyle.png",
+          src: "/images/hero-origin.png",
           width: 1800,
         },
         caption: {

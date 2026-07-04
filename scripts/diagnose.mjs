@@ -8,14 +8,14 @@ const requiredImages = [
   "hero-origin.png",
   "studio-reflection.png",
   "volcanic-bottle.png",
-  "market-lifestyle.png",
+  "hair-texture-lifestyle.png",
   "night-routine.png",
-  "barbershop.png",
   "packing-orders.png",
   "front-label.png",
   "back-label.png",
   "facebook-cover.png",
   "profile-logo.png",
+  "mount-cameroon-river-bottle.png",
 ];
 
 const requiredSiteImageKeys = [

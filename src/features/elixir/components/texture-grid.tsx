@@ -30,14 +30,14 @@ const TEXTURES: Texture[] = [
     label: "Waves & Frizz",
     // Claim verified: botanical emollients smooth the cuticle without film-forming agents
     claim: "Defines movement — smooths the cuticle without weighing waves down",
-    poster: "/images/market-lifestyle.png",
+    poster: "/images/hero-origin.png",
   },
   {
     id: "curly",
     label: "Curly & Thick",
     // Claim verified: penetrating oils (baobab, castor) seal moisture in cortex
     claim: "Seals moisture — penetrates before locking hydration in",
-    poster: "/images/barbershop.png",
+    poster: "/images/hair-texture-lifestyle.png",
   },
   {
     id: "coiled",
