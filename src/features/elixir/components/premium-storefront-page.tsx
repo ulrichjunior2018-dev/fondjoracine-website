@@ -642,7 +642,7 @@ export function ClosingChapter({ copy, whatsappUrl }: { copy: Copy; whatsappUrl:
   const actions = [
     {
       body: consultationCard?.[1] ?? "",
-      href: "/hair-consultation",
+      href: "/diagnostic",
       icon: Sparkles,
       title: consultationCard?.[0] ?? "",
     },

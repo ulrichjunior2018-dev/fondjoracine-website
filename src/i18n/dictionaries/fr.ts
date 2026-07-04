@@ -58,11 +58,10 @@ export const fr = {
   marketTitle: "Dans la ville",
   menu: "Menu",
   nav: [
-    ["Objet", "#product"],
-    ["Origine", "#origin"],
-    ["Formule", "#formula"],
-    ["Rituel", "#ritual"],
-    ["Contact", "#contact"],
+    ["Diagnostic", "/diagnostic"],
+    ["Botanique", "/botanique"],
+    ["Sève Racine", "/seve-racine"],
+    ["Sur-mesure", "/sur-mesure"],
   ],
   nightText:
     "Quelques gouttes chauffees dans les mains, puis travaillees lentement sur le cuir chevelu avant la fin du jour.",

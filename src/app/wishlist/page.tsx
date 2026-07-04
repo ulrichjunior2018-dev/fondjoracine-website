@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function WishlistPage() {
-  redirect("/product");
+  redirect("/seve-racine" as never);
 }

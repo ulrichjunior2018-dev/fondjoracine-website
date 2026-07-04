@@ -1,13 +1,5 @@
-import {
-  buildRouteMetadata,
-  LandingRoutePage,
-} from "@/features/elixir/components/landing-route-page";
-
-export const metadata = buildRouteMetadata(
-  "Ingredients",
-  "Review the botanical oils and extracts in FONDJO RACINE SÈVE, presented as cosmetic hair-care support.",
-);
+import { redirect } from "next/navigation";
 
 export default function IngredientsPage() {
-  return <LandingRoutePage />;
+  redirect("/botanique" as never);
 }

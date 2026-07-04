@@ -61,11 +61,10 @@ export const es = {
   marketTitle: "En la ciudad",
   menu: "Menu",
   nav: [
-    ["Objeto", "#product"],
-    ["Origen", "#origin"],
-    ["Formula", "#formula"],
-    ["Ritual", "#ritual"],
-    ["Contacto", "#contact"],
+    ["Diagnóstico", "/diagnostic"],
+    ["Botánica", "/botanique"],
+    ["Sève Racine", "/seve-racine"],
+    ["A medida", "/sur-mesure"],
   ],
   nightText:
     "Unas gotas calentadas en las manos y trabajadas lentamente en el cuero cabelludo al cerrar el dia.",

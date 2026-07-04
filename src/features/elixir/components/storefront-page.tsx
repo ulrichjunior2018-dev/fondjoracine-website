@@ -79,7 +79,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
   const navLinks = [
     { href: "#hero", label: copy.navHome },
     { href: "#diagnosis", label: copy.navDiagnosis },
-    { href: "#product", label: copy.navProduct },
+    { href: "/seve-racine", label: copy.navProduct },
     { href: "#ingredients", label: copy.navIngredients },
     { href: "#before-after", label: copy.navResults },
     { href: "#how-to-use", label: copy.navHow },
@@ -718,7 +718,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                 <WhatsAppCta href={whatsappUrl} label={t(content.finalCta.button, locale)} />
                 <a
                   className="inline-flex h-12 items-center gap-2 text-sm font-semibold text-accent"
-                  href="#product"
+                  href="/seve-racine"
                 >
                   {locale === "fr" ? "Voir le produit" : "View product"}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />

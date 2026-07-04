@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { destination: "/diagnostic", permanent: true, source: "/hair-consultation" },
+      { destination: "/botanique", permanent: true, source: "/ingredients" },
+      { destination: "/seve-racine", permanent: true, source: "/cart" },
+      { destination: "/seve-racine", permanent: true, source: "/collections" },
+      { destination: "/seve-racine", permanent: true, source: "/collections/:slug*" },
+      { destination: "/seve-racine", permanent: true, source: "/pre-order" },
+      { destination: "/seve-racine", permanent: true, source: "/product" },
+      { destination: "/seve-racine", permanent: true, source: "/products/:slug*" },
+      { destination: "/seve-racine", permanent: true, source: "/search" },
+      { destination: "/seve-racine", permanent: true, source: "/shop" },
+      { destination: "/seve-racine", permanent: true, source: "/wishlist" },
+    ];
+  },
   async headers() {
     return [
       {

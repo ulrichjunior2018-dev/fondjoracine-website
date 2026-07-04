@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function ProductSlugPage() {
-  redirect("/product");
+  redirect("/seve-racine" as never);
 }

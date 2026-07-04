@@ -53,8 +53,8 @@ function getTrustIcon(index: number) {
 }
 
 export function CinematicHero({
-  consultationHref = "#formula",
-  productHref = "#product",
+  consultationHref = "/diagnostic",
+  productHref = "/seve-racine",
 }: CinematicHeroProps) {
   return (
     <>
@@ -84,31 +84,31 @@ export function CinematicHero({
           <div className="relative z-20 mx-auto grid min-h-svh w-full max-w-[1440px] items-center gap-6 px-5 pb-8 pt-[5.7rem] text-center md:grid-cols-[minmax(0,0.94fr)_minmax(18rem,0.72fr)_minmax(12rem,0.28fr)] md:gap-7 md:px-10 md:py-24 md:text-left xl:px-20">
             <div className="mx-auto max-w-[43rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D4AF37]">
-                FONDJO RACINE · MADE IN BUEA, CAMEROON
+                FONDJO RACINE · DIAGNOSTIC CAPILLAIRE
               </p>
               <h1 className="mt-5 font-serif text-[clamp(2.72rem,11.4vw,5.1rem)] font-light leading-[0.92] tracking-normal text-[#F7F4EB] md:mt-6 md:text-[clamp(4rem,6.2vw,7rem)] md:leading-[0.91]">
-                One Universal Oil.
-                <span className="block text-[#D4AF37]">Infinite Textures.</span>
-                <span className="block">Born in Buea.</span>
+                Vos cheveux
+                <span className="block text-[#D4AF37]">ont une histoire.</span>
+                <span className="block">Commençons par l&apos;écouter.</span>
               </h1>
               <p className="mx-auto mt-5 max-w-[40rem] text-[0.96rem] leading-7 text-[#F7F4EB]/78 md:mx-0 md:mt-6 md:text-lg md:leading-8">
-                SÈVE is a botanical hair treatment oil crafted in Buea to nourish the scalp,
-                strengthen roots, and restore softness across every hair type.
+                Avant le flacon, FONDJO RACINE commence par comprendre votre texture, votre rythme,
+                votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.
               </p>
 
               <div className="mt-6 grid gap-3 sm:inline-grid sm:grid-cols-2 md:mt-10">
                 <a
                   className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#D4AF37] px-7 text-sm font-semibold text-[#0D0D0D] shadow-[0_22px_80px_rgb(212_175_55/.28)] transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
-                  href={productHref}
+                  href={consultationHref}
                 >
-                  Discover SÈVE
+                  Commencer mon diagnostic
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </a>
                 <a
                   className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F7F4EB]/24 bg-[#0D0D0D]/32 px-7 text-sm font-semibold text-[#F7F4EB] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
-                  href={consultationHref}
+                  href={productHref}
                 >
-                  Start Hair Consultation
+                  Découvrir Sève Racine
                 </a>
               </div>
             </div>

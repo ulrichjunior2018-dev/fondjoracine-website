@@ -1,13 +1,5 @@
-import {
-  buildRouteMetadata,
-  LandingRoutePage,
-} from "@/features/elixir/components/landing-route-page";
-
-export const metadata = buildRouteMetadata(
-  "Hair Consultation",
-  "Start the free FONDJO RACINE hair consultation for cosmetic routine guidance and optional WhatsApp follow-up.",
-);
+import { redirect } from "next/navigation";
 
 export default function HairConsultationPage() {
-  return <LandingRoutePage />;
+  redirect("/diagnostic" as never);
 }
