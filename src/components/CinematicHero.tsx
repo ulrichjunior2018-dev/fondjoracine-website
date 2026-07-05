@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, Droplets, Leaf, Languages, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, CreditCard, PenLine } from "lucide-react";
 import Image from "next/image";
 
 import { RealPhotographyPendingSlot } from "@/components/HairTexturePanels";
+import { config } from "@/lib/config";
 import { useI18n } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
 
@@ -11,22 +12,6 @@ type CinematicHeroProps = {
   consultationHref?: string;
   productHref?: string;
 };
-
-function getTrustIcon(index: number) {
-  switch (index) {
-    case 1:
-      return Leaf;
-    case 2:
-      return Languages;
-    case 3:
-      return Droplets;
-    case 4:
-      return ShieldCheck;
-    case 0:
-    default:
-      return Sparkles;
-  }
-}
 
 export function CinematicHero({
   consultationHref = "/diagnostic",
@@ -43,17 +28,15 @@ export function CinematicHero({
           secondary: "Discover Sève Racine",
           story:
             "Before the bottle, Maison Fondjo begins by understanding your texture, your rhythm, your scalp and how your hair lives every day.",
+          pending: "Real product photography pending",
           titleFirst: "Your hair",
           titleSecond: "has a story.",
           titleThird: "Let us begin by listening.",
-          trustLabel: "Maison Fondjo trust markers",
+          trustLabel: "Maison Fondjo box trust signals",
           trustItems: [
-            "Made in Cameroon",
-            "11 verified botanicals",
-            "For multiple textures",
-            "100ml",
-            "External use",
-            "MTN MoMo + Orange Money",
+            ["Numbered box", `${config.batch.name}, ${config.batch.size} pieces`],
+            ["Founder signature", "Fondjo Ulrich / Fondjo Clarisse"],
+            ["Payment marks", "MTN Mobile Money + Orange Money"],
           ],
         }
       : {
@@ -64,17 +47,15 @@ export function CinematicHero({
           secondary: "Découvrir Sève Racine",
           story:
             "Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme, votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.",
+          pending: "Photographie produit réelle en attente",
           titleFirst: "Vos cheveux",
           titleSecond: "ont une histoire.",
           titleThird: "Commençons par l'écouter.",
-          trustLabel: "Repères de confiance Maison Fondjo",
+          trustLabel: "Repères du coffret Maison Fondjo",
           trustItems: [
-            "Fabriqué au Cameroun",
-            "11 botaniques vérifiées",
-            "Pour textures multiples",
-            "100ml",
-            "Usage externe",
-            "MTN MoMo + Orange Money",
+            ["Coffret numéroté", `${config.batch.name}, ${config.batch.size} exemplaires`],
+            ["Ligne signature", "Fondjo Ulrich / Fondjo Clarisse"],
+            ["Marques paiement", "MTN Mobile Money + Orange Money"],
           ],
         };
 
@@ -134,28 +115,30 @@ export function CinematicHero({
             </div>
 
             <div className="relative mx-auto aspect-[4/5] w-[min(70vw,18.5rem)] animate-[fondjoFadeUp_1s_ease-out_.18s_both] md:mx-0 md:w-full md:max-w-[30rem]">
-              <div className="absolute inset-[11%] rounded-full bg-[#D4AF37]/24 blur-3xl motion-safe:animate-[fondjoGlow_5.5s_ease-in-out_infinite]" />
-              <div className="absolute inset-x-[15%] bottom-[5%] h-[16%] rounded-full bg-[#D4AF37]/16 blur-2xl" />
-              <div className="absolute inset-[3%] rounded-full bg-[#1B5E20]/22 blur-2xl" />
-              <Image
-                alt={heroCopy.bottleAlt}
-                className="object-contain drop-shadow-[0_34px_70px_rgb(0_0_0/.6)] md:motion-safe:animate-[fondjoFloat_7s_ease-in-out_infinite]"
-                fill
-                priority
-                sizes="(min-width: 1024px) 28vw, 70vw"
-                src={siteImages.studioBottle}
-              />
-              <div className="pointer-events-none absolute left-[28%] top-[44%] grid h-[28%] w-[44%] place-items-center rounded-sm border border-[#D4AF37]/42 bg-[#082012]/88 px-2 text-center shadow-[0_14px_34px_rgb(0_0_0/.38)] backdrop-blur-[1px]">
-                <div>
-                  <p className="text-[0.48rem] font-semibold uppercase tracking-[0.2em] text-[#D4AF37] sm:text-[0.58rem]">
+              <div className="absolute inset-[7%] rounded-[1.1rem] bg-[#D4AF37]/18 blur-3xl" />
+              <div className="relative flex h-full flex-col justify-between rounded-[0.85rem] border border-[#d6b75b]/38 bg-[linear-gradient(145deg,#030302,#12100b_44%,#050403)] p-5 shadow-[0_34px_90px_rgb(0_0_0/.58)]">
+                <div className="rounded-sm border border-[#d6b75b]/24 bg-[#f6f0e4] px-4 py-5 text-[#14110b] shadow-[inset_0_0_0_1px_rgb(20_17_11/.08)]">
+                  <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#7b622d]">
                     Maison Fondjo
                   </p>
-                  <p className="mt-1 font-serif text-[0.9rem] leading-none text-[#F7F4EB] sm:text-[1.05rem]">
-                    Sève Racine
+                  <p className="mt-3 font-serif text-4xl font-light leading-none">Sève Racine</p>
+                  <div className="mt-5 h-px bg-[#d6b75b]" />
+                  <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#14110b]/60">
+                    {heroCopy.pending}
                   </p>
                 </div>
+                <div className="relative mx-auto my-5 h-32 w-32 rounded-full border border-[#d6b75b]/45 bg-[#080706] shadow-[0_0_0_12px_rgb(214_183_91/.05)]">
+                  <span className="absolute inset-5 rounded-full border border-[#d6b75b]/35" />
+                  <span className="absolute inset-x-7 top-1/2 h-px bg-[#d6b75b]/60" />
+                  <span className="absolute inset-y-7 left-1/2 w-px bg-[#d6b75b]/60" />
+                  <span className="absolute inset-0 grid place-items-center font-serif text-2xl text-[#d6b75b]">
+                    MF
+                  </span>
+                </div>
+                <p className="border-t border-[#d6b75b]/24 pt-4 text-center text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-[#f6f0e4]/58">
+                  {heroCopy.bottleAlt}
+                </p>
               </div>
-              <div className="pointer-events-none absolute inset-x-[22%] bottom-[1%] h-px bg-[linear-gradient(90deg,transparent,#D4AF37,transparent)] opacity-80" />
             </div>
 
             <div aria-hidden="true" className="hidden md:block" />
@@ -165,19 +148,24 @@ export function CinematicHero({
 
       <section
         aria-label={heroCopy.trustLabel}
-        className="border-y border-[#D4AF37]/16 bg-[#0D0D0D] px-4 py-4 text-[#F7F4EB]"
+        className="border-y border-[#D4AF37]/18 bg-[#0D0D0D] px-4 py-5 text-[#F7F4EB]"
       >
-        <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-2 lg:grid-cols-6">
-          {heroCopy.trustItems.map((item, index) => {
-            const Icon = getTrustIcon(index);
+        <div className="mx-auto grid max-w-7xl gap-3 md:grid-cols-3">
+          {heroCopy.trustItems.map(([label, value], index) => {
+            const Icon = index === 0 ? BadgeCheck : index === 1 ? PenLine : CreditCard;
 
             return (
               <div
-                className="flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/8 bg-white/[0.025] px-3 text-center text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#F7F4EB]/76"
-                key={item}
+                className="flex min-h-20 items-center gap-4 rounded-sm border border-[#d6b75b]/18 bg-[#f6f0e4]/[0.035] px-4"
+                key={label}
               >
-                <Icon className="size-3.5 shrink-0 text-[#D4AF37]" aria-hidden="true" />
-                <span>{item}</span>
+                <Icon className="size-5 shrink-0 text-[#D4AF37]" aria-hidden="true" />
+                <span>
+                  <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+                    {label}
+                  </span>
+                  <span className="mt-1 block text-sm text-[#F7F4EB]/74">{value}</span>
+                </span>
               </div>
             );
           })}

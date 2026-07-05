@@ -177,15 +177,15 @@ const formulaImageFallbacks = [
 const defaultFormulaIngredients = formulaIngredients.map((ingredient, index) => ({
   image: formulaImageFallbacks[index % formulaImageFallbacks.length],
   imageAlt: {
-    en: `${ingredient.name_fr} botanical ingredient visual`,
+    en: `${ingredient.name_en} botanical card illustration`,
     fr: `Visuel botanique ${ingredient.name_fr}`,
   },
   name: {
-    en: ingredient.name_fr,
+    en: ingredient.name_en,
     fr: ingredient.name_fr,
   },
   note: {
-    en: ingredient.chosen_for,
+    en: ingredient.chosen_for_en,
     fr: ingredient.chosen_for,
   },
 }));

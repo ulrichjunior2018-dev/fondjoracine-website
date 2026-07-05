@@ -34,7 +34,7 @@ export const en = {
   footerTerms: "Terms",
   formula: "Formula",
   formulaBody:
-    "The formula follows 11 verified botanicals. Castor, jojoba, coconut, avocado and olive are not ornaments: each carries a role.",
+    "The formula follows 11 botanicals: mint, moringa, black seed, bay laurel, castor, coconut, olive, sweet almond, avocado, argan and jojoba. Each card states why the ingredient is present.",
   formulaTitle: "11 botanicals, edited with care.",
   gallery: "Gallery",
   heroEyebrow: "Maison Fondjo · Hair ritual oil",
@@ -85,8 +85,9 @@ export const en = {
   ritualSteps: ["Warm a small amount", "Work the scalp", "Finish lengths or beard"],
   ritualTitle: "Use less. Place better.",
   scroll: "Scroll",
-  textureText: "A reminder from Buea: SÈVE does not follow a hair-type label, but a real need.",
-  textureTitle: "Texture study",
+  textureText:
+    "Dedicated image to produce before final publication; no photograph is reused under another caption.",
+  textureTitle: "Real photography pending",
   whatsapp: "WhatsApp assistance",
   whyBody:
     "The ritual moves in order: root, scalp, fibre, ends. Castor, black seed, jojoba, coconut and olive keep the oil deliberate, never heavy.",

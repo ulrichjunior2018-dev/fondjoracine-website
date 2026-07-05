@@ -40,7 +40,7 @@ export const fr = {
   footerTerms: "Conditions",
   formula: "Formule",
   formulaBody:
-    "La formule suit 11 botaniques verifiees. Ricin, jojoba, coco, avocat et olive ne sont pas des ornements : chacun porte un role.",
+    "La formule suit 11 botaniques : menthe, moringa, nigelle, laurier, ricin, coco, olive, amande douce, avocat, argan et jojoba. Chaque carte indique pourquoi l'ingrédient est présent.",
   formulaTitle: "11 botaniques, editees avec soin.",
   gallery: "Galerie",
   heroEyebrow: "Maison Fondjo · Huile rituel capillaire",
@@ -98,8 +98,8 @@ export const fr = {
   ritualTitle: "Utiliser moins. Placer mieux.",
   scroll: "Defiler",
   textureText:
-    "Un rappel depuis Buea : SÈVE ne suit pas une etiquette de type de cheveux, mais un besoin reel.",
-  textureTitle: "Etude de texture",
+    "Image dédiée à produire avant publication finale ; aucune photographie n'est réutilisée sous une autre légende.",
+  textureTitle: "Photographie réelle en attente",
   whatsapp: "Assistance WhatsApp",
   whyBody:
     "Le rituel avance dans l'ordre : racine, cuir chevelu, fibre, pointes. Ricin, nigelle, jojoba, coco et olive gardent l'huile deliberee, jamais lourde.",

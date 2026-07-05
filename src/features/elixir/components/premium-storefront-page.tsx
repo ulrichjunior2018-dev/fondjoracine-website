@@ -10,6 +10,7 @@ import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
+import { formulaIngredients, formulaNote } from "@/content/formula";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -45,43 +46,6 @@ const campaignImages = {
   ingredientJojobaOil: siteImages.ingredientJojobaOil,
   ingredientOliveOil: siteImages.ingredientOliveOil,
 } as const;
-
-const ingredientTimelineDetails = [
-  {
-    benefits: ["Racines soutenues", "Cuir chevelu nourri", "Casse visible limitée"],
-    image: campaignImages.ingredientCastorOil,
-    region: "Afrique de l'Ouest",
-  },
-  {
-    benefits: ["Sensation fraîche", "Confort du cuir chevelu", "Massage mesuré"],
-    image: campaignImages.hairTexture,
-    region: "Afrique de l'Ouest",
-  },
-  {
-    benefits: ["Fibre hydratée", "Sécheresse limitée", "Brillance naturelle"],
-    image: campaignImages.ingredientCoconutOil,
-    region: "Zone tropicale",
-  },
-  {
-    benefits: ["Équilibre du cuir chevelu", "Fini léger", "Sensation saine"],
-    image: campaignImages.ingredientJojobaOil,
-    region: "Amériques",
-  },
-  {
-    benefits: ["Nutrition", "Toucher réparé", "Fibre conditionnée"],
-    image: campaignImages.ingredientAvocadoOil,
-    region: "Amériques tropicales",
-  },
-  {
-    benefits: ["Hydratation scellée", "Douceur améliorée", "Sécheresse limitée"],
-    image: campaignImages.ingredientOliveOil,
-    region: "Méditerranée",
-  },
-] as const;
-
-function getIngredientDetails(index: number) {
-  return ingredientTimelineDetails.at(index) ?? ingredientTimelineDetails[0];
-}
 
 function FadeUp({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
@@ -127,21 +91,33 @@ function ImagePanel({
   );
 }
 
-function MapPinIcon() {
+function EngravedBotanicalIllustration({ index }: { index: number }) {
+  const side = index % 2 === 0 ? 1 : -1;
+
   return (
     <svg
       aria-hidden="true"
-      className="mt-0.5 size-3 shrink-0"
+      className="mx-auto h-32 w-36 text-[#7b622d]"
       fill="none"
-      viewBox="0 0 16 16"
+      viewBox="0 0 160 132"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M8 14s4.5-4.28 4.5-8A4.5 4.5 0 0 0 3.5 6c0 3.72 4.5 8 4.5 8Z"
+        d={`M80 118 C ${76 + side * 7} 92, ${86 - side * 18} 52, 80 16`}
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeWidth="1.1"
       />
-      <circle cx="8" cy="6" r="1.55" fill="currentColor" />
+      {[0, 1, 2, 3, 4].map((leaf) => (
+        <path
+          d={`M80 ${102 - leaf * 18} C ${112 + side * leaf * 1.5} ${92 - leaf * 17}, ${112 + side * 4} ${70 - leaf * 13}, 83 ${84 - leaf * 15} C ${98 + side * 4} ${90 - leaf * 17}, ${98 + side * 5} ${104 - leaf * 14}, 80 ${102 - leaf * 18}`}
+          key={leaf}
+          stroke="currentColor"
+          strokeOpacity={0.82 - leaf * 0.08}
+          strokeWidth="0.9"
+        />
+      ))}
+      <circle cx="80" cy="16" r="2.4" fill="currentColor" opacity="0.5" />
     </svg>
   );
 }
@@ -319,10 +295,12 @@ export function IngredientCarousel({
   copy,
   locale,
 }: PremiumStorefrontPageProps & { copy: Copy }) {
-  const ingredients = content.ingredientScience.ingredients.slice(
-    0,
-    ingredientTimelineDetails.length,
-  );
+  void content;
+  const ingredients = formulaIngredients;
+  const formulaNoteText =
+    locale === "en"
+      ? "This list is not presented as concentration order; the exact label order awaits formulator confirmation."
+      : formulaNote;
 
   return (
     <section
@@ -341,78 +319,40 @@ export function IngredientCarousel({
           <p className="mt-5 max-w-2xl text-sm leading-8 text-[#f6f0e4]/65">{copy.formulaBody}</p>
         </FadeUp>
 
-        <div
-          aria-label="Cartes des ingrédients de Buea"
-          className="-mx-5 mt-12 snap-x snap-mandatory overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10 [&::-webkit-scrollbar]:hidden"
-        >
-          <div className="grid w-max auto-cols-[82vw] grid-flow-col gap-4 sm:auto-cols-[26rem] lg:auto-cols-[30rem]">
-            {ingredients.map((ingredient, index) => {
-              const details = getIngredientDetails(index);
-              const name = t(ingredient.name, locale);
-              const note = t(ingredient.note, locale);
-              const image = ingredient.image ?? details.image;
-              const imageAlt = ingredient.imageAlt
-                ? t(ingredient.imageAlt, locale)
-                : `${name}, photographie botanique pour Sève Racine`;
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {ingredients.map((ingredient, index) => {
+            const name = locale === "en" ? ingredient.name_en : ingredient.name_fr;
+            const note = locale === "en" ? ingredient.chosen_for_en : ingredient.chosen_for;
 
-              return (
-                <motion.article
-                  className="group relative snap-start overflow-hidden rounded-md border border-[#d6b75b]/18 bg-white/[0.035] shadow-[0_30px_90px_rgb(0_0_0/.24)]"
-                  initial={{ opacity: 0, y: 18 }}
-                  key={name}
-                  transition={{ duration: 0.45, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                  viewport={{ once: true, margin: "-12%" }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[#17130e]">
-                    <Image
-                      alt={imageAlt}
-                      blurDataURL={blurDataUrl}
-                      className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.035]"
-                      fill
-                      loading="lazy"
-                      placeholder="blur"
-                      sizes="(min-width: 1024px) 30rem, (min-width: 640px) 26rem, 82vw"
-                      src={image}
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_54%,rgb(8_7_6/.86)_100%)]" />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-[#d6b75b]/28 bg-[#080706]/72 px-3 py-2 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-[#d6b75b] backdrop-blur">
-                        <MapPinIcon />
-                        {details.region}
-                      </span>
-                      <span className="font-mono text-xs text-[#f6f0e4]/58">
-                        {String(index + 1).padStart(2, "0")} / {ingredients.length}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-5 sm:p-6">
-                    <h3 className="font-serif text-4xl font-light leading-none text-[#f6f0e4]">
-                      {name}
-                    </h3>
-                    <p className="mt-4 min-h-21 text-sm leading-7 text-[#f6f0e4]/66">{note}</p>
-                    <div className="mt-6 h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-50" />
-                    <ul
-                      aria-label={`${name} : bénéfices`}
-                      className="mt-5 grid gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#f6f0e4]/72"
-                    >
-                      {details.benefits.map((benefit) => (
-                        <li className="flex items-center gap-2" key={benefit}>
-                          <span className="size-1.5 rounded-full bg-[#d6b75b]" />
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,#d6b75b,transparent)] opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-                  />
-                </motion.article>
-              );
-            })}
-          </div>
+            return (
+              <motion.article
+                className="group relative min-h-[24rem] overflow-hidden rounded-sm border border-[#d6b75b]/46 bg-[#f6f0e4] p-6 text-[#14110b] shadow-[0_24px_80px_rgb(0_0_0/.2)]"
+                initial={{ opacity: 0, y: 18 }}
+                key={`${name}-${index}`}
+                transition={{ duration: 0.45, delay: index * 0.025, ease: [0.16, 1, 0.3, 1] }}
+                viewport={{ once: true, margin: "-12%" }}
+                whileInView={{ opacity: 1, y: 0 }}
+              >
+                <div aria-hidden="true" className="absolute inset-3 border border-[#d6b75b]/30" />
+                <div className="relative">
+                  <p className="text-center text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#7b622d]/80">
+                    Maison Fondjo Herbier
+                  </p>
+                  <EngravedBotanicalIllustration index={index} />
+                  <h3 className="mt-5 text-center font-serif text-4xl font-light leading-none">
+                    {name}
+                  </h3>
+                  <p className="mt-2 text-center font-serif text-lg italic text-[#7b622d]">
+                    {ingredient.latin}
+                  </p>
+                  <div className="mx-auto mt-5 h-px w-24 bg-[#d6b75b]" />
+                  <p className="mt-6 text-center text-sm leading-7 text-[#14110b]/70">{note}</p>
+                </div>
+              </motion.article>
+            );
+          })}
         </div>
+        <p className="mt-8 max-w-3xl text-xs leading-6 text-[#f6f0e4]/45">{formulaNoteText}</p>
       </Container>
     </section>
   );
@@ -507,28 +447,22 @@ export function RitualSection({ copy }: { copy: Copy }) {
 export function LifestyleGallery({ copy }: { copy: Copy }) {
   const moments = [
     {
-      src: campaignImages.night,
       text: copy.nightText,
       title: copy.nightTitle,
     },
     {
-      src: campaignImages.market,
       text: copy.marketText,
       title: copy.marketTitle,
     },
     {
-      src: campaignImages.barbershop,
       text: copy.barbershopText,
       title: copy.barbershopTitle,
     },
     {
-      src: campaignImages.packing,
       text: copy.packingText,
       title: copy.packingTitle,
     },
   ] as const;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeMoment = moments.find((_, index) => index === activeIndex) ?? moments[0];
 
   return (
     <section
@@ -545,81 +479,22 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
             {copy.lifestyleTitle}
           </h2>
         </FadeUp>
-        <FadeUp className="mt-12 grid gap-5 lg:grid-cols-[1.18fr_0.82fr] lg:items-end">
-          <motion.div
-            className="relative min-h-[28rem] overflow-hidden rounded-md bg-[#14110b]"
-            key={activeMoment.title}
-            initial={{ opacity: 0.82 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <ImagePanel
-              alt={`Maison Fondjo ${activeMoment.title}`}
-              className="absolute inset-0"
-              sizes="(min-width: 1024px) 58vw, 100vw"
-              src={activeMoment.src}
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgb(20_17_11/.82)_100%)]" />
-            <div className="absolute bottom-6 left-5 right-5 text-[#f6f0e4] sm:bottom-8 sm:left-8 sm:right-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#d6b75b]">
-                {copy.gallery}
-              </p>
-              <h3 className="mt-3 font-serif text-5xl font-light leading-none">
-                {activeMoment.title}
-              </h3>
-              <p className="mt-4 max-w-lg text-sm leading-7 text-[#f6f0e4]/72">
-                {activeMoment.text}
-              </p>
-            </div>
-          </motion.div>
-          <div className="grid gap-3">
-            {moments.map((moment, index) => {
-              const isActive = index === activeIndex;
-
-              return (
-                <button
-                  aria-pressed={isActive}
-                  className={`group grid grid-cols-[5.5rem_1fr] gap-4 rounded-md border p-2 text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#7b622d] ${
-                    isActive
-                      ? "border-[#7b622d]/40 bg-[#14110b] text-[#f6f0e4]"
-                      : "border-[#7b622d]/16 bg-white/30 text-[#14110b] hover:border-[#7b622d]/34"
-                  }`}
-                  key={moment.title}
-                  onClick={() => setActiveIndex(index)}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  type="button"
-                >
-                  <ImagePanel
-                    alt=""
-                    className="relative aspect-square overflow-hidden rounded-sm bg-[#17130e]"
-                    sizes="6rem"
-                    src={moment.src}
-                  />
-                  <span className="flex min-w-0 flex-col justify-center">
-                    <span className="font-serif text-2xl leading-none">{moment.title}</span>
-                    <span
-                      className={`mt-2 text-xs leading-5 ${
-                        isActive ? "text-[#f6f0e4]/62" : "text-[#14110b]/62"
-                      }`}
-                    >
-                      {moment.text}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </FadeUp>
-        <div className="mt-5 grid gap-4 md:grid-cols-4">
+        <div className="mt-12 grid gap-4 md:grid-cols-4">
           {moments.map((moment, index) => (
             <FadeUp className={index % 2 === 1 ? "md:mt-10" : ""} key={moment.title}>
-              <article className="group">
-                <ImagePanel
-                  alt={`Maison Fondjo ${moment.title}`}
-                  className="relative aspect-[4/5] overflow-hidden rounded-md"
-                  sizes="(min-width: 768px) 25vw, 100vw"
-                  src={moment.src}
-                />
+              <article className="group rounded-sm border border-[#7b622d]/18 bg-white/42 p-3">
+                <div className="relative grid aspect-[4/5] place-items-center overflow-hidden rounded-sm border border-[#7b622d]/22 bg-[#14110b] text-[#f6f0e4]">
+                  <div aria-hidden="true" className="absolute inset-5 border border-[#d6b75b]/24" />
+                  <div className="relative px-5 text-center">
+                    <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b]">
+                      {copy.textureTitle}
+                    </p>
+                    <p className="mt-4 font-serif text-3xl leading-none">{moment.title}</p>
+                    <p className="mt-5 text-xs uppercase tracking-[0.16em] text-[#f6f0e4]/48">
+                      {copy.textureText}
+                    </p>
+                  </div>
+                </div>
                 <h3 className="mt-4 font-serif text-3xl">{moment.title}</h3>
                 <p className="mt-2 text-sm leading-7 text-[#14110b]/64">{moment.text}</p>
               </article>
