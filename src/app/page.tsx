@@ -13,26 +13,26 @@ export async function generateMetadata(): Promise<Metadata> {
   const image = getPrimaryElixirImage(content);
 
   return {
-    title: t(content.seo.title, "fr"),
-    description: t(content.seo.description, "fr"),
+    title: t(content.seo.title, "en"),
+    description: t(content.seo.description, "en"),
     ...(isProduction
       ? {
           alternates: {
             canonical: siteConfig.url,
             languages: {
-              fr: siteConfig.url,
+              en: siteConfig.url,
             },
           },
         }
       : {}),
     openGraph: {
-      title: t(content.seo.title, "fr"),
-      description: t(content.seo.description, "fr"),
-      locale: "fr_FR",
+      title: t(content.seo.title, "en"),
+      description: t(content.seo.description, "en"),
+      locale: "en_US",
       url: siteConfig.url,
       images: [
         {
-          alt: t(image.alt, "fr"),
+          alt: t(image.alt, "en"),
           height: image.height,
           url: image.src,
           width: image.width,
@@ -52,9 +52,9 @@ export default async function HomePage() {
       "@type": "Brand",
       name: content.brand,
     },
-    description: t(content.seo.description, "fr"),
+    description: t(content.seo.description, "en"),
     image: content.images.map((image) => image.src),
-    name: t(content.title, "fr"),
+    name: t(content.title, "en"),
     offers: {
       "@type": "Offer",
       availability: "https://schema.org/InStock",
@@ -78,7 +78,7 @@ export default async function HomePage() {
       "@type": "Offer",
       itemOffered: {
         "@type": "Product",
-        name: t(content.product.name, "fr"),
+        name: t(content.product.name, "en"),
       },
     },
   };
@@ -87,10 +87,10 @@ export default async function HomePage() {
     "@type": "FAQPage",
     mainEntity: content.faq.items.map((item) => ({
       "@type": "Question",
-      name: t(item.question, "fr"),
+      name: t(item.question, "en"),
       acceptedAnswer: {
         "@type": "Answer",
-        text: t(item.answer, "fr"),
+        text: t(item.answer, "en"),
       },
     })),
   };
@@ -109,7 +109,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <PremiumStorefrontPage content={content} locale="fr" />
+      <PremiumStorefrontPage content={content} locale="en" />
     </>
   );
 }

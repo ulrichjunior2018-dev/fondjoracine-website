@@ -25,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+public/images/ChatGPT Image *.png
 
 # debug
 npm-debug.log*

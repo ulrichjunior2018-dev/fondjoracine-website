@@ -82,10 +82,9 @@ function getPaymentInstructions(
   if (method === "stripe") {
     return {
       heading: "Stripe Checkout",
-      instructions:
-        locale === "fr"
-          ? "Vous serez redirige vers Stripe pour finaliser le paiement par carte."
-          : "You will be redirected to Stripe to complete card payment.",
+      instructions: locale.startsWith("fr")
+        ? "Vous serez redirige vers Stripe pour finaliser le paiement par carte."
+        : "You will be redirected to Stripe to complete card payment.",
       label: "Stripe",
       number: "",
     };
@@ -139,7 +138,7 @@ async function createStripeCheckoutSession(
             quantity: input.quantity,
           },
     ],
-    locale: input.locale === "fr" ? "fr" : "en",
+    locale: input.locale.startsWith("fr") ? "fr" : "en",
     metadata: {
       order_id: order.id,
       order_number: order.order_number,

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { SeveRacineRouteSection } from "@/components/AdvisorRouteSections";
-import { advisorCopy } from "@/content/advisor-copy";
+import { copy } from "@/content/copy";
 
 export const metadata: Metadata = {
   title: "Sève Racine | Maison Fondjo",
-  description: advisorCopy.seveRacine.description,
+  description: copy.en.seveRacine.description,
 };
 
 export default function SeveRacinePage() {

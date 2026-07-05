@@ -2,11 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 import { env } from "@/config/env";
 import { elixirContentSchema } from "@/features/elixir/data/content-schema";
-import {
-  defaultElixirContent,
-  type ElixirContent,
-  type LocalizedText,
-} from "@/features/elixir/data/content";
+import { defaultElixirContent, type ElixirContent } from "@/features/elixir/data/content";
 import { buildWaLink, config, formatXaf } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
 import { logger } from "@/lib/logger/logger";
@@ -36,7 +32,7 @@ export async function getElixirContent(): Promise<ElixirContent> {
   const supabase = getPublicSupabaseClient();
 
   if (!supabase) {
-    return prepareFrenchContent(applyRuntimeOverrides(parseElixirContent(defaultElixirContent)));
+    return applyRuntimeOverrides(parseElixirContent(defaultElixirContent));
   }
 
   const { data, error } = await supabase
@@ -54,7 +50,7 @@ export async function getElixirContent(): Promise<ElixirContent> {
     ? mergeContent(defaultElixirContent, data.content)
     : defaultElixirContent;
 
-  return prepareFrenchContent(applyRuntimeOverrides(parseElixirContent(content)));
+  return applyRuntimeOverrides(parseElixirContent(content));
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -140,43 +136,6 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
   };
 
   return runtimeContent;
-}
-
-function isLocalizedText(value: unknown): value is LocalizedText {
-  return (
-    isRecord(value) &&
-    typeof value.fr === "string" &&
-    typeof value.en === "string" &&
-    Object.keys(value).every((key) => key === "fr" || key === "en")
-  );
-}
-
-function forceFrenchLocalizedText<T>(value: T): T {
-  if (isLocalizedText(value)) {
-    return {
-      en: value.fr,
-      fr: value.fr,
-    } as T;
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => forceFrenchLocalizedText(item)) as T;
-  }
-
-  if (isRecord(value)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, nestedValue]) => [
-        key,
-        forceFrenchLocalizedText(nestedValue),
-      ]),
-    ) as T;
-  }
-
-  return value;
-}
-
-function prepareFrenchContent(content: ElixirContent): ElixirContent {
-  return forceFrenchLocalizedText(content);
 }
 
 export function getWhatsAppUrl(content: ElixirContent, locale: "en" | "fr") {

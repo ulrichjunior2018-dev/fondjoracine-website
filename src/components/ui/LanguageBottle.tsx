@@ -24,7 +24,7 @@ export function LanguageBottle() {
       type="button"
     >
       <motion.svg
-        animate={{ rotateY: locale === "fr" ? 0 : 180 }}
+        animate={{ rotateY: locale.startsWith("fr") ? 0 : 180 }}
         aria-hidden="true"
         className="h-10 w-8"
         initial={false}
@@ -59,7 +59,7 @@ export function LanguageBottle() {
           fontWeight="700"
           letterSpacing="1"
           style={{
-            transform: locale === "en" ? "scaleX(-1)" : undefined,
+            transform: locale.startsWith("en") ? "scaleX(-1)" : undefined,
             transformOrigin: "20px 40px",
           }}
           textAnchor="middle"

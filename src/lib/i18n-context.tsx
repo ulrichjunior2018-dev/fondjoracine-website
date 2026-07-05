@@ -1,8 +1,17 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { copy, type Locale } from "@/content/copy";
+import { isLocale, localeStorageKey, localeSuggestionStorageKey, pickLocale } from "@/lib/locale";
 
 type I18nContextValue = {
   copy: (typeof copy)[Locale];
@@ -12,33 +21,37 @@ type I18nContextValue = {
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
-const storageKey = "maison-fondjo-locale";
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const locale: Locale = "fr";
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-    window.localStorage.setItem(storageKey, "fr");
-    document.documentElement.lang = "fr";
+    const storedLocale = window.localStorage.getItem(localeStorageKey);
+    const nextLocale = isLocale(storedLocale) ? storedLocale : "en";
+
+    document.documentElement.lang = nextLocale;
+
+    if (nextLocale.charCodeAt(0) !== locale.charCodeAt(0)) {
+      const frame = window.requestAnimationFrame(() => setLocaleState(nextLocale));
+
+      return () => window.cancelAnimationFrame(frame);
+    }
   }, []);
 
   const setLocale = useCallback((nextLocale: Locale) => {
-    void nextLocale;
-    window.localStorage.setItem(storageKey, "fr");
-    document.documentElement.lang = "fr";
+    setLocaleState(nextLocale);
+    window.localStorage.setItem(localeStorageKey, nextLocale);
+    window.localStorage.setItem(localeSuggestionStorageKey, "resolved");
+    document.documentElement.lang = nextLocale;
   }, []);
 
   const toggleLocale = useCallback(() => {
-    setLocale("fr");
-  }, [setLocale]);
-
-  useEffect(() => {
-    document.documentElement.lang = "fr";
-  }, []);
+    setLocale(pickLocale(locale, { english: "fr", french: "en" }));
+  }, [locale, setLocale]);
 
   const value = useMemo(
     () => ({
-      copy: copy.fr,
+      copy: copy[locale],
       locale,
       setLocale,
       toggleLocale,

@@ -30,6 +30,10 @@ type Option = {
   value: string;
 };
 
+function localized(english: string, french: string): Record<Locale, string> {
+  return { ["en"]: english, ["fr"]: french };
+}
+
 type Question =
   | {
       id: keyof HairConsultationAnswersInput;
@@ -62,8 +66,8 @@ type ApiResponse = {
   };
 };
 
-const single = (value: string, en: string, fr: string): Option => ({
-  label: { en, fr },
+const single = (value: string, english: string, french: string): Option => ({
+  label: localized(english, french),
   value,
 });
 
@@ -80,7 +84,7 @@ const questions: Question[] = [
       single("heat_damaged", "Heat-damaged", "Abime par la chaleur"),
       single("not_sure", "Not sure", "Pas sure"),
     ],
-    prompt: { en: "What is your hair type?", fr: "Quel est votre type de cheveux ?" },
+    prompt: localized("What is your hair type?", "Quel est votre type de cheveux ?"),
   },
   {
     id: "mainConcern",
@@ -96,7 +100,7 @@ const questions: Question[] = [
       single("weak_hair", "Weak hair", "Cheveux fragiles"),
       single("damaged_hair", "Damaged hair", "Cheveux abimes"),
     ],
-    prompt: { en: "What is your main concern?", fr: "Quel est votre probleme principal ?" },
+    prompt: localized("What is your main concern?", "Quel est votre probleme principal ?"),
   },
   {
     id: "concernDuration",
@@ -108,10 +112,10 @@ const questions: Question[] = [
       single("6_to_12_months", "6-12 months", "6 a 12 mois"),
       single("more_than_1_year", "More than 1 year", "Plus d un an"),
     ],
-    prompt: {
-      en: "How long have you had this problem?",
-      fr: "Depuis quand avez-vous ce probleme ?",
-    },
+    prompt: localized(
+      "How long have you had this problem?",
+      "Depuis quand avez-vous ce probleme ?",
+    ),
   },
   {
     id: "scalpOiling",
@@ -123,10 +127,10 @@ const questions: Question[] = [
       single("daily", "Daily", "Chaque jour"),
       single("only_when_dry", "Only when hair feels dry", "Seulement quand c est sec"),
     ],
-    prompt: {
-      en: "How often do you oil your scalp?",
-      fr: "A quelle frequence huilez-vous le cuir chevelu ?",
-    },
+    prompt: localized(
+      "How often do you oil your scalp?",
+      "A quelle frequence huilez-vous le cuir chevelu ?",
+    ),
   },
   {
     id: "styles",
@@ -141,7 +145,7 @@ const questions: Question[] = [
       single("locs", "Locs", "Locs"),
       single("protective_styles", "Protective styles", "Coiffures protectrices"),
     ],
-    prompt: { en: "What styles do you wear most?", fr: "Quelles coiffures portez-vous le plus ?" },
+    prompt: localized("What styles do you wear most?", "Quelles coiffures portez-vous le plus ?"),
   },
   {
     id: "heatUse",
@@ -152,7 +156,7 @@ const questions: Question[] = [
       single("weekly", "Weekly", "Chaque semaine"),
       single("multiple_times_weekly", "Multiple times weekly", "Plusieurs fois par semaine"),
     ],
-    prompt: { en: "Do you use heat?", fr: "Utilisez-vous la chaleur ?" },
+    prompt: localized("Do you use heat?", "Utilisez-vous la chaleur ?"),
   },
   {
     id: "scalpSymptoms",
@@ -167,7 +171,7 @@ const questions: Question[] = [
       single("redness", "Redness", "Rougeur"),
       single("heavy_dandruff", "Heavy dandruff", "Pellicules importantes"),
     ],
-    prompt: { en: "Do you have scalp symptoms?", fr: "Avez-vous des symptomes du cuir chevelu ?" },
+    prompt: localized("Do you have scalp symptoms?", "Avez-vous des symptomes du cuir chevelu ?"),
   },
   {
     id: "previousProducts",
@@ -208,48 +212,43 @@ const initialAnswers: Partial<HairConsultationAnswersInput> = {
 
 function copy(locale: Locale) {
   return {
-    back: locale === "fr" ? "Retour" : "Back",
-    consent:
-      locale === "fr"
-        ? "J accepte que Maison Fondjo enregistre mes reponses pour generer mon guide et assurer un suivi WhatsApp."
-        : "I agree that Maison Fondjo can store my answers to generate my guide and support WhatsApp follow-up.",
-    contact: locale === "fr" ? "Vos coordonnees" : "Your details",
-    download: locale === "fr" ? "Telecharger le resume" : "Download summary",
-    downloadError:
-      locale === "fr"
-        ? "Impossible de telecharger l image pour le moment."
-        : "Unable to download the image right now.",
-    email: locale === "fr" ? "Email optionnel" : "Email optional",
-    error:
-      locale === "fr"
-        ? "Impossible de terminer le diagnostic."
-        : "Unable to complete consultation.",
-    intro:
-      locale === "fr"
-        ? "Repondez a quelques questions. Maison Fondjo cree un guide cosmetique personnalise, puis vous passe a WhatsApp pour un suivi humain."
-        : "Answer a few questions. Maison Fondjo creates a personalized cosmetic guide, then hands you to WhatsApp for human follow-up.",
-    medical:
-      locale === "fr"
-        ? "Ce diagnostic ne remplace pas un dermatologue. Douleur, plaies, brulure, reaction allergique ou chute soudaine par plaques demandent un avis medical."
-        : "This consultation does not replace a dermatologist. Pain, sores, burning, allergic reaction, or sudden patchy hair loss needs medical review.",
-    name: locale === "fr" ? "Nom complet" : "Full name",
-    next: locale === "fr" ? "Continuer" : "Continue",
-    phone: locale === "fr" ? "Telephone WhatsApp" : "WhatsApp phone",
-    privacy:
-      locale === "fr"
-        ? "Vos reponses sont utilisees pour personnaliser le conseil Maison Fondjo et aider l equipe admin a assurer le suivi."
-        : "Your answers are used to personalize Maison Fondjo guidance and help the admin team follow up.",
-    result: locale === "fr" ? "Votre profil capillaire" : "Your hair profile",
-    resultIntro:
-      locale === "fr"
-        ? "Votre carte routine est prete. Telechargez-la avant de continuer vers WhatsApp."
-        : "Your routine card is ready. Download it before continuing to WhatsApp.",
-    send: locale === "fr" ? "Envoyer le resume sur WhatsApp" : "Send summary to WhatsApp",
-    start: locale === "fr" ? "Demarrer le diagnostic" : "Start diagnosis",
-    submit: locale === "fr" ? "Generer mon guide" : "Generate my guide",
-    subtitle: locale === "fr" ? "Diagnostic capillaire IA" : "AI hair consultation",
-    tapOne: locale === "fr" ? "Choisissez une reponse" : "Choose one answer",
-    tapSeveral: locale === "fr" ? "Choisissez tout ce qui s applique" : "Choose all that apply",
+    back: locale.startsWith("fr") ? "Retour" : "Back",
+    consent: locale.startsWith("fr")
+      ? "J accepte que Maison Fondjo enregistre mes reponses pour generer mon guide et assurer un suivi WhatsApp."
+      : "I agree that Maison Fondjo can store my answers to generate my guide and support WhatsApp follow-up.",
+    contact: locale.startsWith("fr") ? "Vos coordonnees" : "Your details",
+    download: locale.startsWith("fr") ? "Telecharger le resume" : "Download summary",
+    downloadError: locale.startsWith("fr")
+      ? "Impossible de telecharger l image pour le moment."
+      : "Unable to download the image right now.",
+    email: locale.startsWith("fr") ? "Email optionnel" : "Email optional",
+    error: locale.startsWith("fr")
+      ? "Impossible de terminer le diagnostic."
+      : "Unable to complete consultation.",
+    intro: locale.startsWith("fr")
+      ? "Repondez a quelques questions. Maison Fondjo cree un guide cosmetique personnalise, puis vous passe a WhatsApp pour un suivi humain."
+      : "Answer a few questions. Maison Fondjo creates a personalized cosmetic guide, then hands you to WhatsApp for human follow-up.",
+    medical: locale.startsWith("fr")
+      ? "Ce diagnostic ne remplace pas un dermatologue. Douleur, plaies, brulure, reaction allergique ou chute soudaine par plaques demandent un avis medical."
+      : "This consultation does not replace a dermatologist. Pain, sores, burning, allergic reaction, or sudden patchy hair loss needs medical review.",
+    name: locale.startsWith("fr") ? "Nom complet" : "Full name",
+    next: locale.startsWith("fr") ? "Continuer" : "Continue",
+    phone: locale.startsWith("fr") ? "Telephone WhatsApp" : "WhatsApp phone",
+    privacy: locale.startsWith("fr")
+      ? "Vos reponses sont utilisees pour personnaliser le conseil Maison Fondjo et aider l equipe admin a assurer le suivi."
+      : "Your answers are used to personalize Maison Fondjo guidance and help the admin team follow up.",
+    result: locale.startsWith("fr") ? "Votre profil capillaire" : "Your hair profile",
+    resultIntro: locale.startsWith("fr")
+      ? "Votre carte routine est prete. Telechargez-la avant de continuer vers WhatsApp."
+      : "Your routine card is ready. Download it before continuing to WhatsApp.",
+    send: locale.startsWith("fr") ? "Envoyer le resume sur WhatsApp" : "Send summary to WhatsApp",
+    start: locale.startsWith("fr") ? "Demarrer le diagnostic" : "Start diagnosis",
+    submit: locale.startsWith("fr") ? "Generer mon guide" : "Generate my guide",
+    subtitle: locale.startsWith("fr") ? "Diagnostic capillaire IA" : "AI hair consultation",
+    tapOne: locale.startsWith("fr") ? "Choisissez une reponse" : "Choose one answer",
+    tapSeveral: locale.startsWith("fr")
+      ? "Choisissez tout ce qui s applique"
+      : "Choose all that apply",
   };
 }
 
@@ -300,7 +299,7 @@ function createRoutineSummaryExportCard(
     <div style="border-bottom:1px solid rgba(240,199,106,.35);padding-bottom:24px;">
       <p style="color:#f0c76a;font-size:13px;font-weight:700;letter-spacing:5px;margin:0;text-transform:uppercase;">Maison Fondjo</p>
       <h1 style="font-family:Georgia,serif;font-size:56px;font-weight:400;line-height:1;margin:16px 0 0;">${
-        locale === "fr" ? "Carte routine" : "Routine card"
+        locale.startsWith("fr") ? "Carte routine" : "Routine card"
       }</h1>
       <p style="color:rgba(250,247,240,.72);font-size:18px;line-height:1.7;margin:20px 0 0;max-width:720px;">${escapeHtml(
         recommendation.hairProfile,
@@ -312,7 +311,7 @@ function createRoutineSummaryExportCard(
     <div style="display:grid;gap:24px;grid-template-columns:1fr 1fr;margin-top:28px;">
       <div style="background:rgba(0,0,0,.18);border:1px solid rgba(240,199,106,.35);padding:24px;">
         <h2 style="color:#f0dfb7;font-size:22px;margin:0 0 16px;">${
-          locale === "fr" ? "Routine Maison Fondjo" : "Maison Fondjo routine"
+          locale.startsWith("fr") ? "Routine Maison Fondjo" : "Maison Fondjo routine"
         }</h2>
         <ul style="color:rgba(250,247,240,.78);font-size:16px;line-height:1.65;margin:0;padding-left:20px;">${routineItems
           .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -321,7 +320,7 @@ function createRoutineSummaryExportCard(
       <div style="display:grid;gap:18px;">
         <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);padding:22px;">
           <h2 style="color:#f0dfb7;font-size:20px;margin:0 0 14px;">${
-            locale === "fr" ? "A faire" : "What to do"
+            locale.startsWith("fr") ? "A faire" : "What to do"
           }</h2>
           <ul style="color:rgba(250,247,240,.74);font-size:15px;line-height:1.6;margin:0;padding-left:18px;">${doItems
             .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -329,7 +328,7 @@ function createRoutineSummaryExportCard(
         </div>
         <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);padding:22px;">
           <h2 style="color:#f0dfb7;font-size:20px;margin:0 0 14px;">${
-            locale === "fr" ? "A eviter" : "What not to do"
+            locale.startsWith("fr") ? "A eviter" : "What not to do"
           }</h2>
           <ul style="color:rgba(250,247,240,.74);font-size:15px;line-height:1.6;margin:0;padding-left:18px;">${avoidItems
             .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -339,7 +338,7 @@ function createRoutineSummaryExportCard(
     </div>
     <div style="background:rgba(240,223,183,.1);border:1px solid rgba(184,134,11,.35);margin-top:26px;padding:24px;">
       <h2 style="color:#f0dfb7;font-size:21px;margin:0 0 16px;">${
-        locale === "fr" ? "Plan de suivi 60 jours" : "60-day tracking plan"
+        locale.startsWith("fr") ? "Plan de suivi 60 jours" : "60-day tracking plan"
       }</h2>
       <div style="display:grid;gap:12px;grid-template-columns:repeat(5,1fr);">${recommendation.sixtyDayPlan
         .map(
@@ -504,7 +503,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
                 Maison Fondjo
               </p>
               <h4 className="mt-3 font-serif text-4xl leading-none text-[#FAF7F0]">
-                {locale === "fr" ? "Carte routine" : "Routine card"}
+                {locale.startsWith("fr") ? "Carte routine" : "Routine card"}
               </h4>
               <p className="mt-3 max-w-xl text-sm leading-7 text-[#FAF7F0]/72">
                 {recommendation.hairProfile}
@@ -532,7 +531,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
           <div className="mt-6 grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
             <div className="rounded-lg border border-[#f0c76a]/22 bg-black/16 p-5">
               <h5 className="font-semibold text-[#f0dfb7]">
-                {locale === "fr" ? "Routine Maison Fondjo" : "Maison Fondjo routine"}
+                {locale.startsWith("fr") ? "Routine Maison Fondjo" : "Maison Fondjo routine"}
               </h5>
               <ul className="mt-4 grid gap-3 text-sm leading-6 text-[#FAF7F0]/76">
                 {recommendation.recommendedRoutine.slice(0, 5).map((item) => (
@@ -546,7 +545,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
             <div className="grid gap-5">
               <div className="rounded-lg border border-white/12 bg-white/7 p-5">
                 <h5 className="font-semibold text-[#f0dfb7]">
-                  {locale === "fr" ? "A faire" : "What to do"}
+                  {locale.startsWith("fr") ? "A faire" : "What to do"}
                 </h5>
                 <ul className="mt-4 grid gap-2 text-sm leading-6 text-[#FAF7F0]/72">
                   {recommendation.whatToDo.slice(0, 3).map((item) => (
@@ -556,7 +555,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
               </div>
               <div className="rounded-lg border border-white/12 bg-white/7 p-5">
                 <h5 className="font-semibold text-[#f0dfb7]">
-                  {locale === "fr" ? "A eviter" : "What not to do"}
+                  {locale.startsWith("fr") ? "A eviter" : "What not to do"}
                 </h5>
                 <ul className="mt-4 grid gap-2 text-sm leading-6 text-[#FAF7F0]/72">
                   {recommendation.whatNotToDo.slice(0, 3).map((item) => (
@@ -569,7 +568,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
 
           <div className="mt-6 rounded-lg border border-[#b8860b]/30 bg-[#f0dfb7]/10 p-5">
             <h5 className="font-semibold text-[#f0dfb7]">
-              {locale === "fr" ? "Plan de suivi 60 jours" : "60-day tracking plan"}
+              {locale.startsWith("fr") ? "Plan de suivi 60 jours" : "60-day tracking plan"}
             </h5>
             <div className="mt-4 grid gap-3 sm:grid-cols-5">
               {recommendation.sixtyDayPlan.map((stage) => (
@@ -634,7 +633,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
             {c.subtitle}
           </Badge>
           <h3 className="mt-5 max-w-2xl text-3xl font-semibold leading-tight sm:text-4xl">
-            {locale === "fr"
+            {locale.startsWith("fr")
               ? "Votre rituel commence par vos reponses."
               : "Your ritual starts with your answers."}
           </h3>
@@ -665,7 +664,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               >
                 <p className="text-sm leading-7 text-[#FAF7F0]/72">
-                  {locale === "fr"
+                  {locale.startsWith("fr")
                     ? "10 questions, une a la fois, puis une carte routine personnalisee avant WhatsApp."
                     : "10 questions, one at a time, then a personalized routine card before WhatsApp."}
                 </p>

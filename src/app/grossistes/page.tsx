@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { GrossistesRouteSection } from "@/components/AdvisorRouteSections";
-import { advisorCopy } from "@/content/advisor-copy";
+import { copy } from "@/content/copy";
 
 export const metadata: Metadata = {
   title: "Grossistes | Maison Fondjo",
-  description: advisorCopy.grossistes.description,
+  description: copy.en.grossistes.description,
 };
 
 export default function GrossistesPage() {

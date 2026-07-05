@@ -1,5 +1,7 @@
 import { formulaIngredients } from "@/content/formula";
+import type { Locale } from "@/content/copy";
 import { buildWaLink, config, formatXaf } from "@/lib/config";
+import { pickLocale } from "@/lib/locale";
 import { siteImages } from "@/lib/site-images";
 
 export const advisorPricing = {
@@ -45,6 +47,26 @@ export const herbariumIngredients = formulaIngredients.map((ingredient) => ({
   region: "Formule botanique",
   regionEn: "Botanical formula",
 }));
+
+export function getHerbariumIngredientCopy(
+  ingredient: (typeof herbariumIngredients)[number],
+  locale: Locale,
+) {
+  return {
+    chosenFor: pickLocale(locale, {
+      english: ingredient.chosenForEn,
+      french: ingredient.chosenFor,
+    }),
+    commonName: pickLocale(locale, {
+      english: ingredient.commonNameEn,
+      french: ingredient.commonName,
+    }),
+    region: pickLocale(locale, {
+      english: ingredient.regionEn,
+      french: ingredient.region,
+    }),
+  };
+}
 
 export function buildWhatsAppUrl(
   messageKey: Parameters<typeof buildWaLink>[0],

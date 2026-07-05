@@ -4,8 +4,7 @@ import { ArrowRight, BadgeCheck, CreditCard, PenLine } from "lucide-react";
 import Image from "next/image";
 
 import { RealPhotographyPendingSlot } from "@/components/HairTexturePanels";
-import { config } from "@/lib/config";
-import { useI18n } from "@/lib/i18n-context";
+import { useCopy } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
 
 type CinematicHeroProps = {
@@ -17,47 +16,7 @@ export function CinematicHero({
   consultationHref = "/diagnostic",
   productHref = "/seve-racine",
 }: CinematicHeroProps) {
-  const { locale } = useI18n();
-  const heroCopy =
-    locale === "en"
-      ? {
-          backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
-          bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
-          eyebrow: "MAISON FONDJO — BUEA, CAMEROON",
-          primary: "Start my diagnostic",
-          secondary: "Discover Sève Racine",
-          story:
-            "Before the bottle, Maison Fondjo begins by understanding your texture, your rhythm, your scalp and how your hair lives every day.",
-          pending: "Real product photography pending",
-          titleFirst: "Your hair",
-          titleSecond: "has a story.",
-          titleThird: "Let us begin by listening.",
-          trustLabel: "Maison Fondjo box trust signals",
-          trustItems: [
-            ["Numbered box", `${config.batch.name}, ${config.batch.size} pieces`],
-            ["Founder signature", "Fondjo Ulrich / Fondjo Clarisse"],
-            ["Payment marks", "MTN Mobile Money + Orange Money"],
-          ],
-        }
-      : {
-          backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
-          bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
-          eyebrow: "MAISON FONDJO — BUEA, CAMEROUN",
-          primary: "Commencer mon diagnostic",
-          secondary: "Découvrir Sève Racine",
-          story:
-            "Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme, votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.",
-          pending: "Photographie produit réelle en attente",
-          titleFirst: "Vos cheveux",
-          titleSecond: "ont une histoire.",
-          titleThird: "Commençons par l'écouter.",
-          trustLabel: "Repères du coffret Maison Fondjo",
-          trustItems: [
-            ["Coffret numéroté", `${config.batch.name}, ${config.batch.size} exemplaires`],
-            ["Ligne signature", "Fondjo Ulrich / Fondjo Clarisse"],
-            ["Marques paiement", "MTN Mobile Money + Orange Money"],
-          ],
-        };
+  const heroCopy = useCopy().home.hero;
 
   return (
     <>

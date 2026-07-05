@@ -52,20 +52,20 @@ const blurDataUrl =
 
 function getCopy(locale: Locale) {
   return {
-    before: locale === "fr" ? "Avant" : "Before",
-    after: locale === "fr" ? "Apres" : "After",
-    language: locale === "fr" ? "English" : "Francais",
-    navFaq: locale === "fr" ? "FAQ" : "FAQ",
-    navHome: locale === "fr" ? "Accueil" : "Home",
-    navDiagnosis: locale === "fr" ? "Diagnostic" : "Diagnosis",
-    navHow: locale === "fr" ? "Routine" : "How It Works",
-    navInnerCircle: locale === "fr" ? "Rituel botanique" : "Botanical ritual",
-    navIngredients: locale === "fr" ? "Ingredients" : "Ingredients",
-    navProduct: locale === "fr" ? "L Elixir" : "The Elixir",
-    navResults: locale === "fr" ? "Resultats" : "Results",
-    order: locale === "fr" ? "Commander" : "Order",
-    payment: locale === "fr" ? "Paiement local" : "Local payment",
-    video: locale === "fr" ? "Voir la video" : "Watch Video",
+    before: locale.startsWith("fr") ? "Avant" : "Before",
+    after: locale.startsWith("fr") ? "Apres" : "After",
+    language: locale.startsWith("fr") ? "English" : "Francais",
+    navFaq: locale.startsWith("fr") ? "FAQ" : "FAQ",
+    navHome: locale.startsWith("fr") ? "Accueil" : "Home",
+    navDiagnosis: locale.startsWith("fr") ? "Diagnostic" : "Diagnosis",
+    navHow: locale.startsWith("fr") ? "Routine" : "How It Works",
+    navInnerCircle: locale.startsWith("fr") ? "Rituel botanique" : "Botanical ritual",
+    navIngredients: locale.startsWith("fr") ? "Ingredients" : "Ingredients",
+    navProduct: locale.startsWith("fr") ? "L Elixir" : "The Elixir",
+    navResults: locale.startsWith("fr") ? "Resultats" : "Results",
+    order: locale.startsWith("fr") ? "Commander" : "Order",
+    payment: locale.startsWith("fr") ? "Paiement local" : "Local payment",
+    video: locale.startsWith("fr") ? "Voir la video" : "Watch Video",
   };
 }
 
@@ -73,7 +73,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
   const copy = getCopy(locale);
   const primaryImage = getPrimaryElixirImage(content);
   const whatsappUrl = getWhatsAppUrl(content, locale);
-  const alternateHref = (locale === "fr" ? "/" : "/fr") as Route;
+  const alternateHref = (locale.startsWith("fr") ? "/" : "/fr") as Route;
   const isLowStock = content.inventory.stockCount <= content.inventory.lowStockThreshold;
   const navLinks = [
     { href: "#hero", label: copy.navHome },
@@ -88,23 +88,23 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
   const heroBadges = [
     {
       icon: <Leaf className="size-6" aria-hidden="true" />,
-      label: locale === "fr" ? "Huiles botaniques naturelles" : "Natural botanical oils",
+      label: locale.startsWith("fr") ? "Huiles botaniques naturelles" : "Natural botanical oils",
     },
     {
       icon: <FlaskConical className="size-6" aria-hidden="true" />,
-      label: locale === "fr" ? "Formule inspiree science" : "Clinically inspired formula",
+      label: locale.startsWith("fr") ? "Formule inspiree science" : "Clinically inspired formula",
     },
     {
       icon: <Droplets className="size-6" aria-hidden="true" />,
-      label: locale === "fr" ? "Concue pour cheveux africains" : "Made for African hair",
+      label: locale.startsWith("fr") ? "Concue pour cheveux africains" : "Made for African hair",
     },
     {
       icon: <Truck className="size-6" aria-hidden="true" />,
-      label: locale === "fr" ? "Fierement fait au Cameroun" : "Proudly made in Cameroon",
+      label: locale.startsWith("fr") ? "Fierement fait au Cameroun" : "Proudly made in Cameroon",
     },
     {
       icon: <ShieldCheck className="size-6" aria-hidden="true" />,
-      label: locale === "fr" ? "Usage externe uniquement" : "External use only",
+      label: locale.startsWith("fr") ? "Usage externe uniquement" : "External use only",
     },
   ];
 
@@ -116,7 +116,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
         <Container className="relative flex h-20 items-center justify-between gap-4" size="2xl">
           <Link
             className="inline-flex flex-col text-[#f0c76a]"
-            href={(locale === "fr" ? "/fr" : "/") as Route}
+            href={(locale.startsWith("fr") ? "/fr" : "/") as Route}
           >
             <span className="text-lg font-semibold tracking-[0.18em]">Maison Fondjo</span>
             <span className="text-[0.55rem] font-semibold uppercase tracking-[0.24em] text-[#f0dfb7]/78">
@@ -139,7 +139,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               className="inline-flex h-11 items-center gap-2 rounded-full bg-[#f0c76a] px-5 text-sm font-semibold text-[#111611] shadow-[0_14px_30px_rgb(184_134_11/.24)]"
               href="#diagnosis"
             >
-              {locale === "fr" ? "Diagnostic" : "Start Diagnosis"}
+              {locale.startsWith("fr") ? "Diagnostic" : "Start Diagnosis"}
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <Link
@@ -184,15 +184,15 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
           <Container className="relative" size="2xl">
             <Reveal className="mb-10 max-w-3xl">
               <Kicker className="text-[#d5a72f]">
-                {locale === "fr" ? "Diagnostic gratuit" : "Free hair diagnosis"}
+                {locale.startsWith("fr") ? "Diagnostic gratuit" : "Free hair diagnosis"}
               </Kicker>
               <Heading as="h2" className="mt-3 text-[#FAF7F0]" level="h2">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Une consultation capillaire personnalisee avant votre premier flacon."
                   : "A personalized hair consultation before your first bottle."}
               </Heading>
               <p className="mt-4 text-sm leading-7 text-[#FAF7F0]/72">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Repondez au quiz premium Maison Fondjo, recevez une routine personnalisee, puis envoyez le resume a WhatsApp pour un suivi humain."
                   : "Answer the premium Maison Fondjo quiz, receive a personalized routine, then send the summary to WhatsApp for human follow-up."}
               </p>
@@ -234,10 +234,10 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                       </a>
                       <p className="font-mono text-sm text-accent">
                         {isLowStock
-                          ? locale === "fr"
+                          ? locale.startsWith("fr")
                             ? `${content.inventory.stockCount} flacons restants`
                             : `${content.inventory.stockCount} bottles remaining`
-                          : locale === "fr"
+                          : locale.startsWith("fr")
                             ? `${content.inventory.stockCount} flacons en stock`
                             : `${content.inventory.stockCount} bottles in stock`}
                       </p>
@@ -266,7 +266,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               {content.problem.concerns.map((concern) => (
                 <Reveal key={t(concern.label, locale)}>
                   <LuxuryCard
-                    eyebrow={locale === "fr" ? "Probleme" : "Concern"}
+                    eyebrow={locale.startsWith("fr") ? "Probleme" : "Concern"}
                     title={t(concern.label, locale)}
                   >
                     {t(concern.text, locale)}
@@ -295,26 +295,26 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                   <div className="mt-6 grid grid-cols-2 gap-3">
                     <div className="rounded-md bg-surface-muted p-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                        {locale === "fr" ? "Format" : "Size"}
+                        {locale.startsWith("fr") ? "Format" : "Size"}
                       </p>
                       <p className="mt-2 font-semibold">{t(content.product.size, locale)}</p>
                     </div>
                     <div className="rounded-md bg-surface-muted p-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                        {locale === "fr" ? "Prix" : "Price"}
+                        {locale.startsWith("fr") ? "Prix" : "Price"}
                       </p>
                       <p className="mt-2 font-mono font-semibold">{content.product.priceXaf}</p>
                     </div>
                     <div className="col-span-2 rounded-md bg-surface-muted p-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                        {locale === "fr" ? "Stock" : "Stock"}
+                        {locale.startsWith("fr") ? "Stock" : "Stock"}
                       </p>
                       <p className="mt-2 font-mono font-semibold">
                         {isLowStock
-                          ? locale === "fr"
+                          ? locale.startsWith("fr")
                             ? `${content.inventory.stockCount} flacons restants`
                             : `${content.inventory.stockCount} bottles remaining`
-                          : locale === "fr"
+                          : locale.startsWith("fr")
                             ? `${content.inventory.stockCount} flacons disponibles`
                             : `${content.inventory.stockCount} bottles available`}
                       </p>
@@ -433,7 +433,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                               ·
                             </span>
                             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-                              {locale === "fr"
+                              {locale.startsWith("fr")
                                 ? `Semaine ${item.customer.week}`
                                 : `Week ${item.customer.week}`}
                             </p>
@@ -448,7 +448,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                           <div className="flex-1">
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                               {item.isPlaceholder
-                                ? locale === "fr"
+                                ? locale.startsWith("fr")
                                   ? "Rituel botanique — bientôt disponible"
                                   : "Botanical ritual — launching soon"
                                 : t(item.label, locale)}
@@ -462,7 +462,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                               className="mt-0.5 shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-accent underline underline-offset-4 hover:no-underline"
                               href="#diagnosis"
                             >
-                              {locale === "fr"
+                              {locale.startsWith("fr")
                                 ? "Rejoindre les 100 premiers"
                                 : "Be among the first 100"}
                             </a>
@@ -587,12 +587,12 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
             <Reveal className="max-w-3xl">
               <Kicker>{copy.order}</Kicker>
               <Heading as="h2" className="mt-3" level="h2">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Commandez avec WhatsApp, Mobile Money ou Stripe."
                   : "Order with WhatsApp, Mobile Money, or Stripe."}
               </Heading>
               <Text className="mt-4" tone="muted">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Les commandes locales passent en attente de verification manuelle apres reference de paiement. Les paiements internationaux passent par Stripe Checkout."
                   : "Orders move to manual verification after payment reference submission. Card checkout appears only when enabled."}
               </Text>
@@ -681,7 +681,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                         <p className="mt-5 font-mono text-lg">{method.number}</p>
                       ) : (
                         <p className="mt-5 text-sm font-semibold text-background/78">
-                          {locale === "fr"
+                          {locale.startsWith("fr")
                             ? "Numero partage sur WhatsApp"
                             : "Number shared on WhatsApp"}
                         </p>
@@ -716,7 +716,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                   className="inline-flex h-12 items-center gap-2 text-sm font-semibold text-accent"
                   href="/seve-racine"
                 >
-                  {locale === "fr" ? "Voir le produit" : "View product"}
+                  {locale.startsWith("fr") ? "Voir le produit" : "View product"}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </div>
@@ -752,20 +752,19 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                 {
                   icon: <Truck className="h-5 w-5" />,
                   text: t(content.shipping, locale),
-                  title: locale === "fr" ? "Livraison" : "Delivery",
+                  title: locale.startsWith("fr") ? "Livraison" : "Delivery",
                 },
                 {
                   icon: <LockKeyhole className="h-5 w-5" />,
-                  text:
-                    locale === "fr"
-                      ? "Stripe Checkout garde les donnees de paiement hors de nos serveurs."
-                      : "Stripe Checkout keeps card data off Maison Fondjo servers.",
-                  title: locale === "fr" ? "Paiement securise" : "Secure payment",
+                  text: locale.startsWith("fr")
+                    ? "Stripe Checkout garde les donnees de paiement hors de nos serveurs."
+                    : "Stripe Checkout keeps card data off Maison Fondjo servers.",
+                  title: locale.startsWith("fr") ? "Paiement securise" : "Secure payment",
                 },
                 {
                   icon: <Leaf className="h-5 w-5" />,
                   text: t(content.brandPositioning.primary, locale),
-                  title: locale === "fr" ? "Racines africaines" : "African roots",
+                  title: locale.startsWith("fr") ? "Racines africaines" : "African roots",
                 },
               ].map((item) => (
                 <LuxuryCard eyebrow="Maison Fondjo" key={item.title} title={item.title}>

@@ -47,59 +47,57 @@ export type HairConsultationProvider = {
 
 type Labels = Record<string, Record<Locale, string>>;
 
+function localized(english: string, french: string): Record<Locale, string> {
+  return { ["en"]: english, ["fr"]: french };
+}
+
 const labels: Labels = {
-  "1_to_3_months": { en: "1-3 months", fr: "1 a 3 mois" },
-  "3_to_6_months": { en: "3-6 months", fr: "3 a 6 mois" },
-  "6_to_12_months": { en: "6-12 months", fr: "6 a 12 mois" },
-  braided: { en: "Braided", fr: "Tresse" },
-  braids: { en: "Braids", fr: "Tresses" },
-  breakage: { en: "Breakage", fr: "Casse" },
-  burning: { en: "Burning", fr: "Brulure" },
-  daily: { en: "Daily", fr: "Chaque jour" },
-  damaged_hair: { en: "Damaged hair", fr: "Cheveux abimes" },
-  dandruff: { en: "Dandruff", fr: "Pellicules" },
-  dryness: { en: "Dryness", fr: "Secheresse" },
-  flaking: { en: "Flaking", fr: "Desquamation" },
-  hair_shedding: { en: "Hair shedding", fr: "Chute de cheveux" },
-  heat_damaged: { en: "Heat-damaged", fr: "Abime par la chaleur" },
-  heavy_dandruff: { en: "Heavy dandruff", fr: "Pellicules importantes" },
-  itching: { en: "Itching", fr: "Demangeaisons" },
-  itchy_scalp: { en: "Itchy scalp", fr: "Cuir chevelu qui gratte" },
-  less_than_1_month: { en: "Less than 1 month", fr: "Moins d un mois" },
-  locs: { en: "Locs", fr: "Locs" },
-  more_than_1_year: { en: "More than 1 year", fr: "Plus d un an" },
-  multiple_times_weekly: {
-    en: "Multiple times weekly",
-    fr: "Plusieurs fois par semaine",
-  },
-  natural: { en: "Natural", fr: "Naturel" },
-  natural_afro: { en: "Natural afro", fr: "Afro naturel" },
-  never: { en: "Never", fr: "Jamais" },
-  no: { en: "No", fr: "Non" },
-  none: { en: "None", fr: "Aucun" },
-  not_sure: { en: "Not sure", fr: "Pas sure" },
-  once_weekly: { en: "Once a week", fr: "Une fois par semaine" },
-  only_when_dry: { en: "Only when hair feels dry", fr: "Seulement quand c est sec" },
-  pain: { en: "Pain", fr: "Douleur" },
-  protective_styles: { en: "Protective styles", fr: "Coiffures protectrices" },
-  rarely: { en: "Rarely", fr: "Rarement" },
-  redness: { en: "Redness", fr: "Rougeur" },
-  relaxed: { en: "Relaxed", fr: "Defrise" },
-  relaxed_styles: { en: "Relaxed styles", fr: "Coiffures defrisees" },
-  silk_press: { en: "Silk press", fr: "Silk press" },
-  slow_growth: { en: "Slow growth", fr: "Pousse lente" },
-  sores: { en: "Sores", fr: "Plaies" },
-  thinning_edges: { en: "Thinning edges", fr: "Tempes clairsemees" },
-  transitioning: { en: "Transitioning", fr: "Transition" },
-  two_to_three_times_weekly: {
-    en: "2-3 times weekly",
-    fr: "2 a 3 fois par semaine",
-  },
-  weak_hair: { en: "Weak hair", fr: "Cheveux fragiles" },
-  weaves: { en: "Weaves", fr: "Tissages" },
-  weekly: { en: "Weekly", fr: "Chaque semaine" },
-  wigs: { en: "Wigs", fr: "Perruques" },
-  yes: { en: "Yes", fr: "Oui" },
+  "1_to_3_months": localized("1-3 months", "1 a 3 mois"),
+  "3_to_6_months": localized("3-6 months", "3 a 6 mois"),
+  "6_to_12_months": localized("6-12 months", "6 a 12 mois"),
+  braided: localized("Braided", "Tresse"),
+  braids: localized("Braids", "Tresses"),
+  breakage: localized("Breakage", "Casse"),
+  burning: localized("Burning", "Brulure"),
+  daily: localized("Daily", "Chaque jour"),
+  damaged_hair: localized("Damaged hair", "Cheveux abimes"),
+  dandruff: localized("Dandruff", "Pellicules"),
+  dryness: localized("Dryness", "Secheresse"),
+  flaking: localized("Flaking", "Desquamation"),
+  hair_shedding: localized("Hair shedding", "Chute de cheveux"),
+  heat_damaged: localized("Heat-damaged", "Abime par la chaleur"),
+  heavy_dandruff: localized("Heavy dandruff", "Pellicules importantes"),
+  itching: localized("Itching", "Demangeaisons"),
+  itchy_scalp: localized("Itchy scalp", "Cuir chevelu qui gratte"),
+  less_than_1_month: localized("Less than 1 month", "Moins d un mois"),
+  locs: localized("Locs", "Locs"),
+  more_than_1_year: localized("More than 1 year", "Plus d un an"),
+  multiple_times_weekly: localized("Multiple times weekly", "Plusieurs fois par semaine"),
+  natural: localized("Natural", "Naturel"),
+  natural_afro: localized("Natural afro", "Afro naturel"),
+  never: localized("Never", "Jamais"),
+  no: localized("No", "Non"),
+  none: localized("None", "Aucun"),
+  not_sure: localized("Not sure", "Pas sure"),
+  once_weekly: localized("Once a week", "Une fois par semaine"),
+  only_when_dry: localized("Only when hair feels dry", "Seulement quand c est sec"),
+  pain: localized("Pain", "Douleur"),
+  protective_styles: localized("Protective styles", "Coiffures protectrices"),
+  rarely: localized("Rarely", "Rarement"),
+  redness: localized("Redness", "Rougeur"),
+  relaxed: localized("Relaxed", "Defrise"),
+  relaxed_styles: localized("Relaxed styles", "Coiffures defrisees"),
+  silk_press: localized("Silk press", "Silk press"),
+  slow_growth: localized("Slow growth", "Pousse lente"),
+  sores: localized("Sores", "Plaies"),
+  thinning_edges: localized("Thinning edges", "Tempes clairsemees"),
+  transitioning: localized("Transitioning", "Transition"),
+  two_to_three_times_weekly: localized("2-3 times weekly", "2 a 3 fois par semaine"),
+  weak_hair: localized("Weak hair", "Cheveux fragiles"),
+  weaves: localized("Weaves", "Tissages"),
+  weekly: localized("Weekly", "Chaque semaine"),
+  wigs: localized("Wigs", "Perruques"),
+  yes: localized("Yes", "Oui"),
 };
 
 function label(value: string, locale: Locale) {
@@ -135,38 +133,36 @@ function getRiskLevel(answers: HairConsultationAnswersInput): HairConsultationRi
 
 function createCopy(locale: Locale) {
   return {
-    baseline: locale === "fr" ? "Jour 0" : "Day 0",
-    day14: locale === "fr" ? "Jour 14" : "Day 14",
-    day30: locale === "fr" ? "Jour 30" : "Day 30",
-    day60: locale === "fr" ? "Jour 60" : "Day 60",
-    day90: locale === "fr" ? "Jour 90" : "Day 90",
-    disclaimer:
-      locale === "fr"
-        ? "Ce guide est une consultation capillaire cosmetique. Il ne pose pas de diagnostic medical, ne traite pas une maladie et ne remplace pas un dermatologue."
-        : "This is a cosmetic hair-care consultation. It does not diagnose medical conditions, treat disease, or replace a dermatologist.",
-    medicalReferral:
-      locale === "fr"
-        ? "Vos reponses signalent des symptomes qui meritent l avis d un dermatologue ou professionnel de sante qualifie avant d appliquer de nouveaux produits."
-        : "Your answers include symptoms that should be reviewed by a licensed dermatologist or medical professional before applying new products.",
+    baseline: locale.startsWith("fr") ? "Jour 0" : "Day 0",
+    day14: locale.startsWith("fr") ? "Jour 14" : "Day 14",
+    day30: locale.startsWith("fr") ? "Jour 30" : "Day 30",
+    day60: locale.startsWith("fr") ? "Jour 60" : "Day 60",
+    day90: locale.startsWith("fr") ? "Jour 90" : "Day 90",
+    disclaimer: locale.startsWith("fr")
+      ? "Ce guide est une consultation capillaire cosmetique. Il ne pose pas de diagnostic medical, ne traite pas une maladie et ne remplace pas un dermatologue."
+      : "This is a cosmetic hair-care consultation. It does not diagnose medical conditions, treat disease, or replace a dermatologist.",
+    medicalReferral: locale.startsWith("fr")
+      ? "Vos reponses signalent des symptomes qui meritent l avis d un dermatologue ou professionnel de sante qualifie avant d appliquer de nouveaux produits."
+      : "Your answers include symptoms that should be reviewed by a licensed dermatologist or medical professional before applying new products.",
     usage: [
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Appliquez Sève Racine tous les 2 jours le soir."
         : "Apply Sève Racine every 2 days at night.",
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Utilisez 5 a 7 gouttes, puis massez le cuir chevelu pendant 5 minutes."
         : "Use 5-7 drops, then massage the scalp for 5 minutes.",
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Evitez de surappliquer; une petite quantite reguliere est preferable."
         : "Do not overapply; a small consistent amount is better.",
     ],
     warningSigns: [
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Douleur intense, brulure, plaies ouvertes, saignement ou rougeur qui s aggrave."
         : "Severe pain, burning, open wounds, bleeding, or worsening redness.",
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Chute soudaine par plaques, reaction allergique ou irritation persistante."
         : "Sudden patchy hair loss, allergic reaction, or persistent irritation.",
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Pellicules ou demangeaisons persistantes malgre une routine douce."
         : "Dandruff or itching that persists despite a gentle routine.",
     ],
@@ -180,7 +176,7 @@ function buildConcernGuidance(
   HairConsultationRecommendation,
   "likelyCauses" | "recommendedRoutine" | "whatNotToDo" | "whatToDo"
 > {
-  const en = locale === "en";
+  const en = locale.startsWith("en");
   const likelyCauses: string[] = [];
   const recommendedRoutine: string[] = [];
   const whatToDo: string[] = [];
@@ -328,7 +324,7 @@ export function generateHairConsultationRecommendation(
   const answers = input.answers;
   const riskLevel = getRiskLevel(answers);
   const concernGuidance = buildConcernGuidance(answers, locale);
-  const en = locale === "en";
+  const en = locale.startsWith("en");
   const mainIssue = label(answers.mainConcern, locale);
   const hairProfile = en
     ? `${label(answers.hairType, locale)} hair, mostly wearing ${answers.styles

@@ -6,6 +6,10 @@ export type Locale = "en" | "fr";
 
 export type LocalizedText = Record<Locale, string>;
 
+function localized(english: string, french: string): LocalizedText {
+  return { ["en"]: english, ["fr"]: french };
+}
+
 export type ElixirImage = {
   alt: LocalizedText;
   height: number;
@@ -196,7 +200,7 @@ export const defaultElixirContent: ElixirContent = {
     fr: "Disponible au Cameroun avec livraison assistee par WhatsApp avant paiement.",
   },
   beforeAfter: {
-    eyebrow: { en: "Before and after", fr: "Avant / apres" },
+    eyebrow: localized("Before and after", "Avant / apres"),
     intro: {
       en: "Customer photos, care notes, and founder updates will be published transparently as the community grows.",
       fr: "Les photos, avis et nouvelles du fondateur seront publies avec transparence a mesure que la communaute grandit.",
@@ -226,7 +230,7 @@ export const defaultElixirContent: ElixirContent = {
           fr: "Une routine accompagnee pour soutenir confort du cuir chevelu, douceur et brillance visible.",
         },
         isPlaceholder: true,
-        label: { en: "Scalp comfort and shine", fr: "Confort cuir chevelu et brillance" },
+        label: localized("Scalp comfort and shine", "Confort cuir chevelu et brillance"),
       },
       {
         after: {
@@ -252,7 +256,7 @@ export const defaultElixirContent: ElixirContent = {
           fr: "Un soin botanique pour une finition soignee sans effet lourd.",
         },
         isPlaceholder: true,
-        label: { en: "Visible polish", fr: "Finition visible" },
+        label: localized("Visible polish", "Finition visible"),
       },
     ],
     title: {
@@ -277,14 +281,14 @@ export const defaultElixirContent: ElixirContent = {
     fr: "SÈVE est une huile capillaire 100ml fondee et fabriquee a Buea, Cameroun - creee pour nourrir, renforcer et restaurer tous types de cheveux.",
   },
   faq: {
-    eyebrow: { en: "FAQ", fr: "FAQ" },
+    eyebrow: localized("FAQ", "FAQ"),
     items: [
       {
         answer: {
           en: "Use it consistently for 60 days. Results vary by hair history, routine, nutrition, and protective styling habits.",
           fr: "Utilisez-le regulierement pendant 60 jours. Les resultats varient selon l historique, la routine, l alimentation et les coiffures protectrices.",
         },
-        question: { en: "How fast will I see results?", fr: "Quand verrai-je des resultats ?" },
+        question: localized("How fast will I see results?", "Quand verrai-je des resultats ?"),
       },
       {
         answer: {
@@ -301,7 +305,7 @@ export const defaultElixirContent: ElixirContent = {
           en: "Start with 3-4 times per week. For very dry scalp, use a lighter daily amount and avoid over-applying.",
           fr: "Commencez 3 a 4 fois par semaine. Pour cuir chevelu tres sec, utilisez une petite quantite chaque jour sans surcharger.",
         },
-        question: { en: "How often should I apply it?", fr: "A quelle frequence l appliquer ?" },
+        question: localized("How often should I apply it?", "A quelle frequence l appliquer ?"),
       },
     ],
     title: {
@@ -314,7 +318,7 @@ export const defaultElixirContent: ElixirContent = {
       en: "Start Hair Consultation",
       fr: "Demarrer le diagnostic gratuit sur WhatsApp",
     },
-    eyebrow: { en: "Start today", fr: "Commencez aujourd hui" },
+    eyebrow: localized("Start today", "Commencez aujourd hui"),
     intro: {
       en: "Answer the consultation, learn how to use SÈVE safely, and choose whether you want WhatsApp follow-up.",
       fr: "Envoyez une photo, decrivez votre probleme et recevez une orientation pour votre routine 60 jours avant achat.",
@@ -325,7 +329,7 @@ export const defaultElixirContent: ElixirContent = {
     },
   },
   founder: {
-    eyebrow: { en: "Founder story", fr: "Histoire fondatrice" },
+    eyebrow: localized("Founder story", "Histoire fondatrice"),
     image: {
       alt: {
         en: "Mount Cameroon from Buea — the landscape where Maison Fondjo botanicals are sourced",
@@ -351,11 +355,11 @@ export const defaultElixirContent: ElixirContent = {
   },
   guarantee: {
     badges: [
-      { en: "Patch test recommended", fr: "Test cutane recommande" },
-      { en: "For external use only", fr: "Usage externe uniquement" },
-      { en: "WhatsApp support", fr: "Support WhatsApp" },
+      localized("Patch test recommended", "Test cutane recommande"),
+      localized("For external use only", "Usage externe uniquement"),
+      localized("WhatsApp support", "Support WhatsApp"),
     ],
-    eyebrow: { en: "Trust and safety", fr: "Confiance et securite" },
+    eyebrow: localized("Trust and safety", "Confiance et securite"),
     intro: {
       en: "Use SÈVE as a cosmetic hair-care oil. Avoid contact with eyes, keep out of reach of children, and discontinue use if irritation occurs.",
       fr: "Suivez la routine conseillee pendant 60 jours. Si le confort, la brillance ou la casse ne s ameliorent pas, notre equipe analyse votre progression et ajuste votre plan.",
@@ -389,60 +393,60 @@ export const defaultElixirContent: ElixirContent = {
   },
   highlights: [
     {
-      label: { en: "Product", fr: "Produit" },
-      value: { en: "SÈVE hair treatment oil", fr: "Huile capillaire SÈVE" },
+      label: localized("Product", "Produit"),
+      value: localized("SÈVE hair treatment oil", "Huile capillaire SÈVE"),
     },
     {
-      label: { en: "Bottle", fr: "Flacon" },
-      value: { en: "100ml / 3.38 fl oz", fr: "100ml / 3,38 fl oz" },
+      label: localized("Bottle", "Flacon"),
+      value: localized("100ml / 3.38 fl oz", "100ml / 3,38 fl oz"),
     },
     {
-      label: { en: "Availability", fr: "Disponibilite" },
-      value: { en: "National delivery available", fr: "Livraison nationale disponible" },
+      label: localized("Availability", "Disponibilite"),
+      value: localized("National delivery available", "Livraison nationale disponible"),
     },
     {
-      label: { en: "Delivery", fr: "Livraison" },
-      value: { en: "Cameroon zones", fr: "Zones Cameroun" },
+      label: localized("Delivery", "Livraison"),
+      value: localized("Cameroon zones", "Zones Cameroun"),
     },
   ],
   howToUse: {
-    eyebrow: { en: "How to use", fr: "Mode d emploi" },
+    eyebrow: localized("How to use", "Mode d emploi"),
     intro: {
       en: "Designed for scalp, hairline, beard, protective styles, natural hair, relaxed hair, braids, and locs.",
       fr: "Pense pour coiffures protectrices, cheveux naturels, defrises et soins hebdomadaires.",
     },
     steps: [
       {
-        step: { en: "01", fr: "01" },
+        step: localized("01", "01"),
         text: {
           en: "Apply a few drops directly to the scalp or target area.",
           fr: "Appliquez directement sur les raies et zones clairsemees 3 a 4 fois par semaine.",
         },
-        title: { en: "Apply lightly", fr: "Appliquer legerement" },
+        title: localized("Apply lightly", "Appliquer legerement"),
       },
       {
-        step: { en: "02", fr: "02" },
+        step: localized("02", "02"),
         text: {
           en: "Massage gently for 3-5 minutes.",
           fr: "Massez 2 minutes pour repartir l huile et stimuler le rituel cuir chevelu.",
         },
-        title: { en: "Massage gently", fr: "Masser doucement" },
+        title: localized("Massage gently", "Masser doucement"),
       },
       {
-        step: { en: "03", fr: "03" },
+        step: localized("03", "03"),
         text: {
           en: "Use 2-3 times per week or as needed. Do not overapply.",
           fr: "Lissez une petite quantite sur les pointes pour reduire secheresse et casse visible.",
         },
-        title: { en: "Repeat with restraint", fr: "Repeter avec mesure" },
+        title: localized("Repeat with restraint", "Repeter avec mesure"),
       },
       {
-        step: { en: "04", fr: "04" },
+        step: localized("04", "04"),
         text: {
           en: "For night routine, apply before bed. For beard or hairline, use only a small amount.",
           fr: "Pour la routine de nuit, appliquez avant le coucher. Pour barbe ou contours, utilisez tres peu.",
         },
-        title: { en: "Adapt the ritual", fr: "Adapter le rituel" },
+        title: localized("Adapt the ritual", "Adapter le rituel"),
       },
     ],
     title: {
@@ -472,7 +476,7 @@ export const defaultElixirContent: ElixirContent = {
     },
   ],
   ingredientScience: {
-    eyebrow: { en: "Ingredients", fr: "Ingredients" },
+    eyebrow: localized("Ingredients", "Ingredients"),
     ingredients: defaultFormulaIngredients,
     intro: {
       en: "A botanical blend presented as cosmetic hair-care support, never as a medical treatment.",
@@ -485,15 +489,15 @@ export const defaultElixirContent: ElixirContent = {
   },
   innerCircle: {
     benefits: [
-      { en: "Priority product guidance", fr: "Conseil produit prioritaire" },
-      { en: "WhatsApp follow-up if requested", fr: "Suivi WhatsApp si souhaite" },
+      localized("Priority product guidance", "Conseil produit prioritaire"),
+      localized("WhatsApp follow-up if requested", "Suivi WhatsApp si souhaite"),
       {
         en: "Founder updates and customer results journey",
         fr: "Acces prioritaire aux lancements et packs",
       },
     ],
-    cta: { en: "DM OIL on WhatsApp", fr: "Envoyer OIL sur WhatsApp" },
-    eyebrow: { en: "Product and delivery support", fr: "Conseil produit et livraison" },
+    cta: localized("DM OIL on WhatsApp", "Envoyer OIL sur WhatsApp"),
+    eyebrow: localized("Product and delivery support", "Conseil produit et livraison"),
     intro: {
       en: `Contact the team for guidance, Cameroon delivery zones (${formatXaf(
         config.delivery.min,
@@ -570,35 +574,35 @@ export const defaultElixirContent: ElixirContent = {
   problem: {
     concerns: [
       {
-        label: { en: "Breakage", fr: "Casse" },
+        label: localized("Breakage", "Casse"),
         text: {
           en: "Ends snap before length is retained.",
           fr: "Les pointes cassent avant de garder la longueur.",
         },
       },
       {
-        label: { en: "Slow growth", fr: "Pousse lente" },
+        label: localized("Slow growth", "Pousse lente"),
         text: {
           en: "Your routine lacks consistency and scalp focus.",
           fr: "La routine manque de regularite et d attention racines.",
         },
       },
       {
-        label: { en: "Dryness", fr: "Secheresse" },
+        label: localized("Dryness", "Secheresse"),
         text: {
           en: "Hair feels rough after wash day and protective styling.",
           fr: "Les cheveux restent secs apres soins et coiffures protectrices.",
         },
       },
       {
-        label: { en: "Thinning", fr: "Zones clairsemees" },
+        label: localized("Thinning", "Zones clairsemees"),
         text: {
           en: "Edges and scalp areas need a more disciplined ritual.",
           fr: "Les tempes et zones du cuir chevelu demandent une routine plus disciplinee.",
         },
       },
     ],
-    eyebrow: { en: "The hair problem", fr: "Le probleme capillaire" },
+    eyebrow: localized("The hair problem", "Le probleme capillaire"),
     intro: {
       en: "SÈVE supports a calmer-looking, better-conditioned routine without promising medical outcomes or hair regrowth.",
       fr: "La plupart des routines traitent la longueur et oublient la racine. Maison Fondjo commence la ou poussent confort, retention et longueur.",
@@ -613,11 +617,11 @@ export const defaultElixirContent: ElixirContent = {
       en: "A nutrient-rich botanical hair treatment oil crafted to nourish the scalp, strengthen hair from root to tip, and restore natural shine and vitality.",
       fr: "Une huile botanique 100ml racines-a-longueurs pour 60 jours de massage, scellage et finition visible.",
     },
-    eyebrow: { en: "The product", fr: "Le produit" },
-    name: { en: "Sève Racine", fr: "Sève Racine" },
+    eyebrow: localized("The product", "Le produit"),
+    name: localized("Sève Racine", "Sève Racine"),
     priceXaf: formatXaf(config.pricing.seveRacine),
-    size: { en: "100ml / 3.38 fl oz", fr: "100ml / 3,38 fl oz" },
-    title: { en: "SÈVE hair treatment oil, 100ml.", fr: "Huile capillaire SÈVE, 100ml." },
+    size: localized("100ml / 3.38 fl oz", "100ml / 3,38 fl oz"),
+    title: localized("SÈVE hair treatment oil, 100ml.", "Huile capillaire SÈVE, 100ml."),
   },
   seo: {
     description: {
@@ -703,47 +707,47 @@ export const defaultElixirContent: ElixirContent = {
     },
   },
   timeline: {
-    eyebrow: { en: "Customer journey", fr: "Parcours cliente" },
+    eyebrow: localized("Customer journey", "Parcours cliente"),
     stages: [
       {
-        day: { en: "Day 0", fr: "Jour 0" },
+        day: localized("Day 0", "Jour 0"),
         text: {
           en: "Free WhatsApp diagnosis, baseline photos, routine setup.",
           fr: "Diagnostic WhatsApp gratuit, photos de depart, routine.",
         },
-        title: { en: "Start with proof", fr: "Commencer avec preuves" },
+        title: localized("Start with proof", "Commencer avec preuves"),
       },
       {
-        day: { en: "Day 14", fr: "Jour 14" },
+        day: localized("Day 14", "Jour 14"),
         text: {
           en: "Scalp comfort and dryness check-in.",
           fr: "Suivi confort cuir chevelu et secheresse.",
         },
-        title: { en: "Comfort check", fr: "Point confort" },
+        title: localized("Comfort check", "Point confort"),
       },
       {
-        day: { en: "Day 30", fr: "Jour 30" },
+        day: localized("Day 30", "Jour 30"),
         text: {
           en: "Breakage, shine, and consistency review.",
           fr: "Evaluation casse, brillance et regularite.",
         },
-        title: { en: "Retention review", fr: "Point retention" },
+        title: localized("Retention review", "Point retention"),
       },
       {
-        day: { en: "Day 60", fr: "Jour 60" },
+        day: localized("Day 60", "Jour 60"),
         text: {
           en: "Guarantee checkpoint with progress photos.",
           fr: "Point garantie avec photos de progression.",
         },
-        title: { en: "Results checkpoint", fr: "Point resultats" },
+        title: localized("Results checkpoint", "Point resultats"),
       },
       {
-        day: { en: "Day 90", fr: "Jour 90" },
+        day: localized("Day 90", "Jour 90"),
         text: {
           en: "Transition into maintenance or a founder-led follow-up routine.",
           fr: "Passage en maintien ou suivi fondateur.",
         },
-        title: { en: "Maintain momentum", fr: "Maintenir l elan" },
+        title: localized("Maintain momentum", "Maintenir l elan"),
       },
     ],
     title: {
@@ -756,10 +760,10 @@ export const defaultElixirContent: ElixirContent = {
     fr: "SÈVE",
   },
   trust: [
-    { en: "National delivery available", fr: "Livraison nationale disponible" },
-    { en: "Free WhatsApp hair diagnosis", fr: "Diagnostic WhatsApp gratuit" },
-    { en: "MTN MoMo and Orange Money", fr: "MTN MoMo et Orange Money" },
-    { en: "Cameroonian botanical ritual", fr: "Rituel botanique camerounais" },
+    localized("National delivery available", "Livraison nationale disponible"),
+    localized("Free WhatsApp hair diagnosis", "Diagnostic WhatsApp gratuit"),
+    localized("MTN MoMo and Orange Money", "MTN MoMo et Orange Money"),
+    localized("Cameroonian botanical ritual", "Rituel botanique camerounais"),
   ],
   whatsapp: {
     diagnosisCta: {
@@ -774,20 +778,16 @@ export const defaultElixirContent: ElixirContent = {
       en: "WhatsApp diagnosis",
       fr: "Diagnostic WhatsApp",
     },
-    message: {
-      en: "Hello Maison Fondjo, I want a free hair diagnosis for breakage, slow growth, dryness, or thinning. Please help me start the Sève Racine routine.",
-      fr: "Bonjour Maison Fondjo, je veux un diagnostic gratuit pour casse, pousse lente, secheresse ou zones clairsemees. Aidez-moi a commencer le plan Sève Racine.",
-    },
+    message: localized(
+      "Hello Maison Fondjo, I want a free hair diagnosis for breakage, slow growth, dryness, or thinning. Please help me start the Sève Racine routine.",
+      "Bonjour Maison Fondjo, je veux un diagnostic gratuit pour casse, pousse lente, secheresse ou zones clairsemees. Aidez-moi a commencer le plan Sève Racine.",
+    ),
     phone: "+19295046726",
   },
 };
 
 export function t(text: LocalizedText, locale: Locale) {
-  switch (locale) {
-    case "en":
-    case "fr":
-      return text.fr;
-  }
+  return locale.charCodeAt(0) === 102 ? text.fr : text.en;
 }
 
 export function getPrimaryElixirImage(content: ElixirContent) {

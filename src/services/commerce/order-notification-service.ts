@@ -34,16 +34,16 @@ export function buildWhatsAppOrderMessage(
   const productName = t(content.product.name, locale);
 
   return [
-    locale === "fr"
+    locale.startsWith("fr")
       ? `Bonjour Maison Fondjo, j'ai cree la commande ${payload.orderNumber}.`
       : `Hello Maison Fondjo, I created order ${payload.orderNumber}.`,
-    `${locale === "fr" ? "Produit" : "Product"}: ${productName}`,
-    `${locale === "fr" ? "Client" : "Customer"}: ${payload.customerName}`,
-    `${locale === "fr" ? "Telephone" : "Phone"}: ${payload.phone}`,
-    `${locale === "fr" ? "Ville" : "City"}: ${payload.city}`,
-    `${locale === "fr" ? "Paiement" : "Payment"}: ${payload.paymentMethod}`,
-    `${locale === "fr" ? "Total" : "Total"}: ${payload.totalLabel}`,
-    `${locale === "fr" ? "Confirmation" : "Confirmation"}: ${payload.confirmationUrl}`,
+    `${locale.startsWith("fr") ? "Produit" : "Product"}: ${productName}`,
+    `${locale.startsWith("fr") ? "Client" : "Customer"}: ${payload.customerName}`,
+    `${locale.startsWith("fr") ? "Telephone" : "Phone"}: ${payload.phone}`,
+    `${locale.startsWith("fr") ? "Ville" : "City"}: ${payload.city}`,
+    `${locale.startsWith("fr") ? "Paiement" : "Payment"}: ${payload.paymentMethod}`,
+    `${locale.startsWith("fr") ? "Total" : "Total"}: ${payload.totalLabel}`,
+    `${locale.startsWith("fr") ? "Confirmation" : "Confirmation"}: ${payload.confirmationUrl}`,
   ].join("\n");
 }
 

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { DiagnosticQuiz } from "@/components/DiagnosticQuiz";
-import { advisorCopy } from "@/content/advisor-copy";
+import { copy } from "@/content/copy";
 
 export const metadata: Metadata = {
-  title: advisorCopy.diagnostic.title,
-  description: advisorCopy.diagnostic.description,
+  title: copy.en.diagnostic.title,
+  description: copy.en.diagnostic.description,
 };
 
 export default function DiagnosticPage() {

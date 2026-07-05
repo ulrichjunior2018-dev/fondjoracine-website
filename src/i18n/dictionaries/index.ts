@@ -3,18 +3,18 @@ import { es } from "./es";
 import { fr } from "./fr";
 
 export const dictionaries = {
-  en,
-  es,
-  fr,
+  ["en"]: en,
+  ["es"]: es,
+  ["fr"]: fr,
 } as const;
 
 export type SiteLanguage = keyof typeof dictionaries;
 export type SiteDictionary = (typeof dictionaries)[SiteLanguage];
 
 export const languageLabels: Record<SiteLanguage, string> = {
-  en: "EN",
-  es: "ES",
-  fr: "FR",
+  ["en"]: "EN",
+  ["es"]: "ES",
+  ["fr"]: "FR",
 };
 
 export function isSiteLanguage(value: string | null): value is SiteLanguage {

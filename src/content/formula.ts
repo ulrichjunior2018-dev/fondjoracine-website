@@ -1,3 +1,6 @@
+import type { Locale } from "@/content/copy";
+import { pickLocale } from "@/lib/locale";
+
 export type FormulaIngredient = {
   chosen_for: string;
   chosen_for_en: string;
@@ -114,3 +117,16 @@ export const formulaIngredients: FormulaIngredient[] = [
 
 export const formulaNote =
   "La liste n'est pas présentée comme un ordre de concentration ; l'ordre exact de l'étiquette attend confirmation du formulateur.";
+
+export function getFormulaIngredientCopy(ingredient: FormulaIngredient, locale: Locale) {
+  return {
+    chosenFor: pickLocale(locale, {
+      english: ingredient.chosen_for_en,
+      french: ingredient.chosen_for,
+    }),
+    name: pickLocale(locale, {
+      english: ingredient.name_en,
+      french: ingredient.name_fr,
+    }),
+  };
+}

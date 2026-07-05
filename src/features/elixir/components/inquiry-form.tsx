@@ -43,7 +43,7 @@ export function InquiryForm({ locale, productName, whatsappPhone }: InquiryFormP
   return (
     <form className="grid gap-3" onSubmit={handleSubmit(submitInquiry)}>
       <label className="grid gap-1.5 text-sm font-medium">
-        {locale === "fr" ? "Nom complet" : "Full name"}
+        {locale.startsWith("fr") ? "Nom complet" : "Full name"}
         <Input autoComplete="name" {...register("name")} />
         {errors.name ? (
           <span className="text-xs text-destructive">{errors.name.message}</span>
@@ -57,7 +57,7 @@ export function InquiryForm({ locale, productName, whatsappPhone }: InquiryFormP
         ) : null}
       </label>
       <label className="grid gap-1.5 text-sm font-medium">
-        {locale === "fr" ? "Ville de livraison" : "Delivery city"}
+        {locale.startsWith("fr") ? "Ville de livraison" : "Delivery city"}
         <Input autoComplete="address-level2" {...register("city")} />
         {errors.city ? (
           <span className="text-xs text-destructive">{errors.city.message}</span>
@@ -69,7 +69,7 @@ export function InquiryForm({ locale, productName, whatsappPhone }: InquiryFormP
         leadingIcon={<Send className="h-4 w-4" />}
         type="submit"
       >
-        {locale === "fr" ? "Envoyer sur WhatsApp" : "Send on WhatsApp"}
+        {locale.startsWith("fr") ? "Envoyer sur WhatsApp" : "Send on WhatsApp"}
       </Button>
     </form>
   );

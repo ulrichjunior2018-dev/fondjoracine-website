@@ -46,6 +46,10 @@ type ApiOrderResponse = {
   };
 };
 
+function localized(english: string, french: string): Record<Locale, string> {
+  return { ["en"]: english, ["fr"]: french };
+}
+
 const paymentOptions: Array<{
   description: Record<Locale, string>;
   icon: "whatsapp" | "mobile" | "stripe";
@@ -53,28 +57,28 @@ const paymentOptions: Array<{
   value: OneProductPaymentMethod;
 }> = [
   {
-    description: {
-      en: "Creez la commande et continuez le diagnostic avec Maison Fondjo sur WhatsApp.",
-      fr: "Creez la commande et continuez le diagnostic avec Maison Fondjo sur WhatsApp.",
-    },
+    description: localized(
+      "Create the order and continue with Maison Fondjo on WhatsApp.",
+      "Creez la commande et continuez le diagnostic avec Maison Fondjo sur WhatsApp.",
+    ),
     icon: "whatsapp",
     label: "WhatsApp",
     value: "whatsapp",
   },
   {
-    description: {
-      en: "Utilisez MTN MoMo ou Orange Money. Le numero est confirme sur WhatsApp.",
-      fr: "Utilisez MTN MoMo ou Orange Money. Le numero est confirme sur WhatsApp.",
-    },
+    description: localized(
+      "Use MTN MoMo or Orange Money. The number is confirmed on WhatsApp.",
+      "Utilisez MTN MoMo ou Orange Money. Le numero est confirme sur WhatsApp.",
+    ),
     icon: "mobile",
     label: "Mobile Money",
     value: "mtn_momo",
   },
   {
-    description: {
-      en: "Payez par carte via Stripe Checkout si disponible.",
-      fr: "Payez par carte via Stripe Checkout si disponible.",
-    },
+    description: localized(
+      "Pay by card through Stripe Checkout when available.",
+      "Payez par carte via Stripe Checkout si disponible.",
+    ),
     icon: "stripe",
     label: "Stripe",
     value: "stripe",
@@ -153,7 +157,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     if (!response.ok || !payload.data) {
       setServerError(
         payload.error?.message ??
-          (locale === "fr"
+          (locale.startsWith("fr")
             ? "Impossible de creer la commande pour le moment."
             : "Impossible de creer la commande pour le moment."),
       );
@@ -171,7 +175,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
   async function submitReference() {
     if (!createdOrder || paymentReference.trim().length < 4) {
       setServerError(
-        locale === "fr"
+        locale.startsWith("fr")
           ? "Ajoutez une reference de transaction valide."
           : "Ajoutez une reference de transaction valide.",
       );
@@ -186,7 +190,9 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
     if (!token) {
       setServerError(
-        locale === "fr" ? "Lien de confirmation invalide." : "Lien de confirmation invalide.",
+        locale.startsWith("fr")
+          ? "Lien de confirmation invalide."
+          : "Lien de confirmation invalide.",
       );
       setIsSubmittingReference(false);
       return;
@@ -207,7 +213,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     if (!response.ok || !payload.data) {
       setServerError(
         payload.error?.message ??
-          (locale === "fr"
+          (locale.startsWith("fr")
             ? "Impossible d enregistrer la reference."
             : "Impossible d enregistrer la reference."),
       );
@@ -226,7 +232,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
         : current,
     );
     setReferenceMessage(
-      locale === "fr"
+      locale.startsWith("fr")
         ? "Reference recue. Votre commande attend maintenant la verification admin."
         : "Reference recue. Votre commande attend la verification admin.",
     );
@@ -247,7 +253,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                  {locale === "fr" ? "Etape 1" : "Etape 1"}
+                  {locale.startsWith("fr") ? "Etape 1" : "Etape 1"}
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold text-[#14110b]">
                   {t(content.product.name, locale)}
@@ -261,13 +267,13 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <div className="rounded-md bg-[#f4eddf] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {locale === "fr" ? "Prix" : "Prix"}
+                {locale.startsWith("fr") ? "Prix" : "Prix"}
               </p>
               <p className="mt-2 font-serif text-5xl font-light leading-none text-[#14110b]">
                 {displayedPrix}
               </p>
               <p className="mt-3 text-sm leading-6 text-[#14110b]/64">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."
                   : "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."}
               </p>
@@ -277,7 +283,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               <p className="rounded-md border border-[#7b622d]/12 p-3">Rituel botanique</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">100ml</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">
-                {locale === "fr" ? "Livraison au Cameroun" : "Livraison au Cameroun"}
+                {locale.startsWith("fr") ? "Livraison au Cameroun" : "Livraison au Cameroun"}
               </p>
             </div>
 
@@ -288,20 +294,20 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               type="button"
             >
-              {locale === "fr" ? "Confirmer le produit" : "Confirmer le produit"}
+              {locale.startsWith("fr") ? "Confirmer le produit" : "Confirmer le produit"}
             </Button>
           </div>
         ) : (
           <div className="grid gap-5 rounded-md border border-[#7b622d]/16 bg-white p-5 sm:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {locale === "fr" ? "Etape 2" : "Etape 2"}
+                {locale.startsWith("fr") ? "Etape 2" : "Etape 2"}
               </p>
               <h3 className="mt-3 text-2xl font-semibold text-[#14110b]">
-                {locale === "fr" ? "Contact et paiement" : "Contact et paiement"}
+                {locale.startsWith("fr") ? "Contact et paiement" : "Contact et paiement"}
               </h3>
               <p className="mt-2 text-sm leading-6 text-[#14110b]/64">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."
                   : "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."}
               </p>
@@ -310,22 +316,22 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field
                 error={form.formState.errors.name?.message}
-                label={locale === "fr" ? "Nom complet" : "Nom complet"}
+                label={locale.startsWith("fr") ? "Nom complet" : "Nom complet"}
                 required
               >
                 <Input
-                  aria-label={locale === "fr" ? "Nom complet" : "Nom complet"}
+                  aria-label={locale.startsWith("fr") ? "Nom complet" : "Nom complet"}
                   autoComplete="name"
                   {...form.register("name")}
                 />
               </Field>
               <Field
                 error={form.formState.errors.phone?.message}
-                label={locale === "fr" ? "Telephone" : "Telephone"}
+                label={locale.startsWith("fr") ? "Telephone" : "Telephone"}
                 required
               >
                 <Input
-                  aria-label={locale === "fr" ? "Telephone" : "Telephone"}
+                  aria-label={locale.startsWith("fr") ? "Telephone" : "Telephone"}
                   autoComplete="tel"
                   inputMode="tel"
                   {...form.register("phone")}
@@ -336,11 +342,11 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field
                 error={form.formState.errors.city?.message}
-                label={locale === "fr" ? "Ville" : "Ville"}
+                label={locale.startsWith("fr") ? "Ville" : "Ville"}
                 required
               >
                 <Input
-                  aria-label={locale === "fr" ? "Ville" : "Ville"}
+                  aria-label={locale.startsWith("fr") ? "Ville" : "Ville"}
                   autoComplete="address-level2"
                   {...form.register("city")}
                 />
@@ -358,15 +364,17 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <Field
               error={form.formState.errors.delivery_address?.message}
-              label={locale === "fr" ? "Adresse courte" : "Adresse courte"}
+              label={locale.startsWith("fr") ? "Adresse courte" : "Adresse courte"}
               required
             >
               <Textarea
-                aria-label={locale === "fr" ? "Adresse courte" : "Adresse courte"}
+                aria-label={locale.startsWith("fr") ? "Adresse courte" : "Adresse courte"}
                 autoComplete="street-address"
                 className="min-h-24"
                 placeholder={
-                  locale === "fr" ? "Quartier, repere, ville..." : "Quartier, repere, ville..."
+                  locale.startsWith("fr")
+                    ? "Quartier, repere, ville..."
+                    : "Quartier, repere, ville..."
                 }
                 {...form.register("delivery_address")}
               />
@@ -380,7 +388,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <div className="grid gap-3">
               <p className="text-sm font-semibold text-[#14110b]">
-                {locale === "fr" ? "Choisir le paiement" : "Choisir le paiement"}
+                {locale.startsWith("fr") ? "Choisir le paiement" : "Choisir le paiement"}
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {paymentOptions.map((option) => {
@@ -416,7 +424,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               </div>
               {isManualPayment ? (
                 <p className="rounded-md bg-[#f4eddf] p-3 text-xs leading-5 text-[#14110b]/70">
-                  {locale === "fr"
+                  {locale.startsWith("fr")
                     ? "Mobile Money couvre MTN MoMo et Orange Money. Le numero de paiement est confirme sur WhatsApp."
                     : "Mobile Money couvre MTN MoMo et Orange Money. Le numero est confirme sur WhatsApp."}
                 </p>
@@ -436,7 +444,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 type="button"
                 variant="secondary"
               >
-                {locale === "fr" ? "Retour" : "Retour"}
+                {locale.startsWith("fr") ? "Retour" : "Retour"}
               </Button>
               <Button
                 className="min-h-14 flex-1 bg-[#14110b] text-[#f4eddf] hover:bg-[#2a2113]"
@@ -446,10 +454,10 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 type="submit"
               >
                 {paymentMethod === "stripe"
-                  ? locale === "fr"
+                  ? locale.startsWith("fr")
                     ? "Continuer vers Stripe"
                     : "Continuer vers Stripe"
-                  : locale === "fr"
+                  : locale.startsWith("fr")
                     ? "Creer la commande"
                     : "Creer la commande"}
               </Button>
@@ -462,7 +470,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
         <div className="rounded-md border border-[#7b622d]/18 bg-[#fff8e4] p-5">
           <p className="text-sm font-semibold text-[#1C1C1C]">Mobile Money</p>
           <p className="mt-3 text-sm leading-6 text-[#1C1C1C]/80">
-            {locale === "fr"
+            {locale.startsWith("fr")
               ? "Numero fourni via WhatsApp pour eviter les erreurs de paiement."
               : "Numero fourni via WhatsApp pour eviter les erreurs de paiement."}
           </p>
@@ -484,11 +492,11 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <div>
               <p className="font-semibold">
-                {locale === "fr" ? "Commande creee" : "Commande creee"}{" "}
+                {locale.startsWith("fr") ? "Commande creee" : "Commande creee"}{" "}
                 {createdOrder.order.order_number}
               </p>
               <p className="mt-2 text-sm leading-6">
-                {locale === "fr"
+                {locale.startsWith("fr")
                   ? "Votre commande est en attente de verification de paiement."
                   : createdOrder.order.status === "payment_submitted"
                     ? "Votre reference a ete soumise et attend la verification admin."
@@ -499,7 +507,9 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                   <Field
                     className="text-success"
                     label={
-                      locale === "fr" ? "Reference de transaction" : "Reference de transaction"
+                      locale.startsWith("fr")
+                        ? "Reference de transaction"
+                        : "Reference de transaction"
                     }
                     required
                   >
@@ -514,7 +524,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                     isLoading={isSubmittingReference}
                     onClick={() => void submitReference()}
                   >
-                    {locale === "fr" ? "Soumettre la reference" : "Soumettre la reference"}
+                    {locale.startsWith("fr") ? "Soumettre la reference" : "Soumettre la reference"}
                   </Button>
                 </div>
               ) : null}
@@ -528,7 +538,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                   className="inline-flex h-10 items-center justify-center rounded-md bg-success px-4 text-sm font-semibold text-white"
                   href={createdOrder.confirmationUrl}
                 >
-                  {locale === "fr" ? "Voir la confirmation" : "Voir la confirmation"}
+                  {locale.startsWith("fr") ? "Voir la confirmation" : "Voir la confirmation"}
                 </a>
                 <a
                   className="inline-flex h-10 items-center justify-center rounded-md border border-success/30 px-4 text-sm font-semibold"

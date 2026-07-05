@@ -33,11 +33,13 @@ export function ProductGallery({ content, locale }: ProductGalleryProps) {
         <div className="grid grid-cols-[0.72fr_1fr] gap-3">
           <div className="rounded-lg border border-border bg-surface p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-              {locale === "fr" ? "Prix" : "Price"}
+              {locale.startsWith("fr") ? "Prix" : "Price"}
             </p>
             <p className="mt-3 font-mono text-xl">{content.product.priceXaf}</p>
             <p className="mt-1 text-sm text-foreground/60">
-              {locale === "fr" ? "Prix configure depuis la marque." : "Brand-configured price."}
+              {locale.startsWith("fr")
+                ? "Prix configure depuis la marque."
+                : "Brand-configured price."}
             </p>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-surface-muted">

@@ -7,6 +7,7 @@ import {
   advisorImages,
   advisorPricing,
   buildWhatsAppUrl,
+  getHerbariumIngredientCopy,
   herbariumIngredients,
 } from "@/lib/advisor-site";
 import { useCopy, useI18n } from "@/lib/i18n-context";
@@ -37,43 +38,45 @@ function HerbariumMark({ index }: { index: number }) {
 }
 
 export function BotaniqueRouteSection() {
-  const { advisor } = useCopy();
+  const copy = useCopy();
   const { locale } = useI18n();
+  const botanique = copy.botanique;
 
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d6b75b]">
-          {advisor.botanique.eyebrow}
+          {botanique.eyebrow}
         </p>
         <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-tight sm:text-7xl">
-          {advisor.botanique.title}
+          {botanique.title}
         </h1>
-        <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">
-          {advisor.botanique.body}
-        </p>
+        <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">{botanique.body}</p>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {herbariumIngredients.map((ingredient, index) => (
-            <article
-              className="min-h-[24rem] border border-[#d6b75b]/16 bg-white/[0.025] p-6 transition duration-300 hover:border-[#d6b75b]/45 hover:bg-[#d6b75b]/[0.045]"
-              key={ingredient.latinName}
-            >
-              <HerbariumMark index={index} />
-              <p className="mt-7 font-serif text-3xl text-[#f6f0e4]">
-                {locale === "en" ? ingredient.commonNameEn : ingredient.commonName}
-              </p>
-              <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-[#d6b75b]">
-                {ingredient.latinName}
-              </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#f6f0e4]/42">
-                {locale === "en" ? ingredient.regionEn : ingredient.region}
-              </p>
-              <p className="mt-5 text-sm leading-7 text-[#f6f0e4]/66">
-                {advisor.botanique.chosenFor} :{" "}
-                {locale === "en" ? ingredient.chosenForEn : ingredient.chosenFor}
-              </p>
-            </article>
-          ))}
+          {herbariumIngredients.map((ingredient, index) => {
+            const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
+
+            return (
+              <article
+                className="min-h-[24rem] border border-[#d6b75b]/16 bg-white/[0.025] p-6 transition duration-300 hover:border-[#d6b75b]/45 hover:bg-[#d6b75b]/[0.045]"
+                key={ingredient.latinName}
+              >
+                <HerbariumMark index={index} />
+                <p className="mt-7 font-serif text-3xl text-[#f6f0e4]">
+                  {ingredientCopy.commonName}
+                </p>
+                <p className="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-[#d6b75b]">
+                  {ingredient.latinName}
+                </p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#f6f0e4]/42">
+                  {ingredientCopy.region}
+                </p>
+                <p className="mt-5 text-sm leading-7 text-[#f6f0e4]/66">
+                  {botanique.chosenFor} : {ingredientCopy.chosenFor}
+                </p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -81,16 +84,17 @@ export function BotaniqueRouteSection() {
 }
 
 export function SeveRacineRouteSection() {
-  const { advisor } = useCopy();
+  const copy = useCopy();
   const { locale } = useI18n();
   const whatsappUrl = buildWhatsAppUrl("order", "", locale);
+  const seveRacine = copy.seveRacine;
 
   return (
     <section className="grid min-h-[calc(100svh-5rem)] items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
       <div className="mx-auto w-full max-w-xl lg:order-2">
         <div className="relative aspect-[4/5] overflow-hidden border border-[#d6b75b]/16 bg-black">
           <Image
-            alt={advisor.seveRacine.alt}
+            alt={seveRacine.alt}
             className="object-cover"
             fill
             priority
@@ -101,15 +105,15 @@ export function SeveRacineRouteSection() {
       </div>
       <div className="mx-auto max-w-2xl lg:order-1">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d6b75b]">
-          {advisor.seveRacine.batchLine}
+          {seveRacine.batchLine}
         </p>
         <h1 className="mt-6 font-serif text-5xl font-light leading-tight sm:text-7xl">
-          {advisor.seveRacine.title}
+          {seveRacine.title}
         </h1>
-        <p className="mt-6 text-lg leading-8 text-[#f6f0e4]/68">{advisor.seveRacine.intro}</p>
+        <p className="mt-6 text-lg leading-8 text-[#f6f0e4]/68">{seveRacine.intro}</p>
         <p className="mt-7 font-mono text-2xl text-[#d6b75b]">{advisorPricing.productXaf}</p>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {advisor.seveRacine.steps.map((step, index) => (
+          {seveRacine.steps.map((step, index) => (
             <div className="border border-[#d6b75b]/14 bg-white/[0.025] p-4" key={step}>
               <p className="font-mono text-xs text-[#d6b75b]">0{index + 1}</p>
               <p className="mt-3 text-sm leading-6 text-[#f6f0e4]/68">{step}</p>
@@ -117,7 +121,7 @@ export function SeveRacineRouteSection() {
           ))}
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {advisor.seveRacine.shippingCards.map((item, index) => (
+          {seveRacine.shippingCards.map((item, index) => (
             <div className="border border-[#d6b75b]/14 bg-white/[0.025] p-4" key={item.label}>
               <div className="flex items-center gap-2 text-[#d6b75b]">
                 {index === 0 ? (
@@ -134,7 +138,7 @@ export function SeveRacineRouteSection() {
           ))}
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {advisor.seveRacine.payment.map((label, index) => (
+          {seveRacine.payment.map((label, index) => (
             <div
               className="flex min-h-12 items-center gap-3 border border-[#d6b75b]/14 bg-[#d6b75b]/[0.055] px-4 text-sm font-semibold text-[#f6f0e4]"
               key={label}
@@ -156,7 +160,7 @@ export function SeveRacineRouteSection() {
           rel="noreferrer"
           target="_blank"
         >
-          {advisor.seveRacine.cta}
+          {seveRacine.cta}
         </a>
       </div>
     </section>
@@ -164,24 +168,23 @@ export function SeveRacineRouteSection() {
 }
 
 export function SurMesureRouteSection() {
-  const { advisor } = useCopy();
+  const copy = useCopy();
   const { locale } = useI18n();
   const whatsappUrl = buildWhatsAppUrl("consultation", "", locale);
+  const surMesure = copy.surMesure;
 
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d6b75b]">
-          {advisor.surMesure.eyebrow}
+          {surMesure.eyebrow}
         </p>
         <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-tight sm:text-7xl">
-          {advisor.surMesure.title}
+          {surMesure.title}
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-[#f6f0e4]/68">
-          {advisor.surMesure.body}
-        </p>
+        <p className="mt-6 max-w-2xl text-lg leading-8 text-[#f6f0e4]/68">{surMesure.body}</p>
         <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {advisor.surMesure.steps.map(([number, title, text]) => (
+          {surMesure.steps.map(([number, title, text]) => (
             <article className="border border-[#d6b75b]/16 bg-white/[0.025] p-6" key={title}>
               <p className="font-mono text-xs text-[#d6b75b]">{number}</p>
               <h2 className="mt-8 font-serif text-3xl">{title}</h2>
@@ -195,7 +198,7 @@ export function SurMesureRouteSection() {
           rel="noreferrer"
           target="_blank"
         >
-          {advisor.surMesure.cta}
+          {surMesure.cta}
         </a>
       </div>
     </section>
@@ -203,30 +206,31 @@ export function SurMesureRouteSection() {
 }
 
 export function GrossistesRouteSection() {
-  const { advisor } = useCopy();
+  const copy = useCopy();
   const { locale } = useI18n();
   const whatsappUrl = buildWhatsAppUrl("wholesale", "", locale);
+  const grossistes = copy.grossistes;
 
   return (
     <section className="mx-auto grid min-h-[calc(100svh-5rem)] max-w-4xl content-center px-4 py-16 sm:px-6 lg:px-8">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d6b75b]">
-        {advisor.grossistes.eyebrow}
+        {grossistes.eyebrow}
       </p>
       <h1 className="mt-6 font-serif text-5xl font-light leading-tight sm:text-7xl">
-        {advisor.grossistes.title}
+        {grossistes.title}
       </h1>
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <div className="border border-[#d6b75b]/16 bg-white/[0.025] p-6">
           <p className="font-mono text-2xl text-[#d6b75b]">{advisorPricing.wholesaleMoq}</p>
-          <p className="mt-3 text-sm text-[#f6f0e4]/62">{advisor.grossistes.cardMinimum}</p>
+          <p className="mt-3 text-sm text-[#f6f0e4]/62">{grossistes.cardMinimum}</p>
         </div>
         <div className="border border-[#d6b75b]/16 bg-white/[0.025] p-6">
           <p className="font-mono text-2xl text-[#d6b75b]">{advisorPricing.wholesaleUnitXaf}</p>
-          <p className="mt-3 text-sm text-[#f6f0e4]/62">{advisor.grossistes.cardPrice}</p>
+          <p className="mt-3 text-sm text-[#f6f0e4]/62">{grossistes.cardPrice}</p>
         </div>
         <div className="border border-[#d6b75b]/16 bg-white/[0.025] p-6">
           <p className="font-mono text-2xl text-[#d6b75b]">WhatsApp</p>
-          <p className="mt-3 text-sm text-[#f6f0e4]/62">{advisor.grossistes.cardValidation}</p>
+          <p className="mt-3 text-sm text-[#f6f0e4]/62">{grossistes.cardValidation}</p>
         </div>
       </div>
       <a
@@ -235,7 +239,7 @@ export function GrossistesRouteSection() {
         rel="noreferrer"
         target="_blank"
       >
-        {advisor.grossistes.cta}
+        {grossistes.cta}
       </a>
     </section>
   );

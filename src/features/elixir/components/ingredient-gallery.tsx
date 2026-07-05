@@ -36,10 +36,12 @@ function EngravedBotanical({ index }: { index: number }) {
 }
 
 export function IngredientGallery({ content, locale }: IngredientGalleryProps) {
-  const eyebrow =
-    locale === "fr" ? content.ingredientScience.eyebrow.fr : content.ingredientScience.eyebrow.en;
-  const title =
-    locale === "fr" ? content.ingredientScience.title.fr : content.ingredientScience.title.en;
+  const eyebrow = locale.startsWith("fr")
+    ? content.ingredientScience.eyebrow.fr
+    : content.ingredientScience.eyebrow.en;
+  const title = locale.startsWith("fr")
+    ? content.ingredientScience.title.fr
+    : content.ingredientScience.title.en;
 
   return (
     <section className="bg-[#080706] px-5 py-16 text-[#f6f0e4] sm:px-8 lg:px-12" id="ingredients">
@@ -52,8 +54,8 @@ export function IngredientGallery({ content, locale }: IngredientGalleryProps) {
         </h2>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {formulaIngredients.map((ingredient, index) => {
-            const name = locale === "fr" ? ingredient.name_fr : ingredient.name_en;
-            const note = locale === "fr" ? ingredient.chosen_for : ingredient.chosen_for_en;
+            const name = locale.startsWith("fr") ? ingredient.name_fr : ingredient.name_en;
+            const note = locale.startsWith("fr") ? ingredient.chosen_for : ingredient.chosen_for_en;
 
             return (
               <motion.article

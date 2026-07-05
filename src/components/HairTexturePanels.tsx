@@ -7,7 +7,7 @@ export function HairTexturePanels() {
 }
 
 export function RealPhotographyPendingSlot() {
-  const { advisor } = useCopy();
+  const copy = useCopy();
 
-  return <span className="sr-only">{advisor.texturePending.label}</span>;
+  return <span className="sr-only">{copy.home.textureTitle}</span>;
 }

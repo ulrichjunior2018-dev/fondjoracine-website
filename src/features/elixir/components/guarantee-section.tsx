@@ -100,7 +100,7 @@ function AnimatedRingCounter({
           {count}
         </span>
         <span className="mt-1 block text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-foreground/48">
-          {locale === "fr" ? "jours" : "days"}
+          {locale.startsWith("fr") ? "jours" : "days"}
         </span>
       </div>
     </div>

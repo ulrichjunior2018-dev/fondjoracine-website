@@ -46,7 +46,7 @@ export function formatXaf(amount: number) {
 export function buildWaLink(
   messageKey: WhatsAppMessageKey,
   dynamicText = "",
-  locale: WhatsAppLocale = "fr",
+  locale: WhatsAppLocale = "en",
 ) {
   const messages = config.whatsapp.messages[locale];
   const message =

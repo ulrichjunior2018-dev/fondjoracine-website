@@ -107,8 +107,8 @@ export function ImageCompareSlider({
     }
   }
 
-  const beforeLabel = locale === "fr" ? "AVANT" : "BEFORE";
-  const afterLabel = locale === "fr" ? "APRÈS" : "AFTER";
+  const beforeLabel = locale.startsWith("fr") ? "AVANT" : "BEFORE";
+  const afterLabel = locale.startsWith("fr") ? "APRÈS" : "AFTER";
 
   return (
     // touch-action: none prevents scroll interference during horizontal drag
@@ -169,7 +169,7 @@ export function ImageCompareSlider({
       {/* ── Slider: vertical line + draggable handle ── */}
       <div
         ref={lineRef}
-        aria-label={locale === "fr" ? "Glisser pour comparer" : "Drag to compare"}
+        aria-label={locale.startsWith("fr") ? "Glisser pour comparer" : "Drag to compare"}
         aria-orientation="vertical"
         aria-valuemax={100}
         aria-valuemin={0}

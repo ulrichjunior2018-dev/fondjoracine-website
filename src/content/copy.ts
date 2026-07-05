@@ -418,19 +418,129 @@ const advisorEn = {
   },
 };
 
+const homeFr = {
+  ...storefrontFr,
+  formulaNote:
+    "La liste n'est pas présentée comme un ordre de concentration ; l'ordre exact de l'étiquette attend confirmation du formulateur.",
+  hero: {
+    backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
+    bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
+    eyebrow: "MAISON FONDJO — BUEA, CAMEROUN",
+    primary: "Commencer mon diagnostic",
+    secondary: "Découvrir Sève Racine",
+    story:
+      "Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme, votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.",
+    pending: "Photographie produit réelle en attente",
+    titleFirst: "Vos cheveux",
+    titleSecond: "ont une histoire.",
+    titleThird: "Commençons par l'écouter.",
+    trustLabel: "Repères du coffret Maison Fondjo",
+    trustItems: [
+      ["Coffret numéroté", "Lot Fondateur 2026, 200 exemplaires"],
+      ["Ligne signature", "Fondjo Ulrich / Fondjo Clarisse"],
+      ["Marques paiement", "MTN Mobile Money + Orange Money"],
+    ],
+  },
+  language: {
+    bannerAccept: "Passer en français",
+    bannerDismiss: "Continuer en anglais",
+    bannerText: "On dirait que vous préférez le français",
+    toggleLabel: "Switch language / Changer de langue",
+  },
+  shell: advisorFr.shell,
+} as const;
+
+const homeEn = {
+  ...storefrontEn,
+  formulaNote:
+    "This list is not presented as concentration order; the exact label order awaits formulator confirmation.",
+  hero: {
+    backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
+    bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
+    eyebrow: "MAISON FONDJO — BUEA, CAMEROON",
+    primary: "Start my diagnostic",
+    secondary: "Discover Sève Racine",
+    story:
+      "Before the bottle, Maison Fondjo begins by understanding texture, rhythm, scalp condition and daily use.",
+    pending: "Real product photography pending",
+    titleFirst: "Your hair",
+    titleSecond: "has a story.",
+    titleThird: "Let us begin by listening.",
+    trustLabel: "Maison Fondjo box trust signals",
+    trustItems: [
+      ["Numbered box", "Founder Batch 2026, 200 pieces"],
+      ["Founder signature", "Fondjo Ulrich / Fondjo Clarisse"],
+      ["Payment marks", "MTN Mobile Money + Orange Money"],
+    ],
+  },
+  language: {
+    bannerAccept: "Switch to French",
+    bannerDismiss: "Continue in English",
+    bannerText: "It looks like you prefer French",
+    toggleLabel: "Switch language / Changer de langue",
+  },
+  shell: advisorEn.shell,
+} as const;
+
+const diagnosticFr = {
+  ...advisorFr.diagnostic,
+  recommendation: {
+    credited: "créditée",
+    fallbackAnswer: "Non renseigné",
+    for: "pour",
+    privateDirection: "Consultation Privée recommandée",
+    recommendationLabel: "Recommandation Sève Racine",
+    recommendationText: "commencer par un rituel mesuré avec {botanicalOne} et {botanicalTwo}.",
+    severityHigh: "élevée",
+    severityStandard: "standard",
+    summaryConcern: "Problème",
+    summaryDirection: "Orientation",
+    summaryHair: "Cheveux",
+    summaryRoutine: "Routine",
+    summaryScalp: "Cuir chevelu",
+    summarySeverity: "Sévérité",
+  },
+} as const;
+
+const diagnosticEn = {
+  ...advisorEn.diagnostic,
+  recommendation: {
+    credited: "credited",
+    fallbackAnswer: "Not provided",
+    for: "for",
+    privateDirection: "Private Consultation recommended",
+    recommendationLabel: "Sève Racine recommendation",
+    recommendationText: "start with a measured ritual using {botanicalOne} and {botanicalTwo}.",
+    severityHigh: "high",
+    severityStandard: "standard",
+    summaryConcern: "Concern",
+    summaryDirection: "Direction",
+    summaryHair: "Hair",
+    summaryRoutine: "Routine",
+    summaryScalp: "Scalp",
+    summarySeverity: "Severity",
+  },
+} as const;
+
 export const copy = {
   en: {
-    advisor: advisorEn,
-    public: publicEn,
-    storefront: storefrontEn,
+    botanique: advisorEn.botanique,
+    diagnostic: diagnosticEn,
+    grossistes: advisorEn.grossistes,
+    home: homeEn,
+    seveRacine: advisorEn.seveRacine,
+    surMesure: advisorEn.surMesure,
   },
   fr: {
-    advisor: advisorFr,
-    public: publicFr,
-    storefront: storefrontFr,
+    botanique: advisorFr.botanique,
+    diagnostic: diagnosticFr,
+    grossistes: advisorFr.grossistes,
+    home: homeFr,
+    seveRacine: advisorFr.seveRacine,
+    surMesure: advisorFr.surMesure,
   },
 } as const;
 
 export type Locale = keyof typeof copy;
 
-export const publicCopy = copy.fr.public;
+export const publicCopy = publicFr;

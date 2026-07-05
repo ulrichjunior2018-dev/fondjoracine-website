@@ -10,7 +10,7 @@ import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
-import { formulaIngredients, formulaNote } from "@/content/formula";
+import { formulaIngredients, formulaNote, getFormulaIngredientCopy } from "@/content/formula";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -22,7 +22,7 @@ type PremiumStorefrontPageProps = {
   locale: Locale;
 };
 
-type Copy = ReturnType<typeof useCopy>["storefront"];
+type Copy = ReturnType<typeof useCopy>["home"];
 
 const blurDataUrl =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PHBhdGggZD0nTTAgMTZMMTYgME0tNCAxMkwxMi00TTQgMjBMMjAgNCcgc3Ryb2tlPScjYzhhOTUxJyBzdHJva2Utb3BhY2l0eT0nLjE2Jy8+PC9zdmc+";
@@ -297,10 +297,7 @@ export function IngredientCarousel({
 }: PremiumStorefrontPageProps & { copy: Copy }) {
   void content;
   const ingredients = formulaIngredients;
-  const formulaNoteText =
-    locale === "en"
-      ? "This list is not presented as concentration order; the exact label order awaits formulator confirmation."
-      : formulaNote;
+  const formulaNoteText = copy.formulaNote;
 
   return (
     <section
@@ -321,14 +318,13 @@ export function IngredientCarousel({
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {ingredients.map((ingredient, index) => {
-            const name = locale === "en" ? ingredient.name_en : ingredient.name_fr;
-            const note = locale === "en" ? ingredient.chosen_for_en : ingredient.chosen_for;
+            const ingredientCopy = getFormulaIngredientCopy(ingredient, locale);
 
             return (
               <motion.article
                 className="group relative min-h-[24rem] overflow-hidden rounded-sm border border-[#d6b75b]/46 bg-[#f6f0e4] p-6 text-[#14110b] shadow-[0_24px_80px_rgb(0_0_0/.2)]"
                 initial={{ opacity: 0, y: 18 }}
-                key={`${name}-${index}`}
+                key={`${ingredientCopy.name}-${index}`}
                 transition={{ duration: 0.45, delay: index * 0.025, ease: [0.16, 1, 0.3, 1] }}
                 viewport={{ once: true, margin: "-12%" }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -340,13 +336,15 @@ export function IngredientCarousel({
                   </p>
                   <EngravedBotanicalIllustration index={index} />
                   <h3 className="mt-5 text-center font-serif text-4xl font-light leading-none">
-                    {name}
+                    {ingredientCopy.name}
                   </h3>
                   <p className="mt-2 text-center font-serif text-lg italic text-[#7b622d]">
                     {ingredient.latin}
                   </p>
                   <div className="mx-auto mt-5 h-px w-24 bg-[#d6b75b]" />
-                  <p className="mt-6 text-center text-sm leading-7 text-[#14110b]/70">{note}</p>
+                  <p className="mt-6 text-center text-sm leading-7 text-[#14110b]/70">
+                    {ingredientCopy.chosenFor}
+                  </p>
                 </div>
               </motion.article>
             );
@@ -755,7 +753,7 @@ function PremiumHeader({ copy }: { copy: Copy }) {
 
 export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
   const { copy: localizedCopy, locale } = useI18n();
-  const copy = localizedCopy.storefront;
+  const copy = localizedCopy.home;
   const contentLocale: Locale = locale;
   const whatsappUrl = getWhatsAppUrl(content, contentLocale);
 
