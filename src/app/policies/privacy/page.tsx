@@ -3,39 +3,33 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
+import { publicCopy } from "@/content/copy";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | FONDJO RACINE",
-  description:
-    "How FONDJO RACINE collects and protects order, payment, consultation, and support information.",
+  title: publicCopy.metadata.privacy.title,
+  description: publicCopy.metadata.privacy.description,
+  openGraph: {
+    description: publicCopy.metadata.privacy.description,
+    locale: "fr_FR",
+    title: publicCopy.metadata.privacy.title,
+  },
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <main className="bg-background py-16">
       <Container size="lg">
-        <Kicker>Policy</Kicker>
+        <Kicker>{publicCopy.policies.kicker}</Kicker>
         <Heading as="h1" className="mt-3" level="h2">
-          Privacy Policy
+          {publicCopy.policies.privacy.title}
         </Heading>
-        <Text className="mt-5" tone="muted">
-          FONDJO RACINE collects the information needed to process SÈVE orders, verify payments,
-          coordinate delivery, respond on WhatsApp, and improve the hair consultation experience.
-          This may include name, phone, optional email, city, address, order details, payment
-          reference, consultation answers, and support messages.
-        </Text>
-        <Text className="mt-5" tone="muted">
-          Card payments, when enabled, are handled by Stripe. Manual MTN Mobile Money and Orange
-          Money references are reviewed by the admin team before an order is confirmed. Consultation
-          guidance is cosmetic only and is not medical advice.
-        </Text>
-        <Text className="mt-5" tone="muted">
-          To request correction or deletion of your information, contact us through WhatsApp or the
-          contact page. We keep business records only as long as needed for fulfilment, legal,
-          security, and customer-support purposes.
-        </Text>
+        {publicCopy.policies.privacy.body.map((paragraph) => (
+          <Text className="mt-5" key={paragraph} tone="muted">
+            {paragraph}
+          </Text>
+        ))}
         <Link className="mt-8 inline-flex text-sm font-semibold text-accent" href="/">
-          Return home
+          {publicCopy.policies.backHome}
         </Link>
       </Container>
     </main>

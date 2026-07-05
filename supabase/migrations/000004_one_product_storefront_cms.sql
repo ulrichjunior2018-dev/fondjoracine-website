@@ -54,8 +54,8 @@ values (
     "brand": "FONDJO",
     "slug": "hair-elixir",
     "currency": "USD",
-    "priceCents": 4800,
-    "priceXaf": "29,000 FCFA",
+    "priceCents": 0,
+    "priceXaf": "Configured in app",
     "title": { "en": "FONDJO Hair Elixir", "fr": "FONDJO Hair Elixir" },
     "description": {
       "en": "A concentrated botanical hair elixir created for dry scalp comfort, luminous length, and a polished luxury ritual in one bottle.",
@@ -78,12 +78,12 @@ values (
       "secondaryCta": { "en": "Pay with MoMo or Orange", "fr": "Payer par MoMo ou Orange" }
     },
     "availability": {
-      "en": "Small-batch availability for Cameroon and international delivery.",
-      "fr": "Disponibilite en petites series pour le Cameroun et l international."
+      "en": "Small-batch availability for Cameroon delivery.",
+      "fr": "Disponibilite en petites series pour le Cameroun."
     },
     "shipping": {
-      "en": "Cameroon delivery coordination by WhatsApp. International card payments supported through Stripe.",
-      "fr": "Livraison au Cameroun coordonnee par WhatsApp. Paiements internationaux par carte via Stripe."
+      "en": "Cameroon delivery coordination by WhatsApp. Card payments supported through Stripe when available.",
+      "fr": "Livraison au Cameroun coordonnee par WhatsApp. Paiements par carte par carte via Stripe."
     },
     "whatsapp": {
       "phone": "+19295046726",
@@ -140,7 +140,7 @@ values (
         }
       },
       {
-        "label": { "en": "International payments", "fr": "Paiements internationaux" },
+        "label": { "en": "Card payments", "fr": "Paiements par carte" },
         "text": {
           "en": "Stripe checkout is prepared for cards and global payment methods.",
           "fr": "Stripe Checkout est pret pour cartes et moyens de paiement internationaux."
@@ -189,9 +189,9 @@ values (
         }
       },
       {
-        "name": { "en": "Rosemary leaf", "fr": "Romarin" },
+        "name": { "en": "Mint botanical note", "fr": "Menthe" },
         "note": {
-          "en": "A scalp ritual classic for a fresh, invigorating sensorial note.",
+          "en": "A botanical note chosen for a fresh, invigorating sensorial profile.",
           "fr": "Un classique du rituel cuir chevelu pour une sensation fraiche et tonifiante."
         }
       }

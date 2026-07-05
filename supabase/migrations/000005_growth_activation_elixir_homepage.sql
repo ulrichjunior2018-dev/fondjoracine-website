@@ -8,8 +8,8 @@ values (
     "brand": "FONDJO",
     "slug": "seve-hair-treatment-oil",
     "currency": "USD",
-    "priceCents": 1600,
-    "priceXaf": "9,500 XAF",
+    "priceCents": 0,
+    "priceXaf": "Configured in app",
     "title": {
       "en": "SEVE",
       "fr": "SEVE"
@@ -37,7 +37,7 @@ values (
       "title": { "en": "SEVE, 100ml.", "fr": "SEVE, 100ml." },
       "name": { "en": "SEVE", "fr": "SEVE" },
       "size": { "en": "100ml", "fr": "100ml" },
-      "priceXaf": "9,500 XAF",
+      "priceXaf": "Configured in app",
       "description": {
         "en": "A 100ml root-to-length botanical oil created for 60 days of consistent scalp massage, sealing, and visible polish.",
         "fr": "Une huile botanique 100ml racines-a-longueurs pour 60 jours de massage, scellage et finition visible."
@@ -46,7 +46,7 @@ values (
     "innerCircle": {
       "eyebrow": { "en": "Inner Circle subscription", "fr": "Abonnement Inner Circle" },
       "title": { "en": "Stay consistent for less each month.", "fr": "Restez reguliere pour moins chaque mois." },
-      "priceXaf": "8,000 XAF/month",
+      "priceXaf": "Configured in app",
       "cta": { "en": "Join through WhatsApp", "fr": "Rejoindre via WhatsApp" },
       "benefits": [
         { "en": "Monthly 100ml replenishment", "fr": "Reassort mensuel 100ml" },

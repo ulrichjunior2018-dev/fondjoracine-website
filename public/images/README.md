@@ -1,4 +1,4 @@
-# FONDJO RACINE Production Image Slots
+# Maison Fondjo Production Image Slots
 
 These filenames are the canonical website image slots. Keep replacements lowercase,
 web-safe, and inside `public/images`.
@@ -24,6 +24,5 @@ Additional clean assets currently available:
 - `ingredient-coconut-oil.png`
 - `ingredient-jojoba-oil.png`
 - `ingredient-olive-oil.png`
-- `ingredient-shea-oil.png`
 
 Next.js serves optimized image variants from these originals at runtime.

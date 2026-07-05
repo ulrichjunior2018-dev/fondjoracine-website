@@ -37,7 +37,7 @@ export function ReviewForm({ productId }: ReviewFormProps) {
             }
           : {
               title: "Sign in required",
-              description: "Please sign in to leave a verified FONDJO review.",
+              description: "Please sign in to leave a verified Maison Fondjo review.",
               tone: "warning",
             },
       );

@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { buildWaLink } from "@/lib/config";
 
 const inquirySchema = z.object({
   city: z.string().min(2),
@@ -32,16 +33,11 @@ export function InquiryForm({ locale, productName, whatsappPhone }: InquiryFormP
   });
 
   function submitInquiry(input: InquiryInput) {
-    const message =
-      locale === "fr"
-        ? `Bonjour FONDJO, je veux commander ${productName}. Nom: ${input.name}. Telephone: ${input.phone}. Ville: ${input.city}.`
-        : `Hello FONDJO, I want to order ${productName}. Name: ${input.name}. Phone: ${input.phone}. City: ${input.city}.`;
-    const normalizedWhatsAppPhone = whatsappPhone.replace(/\D/g, "");
-    window.open(
-      `https://wa.me/${normalizedWhatsAppPhone}?text=${encodeURIComponent(message)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
+    void input;
+    void locale;
+    void productName;
+    void whatsappPhone;
+    window.open(buildWaLink("order"), "_blank", "noopener,noreferrer");
   }
 
   return (

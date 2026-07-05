@@ -2,10 +2,11 @@ import {
   buildRouteMetadata,
   LandingRoutePage,
 } from "@/features/elixir/components/landing-route-page";
+import { publicCopy } from "@/content/copy";
 
 export const metadata = buildRouteMetadata(
-  "How To Use",
-  "Learn how to apply SÈVE hair treatment oil with a careful scalp, hairline, beard, and protective-style routine.",
+  publicCopy.metadata.howToUse.title,
+  publicCopy.metadata.howToUse.description,
 );
 
 export default function HowToUsePage() {

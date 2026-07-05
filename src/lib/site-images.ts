@@ -19,7 +19,6 @@ export const siteImages = {
   postpartumShedding: "/images/hair-texture-lifestyle.png",
   riverBottleOrigin: "/images/mount-cameroon-river-bottle.png",
   ingredientCastorOil: "/images/ingredient-castor-oil.png",
-  ingredientSheaOil: "/images/ingredient-shea-oil.png",
   ingredientCoconutOil: "/images/ingredient-coconut-oil.png",
   ingredientJojobaOil: "/images/ingredient-jojoba-oil.png",
   ingredientAvocadoOil: "/images/ingredient-avocado-oil.png",

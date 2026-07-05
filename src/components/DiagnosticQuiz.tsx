@@ -3,78 +3,68 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { advisorCopy } from "@/content/advisor-copy";
 import { advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
 
-type DiagnosticQuizProps = {
-  whatsappPhone: string;
-};
-
 type Question = {
+  summaryLabel: string;
   id: string;
-  options: Array<{ label: string; severity?: "serious" | "standard"; value: string }>;
+  options: ReadonlyArray<{ label: string; severity?: "serious" | "standard"; value: string }>;
   prompt: string;
 };
 
-const questions: Question[] = [
-  {
-    id: "objectif",
-    prompt: "Qu'est-ce qui vous préoccupe le plus aujourd'hui ?",
-    options: [
-      { label: "Casse et longueurs fragiles", value: "casse" },
-      { label: "Sécheresse ou manque de douceur", value: "secheresse" },
-      { label: "Cuir chevelu inconfortable", value: "cuir_chevelu" },
-      {
-        label: "Chute soudaine ou zones clairsemées",
-        severity: "serious",
-        value: "chute_soudaine",
-      },
-    ],
-  },
-  {
-    id: "texture",
-    prompt: "Quelle description se rapproche le plus de vos cheveux ?",
-    options: [
-      { label: "Crépus / coils", value: "crepus" },
-      { label: "Bouclés", value: "boucles" },
-      { label: "Ondulés", value: "ondules" },
-      { label: "Fins ou lisses", value: "fins_lisses" },
-    ],
-  },
-  {
-    id: "routine",
-    prompt: "Votre routine actuelle est plutôt...",
-    options: [
-      { label: "Protective styles ou tresses", value: "protective_styles" },
-      { label: "Wash day régulier", value: "wash_day" },
-      { label: "Grooming barbe / contours", value: "grooming" },
-      { label: "Très irrégulière", value: "irreguliere" },
-    ],
-  },
-  {
-    id: "sensibilite",
-    prompt: "Avez-vous douleur, plaies, brûlure ou réaction persistante ?",
-    options: [
-      { label: "Non", value: "non" },
-      { label: "Parfois une gêne légère", value: "gene_legere" },
-      {
-        label: "Oui, douleur ou irritation persistante",
-        severity: "serious",
-        value: "douleur_irritation",
-      },
-    ],
-  },
-  {
-    id: "frequence",
-    prompt: "Combien de fois par semaine pouvez-vous appliquer un rituel simple ?",
-    options: [
-      { label: "1 fois", value: "1_fois" },
-      { label: "2 à 3 fois", value: "2_3_fois" },
-      { label: "Plus souvent, si c'est léger", value: "plus_souvent" },
-    ],
-  },
-] as const;
+const questions = advisorCopy.diagnostic.questions satisfies readonly Question[];
 
-export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
+function getAnswerValue(questionId: string, answers: Record<string, string>) {
+  if (questionId === "objectif") {
+    return answers.objectif;
+  }
+
+  if (questionId === "texture") {
+    return answers.texture;
+  }
+
+  if (questionId === "routine") {
+    return answers.routine;
+  }
+
+  if (questionId === "sensibilite") {
+    return answers.sensibilite;
+  }
+
+  if (questionId === "duree") {
+    return answers.duree;
+  }
+
+  return undefined;
+}
+
+function getAnswerLabel(questionId: string, answers: Record<string, string>) {
+  const question = questions.find((item) => item.id === questionId);
+  const value = getAnswerValue(questionId, answers);
+
+  return question?.options.find((option) => option.value === value)?.label ?? "Non renseigné";
+}
+
+function getMainProblem(answers: Record<string, string>) {
+  return getAnswerLabel("objectif", answers).toLowerCase();
+}
+
+function getRecommendationBotanicals(answers: Record<string, string>) {
+  const problem = answers.objectif;
+
+  if (problem === "secheresse") {
+    return ["coco", "olive"] as const;
+  }
+
+  if (problem === "cuir_chevelu") {
+    return ["jojoba", "menthe"] as const;
+  }
+
+  return ["ricin", "nigelle"] as const;
+}
+
+export function DiagnosticQuiz() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const currentIndex = Math.min(Object.keys(answers).length, questions.length - 1);
   const isComplete = Object.keys(answers).length === questions.length;
@@ -83,22 +73,28 @@ export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
     () =>
       Object.entries(answers).some(([questionId, value]) => {
         const question = questions.find((item) => item.id === questionId);
-        return question?.options.find((option) => option.value === value)?.severity === "serious";
+        const option = question?.options.find((item) => item.value === value);
+
+        return option && "severity" in option && option.severity === "serious";
       }),
     [answers],
   );
-  const serializedAnswers = questions
-    .map((question) => {
-      const value = answers[question.id];
-      const label =
-        question.options.find((option) => option.value === value)?.label ?? "Non renseigné";
-      return `${question.prompt} ${label}`;
-    })
-    .join(" | ");
-  const resultMessage = hasSeriousSignal
-    ? `Bonjour FONDJO RACINE, je souhaite une Consultation Privee (${advisorPricing.consultationCreditXaf}, creditee) apres mon diagnostic. Reponses: ${serializedAnswers}`
-    : `Bonjour FONDJO RACINE, voici mon diagnostic cheveux. Je veux une recommandation Seve Racine adaptee. Reponses: ${serializedAnswers}`;
-  const resultUrl = buildWhatsAppUrl(whatsappPhone, resultMessage);
+  const severityLabel = hasSeriousSignal ? "élevée" : "standard";
+  const serializedAnswers = [
+    `Cheveux: ${getAnswerLabel("texture", answers)}`,
+    `Cuir chevelu: ${getAnswerLabel("sensibilite", answers)}`,
+    `Problème: ${getMainProblem(answers)}, ${getAnswerLabel("duree", answers)}`,
+    `Routine: ${getAnswerLabel("routine", answers)}`,
+    `Sévérité: ${severityLabel}`,
+  ].join(" / ");
+  const [botanicalOne, botanicalTwo] = getRecommendationBotanicals(answers);
+  const standardRecommendation = `${serializedAnswers}\nRecommandation Sève Racine: pour ${getMainProblem(
+    answers,
+  )}, commencer par un rituel mesuré avec ${botanicalOne} et ${botanicalTwo}.`;
+  const privateConsultationMessage = `${serializedAnswers}\nOrientation: Consultation Privée recommandée (${advisorPricing.consultationCreditXaf} créditée).`;
+  const resultUrl = hasSeriousSignal
+    ? buildWhatsAppUrl("consultation", privateConsultationMessage)
+    : buildWhatsAppUrl("diagnostic", standardRecommendation);
 
   function choose(questionId: string, value: string) {
     setAnswers((current) => ({ ...current, [questionId]: value }));
@@ -116,7 +112,7 @@ export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
       {!isComplete && currentQuestion ? (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
-            Diagnostic FONDJO RACINE
+            {advisorCopy.diagnostic.eyebrow}
           </p>
           <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#f6f0e4] sm:text-6xl">
             {currentQuestion.prompt}
@@ -137,18 +133,27 @@ export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
       ) : (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#d6b75b]/18 bg-[#0d0d0d]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
-            Votre prochaine étape
+            {advisorCopy.diagnostic.nextStep}
           </p>
           <h1 className="mt-5 font-serif text-4xl font-light leading-tight sm:text-6xl">
             {hasSeriousSignal
-              ? "Consultation Privée recommandée."
-              : "Sève Racine peut structurer votre rituel."}
+              ? advisorCopy.diagnostic.privateTitle
+              : advisorCopy.diagnostic.standardTitle}
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">
             {hasSeriousSignal
-              ? `Certains signaux demandent une écoute plus précise. La Consultation Privée est proposée à ${advisorPricing.consultationCreditXaf}, créditée si une formule est ensuite préparée.`
-              : "Vos réponses indiquent un besoin de discipline, de douceur et de placement précis de l'huile. Nous préparons la recommandation Sève Racine à partir de vos réponses."}
+              ? advisorCopy.diagnostic.privateBody.replace(
+                  "{price}",
+                  advisorPricing.consultationCreditXaf,
+                )
+              : advisorCopy.diagnostic.standardBody
+                  .replace("{problem}", getMainProblem(answers))
+                  .replace("{botanicalOne}", botanicalOne)
+                  .replace("{botanicalTwo}", botanicalTwo)}
           </p>
+          <div className="mt-6 rounded-sm border border-[#d6b75b]/14 bg-white/[0.025] p-4 text-sm leading-7 text-[#f6f0e4]/68">
+            {serializedAnswers}
+          </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#d6b75b] px-6 text-sm font-semibold text-[#080706] transition-transform duration-100 active:scale-[0.98]"
@@ -156,7 +161,7 @@ export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
               rel="noreferrer"
               target="_blank"
             >
-              Continuer sur WhatsApp
+              {advisorCopy.diagnostic.whatsapp}
               <MessageCircle className="size-4" aria-hidden="true" />
             </a>
             <button
@@ -164,7 +169,7 @@ export function DiagnosticQuiz({ whatsappPhone }: DiagnosticQuizProps) {
               onClick={() => setAnswers({})}
               type="button"
             >
-              Refaire le diagnostic
+              {advisorCopy.diagnostic.redo}
               <ArrowRight className="size-4" aria-hidden="true" />
             </button>
           </div>

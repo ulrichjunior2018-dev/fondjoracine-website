@@ -7,7 +7,7 @@ export function DocumentLanguage() {
   const pathname = usePathname();
 
   useEffect(() => {
-    document.documentElement.lang = pathname.startsWith("/fr") ? "fr" : "en";
+    document.documentElement.lang = "fr";
   }, [pathname]);
 
   return null;

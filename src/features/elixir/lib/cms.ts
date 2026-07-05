@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "@/config/env";
 import { elixirContentSchema } from "@/features/elixir/data/content-schema";
 import { defaultElixirContent, type ElixirContent } from "@/features/elixir/data/content";
+import { buildWaLink, config, formatXaf } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
 import { logger } from "@/lib/logger/logger";
 
@@ -31,7 +32,7 @@ export async function getElixirContent(): Promise<ElixirContent> {
   const supabase = getPublicSupabaseClient();
 
   if (!supabase) {
-    return parseElixirContent(defaultElixirContent);
+    return applyRuntimeOverrides(parseElixirContent(defaultElixirContent));
   }
 
   const { data, error } = await supabase
@@ -89,7 +90,7 @@ function parseElixirContent(content: ElixirContent): ElixirContent {
     return parsedContent.data;
   }
 
-  logger.error("Invalid FONDJO storefront CMS content. Falling back to bundled content.", {
+  logger.error("Invalid Maison Fondjo storefront CMS content. Falling back to bundled content.", {
     issues: parsedContent.error.issues.map((issue) => ({
       message: issue.message,
       path: issue.path.join("."),
@@ -98,11 +99,11 @@ function parseElixirContent(content: ElixirContent): ElixirContent {
 
   const parsedFallback = elixirContentSchema.parse(defaultElixirContent);
 
-  return parsedFallback;
+  return applyRuntimeOverrides(parsedFallback);
 }
 
 function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
-  return {
+  const runtimeContent = {
     ...content,
     manualPayments: {
       ...content.manualPayments,
@@ -117,18 +118,51 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
         return envNumber ? { ...method, number: envNumber } : method;
       }),
     },
+    innerCircle: {
+      ...content.innerCircle,
+      priceXaf: `${formatXaf(config.pricing.seveRacine)} local equivalent`,
+    },
+    currency: "XAF",
+    priceCents: config.pricing.seveRacine,
+    priceXaf: formatXaf(config.pricing.seveRacine),
+    product: {
+      ...content.product,
+      priceXaf: formatXaf(config.pricing.seveRacine),
+    },
     whatsapp: {
       ...content.whatsapp,
       phone: env.NEXT_PUBLIC_WHATSAPP_NUMBER || content.whatsapp.phone,
     },
   };
+
+  return mirrorFrenchLocalizedText(runtimeContent);
+}
+
+function mirrorFrenchLocalizedText<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => mirrorFrenchLocalizedText(item)) as T;
+  }
+
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  if ("fr" in value && "en" in value) {
+    const localized = value as { en: unknown; fr: unknown };
+
+    if (typeof localized.fr === "string") {
+      return { ...value, en: localized.fr } as T;
+    }
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, item]) => [key, mirrorFrenchLocalizedText(item)]),
+  ) as T;
 }
 
 export function getWhatsAppUrl(content: ElixirContent, locale: "en" | "fr") {
-  const message = encodeURIComponent(
-    locale === "fr" ? content.whatsapp.message.fr : content.whatsapp.message.en,
-  );
-  const phone = content.whatsapp.phone.replace(/\D/g, "");
+  void content;
+  void locale;
 
-  return `https://wa.me/${phone}?text=${message}`;
+  return buildWaLink("order");
 }

@@ -35,8 +35,8 @@ export function buildWhatsAppOrderMessage(
 
   return [
     locale === "fr"
-      ? `Bonjour FONDJO, j'ai cree la commande ${payload.orderNumber}.`
-      : `Hello FONDJO, I created order ${payload.orderNumber}.`,
+      ? `Bonjour Maison Fondjo, j'ai cree la commande ${payload.orderNumber}.`
+      : `Hello Maison Fondjo, I created order ${payload.orderNumber}.`,
     `${locale === "fr" ? "Produit" : "Product"}: ${productName}`,
     `${locale === "fr" ? "Client" : "Customer"}: ${payload.customerName}`,
     `${locale === "fr" ? "Telephone" : "Phone"}: ${payload.phone}`,
@@ -78,7 +78,7 @@ function buildAdminNotificationHtml(payload: OrderNotificationPayload): string {
 
         <tr>
           <td style="background:#0a0905;padding:24px 32px;">
-            <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c8a951;">FONDJO</p>
+            <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c8a951;">Maison Fondjo</p>
             <h1 style="margin:8px 0 0;font-size:20px;font-weight:600;color:#f5f0e8;">New Order — ${safePayload.orderNumber}</h1>
           </td>
         </tr>
@@ -130,7 +130,7 @@ function buildAdminNotificationHtml(payload: OrderNotificationPayload): string {
 
         <tr>
           <td style="padding:16px 32px;background:#f9fafb;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;font-size:12px;color:#9ca3af;">FONDJO · fondjoracine.com · This notification was sent automatically when the order was created.</p>
+            <p style="margin:0;font-size:12px;color:#9ca3af;">Maison Fondjo · fondjoracine.com · This notification was sent automatically when the order was created.</p>
           </td>
         </tr>
 
@@ -153,9 +153,9 @@ export async function queueOrderNotifications(payload: OrderNotificationPayload)
   try {
     const resend = getResendClient();
     await resend.emails.send({
-      from: `FONDJO Orders <${fromEmail}>`,
+      from: `Maison Fondjo Orders <${fromEmail}>`,
       to: adminEmail,
-      subject: `New FONDJO Order — ${payload.orderNumber}`,
+      subject: `New Maison Fondjo Order — ${payload.orderNumber}`,
       html: buildAdminNotificationHtml(payload),
     });
 

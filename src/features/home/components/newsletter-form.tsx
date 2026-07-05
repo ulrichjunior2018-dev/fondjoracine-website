@@ -50,7 +50,7 @@ export function NewsletterForm() {
       </Button>
       <p className="text-xs leading-5 text-foreground/62 sm:col-span-2" role="status">
         {state === "success"
-          ? "You are on the FONDJO list."
+          ? "You are on the Maison Fondjo list."
           : state === "error"
             ? "We could not save that email. Please try again."
             : "Monthly rituals, ingredient notes, and private launch access."}

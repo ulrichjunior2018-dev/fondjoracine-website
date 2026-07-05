@@ -11,11 +11,16 @@ type LandingRoutePageProps = {
 export function buildRouteMetadata(title: string, description: string): Metadata {
   return {
     description,
-    title: `${title} | FONDJO RACINE`,
+    openGraph: {
+      description,
+      locale: "fr_FR",
+      title,
+    },
+    title,
   };
 }
 
-export async function LandingRoutePage({ locale = "en" }: LandingRoutePageProps) {
+export async function LandingRoutePage({ locale = "fr" }: LandingRoutePageProps) {
   const content = await getElixirContent();
 
   return <PremiumStorefrontPage content={content} locale={locale} />;

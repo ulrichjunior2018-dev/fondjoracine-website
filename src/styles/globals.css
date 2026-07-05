@@ -9,7 +9,7 @@
 :root {
   color-scheme: dark;
 
-  /* ── FONDJO brand tokens ─────────────────────────────────────── */
+  /* ── Maison Fondjo brand tokens ──────────────────────────────── */
   --fr-forest: #0e2a1c;
   --fr-void: #07120c;
   --fr-gold: #c9a24b;
@@ -149,14 +149,14 @@
   --color-warning-muted: var(--warning-muted);
   --color-ring: var(--ring);
 
-  /* FONDJO color utilities: text-fr-gold, bg-fr-forest, etc. */
+  /* Maison Fondjo color utilities: text-fr-gold, bg-fr-forest, etc. */
   --color-fr-forest: var(--fr-forest);
   --color-fr-void: var(--fr-void);
   --color-fr-gold: var(--fr-gold);
   --color-fr-ivory: var(--fr-ivory);
   --color-fr-clay: var(--fr-clay);
 
-  /* FONDJO font utilities: font-fraunces, font-jetbrains */
+  /* Maison Fondjo font utilities: font-fraunces, font-jetbrains */
   --font-fraunces: var(--fr-font-display, ui-serif), ui-serif, Georgia, serif;
   --font-jetbrains: var(--fr-font-mono, ui-monospace), ui-monospace, monospace;
 

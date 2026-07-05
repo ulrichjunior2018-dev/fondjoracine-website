@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     follow: false,
     index: false,
   },
-  title: "Admin Dashboard | FONDJO RACINE",
+  title: "Admin Dashboard | Maison Fondjo",
 };
 
 export default async function AdminPage() {
@@ -32,7 +32,7 @@ export default async function AdminPage() {
       <Container>
         <Kicker>Admin</Kicker>
         <Heading as="h1" className="mt-3" level="h2">
-          FONDJO RACINE command center
+          Maison Fondjo command center
         </Heading>
         <Text className="mt-4 max-w-3xl" tone="muted">
           Edit the live storefront, manage orders and Mobile Money verification, approve proof,

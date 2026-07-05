@@ -1,6 +1,6 @@
-# FONDJO RACINE Website
+# Maison Fondjo Website
 
-Production website for [fondjoracine.com](https://fondjoracine.com), the one-product luxury preorder storefront for FONDJO RACINE SÈVE hair treatment oil.
+Production website for [fondjoracine.com](https://fondjoracine.com), the one-product Maison Fondjo storefront for Sève Racine hair treatment oil.
 
 ## Stack
 
@@ -114,8 +114,6 @@ Admin routes are protected through Supabase Auth and role permissions. The publi
 
 ## Launch Notes
 
-- Batch #001 preorder price is 8,500 XAF.
-- Original post-preorder price is 9,500 XAF.
-- Batch quantity is 30 bottles.
-- Ship date is July 6, 2026.
+- Brand, pricing, delivery, batch, and WhatsApp facts are centralized in `src/lib/config.ts`.
+- The public ingredient formula is centralized in `src/content/formula.ts`.
 - Product safety copy avoids medical, cure, disease, or regrowth claims.

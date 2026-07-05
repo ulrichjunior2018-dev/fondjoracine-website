@@ -4,65 +4,71 @@ import { Mail, MessageCircle, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
 import { env } from "@/config/env";
+import { publicCopy } from "@/content/copy";
 import { getElixirContent } from "@/features/elixir/lib/cms";
+import { buildWaLink } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "Contact | FONDJO RACINE",
-  description:
-    "Contact FONDJO RACINE for SÈVE product support, delivery assistance, consultation follow-up, press, and product safety questions.",
+  title: publicCopy.metadata.contact.title,
+  description: publicCopy.metadata.contact.description,
+  openGraph: {
+    description: publicCopy.metadata.contact.description,
+    locale: "fr_FR",
+    title: publicCopy.metadata.contact.title,
+  },
 };
 
 export default async function ContactPage() {
   const content = await getElixirContent();
   const email = env.ADMIN_EMAIL || "hello@fondjoracine.com";
-  const whatsappPhone = content.whatsapp.phone.replace(/\D/g, "");
-  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
-    "Hello FONDJO, I need help with SÈVE.",
-  )}`;
+  const whatsappUrl = buildWaLink("consultation");
 
   return (
     <main className="min-h-screen bg-background py-16">
       <Container>
         <Kicker>Contact</Kicker>
         <Heading as="h1" className="mt-3 max-w-4xl" level="h2">
-          Product support, delivery assistance, press, and product safety.
+          Conseil produit, livraison au Cameroun, presse et sécurité.
         </Heading>
         <Text className="mt-5 max-w-3xl" tone="muted">
-          FONDJO RACINE is founded and made in Buea, Cameroon. WhatsApp is the fastest way to
-          confirm delivery details, ask shipping questions, and request human follow-up after the
-          hair consultation.
+          Maison Fondjo travaille depuis Buea. WhatsApp reste le chemin le plus direct pour
+          confirmer une zone de livraison, poser une question sur Sève Racine ou demander un suivi
+          après diagnostic.
         </Text>
 
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
           {[
             {
+              external: true,
               href: whatsappUrl,
               icon: <MessageCircle className="h-5 w-5" aria-hidden="true" />,
               label: "WhatsApp",
               text: content.whatsapp.phone,
-              title: "Delivery and product support",
+              title: "Livraison et conseil produit",
             },
             {
+              external: false,
               href: `mailto:${email}`,
               icon: <Mail className="h-5 w-5" aria-hidden="true" />,
               label: "Email",
               text: email,
-              title: "Press and admin support",
+              title: "Presse et administration",
             },
             {
+              external: false,
               href: "/policies/terms",
               icon: <ShieldCheck className="h-5 w-5" aria-hidden="true" />,
-              label: "Safety",
-              text: "External use only. Patch test recommended.",
-              title: "Product safety questions",
+              label: "Sécurité",
+              text: "Usage externe. Test cutané recommandé.",
+              title: "Questions sécurité produit",
             },
           ].map((item) => (
             <a
               className="rounded-lg border border-border bg-surface p-6 shadow-soft transition-colors hover:border-accent/50"
               href={item.href}
               key={item.title}
-              rel={item.href.startsWith("https://wa.me") ? "noreferrer" : undefined}
-              target={item.href.startsWith("https://wa.me") ? "_blank" : undefined}
+              rel={item.external ? "noreferrer" : undefined}
+              target={item.external ? "_blank" : undefined}
             >
               <div className="text-accent">{item.icon}</div>
               <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-accent">

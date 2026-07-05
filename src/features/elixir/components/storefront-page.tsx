@@ -3,7 +3,7 @@ import {
   Camera,
   Droplets,
   FlaskConical,
-  Globe2,
+  Languages,
   Leaf,
   LockKeyhole,
   Music2,
@@ -34,7 +34,6 @@ import { Reveal } from "@/features/home/components/reveal";
 import { GuaranteeSection } from "./guarantee-section";
 import { HeroSection } from "./hero-section";
 import { ImageCompareSlider } from "./image-compare-slider";
-import { TextureGrid } from "./texture-grid";
 import { IngredientGallery } from "./ingredient-gallery";
 import { LuxuryCard } from "./luxury-card";
 import { HairConsultationAgent } from "./hair-consultation-agent";
@@ -100,7 +99,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
       label: locale === "fr" ? "Concue pour cheveux africains" : "Made for African hair",
     },
     {
-      icon: <Globe2 className="size-6" aria-hidden="true" />,
+      icon: <Truck className="size-6" aria-hidden="true" />,
       label: locale === "fr" ? "Fierement fait au Cameroun" : "Proudly made in Cameroon",
     },
     {
@@ -119,9 +118,9 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
             className="inline-flex flex-col text-[#f0c76a]"
             href={(locale === "fr" ? "/fr" : "/") as Route}
           >
-            <span className="text-lg font-semibold tracking-[0.18em]">FONDJO</span>
-            <span className="text-[0.55rem] font-semibold uppercase tracking-[0.48em] text-[#f0dfb7]/78">
-              Racine
+            <span className="text-lg font-semibold tracking-[0.18em]">Maison Fondjo</span>
+            <span className="text-[0.55rem] font-semibold uppercase tracking-[0.24em] text-[#f0dfb7]/78">
+              Buea
             </span>
           </Link>
           <nav className="hidden items-center gap-7 text-sm font-medium text-[#FAF7F0]/76 lg:flex">
@@ -147,7 +146,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               className="inline-flex h-10 items-center gap-2 rounded-full border border-white/16 bg-white/8 px-3 text-sm font-medium text-[#FAF7F0]"
               href={alternateHref}
             >
-              <Globe2 className="h-4 w-4" aria-hidden="true" />
+              <Languages className="h-4 w-4" aria-hidden="true" />
               {copy.language}
             </Link>
           </div>
@@ -164,9 +163,6 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
 
       {/* z-[2] ensures these sections slide over the sticky hero (z-[1]) as user scrolls */}
       <div className="relative z-[2]">
-        {/* TextureGrid: directly below the fold, first thing after the hero */}
-        <TextureGrid />
-
         <section className="border-y border-[#ded3bf] bg-[#FAF7F0]">
           <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-5" size="2xl">
             {heroBadges.map((badge) => (
@@ -197,8 +193,8 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               </Heading>
               <p className="mt-4 text-sm leading-7 text-[#FAF7F0]/72">
                 {locale === "fr"
-                  ? "Repondez au quiz premium FONDJO, recevez une routine personnalisee, puis envoyez le resume a WhatsApp pour un suivi humain."
-                  : "Answer the premium FONDJO quiz, receive a personalized routine, then send the summary to WhatsApp for human follow-up."}
+                  ? "Repondez au quiz premium Maison Fondjo, recevez une routine personnalisee, puis envoyez le resume a WhatsApp pour un suivi humain."
+                  : "Answer the premium Maison Fondjo quiz, receive a personalized routine, then send the summary to WhatsApp for human follow-up."}
               </p>
             </Reveal>
             <Reveal>
@@ -598,7 +594,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
               <Text className="mt-4" tone="muted">
                 {locale === "fr"
                   ? "Les commandes locales passent en attente de verification manuelle apres reference de paiement. Les paiements internationaux passent par Stripe Checkout."
-                  : "Local orders move to manual verification after payment reference submission. International payments continue through Stripe Checkout."}
+                  : "Orders move to manual verification after payment reference submission. Card checkout appears only when enabled."}
               </Text>
             </Reveal>
             <div className="mt-10">
@@ -763,7 +759,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                   text:
                     locale === "fr"
                       ? "Stripe Checkout garde les donnees de paiement hors de nos serveurs."
-                      : "Stripe Checkout keeps card data off FONDJO servers.",
+                      : "Stripe Checkout keeps card data off Maison Fondjo servers.",
                   title: locale === "fr" ? "Paiement securise" : "Secure payment",
                 },
                 {
@@ -772,7 +768,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                   title: locale === "fr" ? "Racines africaines" : "African roots",
                 },
               ].map((item) => (
-                <LuxuryCard eyebrow="FONDJO RACINE" key={item.title} title={item.title}>
+                <LuxuryCard eyebrow="Maison Fondjo" key={item.title} title={item.title}>
                   <div className="mb-4 text-accent">{item.icon}</div>
                   {item.text}
                 </LuxuryCard>
@@ -784,10 +780,8 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
         <footer className="border-t border-border bg-[#07150b] py-8 text-[#F7F4EB]/70">
           <Container className="flex flex-col gap-5 text-sm sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-semibold tracking-[0.18em] text-[#D4AF37]">FONDJO RACINE</p>
-              <p className="mt-2 text-xs leading-5">
-                Founded and made in Buea, Cameroon. For external use only. Patch test recommended.
-              </p>
+              <p className="font-semibold tracking-[0.18em] text-[#D4AF37]">Maison Fondjo</p>
+              <p className="mt-2 text-xs leading-5">Enracinée dans la nature. Faite pour durer.</p>
             </div>
             <nav className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
               {[
@@ -795,7 +789,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                 ["Privacy", "/policies/privacy"],
                 ["Terms", "/policies/terms"],
                 ["Returns", "/policies/returns"],
-                ["Shipping", "/policies/shipping"],
+                ["Delivery", "/policies/shipping"],
               ].map(([label, href]) => (
                 <Link className="hover:text-[#D4AF37]" href={href as Route} key={href}>
                   {label}

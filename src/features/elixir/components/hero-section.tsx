@@ -13,7 +13,7 @@ import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 //   Left panel : Macro botanical sourcing — hands harvesting botanicals,
 //                distillation process, plant close-ups in Buea / SW Region.
 //   Right panel: Fast-cut montage — Sève applied across 4 hair patterns:
-//                fine/straight, waves, curly/thick, coiled 4C.
+//                final Maison Fondjo motion assets.
 //
 // Recommended specs: 1920×1080 H.264 MP4 + WebM fallback, ≤ 8 MB each.
 // Drop files at /public/videos/ and uncomment the src props below.
@@ -37,7 +37,7 @@ function VideoPanel({ poster, side }: VideoPanelProps) {
         alt={
           side === "left"
             ? "Botanical sourcing in Buea, Cameroon (video placeholder)"
-            : "Sève oil applied across hair textures (video placeholder)"
+            : "Sève Racine campaign image placeholder"
         }
         className="absolute inset-0 h-full w-full object-cover"
         src={poster}
@@ -107,7 +107,7 @@ export function HeroSection(_props: HeroSectionProps) {
             className="mb-7 font-jetbrains text-[0.62rem] font-medium uppercase tracking-[0.38em]"
             style={{ color: "var(--fr-gold)" }}
           >
-            FONDJO RACINE · SÈVE · 100&thinsp;ml
+            Maison Fondjo · Sève Racine · 100&thinsp;ml
           </p>
 
           {/* H1 — Fraunces display, italic on "Buea" */}
@@ -115,7 +115,7 @@ export function HeroSection(_props: HeroSectionProps) {
             className="font-fraunces text-[2.6rem] font-light leading-[1.04] sm:text-[4rem] lg:text-[5.5rem]"
             style={{ color: "var(--fr-ivory)" }}
           >
-            One universal oil. <span className="block sm:inline">Infinite textures.</span>{" "}
+            One universal oil. <span className="block sm:inline">Everyday discipline.</span>{" "}
             <span className="block sm:inline">
               Born in{" "}
               <em

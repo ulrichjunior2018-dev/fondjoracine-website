@@ -3,6 +3,7 @@ import type {
   HairConsultationAnswersInput,
 } from "@/domain/commerce/schemas";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
+import { buildWaLink } from "@/lib/config";
 import { getSupabaseAdminClient } from "@/lib/database/admin";
 import { AppError } from "@/lib/errors/app-error";
 
@@ -149,8 +150,8 @@ function createCopy(locale: Locale) {
         : "Your answers include symptoms that should be reviewed by a licensed dermatologist or medical professional before applying new products.",
     usage: [
       locale === "fr"
-        ? "Appliquez FONDJO tous les 2 jours le soir."
-        : "Apply FONDJO every 2 days at night.",
+        ? "Appliquez Sève Racine tous les 2 jours le soir."
+        : "Apply Sève Racine every 2 days at night.",
       locale === "fr"
         ? "Utilisez 5 a 7 gouttes, puis massez le cuir chevelu pendant 5 minutes."
         : "Use 5-7 drops, then massage the scalp for 5 minutes.",
@@ -193,8 +194,8 @@ function buildConcernGuidance(
     );
     recommendedRoutine.push(
       en
-        ? "Massage scalp for 5 minutes and apply FONDJO every 2 days."
-        : "Massez le cuir chevelu 5 minutes et appliquez FONDJO tous les 2 jours.",
+        ? "Massage scalp for 5 minutes and apply Sève Racine every 2 days."
+        : "Massez le cuir chevelu 5 minutes et appliquez Sève Racine tous les 2 jours.",
     );
     whatToDo.push(
       en
@@ -216,8 +217,8 @@ function buildConcernGuidance(
     );
     recommendedRoutine.push(
       en
-        ? "Use FONDJO on the scalp and a light touch on dry ends after moisturizing."
-        : "Utilisez FONDJO sur le cuir chevelu et legerement sur les pointes apres hydratation.",
+        ? "Use Sève Racine on the scalp and a light touch on dry ends after moisturizing."
+        : "Utilisez Sève Racine sur le cuir chevelu et legerement sur les pointes apres hydratation.",
     );
     whatToDo.push(en ? "Detangle gently in sections." : "Demelez doucement par sections.");
     whatNotToDo.push(
@@ -320,6 +321,8 @@ export function generateHairConsultationRecommendation(
   input: CreateHairConsultationInput,
   _content: ElixirContent,
 ): HairConsultationRecommendation {
+  void _content;
+
   const locale = input.locale;
   const copy = createCopy(locale);
   const answers = input.answers;
@@ -353,8 +356,8 @@ export function generateHairConsultationRecommendation(
         ];
   const whatsAppLines = [
     en
-      ? "Hello FONDJO, here is my hair consultation summary:"
-      : "Bonjour FONDJO, voici mon resume diagnostic capillaire :",
+      ? "Hello Maison Fondjo, here is my hair consultation summary:"
+      : "Bonjour Maison Fondjo, voici mon resume diagnostic capillaire :",
     `${en ? "Name" : "Nom"}: ${input.customer.name}`,
     `${en ? "Profile" : "Profil"}: ${hairProfile}`,
     `${en ? "Main issue" : "Probleme principal"}: ${mainIssue}`,
@@ -402,8 +405,8 @@ export function generateHairConsultationRecommendation(
       {
         day: copy.day60,
         focus: en
-          ? "Review progress photos and adjust with FONDJO support."
-          : "Analysez les photos de progression et ajustez avec le support FONDJO.",
+          ? "Review progress photos and adjust with Maison Fondjo support."
+          : "Analysez les photos de progression et ajustez avec le support Maison Fondjo.",
       },
       {
         day: copy.day90,
@@ -416,8 +419,8 @@ export function generateHairConsultationRecommendation(
     whatNotToDo: [
       ...concernGuidance.whatNotToDo,
       en
-        ? "Do not use FONDJO on open wounds or active irritation."
-        : "N appliquez pas FONDJO sur plaies ouvertes ou irritation active.",
+        ? "Do not use Sève Racine on open wounds or active irritation."
+        : "N appliquez pas Sève Racine sur plaies ouvertes ou irritation active.",
       en
         ? "Do not expect instant changes; track photos and routine habits."
         : "N attendez pas un changement instantane; suivez photos et habitudes.",
@@ -428,8 +431,8 @@ export function generateHairConsultationRecommendation(
         ? "Use a Day 0 photo and repeat checks at Day 14, 30, 60, and 90."
         : "Prenez une photo Jour 0 puis controlez Jour 14, 30, 60 et 90.",
       en
-        ? "Message FONDJO on WhatsApp if symptoms worsen or if you need routine help."
-        : "Ecrivez a FONDJO sur WhatsApp si les symptomes empirent ou si vous avez besoin d aide.",
+        ? "Message Maison Fondjo on WhatsApp if symptoms worsen or if you need routine help."
+        : "Ecrivez a Maison Fondjo sur WhatsApp si les symptomes empirent ou si vous avez besoin d aide.",
     ],
     whatsappMessage: whatsAppLines.join("\n"),
   };
@@ -471,14 +474,9 @@ export async function createHairConsultation(
     throw new AppError("BAD_REQUEST", error.message);
   }
 
-  const whatsappPhone = content.whatsapp.phone.replace(/\D/g, "");
-  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
-    recommendation.whatsappMessage,
-  )}`;
-
   return {
     consultation: data,
-    whatsappUrl,
+    whatsappUrl: buildWaLink("diagnostic", recommendation.whatsappMessage),
   };
 }
 

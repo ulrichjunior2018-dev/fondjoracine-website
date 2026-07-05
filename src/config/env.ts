@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("FONDJO"),
+  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("Maison Fondjo"),
   NEXT_PUBLIC_SITE_URL: z.string().url().default("https://fondjoracine.com"),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional().or(z.literal("")),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional().or(z.literal("")),

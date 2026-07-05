@@ -147,7 +147,7 @@ function LayeredBottleFallback({ fallbackImage, label }: Product3DSceneProps) {
           />
           <div className="absolute left-1/2 top-[36%] w-[62%] -translate-x-1/2 rounded-md border border-[#B8860B]/48 bg-[#FAF7F0]/92 px-4 py-5 text-center shadow-[0_18px_40px_rgb(0_0_0/.18)]">
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.24em] text-[#2E6B3E]">
-              FONDJO
+              Maison Fondjo
             </p>
             <p className="mt-3 text-sm font-semibold leading-5 text-[#1C1C1C]">{label}</p>
             <p className="mt-3 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#B8860B]">
@@ -396,7 +396,7 @@ export function Product3DScene({ fallbackImage, label }: Product3DSceneProps) {
         transition={{ duration: 5.6, ease: "easeInOut", repeat: Infinity, repeatDelay: 1.2 }}
       />
       <div className="pointer-events-none absolute inset-x-6 bottom-6 flex items-center justify-between gap-3 rounded-full border border-[#f0dfb7]/26 bg-black/22 px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#FAF7F0] backdrop-blur">
-        <span>FONDJO</span>
+        <span>Maison Fondjo</span>
         <span className="inline-flex items-center gap-1 text-[0.64rem] text-[#f0dfb7]">
           360
           <span className="h-px w-8 bg-[#f0dfb7]/60" />

@@ -55,7 +55,7 @@ export function ProductActions({ product }: ProductActionsProps) {
       } catch {
         toast({
           title: "Sign in required",
-          description: "Please sign in to manage your FONDJO cart.",
+          description: "Please sign in to manage your Maison Fondjo cart.",
           tone: "warning",
         });
       }
@@ -68,7 +68,7 @@ export function ProductActions({ product }: ProductActionsProps) {
         await postJson("/api/wishlist", { product_id: product.id });
         toast({
           title: "Saved to wishlist",
-          description: "Added to your FONDJO wishlist.",
+          description: "Added to your Maison Fondjo wishlist.",
           tone: "success",
         });
       } catch {

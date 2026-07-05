@@ -1,4 +1,5 @@
-import { fondjoProductPricing } from "@/config/product-pricing";
+import { formulaIngredients } from "@/content/formula";
+import { config, formatXaf } from "@/lib/config";
 import { siteImages } from "@/lib/site-images";
 
 export type Locale = "en" | "fr";
@@ -164,10 +165,35 @@ export type ElixirContent = {
   };
 };
 
+const formulaImageFallbacks = [
+  siteImages.ingredientCastorOil,
+  siteImages.ingredientAvocadoOil,
+  siteImages.ingredientCoconutOil,
+  siteImages.ingredientOliveOil,
+  siteImages.ingredientJojobaOil,
+  siteImages.hairTextureLifestyle,
+] as const;
+
+const defaultFormulaIngredients = formulaIngredients.map((ingredient, index) => ({
+  image: formulaImageFallbacks[index % formulaImageFallbacks.length],
+  imageAlt: {
+    en: `${ingredient.name_fr} botanical ingredient visual`,
+    fr: `Visuel botanique ${ingredient.name_fr}`,
+  },
+  name: {
+    en: ingredient.name_fr,
+    fr: ingredient.name_fr,
+  },
+  note: {
+    en: ingredient.chosen_for,
+    fr: ingredient.chosen_for,
+  },
+}));
+
 export const defaultElixirContent: ElixirContent = {
   availability: {
-    en: "Available in Cameroon with WhatsApp-assisted delivery and international card checkout.",
-    fr: "Disponible au Cameroun avec livraison assistee par WhatsApp et paiement international par carte.",
+    en: "Available in Cameroon with WhatsApp-assisted delivery before payment.",
+    fr: "Disponible au Cameroun avec livraison assistee par WhatsApp avant paiement.",
   },
   beforeAfter: {
     eyebrow: { en: "Before and after", fr: "Avant / apres" },
@@ -188,8 +214,8 @@ export const defaultElixirContent: ElixirContent = {
         },
         before: {
           alt: {
-            en: "Everyday market lifestyle scene in Buea, Cameroon — context for FONDJO RACINE",
-            fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie FONDJO RACINE",
+            en: "Everyday market lifestyle scene in Buea, Cameroon — context for Maison Fondjo",
+            fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie Maison Fondjo",
           },
           height: 1300,
           src: "/images/hero-origin.png",
@@ -214,8 +240,8 @@ export const defaultElixirContent: ElixirContent = {
         },
         before: {
           alt: {
-            en: "Mount Cameroon and Buea landscape at dusk — origin of FONDJO RACINE botanical sourcing",
-            fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques FONDJO RACINE",
+            en: "Mount Cameroon and Buea landscape at dusk — origin of Maison Fondjo botanical sourcing",
+            fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques Maison Fondjo",
           },
           height: 1300,
           src: "/images/hero-origin.png",
@@ -234,18 +260,18 @@ export const defaultElixirContent: ElixirContent = {
       fr: "Parcours resultats bientot disponible.",
     },
   },
-  brand: "FONDJO",
+  brand: "Maison Fondjo",
   brandPositioning: {
     primary: {
       en: "A precise hair treatment oil founded and made in Buea, Cameroon.",
       fr: "Une huile de soin capillaire precise fondee et fabriquee a Buea, Cameroun.",
     },
     secondary: {
-      en: "The FONDJO family name, a root-led formula, and a quieter standard of care.",
-      fr: "Le nom de famille FONDJO, une formule pensee par la racine et une exigence calme du soin.",
+      en: "The Fondjo family name, a root-led formula, and a quieter standard of care.",
+      fr: "Le nom de famille Fondjo, une formule pensee par la racine et une exigence calme du soin.",
     },
   },
-  currency: "USD",
+  currency: "XAF",
   description: {
     en: "SÈVE is a 100ml hair treatment oil founded and made in Buea, Cameroon - created to nourish, strengthen, and restore all hair types.",
     fr: "SÈVE est une huile capillaire 100ml fondee et fabriquee a Buea, Cameroun - creee pour nourrir, renforcer et restaurer tous types de cheveux.",
@@ -302,18 +328,18 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: { en: "Founder story", fr: "Histoire fondatrice" },
     image: {
       alt: {
-        en: "Mount Cameroon from Buea — the landscape where FONDJO RACINE botanicals are sourced",
-        fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques FONDJO RACINE",
+        en: "Mount Cameroon from Buea — the landscape where Maison Fondjo botanicals are sourced",
+        fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques Maison Fondjo",
       },
       height: 1300,
       src: "/images/hero-origin.png",
       width: 1800,
     },
     intro: {
-      en: "FONDJO is the family name. RACINE means root. Together they set the discipline of the brand: begin with the scalp, respect the material, and make every bottle with the restraint expected of something carrying a name.",
-      fr: "FONDJO est le nom de famille. RACINE signifie racine. Ensemble, ils donnent la discipline de la marque : commencer par le cuir chevelu, respecter la matiere et fabriquer chaque flacon avec la retenue qu'exige un nom.",
+      en: "Fondjo is the family name. Racine means root. Together they set the discipline of Maison Fondjo: begin with the scalp, respect the material, and make every bottle with the restraint expected of something carrying a name.",
+      fr: "Fondjo est le nom de famille. Racine signifie racine. Ensemble, ils donnent la discipline de Maison Fondjo : commencer par le cuir chevelu, respecter la matiere et fabriquer chaque flacon avec la retenue qu'exige un nom.",
     },
-    name: "Kamyou Ulrich Fondjo",
+    name: "Fondjo Ulrich — Fondateur / Fondjo Clarisse — Co-fondatrice",
     signature: {
       en: "Buea is not decoration in this story. It is the place where the product is made, tested, handled, and held to a standard.",
       fr: "Buea n'est pas un decor dans cette histoire. C'est le lieu ou le produit est fabrique, teste, manipule et tenu a une exigence.",
@@ -345,7 +371,7 @@ export const defaultElixirContent: ElixirContent = {
   },
   hero: {
     eyebrow: {
-      en: "FONDJO RACINE · SÈVE",
+      en: "Maison Fondjo · Sève Racine",
       fr: "Soin capillaire botanique africain premium",
     },
     primaryCta: {
@@ -376,7 +402,7 @@ export const defaultElixirContent: ElixirContent = {
     },
     {
       label: { en: "Delivery", fr: "Livraison" },
-      value: { en: "Cameroon and international", fr: "Cameroun et international" },
+      value: { en: "Cameroon zones", fr: "Zones Cameroun" },
     },
   ],
   howToUse: {
@@ -428,8 +454,8 @@ export const defaultElixirContent: ElixirContent = {
   images: [
     {
       alt: {
-        en: "FONDJO RACINE bottle front label",
-        fr: "Etiquette avant du flacon FONDJO RACINE",
+        en: "Sève Racine bottle front label",
+        fr: "Etiquette avant du flacon Sève Racine",
       },
       height: 1600,
       src: "/images/front-label.png",
@@ -437,8 +463,8 @@ export const defaultElixirContent: ElixirContent = {
     },
     {
       alt: {
-        en: "FONDJO RACINE Sève bottle back label — ingredients and directions",
-        fr: "Etiquette arriere du flacon Seve FONDJO RACINE — ingredients et mode d emploi",
+        en: "Sève Racine bottle back label — ingredients and directions",
+        fr: "Etiquette arriere du flacon Sève Racine — ingredients et mode d emploi",
       },
       height: 1600,
       src: "/images/back-label.png",
@@ -447,87 +473,14 @@ export const defaultElixirContent: ElixirContent = {
   ],
   ingredientScience: {
     eyebrow: { en: "Ingredients", fr: "Ingredients" },
-    ingredients: [
-      {
-        name: { en: "Castor oil", fr: "Huile de ricin" },
-        image: siteImages.ingredientCastorOil,
-        imageAlt: {
-          en: "Castor oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile de ricin avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Strengthens roots, nourishes the scalp, and helps reduce breakage.",
-          fr: "Renforce les racines, nourrit le cuir chevelu et aide a reduire la casse.",
-        },
-      },
-      {
-        name: { en: "Shea oil", fr: "Huile de karite" },
-        image: siteImages.ingredientSheaOil,
-        imageAlt: {
-          en: "Shea oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile de karite avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Deeply moisturizes, softens hair, and supports dry scalp comfort.",
-          fr: "Hydrate en profondeur, adoucit les cheveux et aide au confort du cuir chevelu sec.",
-        },
-      },
-      {
-        name: { en: "Coconut oil", fr: "Huile de coco" },
-        image: siteImages.ingredientCoconutOil,
-        imageAlt: {
-          en: "Coconut oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile de coco avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Hydrates the hair shaft, protects against dryness, and adds natural shine.",
-          fr: "Hydrate la fibre capillaire, protege contre la secheresse et apporte une brillance naturelle.",
-        },
-      },
-      {
-        name: { en: "Jojoba oil", fr: "Huile de jojoba" },
-        image: siteImages.ingredientJojobaOil,
-        imageAlt: {
-          en: "Jojoba oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile de jojoba avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Balances scalp oils, keeps hair lightweight, and supports a healthy scalp environment.",
-          fr: "Equilibre les huiles du cuir chevelu, garde les cheveux legers et soutient un environnement sain.",
-        },
-      },
-      {
-        name: { en: "Avocado oil", fr: "Huile d avocat" },
-        image: siteImages.ingredientAvocadoOil,
-        imageAlt: {
-          en: "Avocado oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile d avocat avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Rich in nutrients and fatty acids to nourish, repair, and condition hair.",
-          fr: "Riche en nutriments et acides gras pour nourrir, reparer et conditionner les cheveux.",
-        },
-      },
-      {
-        name: { en: "Olive oil", fr: "Huile d olive" },
-        image: siteImages.ingredientOliveOil,
-        imageAlt: {
-          en: "Olive oil ingredient artwork with FONDJO RACINE SEVE bottle",
-          fr: "Visuel ingredient huile d olive avec le flacon FONDJO RACINE SEVE",
-        },
-        note: {
-          en: "Seals in moisture, improves softness, and helps protect hair from dryness.",
-          fr: "Scelle l hydratation, ameliore la douceur et aide a proteger les cheveux de la secheresse.",
-        },
-      },
-    ],
+    ingredients: defaultFormulaIngredients,
     intro: {
-      en: "A nutrient-rich botanical oil blend presented as cosmetic hair-care support, never as a medical treatment.",
+      en: "A botanical blend presented as cosmetic hair-care support, never as a medical treatment.",
       fr: "Un melange botanique concu autour de la vraie vie des cheveux africains : coiffes, proteges, laves et repares.",
     },
     title: {
-      en: "Botanical oils and extracts for scalp, strands, beard, and protective styles.",
-      fr: "Huit huiles et actifs. Un rituel de pousse discipline.",
+      en: "Eleven botanicals for scalp, strands, beard, and protective styles.",
+      fr: "Onze botaniques. Un rituel capillaire discipline.",
     },
   },
   innerCircle: {
@@ -542,10 +495,14 @@ export const defaultElixirContent: ElixirContent = {
     cta: { en: "DM OIL on WhatsApp", fr: "Envoyer OIL sur WhatsApp" },
     eyebrow: { en: "Product and delivery support", fr: "Conseil produit et livraison" },
     intro: {
-      en: "Contact the team for guidance, delivery timelines, shipping rates, and order support.",
-      fr: "Contactez l'equipe pour conseils, delais, tarifs de livraison et assistance commande.",
+      en: `Contact the team for guidance, Cameroon delivery zones (${formatXaf(
+        config.delivery.min,
+      )}–${formatXaf(config.delivery.max)}), and order support.`,
+      fr: `Contactez l'equipe pour conseils, zones de livraison au Cameroun (${formatXaf(
+        config.delivery.min,
+      )}–${formatXaf(config.delivery.max)}) et assistance commande.`,
     },
-    priceXaf: "8,500 XAF local equivalent",
+    priceXaf: `${formatXaf(config.pricing.seveRacine)} local equivalent`,
     title: {
       en: "Botanical ritual - contact available.",
       fr: "Restez reguliere pour moins chaque mois.",
@@ -570,12 +527,12 @@ export const defaultElixirContent: ElixirContent = {
       fr: "Diagnostics et commandes ouverts",
     },
     intro: {
-      en: "SÈVE is available with WhatsApp-assisted product guidance, Cameroon delivery, and international shipping support.",
-      fr: "SÈVE est disponible avec conseil WhatsApp, livraison au Cameroun et assistance expedition internationale.",
+      en: "SÈVE is available with WhatsApp-assisted product guidance and Cameroon delivery support.",
+      fr: "SÈVE est disponible avec conseil WhatsApp et livraison au Cameroun.",
     },
     title: {
-      en: "FONDJO RACINE SÈVE is available with direct support.",
-      fr: "Le premier lot FONDJO SÈVE est disponible maintenant.",
+      en: "Sève Racine is available with direct Maison Fondjo support.",
+      fr: "Sève Racine est disponible avec un accompagnement direct Maison Fondjo.",
     },
   },
   manualPayments: {
@@ -589,7 +546,7 @@ export const defaultElixirContent: ElixirContent = {
     },
     methods: [
       {
-        accountName: "FONDJO",
+        accountName: "Maison Fondjo",
         instructions: {
           en: "Use merchant transfer, then include your full name and city in the WhatsApp message.",
           fr: "Utilisez le transfert marchand, puis envoyez votre nom complet et votre ville sur WhatsApp.",
@@ -598,7 +555,7 @@ export const defaultElixirContent: ElixirContent = {
         number: "",
       },
       {
-        accountName: "FONDJO",
+        accountName: "Maison Fondjo",
         instructions: {
           en: "Use Orange Money transfer and keep the confirmation message until your order is confirmed.",
           fr: "Utilisez le transfert Orange Money et gardez le message de confirmation jusqu'a validation.",
@@ -608,8 +565,8 @@ export const defaultElixirContent: ElixirContent = {
       },
     ],
   },
-  priceCents: fondjoProductPricing.preorderUsd * 100,
-  priceXaf: fondjoProductPricing.preorderLocalDisplay,
+  priceCents: config.pricing.seveRacine,
+  priceXaf: formatXaf(config.pricing.seveRacine),
   problem: {
     concerns: [
       {
@@ -644,7 +601,7 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: { en: "The hair problem", fr: "Le probleme capillaire" },
     intro: {
       en: "SÈVE supports a calmer-looking, better-conditioned routine without promising medical outcomes or hair regrowth.",
-      fr: "La plupart des routines traitent la longueur et oublient la racine. FONDJO commence la ou poussent confort, retention et longueur.",
+      fr: "La plupart des routines traitent la longueur et oublient la racine. Maison Fondjo commence la ou poussent confort, retention et longueur.",
     },
     title: {
       en: "Nourish, strengthen, restore - from root to tip, with restraint.",
@@ -657,24 +614,28 @@ export const defaultElixirContent: ElixirContent = {
       fr: "Une huile botanique 100ml racines-a-longueurs pour 60 jours de massage, scellage et finition visible.",
     },
     eyebrow: { en: "The product", fr: "Le produit" },
-    name: { en: "FONDJO RACINE SÈVE", fr: "FONDJO RACINE SÈVE" },
-    priceXaf: "8,500 XAF",
+    name: { en: "Sève Racine", fr: "Sève Racine" },
+    priceXaf: formatXaf(config.pricing.seveRacine),
     size: { en: "100ml / 3.38 fl oz", fr: "100ml / 3,38 fl oz" },
     title: { en: "SÈVE hair treatment oil, 100ml.", fr: "Huile capillaire SÈVE, 100ml." },
   },
   seo: {
     description: {
-      en: "FONDJO RACINE SÈVE is a 100ml hair treatment oil founded and made in Buea, Cameroon for all hair types and unisex use.",
-      fr: "FONDJO RACINE SÈVE est une huile capillaire 100ml fondee et fabriquee a Buea, Cameroun, pour tous types de cheveux et usage unisexe.",
+      en: "Sève Racine is a 100ml hair treatment oil by Maison Fondjo, founded and made in Buea, Cameroon.",
+      fr: "Sève Racine est une huile capillaire 100ml par Maison Fondjo, fondee et fabriquee a Buea, Cameroun.",
     },
     title: {
-      en: "FONDJO RACINE SÈVE Hair Treatment Oil",
+      en: "Sève Racine Hair Treatment Oil | Maison Fondjo",
       fr: "Huile capillaire camerounaise garantie 60 jours",
     },
   },
   shipping: {
-    en: "Delivery and diagnosis are coordinated on WhatsApp for Cameroon customers.",
-    fr: "Livraison et diagnostic sont coordonnes sur WhatsApp pour les clientes au Cameroun.",
+    en: `Cameroon delivery is coordinated on WhatsApp. Zones: ${formatXaf(
+      config.delivery.min,
+    )}–${formatXaf(config.delivery.max)}.`,
+    fr: `Livraison au Cameroun coordonnee sur WhatsApp. Zones : ${formatXaf(
+      config.delivery.min,
+    )}–${formatXaf(config.delivery.max)}.`,
   },
   slug: "seve-hair-treatment-oil",
   socialLinks: {
@@ -715,7 +676,7 @@ export const defaultElixirContent: ElixirContent = {
           fr: "J aime que le diagnostic WhatsApp rende l huile accompagnee, pas aleatoire.",
         },
         result: {
-          en: "More consistent scalp ritual",
+          en: "More consistent application routine",
           fr: "Rituel cuir chevelu plus regulier",
         },
       },
@@ -806,16 +767,16 @@ export const defaultElixirContent: ElixirContent = {
       fr: "Demarrer le diagnostic gratuit sur WhatsApp",
     },
     finalCta: {
-      en: "Start my FONDJO RACINE routine",
-      fr: "Commencer mon plan FONDJO 60 jours",
+      en: "Start my Maison Fondjo routine",
+      fr: "Commencer mon plan Maison Fondjo 60 jours",
     },
     label: {
       en: "WhatsApp diagnosis",
       fr: "Diagnostic WhatsApp",
     },
     message: {
-      en: "Hello FONDJO, I want a free hair diagnosis for breakage, slow growth, dryness, or thinning. Please help me start the SÈVE routine.",
-      fr: "Bonjour FONDJO, je veux un diagnostic gratuit pour casse, pousse lente, secheresse ou zones clairsemees. Aidez-moi a commencer le plan 60 jours.",
+      en: "Hello Maison Fondjo, I want a free hair diagnosis for breakage, slow growth, dryness, or thinning. Please help me start the Sève Racine routine.",
+      fr: "Bonjour Maison Fondjo, je veux un diagnostic gratuit pour casse, pousse lente, secheresse ou zones clairsemees. Aidez-moi a commencer le plan Sève Racine.",
     },
     phone: "+19295046726",
   },
@@ -823,10 +784,9 @@ export const defaultElixirContent: ElixirContent = {
 
 export function t(text: LocalizedText, locale: Locale) {
   switch (locale) {
+    case "en":
     case "fr":
       return text.fr;
-    case "en":
-      return text.en;
   }
 }
 
@@ -834,7 +794,7 @@ export function getPrimaryElixirImage(content: ElixirContent) {
   const image = content.images.at(0);
 
   if (!image) {
-    throw new Error("FONDJO storefront content requires at least one product image.");
+    throw new Error("Maison Fondjo storefront content requires at least one product image.");
   }
 
   return image;

@@ -15,7 +15,7 @@ export function AdminLockedState({ message }: AdminLockedStateProps) {
         <Card variant="elevated">
           <Kicker>Admin access</Kicker>
           <Heading as="h1" className="mt-3" level="h2">
-            Protected FONDJO admin
+            Protected Maison Fondjo admin
           </Heading>
           <Text className="mt-4" tone="muted">
             {message ??

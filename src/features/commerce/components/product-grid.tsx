@@ -14,7 +14,8 @@ export function ProductGrid({ emptyDescription, products }: ProductGridProps) {
         <EmptyState
           title="No products found"
           description={
-            emptyDescription ?? "Refine your filters or check back as new FONDJO rituals launch."
+            emptyDescription ??
+            "Refine your filters or check back as new Maison Fondjo rituals launch."
           }
         />
       </div>

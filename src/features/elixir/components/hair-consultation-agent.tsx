@@ -211,8 +211,8 @@ function copy(locale: Locale) {
     back: locale === "fr" ? "Retour" : "Back",
     consent:
       locale === "fr"
-        ? "J accepte que FONDJO enregistre mes reponses pour generer mon guide et assurer un suivi WhatsApp."
-        : "I agree that FONDJO can store my answers to generate my guide and support WhatsApp follow-up.",
+        ? "J accepte que Maison Fondjo enregistre mes reponses pour generer mon guide et assurer un suivi WhatsApp."
+        : "I agree that Maison Fondjo can store my answers to generate my guide and support WhatsApp follow-up.",
     contact: locale === "fr" ? "Vos coordonnees" : "Your details",
     download: locale === "fr" ? "Telecharger le resume" : "Download summary",
     downloadError:
@@ -226,8 +226,8 @@ function copy(locale: Locale) {
         : "Unable to complete consultation.",
     intro:
       locale === "fr"
-        ? "Repondez a quelques questions. FONDJO cree un guide cosmetique personnalise, puis vous passe a WhatsApp pour un suivi humain."
-        : "Answer a few questions. FONDJO creates a personalized cosmetic guide, then hands you to WhatsApp for human follow-up.",
+        ? "Repondez a quelques questions. Maison Fondjo cree un guide cosmetique personnalise, puis vous passe a WhatsApp pour un suivi humain."
+        : "Answer a few questions. Maison Fondjo creates a personalized cosmetic guide, then hands you to WhatsApp for human follow-up.",
     medical:
       locale === "fr"
         ? "Ce diagnostic ne remplace pas un dermatologue. Douleur, plaies, brulure, reaction allergique ou chute soudaine par plaques demandent un avis medical."
@@ -237,8 +237,8 @@ function copy(locale: Locale) {
     phone: locale === "fr" ? "Telephone WhatsApp" : "WhatsApp phone",
     privacy:
       locale === "fr"
-        ? "Vos reponses sont utilisees pour personnaliser le conseil FONDJO et aider l equipe admin a assurer le suivi."
-        : "Your answers are used to personalize FONDJO guidance and help the admin team follow up.",
+        ? "Vos reponses sont utilisees pour personnaliser le conseil Maison Fondjo et aider l equipe admin a assurer le suivi."
+        : "Your answers are used to personalize Maison Fondjo guidance and help the admin team follow up.",
     result: locale === "fr" ? "Votre profil capillaire" : "Your hair profile",
     resultIntro:
       locale === "fr"
@@ -298,7 +298,7 @@ function createRoutineSummaryExportCard(
 
   card.innerHTML = `
     <div style="border-bottom:1px solid rgba(240,199,106,.35);padding-bottom:24px;">
-      <p style="color:#f0c76a;font-size:13px;font-weight:700;letter-spacing:5px;margin:0;text-transform:uppercase;">FONDJO RACINE</p>
+      <p style="color:#f0c76a;font-size:13px;font-weight:700;letter-spacing:5px;margin:0;text-transform:uppercase;">Maison Fondjo</p>
       <h1 style="font-family:Georgia,serif;font-size:56px;font-weight:400;line-height:1;margin:16px 0 0;">${
         locale === "fr" ? "Carte routine" : "Routine card"
       }</h1>
@@ -312,7 +312,7 @@ function createRoutineSummaryExportCard(
     <div style="display:grid;gap:24px;grid-template-columns:1fr 1fr;margin-top:28px;">
       <div style="background:rgba(0,0,0,.18);border:1px solid rgba(240,199,106,.35);padding:24px;">
         <h2 style="color:#f0dfb7;font-size:22px;margin:0 0 16px;">${
-          locale === "fr" ? "Routine FONDJO" : "FONDJO routine"
+          locale === "fr" ? "Routine Maison Fondjo" : "Maison Fondjo routine"
         }</h2>
         <ul style="color:rgba(250,247,240,.78);font-size:16px;line-height:1.65;margin:0;padding-left:20px;">${routineItems
           .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -501,7 +501,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
           <div className="flex flex-col gap-4 border-b border-[#f0c76a]/24 pb-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#f0c76a]">
-                FONDJO RACINE
+                Maison Fondjo
               </p>
               <h4 className="mt-3 font-serif text-4xl leading-none text-[#FAF7F0]">
                 {locale === "fr" ? "Carte routine" : "Routine card"}
@@ -532,7 +532,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
           <div className="mt-6 grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
             <div className="rounded-lg border border-[#f0c76a]/22 bg-black/16 p-5">
               <h5 className="font-semibold text-[#f0dfb7]">
-                {locale === "fr" ? "Routine FONDJO" : "FONDJO routine"}
+                {locale === "fr" ? "Routine Maison Fondjo" : "Maison Fondjo routine"}
               </h5>
               <ul className="mt-4 grid gap-3 text-sm leading-6 text-[#FAF7F0]/76">
                 {recommendation.recommendedRoutine.slice(0, 5).map((item) => (

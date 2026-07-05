@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     follow: false,
     index: false,
   },
-  title: "Admin Orders | FONDJO",
+  title: "Admin Orders | Maison Fondjo",
 };
 
 export default async function AdminOrdersPage() {

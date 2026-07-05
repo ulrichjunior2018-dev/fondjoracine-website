@@ -4,6 +4,9 @@ import { siteConfig } from "@/config/site";
 import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
+import { config } from "@/lib/config";
+
+const isProduction = config.env === "production";
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getElixirContent();
@@ -12,17 +15,20 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t(content.seo.title, "fr"),
     description: t(content.seo.description, "fr"),
-    alternates: {
-      canonical: "/fr",
-      languages: {
-        en: "/",
-        fr: "/fr",
-      },
-    },
+    ...(isProduction
+      ? {
+          alternates: {
+            canonical: `${siteConfig.url}/fr`,
+            languages: {
+              fr: `${siteConfig.url}/fr`,
+            },
+          },
+        }
+      : {}),
     openGraph: {
       title: t(content.seo.title, "fr"),
       description: t(content.seo.description, "fr"),
-      locale: "fr_CM",
+      locale: "fr_FR",
       url: `${siteConfig.url}/fr`,
       images: [
         {
@@ -52,7 +58,7 @@ export default async function FrenchHomePage() {
     offers: {
       "@type": "Offer",
       availability: "https://schema.org/InStock",
-      price: Number.isFinite(xafPrice) ? String(xafPrice) : "8500",
+      price: Number.isFinite(xafPrice) ? String(xafPrice) : String(config.pricing.seveRacine),
       priceCurrency: "XAF",
       url: `${siteConfig.url}/fr`,
     },

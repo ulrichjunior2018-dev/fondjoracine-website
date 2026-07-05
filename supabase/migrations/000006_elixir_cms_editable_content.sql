@@ -69,7 +69,7 @@ set
               "fr": "J aime que le diagnostic WhatsApp rende l huile accompagnee, pas aleatoire."
             },
             "result": {
-              "en": "More consistent scalp ritual",
+              "en": "More consistent application routine",
               "fr": "Rituel cuir chevelu plus regulier"
             }
           },

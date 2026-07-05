@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
+import { advisorCopy } from "@/content/advisor-copy";
 import { herbariumIngredients } from "@/lib/advisor-site";
 
 export const metadata: Metadata = {
-  title: "Botanique | FONDJO RACINE",
-  description:
-    "L'herbier digital FONDJO RACINE présente les 11 ingrédients de Sève Racine, leurs noms latins et leur rôle dans le rituel.",
+  title: "Botanique | Maison Fondjo",
+  description: advisorCopy.botanique.description,
 };
 
 function HerbariumMark({ index }: { index: number }) {
@@ -40,14 +40,13 @@ export default function BotaniquePage() {
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d6b75b]">
-            Herbier digital
+            {advisorCopy.botanique.eyebrow}
           </p>
           <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-tight sm:text-7xl">
-            Onze ingrédients. Un langage botanique précis.
+            {advisorCopy.botanique.title}
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">
-            Cette page est conçue comme destination QR et moteur de confiance : noms latins, origine
-            botanique et raison de présence dans Sève Racine.
+            {advisorCopy.botanique.body}
           </p>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {herbariumIngredients.map((ingredient, index) => (
@@ -64,7 +63,7 @@ export default function BotaniquePage() {
                   {ingredient.region}
                 </p>
                 <p className="mt-5 text-sm leading-7 text-[#f6f0e4]/66">
-                  Choisi pour : {ingredient.chosenFor}
+                  {advisorCopy.botanique.chosenFor} : {ingredient.chosenFor}
                 </p>
               </article>
             ))}

@@ -9,16 +9,11 @@ import { useEffect, useRef, useState } from "react";
 import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { siteConfig } from "@/config/site";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
-import {
-  dictionaries,
-  isSiteLanguage,
-  languageLabels,
-  type SiteDictionary,
-  type SiteLanguage,
-} from "@/i18n/dictionaries";
+import { fr } from "@/i18n/dictionaries/fr";
 import { siteImages } from "@/lib/site-images";
 
 type PremiumStorefrontPageProps = {
@@ -26,7 +21,7 @@ type PremiumStorefrontPageProps = {
   locale: Locale;
 };
 
-type Copy = SiteDictionary;
+type Copy = typeof fr;
 
 const blurDataUrl =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PHBhdGggZD0nTTAgMTZMMTYgME0tNCAxMkwxMi00TTQgMjBMMjAgNCcgc3Ryb2tlPScjYzhhOTUxJyBzdHJva2Utb3BhY2l0eT0nLjE2Jy8+PC9zdmc+";
@@ -49,39 +44,38 @@ const campaignImages = {
   ingredientCoconutOil: siteImages.ingredientCoconutOil,
   ingredientJojobaOil: siteImages.ingredientJojobaOil,
   ingredientOliveOil: siteImages.ingredientOliveOil,
-  ingredientSheaOil: siteImages.ingredientSheaOil,
 } as const;
 
 const ingredientTimelineDetails = [
   {
-    benefits: ["Strengthens roots", "Nourishes scalp", "Helps reduce breakage"],
+    benefits: ["Racines soutenues", "Cuir chevelu nourri", "Casse visible limitée"],
     image: campaignImages.ingredientCastorOil,
-    region: "West Africa",
+    region: "Afrique de l'Ouest",
   },
   {
-    benefits: ["Deep moisture", "Softens hair", "Comforts dry scalp"],
-    image: campaignImages.ingredientSheaOil,
-    region: "West Africa",
+    benefits: ["Sensation fraîche", "Confort du cuir chevelu", "Massage mesuré"],
+    image: campaignImages.hairTexture,
+    region: "Afrique de l'Ouest",
   },
   {
-    benefits: ["Hydrates shaft", "Protects dryness", "Adds natural shine"],
+    benefits: ["Fibre hydratée", "Sécheresse limitée", "Brillance naturelle"],
     image: campaignImages.ingredientCoconutOil,
-    region: "Tropics",
+    region: "Zone tropicale",
   },
   {
-    benefits: ["Balances scalp oils", "Lightweight finish", "Healthy scalp feel"],
+    benefits: ["Équilibre du cuir chevelu", "Fini léger", "Sensation saine"],
     image: campaignImages.ingredientJojobaOil,
-    region: "Americas",
+    region: "Amériques",
   },
   {
-    benefits: ["Nutrient-rich", "Repairs feel", "Conditions hair"],
+    benefits: ["Nutrition", "Toucher réparé", "Fibre conditionnée"],
     image: campaignImages.ingredientAvocadoOil,
-    region: "Tropical Americas",
+    region: "Amériques tropicales",
   },
   {
-    benefits: ["Seals moisture", "Improves softness", "Protects from dryness"],
+    benefits: ["Hydratation scellée", "Douceur améliorée", "Sécheresse limitée"],
     image: campaignImages.ingredientOliveOil,
-    region: "Mediterranean",
+    region: "Méditerranée",
   },
 ] as const;
 
@@ -162,20 +156,20 @@ export function ProductShowcase({ copy }: { copy: Copy }) {
       <Container className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
         <FadeUp className="grid gap-3 sm:grid-cols-[1fr_0.72fr] sm:gap-4">
           <ImagePanel
-            alt="FONDJO RACINE reflective black studio product image"
+            alt={copy.mediaAlts.product}
             className="relative aspect-[4/5] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
             sizes="(min-width: 1024px) 34vw, 100vw"
             src={campaignImages.reflection}
           />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-1">
             <ImagePanel
-              alt="FONDJO RACINE front bottle label"
+              alt={copy.mediaAlts.frontLabel}
               className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
               sizes="(min-width: 1024px) 18vw, 50vw"
               src={campaignImages.frontLabel}
             />
             <ImagePanel
-              alt="FONDJO RACINE back bottle label"
+              alt={copy.mediaAlts.backLabel}
               className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
               sizes="(min-width: 1024px) 18vw, 50vw"
               src={campaignImages.backLabel}
@@ -227,7 +221,7 @@ export function OriginSection({ copy }: { copy: Copy }) {
         </FadeUp>
         <FadeUp className="relative min-h-[34rem] overflow-hidden rounded-md">
           <ImagePanel
-            alt="FONDJO RACINE origin story near Mount Cameroon"
+            alt={copy.mediaAlts.origin}
             className="absolute inset-0"
             sizes="(min-width: 1024px) 52vw, 100vw"
             src={campaignImages.origin}
@@ -348,7 +342,7 @@ export function IngredientCarousel({
         </FadeUp>
 
         <div
-          aria-label="Featured ingredient cards"
+          aria-label="Cartes des ingrédients de Buea"
           className="-mx-5 mt-12 snap-x snap-mandatory overflow-x-auto px-5 pb-6 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10 [&::-webkit-scrollbar]:hidden"
         >
           <div className="grid w-max auto-cols-[82vw] grid-flow-col gap-4 sm:auto-cols-[26rem] lg:auto-cols-[30rem]">
@@ -359,7 +353,7 @@ export function IngredientCarousel({
               const image = ingredient.image ?? details.image;
               const imageAlt = ingredient.imageAlt
                 ? t(ingredient.imageAlt, locale)
-                : `${name} botanical oil artwork`;
+                : `${name}, photographie botanique pour Sève Racine`;
 
               return (
                 <motion.article
@@ -399,7 +393,7 @@ export function IngredientCarousel({
                     <p className="mt-4 min-h-21 text-sm leading-7 text-[#f6f0e4]/66">{note}</p>
                     <div className="mt-6 h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-50" />
                     <ul
-                      aria-label={`${name} benefits`}
+                      aria-label={`${name} : bénéfices`}
                       className="mt-5 grid gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#f6f0e4]/72"
                     >
                       {details.benefits.map((benefit) => (
@@ -479,7 +473,7 @@ export function RitualSection({ copy }: { copy: Copy }) {
     <section className="bg-[#100d0a] text-[#f6f0e4]" data-mobile-cta-section="ritual" id="ritual">
       <Container className="grid gap-0 px-0 lg:grid-cols-2" size="full">
         <ImagePanel
-          alt="FONDJO RACINE night self-care ritual"
+          alt={copy.mediaAlts.nightRoutine}
           className="relative min-h-[34rem] overflow-hidden"
           sizes="(min-width: 1024px) 50vw, 100vw"
           src={campaignImages.night}
@@ -528,9 +522,9 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
       title: copy.barbershopTitle,
     },
     {
-      src: campaignImages.hairTexture,
-      text: copy.textureText,
-      title: copy.textureTitle,
+      src: campaignImages.packing,
+      text: copy.packingText,
+      title: copy.packingTitle,
     },
   ] as const;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -560,7 +554,7 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
             <ImagePanel
-              alt={`FONDJO RACINE ${activeMoment.title}`}
+              alt={`Maison Fondjo ${activeMoment.title}`}
               className="absolute inset-0"
               sizes="(min-width: 1024px) 58vw, 100vw"
               src={activeMoment.src}
@@ -621,7 +615,7 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
             <FadeUp className={index % 2 === 1 ? "md:mt-10" : ""} key={moment.title}>
               <article className="group">
                 <ImagePanel
-                  alt={`FONDJO RACINE ${moment.title}`}
+                  alt={`Maison Fondjo ${moment.title}`}
                   className="relative aspect-[4/5] overflow-hidden rounded-md"
                   sizes="(min-width: 768px) 25vw, 100vw"
                   src={moment.src}
@@ -667,7 +661,7 @@ export function ClosingChapter({ copy, whatsappUrl }: { copy: Copy; whatsappUrl:
       id="contact"
     >
       <ImagePanel
-        alt="FONDJO RACINE campaign banner"
+        alt={copy.mediaAlts.banner}
         className="absolute inset-0 opacity-42"
         sizes="100vw"
         src={campaignImages.facebookCover}
@@ -753,11 +747,9 @@ export function StickyMobileCTA({ copy }: { copy: Copy }) {
     <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-md border border-[#d6b75b]/18 bg-[#080706]/90 p-2 shadow-[0_18px_70px_rgb(0_0_0/.45)] backdrop-blur-xl md:hidden">
       <div className="px-2">
         <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[#d6b75b]">
-          FONDJO
+          Maison Fondjo
         </p>
-        <p className="mt-0.5 text-[0.62rem] uppercase tracking-[0.16em] text-[#f6f0e4]/52">
-          RACINE
-        </p>
+        <p className="mt-0.5 text-[0.62rem] uppercase tracking-[0.16em] text-[#f6f0e4]/52">Buea</p>
       </div>
       <a
         className="inline-flex min-h-11 items-center justify-center rounded-sm bg-[#d6b75b] px-4 text-center text-xs font-semibold text-[#080706]"
@@ -766,7 +758,7 @@ export function StickyMobileCTA({ copy }: { copy: Copy }) {
         {copy.contact}
       </a>
       <button
-        aria-label="Dismiss order bar"
+        aria-label="Masquer la barre de commande"
         className="grid size-10 place-items-center rounded-sm border border-white/10 text-[#f6f0e4]/72"
         onClick={() => setDismissedSection(activeSection)}
         type="button"
@@ -787,7 +779,8 @@ export function LuxuryFooter({
     <footer className="bg-[#080706] px-5 pb-28 pt-16 text-[#f6f0e4] md:pb-16">
       <Container className="grid gap-8 border-t border-[#d6b75b]/16 pt-10 md:grid-cols-[1fr_auto]">
         <div>
-          <p className="font-serif text-4xl text-[#d6b75b]">FONDJO RACINE</p>
+          <p className="font-serif text-4xl text-[#d6b75b]">Maison Fondjo</p>
+          <p className="mt-2 text-sm font-semibold text-[#d6b75b]/82">{siteConfig.tagline}</p>
           <p className="mt-3 max-w-xl text-sm leading-7 text-[#f6f0e4]/58">
             {t(content.brandPositioning.primary, locale)}
           </p>
@@ -806,7 +799,7 @@ export function LuxuryFooter({
             className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/12 px-5 text-sm font-semibold"
             href="/policies/terms"
           >
-            Policies
+            {copy.footerTerms}
           </Link>
         </div>
       </Container>
@@ -814,65 +807,25 @@ export function LuxuryFooter({
   );
 }
 
-function LanguageSwitcher({
-  language,
-  setLanguage,
-}: {
-  language: SiteLanguage;
-  setLanguage: (language: SiteLanguage) => void;
-}) {
-  const languages: SiteLanguage[] = ["en", "fr", "es"];
-
-  return (
-    <div className="inline-flex items-center rounded-md border border-white/12 bg-white/5 p-1">
-      {languages.map((item) => (
-        <button
-          aria-pressed={language === item}
-          className={`min-h-8 rounded px-2 text-xs font-semibold transition-colors ${
-            language === item ? "bg-[#d6b75b] text-[#080706]" : "text-[#f6f0e4]/68"
-          }`}
-          key={item}
-          onClick={() => setLanguage(item)}
-          type="button"
-        >
-          {languageLabels[item]}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function PremiumHeader({
-  copy,
-  language,
-  setLanguage,
-}: {
-  copy: Copy;
-  language: SiteLanguage;
-  setLanguage: (language: SiteLanguage) => void;
-}) {
+function PremiumHeader({ copy }: { copy: Copy }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080706]/70 text-[#f6f0e4] backdrop-blur-xl">
       <Container className="flex h-20 items-center justify-between gap-4">
         <a className="flex items-center gap-3" href="#hero">
-          <span className="relative size-9 overflow-hidden rounded-full border border-[#d6b75b]/35">
-            <Image
-              alt="FONDJO RACINE profile logo"
-              blurDataURL={blurDataUrl}
-              className="object-cover"
-              fill
-              loading="lazy"
-              placeholder="blur"
-              sizes="36px"
-              src={campaignImages.profileLogo}
-            />
+          <span
+            aria-hidden="true"
+            className="grid size-9 place-items-center rounded-full border border-[#d6b75b]/35 bg-[#0f2415] font-serif text-xs text-[#d6b75b]"
+          >
+            MF
           </span>
           <span>
-            <span className="block font-serif text-2xl leading-none text-[#d6b75b]">FONDJO</span>
-            <span className="block text-[0.56rem] font-semibold uppercase tracking-[0.4em] text-[#f6f0e4]/58">
-              Racine
+            <span className="block font-serif text-2xl leading-none text-[#d6b75b]">
+              Maison Fondjo
+            </span>
+            <span className="block text-[0.56rem] font-semibold uppercase tracking-[0.24em] text-[#f6f0e4]/58">
+              Buea
             </span>
           </span>
         </a>
@@ -886,7 +839,6 @@ function PremiumHeader({
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher language={language} setLanguage={setLanguage} />
           <a
             className="inline-flex h-10 items-center rounded-md bg-[#d6b75b] px-4 text-sm font-semibold text-[#080706]"
             href="#contact"
@@ -897,7 +849,7 @@ function PremiumHeader({
 
         <Button
           aria-expanded={isOpen}
-          aria-label={isOpen ? "Close navigation" : "Open navigation"}
+          aria-label={isOpen ? copy.navigationClose : copy.navigationOpen}
           className="border-white/12 bg-white/8 text-[#f6f0e4] lg:hidden"
           onClick={() => setIsOpen((current) => !current)}
           size="icon"
@@ -919,9 +871,6 @@ function PremiumHeader({
                 {label}
               </a>
             ))}
-            <div className="px-3 py-3">
-              <LanguageSwitcher language={language} setLanguage={setLanguage} />
-            </div>
           </nav>
         </div>
       ) : null}
@@ -929,30 +878,14 @@ function PremiumHeader({
   );
 }
 
-export function PremiumStorefrontPage({ content, locale }: PremiumStorefrontPageProps) {
-  const [language, setLanguageState] = useState<SiteLanguage>(() => {
-    if (typeof window !== "undefined") {
-      const storedLanguage = window.localStorage.getItem("fondjo-language");
-
-      if (isSiteLanguage(storedLanguage)) {
-        return storedLanguage;
-      }
-    }
-
-    return locale === "fr" ? "fr" : "en";
-  });
-  const copy = dictionaries[language];
-  const contentLocale: Locale = language === "fr" ? "fr" : "en";
+export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
+  const copy = fr;
+  const contentLocale: Locale = "fr";
   const whatsappUrl = getWhatsAppUrl(content, contentLocale);
-
-  function setLanguage(nextLanguage: SiteLanguage) {
-    setLanguageState(nextLanguage);
-    window.localStorage.setItem("fondjo-language", nextLanguage);
-  }
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#080706]">
-      <PremiumHeader copy={copy} language={language} setLanguage={setLanguage} />
+      <PremiumHeader copy={copy} />
       <CinematicHero />
       <ProductShowcase copy={copy} />
       <OriginSection copy={copy} />

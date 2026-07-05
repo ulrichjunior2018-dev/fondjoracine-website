@@ -2,10 +2,11 @@ import {
   buildRouteMetadata,
   LandingRoutePage,
 } from "@/features/elixir/components/landing-route-page";
+import { publicCopy } from "@/content/copy";
 
 export const metadata = buildRouteMetadata(
-  "Origin Story",
-  "Read the FONDJO RACINE origin story from Buea, Cameroon, at the base of Mount Cameroon.",
+  publicCopy.metadata.origin.title,
+  publicCopy.metadata.origin.description,
 );
 
 export default function OriginStoryPage() {

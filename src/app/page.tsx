@@ -4,24 +4,31 @@ import { siteConfig } from "@/config/site";
 import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
+import { config } from "@/lib/config";
+
+const isProduction = config.env === "production";
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getElixirContent();
   const image = getPrimaryElixirImage(content);
 
   return {
-    title: t(content.seo.title, "en"),
-    description: t(content.seo.description, "en"),
-    alternates: {
-      canonical: "/",
-      languages: {
-        en: "/",
-        fr: "/fr",
-      },
-    },
+    title: t(content.seo.title, "fr"),
+    description: t(content.seo.description, "fr"),
+    ...(isProduction
+      ? {
+          alternates: {
+            canonical: siteConfig.url,
+            languages: {
+              fr: siteConfig.url,
+            },
+          },
+        }
+      : {}),
     openGraph: {
-      title: t(content.seo.title, "en"),
-      description: t(content.seo.description, "en"),
+      title: t(content.seo.title, "fr"),
+      description: t(content.seo.description, "fr"),
+      locale: "fr_FR",
       url: siteConfig.url,
       images: [
         {
@@ -45,13 +52,13 @@ export default async function HomePage() {
       "@type": "Brand",
       name: content.brand,
     },
-    description: t(content.seo.description, "en"),
+    description: t(content.seo.description, "fr"),
     image: content.images.map((image) => image.src),
-    name: t(content.title, "en"),
+    name: t(content.title, "fr"),
     offers: {
       "@type": "Offer",
       availability: "https://schema.org/InStock",
-      price: Number.isFinite(xafPrice) ? String(xafPrice) : "8500",
+      price: Number.isFinite(xafPrice) ? String(xafPrice) : String(config.pricing.seveRacine),
       priceCurrency: "XAF",
       url: siteConfig.url,
     },
@@ -59,19 +66,19 @@ export default async function HomePage() {
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "FONDJO RACINE",
+    name: "Maison Fondjo",
     url: siteConfig.url,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Buea",
       addressCountry: "CM",
     },
-    areaServed: ["Cameroon", "Buea", "Douala", "Yaounde"],
+    areaServed: ["Cameroun", "Buea", "Douala", "Yaounde"],
     makesOffer: {
       "@type": "Offer",
       itemOffered: {
         "@type": "Product",
-        name: t(content.product.name, "en"),
+        name: t(content.product.name, "fr"),
       },
     },
   };
@@ -80,10 +87,10 @@ export default async function HomePage() {
     "@type": "FAQPage",
     mainEntity: content.faq.items.map((item) => ({
       "@type": "Question",
-      name: t(item.question, "en"),
+      name: t(item.question, "fr"),
       acceptedAnswer: {
         "@type": "Answer",
-        text: t(item.answer, "en"),
+        text: t(item.answer, "fr"),
       },
     })),
   };
@@ -102,7 +109,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <PremiumStorefrontPage content={content} locale="en" />
+      <PremiumStorefrontPage content={content} locale="fr" />
     </>
   );
 }

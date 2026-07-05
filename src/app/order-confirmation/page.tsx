@@ -5,18 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
+import { publicCopy } from "@/content/copy";
 import { getSupabaseAdminClient } from "@/lib/database/admin";
 import { getOrderByConfirmationToken } from "@/services/commerce/one-product-order-service";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  description: "Review your FONDJO order confirmation and payment verification status.",
+  description: publicCopy.metadata.orderConfirmation.description,
   robots: {
     follow: false,
     index: false,
   },
-  title: "Order Confirmation | FONDJO",
+  title: publicCopy.metadata.orderConfirmation.title,
 };
 
 type ConfirmationPageProps = {
@@ -29,10 +30,10 @@ type ConfirmationPageProps = {
 
 function formatAmount(amount: number, currency: string) {
   if (currency === "XAF") {
-    return `${amount.toLocaleString("en-US")} XAF`;
+    return `${amount.toLocaleString("fr-FR")} XAF`;
   }
 
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("fr-FR", {
     currency,
     style: "currency",
   }).format(amount / 100);
@@ -55,23 +56,23 @@ function getStatusTone(status: string) {
 function getStatusMessage(status: string) {
   switch (status) {
     case "pending_payment":
-      return "Your order is created. Send payment using the instructions below, then submit your transaction reference through the order support flow or WhatsApp.";
+      return publicCopy.orderConfirmation.status.pending_payment;
     case "payment_submitted":
-      return "Your payment reference was received and is waiting for admin verification.";
+      return publicCopy.orderConfirmation.status.payment_submitted;
     case "confirmed":
-      return "Your payment is confirmed. The order will move to packing before shipment.";
+      return publicCopy.orderConfirmation.status.confirmed;
     case "packed":
-      return "Your order is packed and waiting for shipment.";
+      return publicCopy.orderConfirmation.status.packed;
     case "shipped":
-      return "Your order has shipped.";
+      return publicCopy.orderConfirmation.status.shipped;
     case "delivered":
-      return "Your order is marked delivered.";
+      return publicCopy.orderConfirmation.status.delivered;
     case "cancelled":
-      return "This order has been cancelled.";
+      return publicCopy.orderConfirmation.status.cancelled;
     case "refunded":
-      return "This order has been refunded.";
+      return publicCopy.orderConfirmation.status.refunded;
     default:
-      return "We received your FONDJO order. Manual Mobile Money orders are verified by the admin team before confirmation.";
+      return publicCopy.orderConfirmation.status.fallback;
   }
 }
 
@@ -83,16 +84,15 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
       <main className="min-h-screen bg-background py-16">
         <Container size="sm">
           <Card variant="elevated">
-            <Kicker>Order confirmation</Kicker>
+            <Kicker>{publicCopy.orderConfirmation.title}</Kicker>
             <Heading as="h1" className="mt-3" level="h2">
-              Confirmation link missing
+              {publicCopy.orderConfirmation.missing.title}
             </Heading>
             <Text className="mt-4" tone="muted">
-              Please return to your FONDJO order flow or WhatsApp support for help finding your
-              confirmation.
+              {publicCopy.orderConfirmation.missing.body}
             </Text>
             <Link className="mt-6 inline-flex text-sm font-semibold text-accent" href="/">
-              Return home
+              {publicCopy.orderConfirmation.actions.backHome}
             </Link>
           </Card>
         </Container>
@@ -111,7 +111,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
       <Container size="md">
         <Card variant="elevated">
           <Badge tone={getStatusTone(order.status)}>{order.status}</Badge>
-          <Kicker className="mt-6">Order confirmation</Kicker>
+          <Kicker className="mt-6">{publicCopy.orderConfirmation.title}</Kicker>
           <Heading as="h1" className="mt-3" level="h2">
             {order.order_number}
           </Heading>
@@ -136,7 +136,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
             </div>
             <div className="rounded-md bg-surface-muted p-4 sm:col-span-2">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                Delivery
+                {publicCopy.orderConfirmation.delivery}
               </p>
               <p className="mt-2 font-semibold">{order.delivery_city}</p>
               <p className="mt-1 text-sm leading-6 text-foreground/68">{order.delivery_address}</p>
@@ -149,7 +149,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               {instructionNumber ? <p className="mt-2 font-mono">{instructionNumber}</p> : null}
               {order.manual_payment_reference ? (
                 <p className="mt-2 text-sm text-foreground/62">
-                  Reference: {order.manual_payment_reference}
+                  {publicCopy.orderConfirmation.paymentReference}: {order.manual_payment_reference}
                 </p>
               ) : null}
               {instructionText ? (
@@ -163,13 +163,13 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
               href="/#order"
             >
-              Place another order
+              {publicCopy.orderConfirmation.actions.newOrder}
             </Link>
             <Link
               className="inline-flex h-11 items-center justify-center rounded-md border border-border px-5 text-sm font-semibold"
               href="/"
             >
-              Return home
+              {publicCopy.orderConfirmation.actions.backHome}
             </Link>
           </div>
         </Card>

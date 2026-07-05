@@ -47,7 +47,7 @@ export function CartView({ initialCart }: CartViewProps) {
       <div className="rounded-lg border border-border bg-surface px-6 py-16">
         <EmptyState
           title="Sign in to view your cart"
-          description="Your FONDJO cart is protected so your rituals stay connected to your account."
+          description="Your Maison Fondjo cart is protected so your rituals stay connected to your account."
         />
       </div>
     );

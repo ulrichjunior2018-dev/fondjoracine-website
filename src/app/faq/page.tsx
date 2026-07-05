@@ -2,10 +2,11 @@ import {
   buildRouteMetadata,
   LandingRoutePage,
 } from "@/features/elixir/components/landing-route-page";
+import { publicCopy } from "@/content/copy";
 
 export const metadata = buildRouteMetadata(
-  "FAQ",
-  "Answers about SÈVE shipping, safety, ingredients, and WhatsApp-assisted support.",
+  publicCopy.metadata.faq.title,
+  publicCopy.metadata.faq.description,
 );
 
 export default function FaqPage() {

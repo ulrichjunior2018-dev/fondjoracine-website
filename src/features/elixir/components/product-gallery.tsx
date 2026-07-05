@@ -37,7 +37,7 @@ export function ProductGallery({ content, locale }: ProductGalleryProps) {
             </p>
             <p className="mt-3 font-mono text-xl">{content.product.priceXaf}</p>
             <p className="mt-1 text-sm text-foreground/60">
-              ${(content.priceCents / 100).toFixed(2)} USD
+              {locale === "fr" ? "Prix configure depuis la marque." : "Brand-configured price."}
             </p>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-surface-muted">

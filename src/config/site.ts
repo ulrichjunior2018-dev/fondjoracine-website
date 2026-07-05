@@ -1,10 +1,12 @@
 import { env } from "@/config/env";
+import { config } from "@/lib/config";
 
 export const siteConfig = {
   name: env.NEXT_PUBLIC_APP_NAME,
-  url: env.NEXT_PUBLIC_SITE_URL,
+  tagline: "Enracinée dans la nature. Faite pour durer.",
+  url: config.env === "production" ? "https://maisonfondjo.com" : env.NEXT_PUBLIC_SITE_URL,
   description:
-    "FONDJO RACINE SÈVE is a 100ml unisex botanical hair oil founded and made in Buea, Cameroon, with national delivery and international shipping support.",
-  locale: "en_US",
+    "Maison Fondjo présente Sève Racine, huile capillaire botanique 100ml née à Buea avec 11 botaniques et livraison au Cameroun.",
+  locale: "fr_FR",
   twitterHandle: "@fondjoracine",
 } as const;

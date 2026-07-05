@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`h-full antialiased ${fraunces.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >

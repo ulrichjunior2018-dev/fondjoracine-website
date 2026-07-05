@@ -14,6 +14,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 import { fondjoProductPricing } from "@/config/product-pricing";
+import { config, formatXaf } from "@/lib/config";
 import { cn } from "@/lib/utils/cn";
 
 type GeoState = {
@@ -34,41 +35,43 @@ const stripePromise =
   stripePublishableKey && walletPaymentsEnabled ? loadStripe(stripePublishableKey) : null;
 
 function getShippingEstimate(countryCode: string | null) {
+  const deliveryRange = `${formatXaf(config.delivery.min)}–${formatXaf(config.delivery.max)}`;
+
   if (countryCode === "CM") {
     return {
-      estimate: "Estimated Cameroon delivery: 1-4 business days after dispatch.",
+      estimate: `Livraison Cameroun : zones ${deliveryRange}, délai confirmé avant paiement.`,
       isCameroon: true,
-      notice: "National delivery available across Cameroon.",
+      notice: config.delivery.policy,
     };
   }
 
   if (countryCode === "US" || countryCode === "CA") {
     return {
-      estimate: "Estimated North America shipping: 7-14 business days after dispatch.",
+      estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
       isCameroon: false,
-      notice: "Duties and import taxes may apply at delivery.",
+      notice: "Contactez WhatsApp si vous commandez pour une adresse au Cameroun.",
     };
   }
 
   if (["ES", "FR", "DE", "IT", "NL", "BE", "PT"].includes(countryCode ?? "")) {
     return {
-      estimate: "Estimated Europe shipping: 8-16 business days after dispatch.",
+      estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
       isCameroon: false,
-      notice: "Duties and import taxes may apply at delivery.",
+      notice: "Contactez WhatsApp si vous commandez pour une adresse au Cameroun.",
     };
   }
 
   return {
-    estimate: "International shipping is available; WhatsApp the team for a precise timeline.",
+    estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
     isCameroon: false,
-    notice: "Duties and import taxes may apply at delivery.",
+    notice: "L'équipe confirme la ville, le quartier et les frais avant paiement.",
   };
 }
 
 function useGeoLocation(): GeoState {
   const [geo, setGeo] = useState<GeoState>({
     countryCode: null,
-    countryName: "your location",
+    countryName: "votre zone",
     status: "loading",
   });
 
@@ -94,13 +97,13 @@ function useGeoLocation(): GeoState {
 
         setGeo({
           countryCode: data.country_code?.toUpperCase() ?? null,
-          countryName: data.country_name || "your location",
+          countryName: data.country_name || "votre zone",
           status: "ready",
         });
       } catch {
         setGeo({
           countryCode: null,
-          countryName: "your location",
+          countryName: "votre zone",
           status: "fallback",
         });
       } finally {
@@ -138,7 +141,7 @@ function WalletPaymentRequestButton() {
       requestPayerName: true,
       total: {
         amount: fondjoProductPricing.usdCents,
-        label: "FONDJO RACINE SÈVE",
+        label: "Sève Racine",
       },
     });
 
@@ -194,7 +197,7 @@ export function CheckoutTrustBar({
 
   return (
     <aside
-      aria-label="Checkout trust, shipping, and payment support"
+      aria-label="Confiance paiement, livraison et assistance"
       className={cn(
         "rounded-md border border-[#d6b75b]/18 bg-[#0b0906]/88 p-3 text-[#f6f0e4] shadow-[0_18px_70px_rgb(0_0_0/.22)] backdrop-blur-xl",
         compact ? "sm:p-3" : "sm:p-4",
@@ -209,10 +212,12 @@ export function CheckoutTrustBar({
             </span>
             <div>
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-[#d6b75b]">
-                Shipping estimate
+                Estimation livraison
               </p>
               <p className="mt-1 text-sm leading-6 text-[#f6f0e4]/82">
-                {geo.status === "loading" ? "Checking your delivery region..." : shipping.estimate}
+                {geo.status === "loading"
+                  ? "Verification de votre zone de livraison..."
+                  : shipping.estimate}
               </p>
               <p className="mt-1 text-xs leading-5 text-[#f6f0e4]/58">{shipping.notice}</p>
             </div>
@@ -225,7 +230,7 @@ export function CheckoutTrustBar({
             target="_blank"
           >
             <MessageCircle className="size-4 text-[#d6b75b]" aria-hidden="true" />
-            WhatsApp support
+            Assistance WhatsApp
           </a>
         </div>
 
@@ -233,22 +238,22 @@ export function CheckoutTrustBar({
           <div className="grid gap-2">
             <PaymentRequestSlot />
             <p className="text-sm leading-6 text-[#f6f0e4]/74">
-              {stripePromise ? "Apple Pay / Google Pay appears here when available, " : ""}
-              or pay by card.
+              {stripePromise ? "Apple Pay / Google Pay apparait ici si disponible, " : ""}
+              ou paiement par carte.
             </p>
             {shipping.isCameroon ? (
               <p className="text-sm leading-6 text-[#f6f0e4]/74">
-                MTN Mobile Money and Orange Money are available for Cameroon customers.
+                MTN Mobile Money et Orange Money sont disponibles au Cameroun.
               </p>
             ) : null}
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#f6f0e4]/68 sm:grid-cols-4 md:grid-cols-2">
             {[
-              { icon: LockKeyhole, label: "SSL secure" },
-              { icon: CreditCard, label: "Stripe card" },
-              { icon: ShieldCheck, label: "Encrypted" },
-              { icon: BadgeCheck, label: "Support" },
+              { icon: LockKeyhole, label: "SSL" },
+              { icon: CreditCard, label: "Carte Stripe" },
+              { icon: ShieldCheck, label: "Chiffré" },
+              { icon: BadgeCheck, label: "Assistance" },
             ].map((badge) => (
               <span
                 className="inline-flex min-h-10 items-center gap-2 rounded-sm border border-white/10 bg-white/[0.035] px-3"

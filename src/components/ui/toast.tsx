@@ -80,7 +80,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
               "grid w-full gap-1 rounded-lg border p-4 shadow-lifted data-[state=open]:animate-slide-up data-[state=closed]:animate-exit",
               getToastToneClassName(message.tone),
             )}
-            duration={5000}
+            duration={5_000}
             key={message.id}
             onOpenChange={(open) => {
               if (!open) {

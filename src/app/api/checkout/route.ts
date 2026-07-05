@@ -7,7 +7,7 @@ export async function POST() {
   return fail(
     new AppError(
       "BAD_REQUEST",
-      "Use /api/elixir/orders so every Stripe checkout is attached to a FONDJO order.",
+      "Use /api/elixir/orders so every Stripe checkout is attached to a Maison Fondjo order.",
     ),
   );
 }

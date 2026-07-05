@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
+import { config } from "@/lib/config";
+
+const isProduction = config.env === "production";
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -23,7 +26,7 @@ export const defaultMetadata: Metadata = {
         url: `${siteConfig.url}/images/facebook-cover.png`,
         width: 1640,
         height: 624,
-        alt: "FONDJO RACINE — Sève 100ml botanical hair oil, founded and made in Buea, Cameroon",
+        alt: "Maison Fondjo — Sève Racine 100ml, huile capillaire botanique née à Buea, Cameroun",
       },
     ],
   },
@@ -35,16 +38,23 @@ export const defaultMetadata: Metadata = {
     images: [`${siteConfig.url}/images/studio-reflection.png`],
   },
   robots: {
-    index: true,
-    follow: true,
+    index: isProduction,
+    follow: isProduction,
     googleBot: {
-      index: true,
-      follow: true,
+      index: isProduction,
+      follow: isProduction,
       "max-image-preview": "large",
       "max-snippet": -1,
       "max-video-preview": -1,
     },
   },
+  ...(isProduction
+    ? {
+        alternates: {
+          canonical: siteConfig.url,
+        },
+      }
+    : {}),
 };
 
 export function buildOrganizationJsonLd(siteUrl: string) {

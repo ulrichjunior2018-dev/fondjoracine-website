@@ -146,7 +146,7 @@ export const createReviewSchema = z.object({
   order_id: z.string().uuid().optional(),
   rating: z.number().int().min(1).max(5),
   title: z.string().max(120).optional(),
-  body: z.string().min(8).max(5000),
+  body: z.string().min(8).max(5_000),
 });
 
 export const wishlistItemSchema = z.object({

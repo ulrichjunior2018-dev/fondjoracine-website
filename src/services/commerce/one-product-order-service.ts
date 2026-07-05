@@ -10,12 +10,10 @@ import type {
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
+import { buildWaLink } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
 import { getStripeClient } from "@/lib/payments/stripe";
-import {
-  buildWhatsAppOrderMessage,
-  queueOrderNotifications,
-} from "@/services/commerce/order-notification-service";
+import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type ManualPaymentMethod = Extract<OneProductPaymentMethod, "mtn_momo" | "orange_money">;
@@ -67,14 +65,6 @@ function getConfirmationUrl(token: string) {
   return `${env.NEXT_PUBLIC_SITE_URL}/order-confirmation?token=${token}`;
 }
 
-function getTotalLabel(content: ElixirContent, quantity: number, method: OneProductPaymentMethod) {
-  if (method === "stripe") {
-    return `$${((content.priceCents * quantity) / 100).toFixed(2)} ${content.currency}`;
-  }
-
-  return `${parseXafAmount(content.product.priceXaf) * quantity} XAF`;
-}
-
 function getPaymentInstructions(
   content: ElixirContent,
   locale: Locale,
@@ -94,8 +84,8 @@ function getPaymentInstructions(
       heading: "Stripe Checkout",
       instructions:
         locale === "fr"
-          ? "Vous serez redirige vers Stripe pour finaliser le paiement international."
-          : "You will be redirected to Stripe to complete international payment.",
+          ? "Vous serez redirige vers Stripe pour finaliser le paiement par carte."
+          : "You will be redirected to Stripe to complete card payment.",
       label: "Stripe",
       number: "",
     };
@@ -309,16 +299,7 @@ export async function createOneProductOrder(
   await recordPayment(supabase, order, input, content);
 
   const confirmationUrl = getConfirmationUrl(order.confirmation_token);
-  const totalLabel = getTotalLabel(content, input.quantity, input.payment_method);
-  const whatsappMessage = buildWhatsAppOrderMessage(content, locale, {
-    city: input.city,
-    confirmationUrl,
-    customerName: input.name,
-    orderNumber: order.order_number,
-    paymentMethod: instructions.label,
-    phone: normalizePhone(input.phone),
-    totalLabel,
-  });
+  const totalLabel = `${parseXafAmount(content.product.priceXaf) * input.quantity} XAF`;
 
   await queueOrderNotifications({
     city: input.city,
@@ -347,14 +328,11 @@ export async function createOneProductOrder(
     };
   }
 
-  const whatsappPhone = content.whatsapp.phone.replace(/\D/g, "");
-  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(whatsappMessage)}`;
-
   return {
     confirmationUrl,
     order,
     paymentInstructions: instructions,
-    whatsappUrl,
+    whatsappUrl: buildWaLink("order"),
   };
 }
 
