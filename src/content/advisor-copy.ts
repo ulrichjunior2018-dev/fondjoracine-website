@@ -6,6 +6,17 @@ const consultationPrice = formatXaf(config.pricing.consultation);
 const surMesurePrice = formatXaf(config.pricing.surMesure);
 
 export const advisorCopy = {
+  footerLinks: [
+    ["Grossistes", "/grossistes"],
+    ["Contact", "/contact"],
+    ["Livraison", "/policies/shipping"],
+  ],
+  nav: [
+    ["Diagnostic", "/diagnostic"],
+    ["Botanique", "/botanique"],
+    ["Sève Racine", "/seve-racine"],
+    ["Sur-mesure", "/sur-mesure"],
+  ],
   botanique: {
     body: "Cette page sert de destination QR : 11 botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
     chosenFor: "Choisi pour",

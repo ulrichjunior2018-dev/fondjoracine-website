@@ -135,34 +135,11 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
     },
   };
 
-  return mirrorFrenchLocalizedText(runtimeContent);
-}
-
-function mirrorFrenchLocalizedText<T>(value: T): T {
-  if (Array.isArray(value)) {
-    return value.map((item) => mirrorFrenchLocalizedText(item)) as T;
-  }
-
-  if (!value || typeof value !== "object") {
-    return value;
-  }
-
-  if ("fr" in value && "en" in value) {
-    const localized = value as { en: unknown; fr: unknown };
-
-    if (typeof localized.fr === "string") {
-      return { ...value, en: localized.fr } as T;
-    }
-  }
-
-  return Object.fromEntries(
-    Object.entries(value).map(([key, item]) => [key, mirrorFrenchLocalizedText(item)]),
-  ) as T;
+  return runtimeContent;
 }
 
 export function getWhatsAppUrl(content: ElixirContent, locale: "en" | "fr") {
   void content;
-  void locale;
 
-  return buildWaLink("order");
+  return buildWaLink("order", "", locale);
 }

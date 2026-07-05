@@ -1,4 +1,9 @@
-export const publicCopy = {
+import { en as storefrontEn } from "@/i18n/dictionaries/en";
+import { fr as storefrontFr } from "@/i18n/dictionaries/fr";
+
+import { advisorCopy as advisorFr } from "./advisor-copy";
+
+const publicFr = {
   errors: {
     genericMessage: "Un incident est survenu. Rechargez la page ou revenez par WhatsApp.",
     genericTitle: "La page n'a pas pu se charger",
@@ -114,3 +119,297 @@ export const publicCopy = {
     },
   },
 } as const;
+
+const publicEn = {
+  errors: {
+    genericMessage: "Something went wrong. Reload the page or return through WhatsApp.",
+    genericTitle: "The page could not load",
+    notFoundBody: "This Maison Fondjo page is not available.",
+    notFoundTitle: "Page not found",
+  },
+  metadata: {
+    contact: {
+      description:
+        "Contact Maison Fondjo for Sève Racine, delivery in Cameroon, diagnostic follow-up and product safety questions.",
+      title: "Contact | Maison Fondjo",
+    },
+    faq: {
+      description:
+        "Answers about Sève Racine, the 11 botanicals, Cameroon delivery, product safety and WhatsApp assistance.",
+      title: "FAQ | Maison Fondjo",
+    },
+    howToUse: {
+      description:
+        "How to use Sève Racine: a few drops, roots, lengths, beard and a measured gesture.",
+      title: "How to use | Maison Fondjo",
+    },
+    origin: {
+      description:
+        "Maison Fondjo origin: Buea, Mount Cameroon, the Fondjo name and the meaning of Racine.",
+      title: "Origin | Maison Fondjo",
+    },
+    orderConfirmation: {
+      description:
+        "Maison Fondjo order confirmation: payment, Mobile Money reference and delivery in Cameroon.",
+      title: "Confirmation | Maison Fondjo",
+    },
+    privacy: {
+      description:
+        "How Maison Fondjo protects order, payment, delivery and diagnostic information.",
+      title: "Privacy | Maison Fondjo",
+    },
+    returns: {
+      description:
+        "Maison Fondjo returns: personal product, damage verified at delivery, exchange reviewed.",
+      title: "Returns | Maison Fondjo",
+    },
+    shipping: {
+      description:
+        "Sève Racine delivery in Cameroon: zones, fees confirmed before payment and WhatsApp coordination.",
+      title: "Delivery | Maison Fondjo",
+    },
+    terms: {
+      description:
+        "Maison Fondjo terms for using the site, ordering Sève Racine and verifying payment.",
+      title: "Terms | Maison Fondjo",
+    },
+  },
+  orderConfirmation: {
+    actions: {
+      backHome: "Back home",
+      newOrder: "Order again",
+    },
+    delivery: "Delivery",
+    missing: {
+      body: "Return to the Sève Racine order flow or contact WhatsApp assistance to recover your confirmation.",
+      title: "Confirmation link missing",
+    },
+    paymentReference: "Reference",
+    status: {
+      cancelled: "This order has been cancelled.",
+      confirmed: "Payment is confirmed. The order now moves into preparation.",
+      delivered: "The order is marked as delivered.",
+      fallback:
+        "Your Maison Fondjo order has been received. Mobile Money payments are verified before confirmation.",
+      packed: "The order is packed and awaiting delivery.",
+      payment_submitted: "The payment reference has been received and awaits verification.",
+      pending_payment: "The order is created. Send payment, then add your transaction reference.",
+      refunded: "This order has been refunded.",
+      shipped: "The order is out for delivery.",
+    },
+    title: "Order confirmation",
+  },
+  policies: {
+    backHome: "Back home",
+    kicker: "Policy",
+    privacy: {
+      body: [
+        "Maison Fondjo collects only the information needed to prepare Sève Racine, verify payment, coordinate delivery in Cameroon, answer on WhatsApp and improve the hair diagnostic.",
+        "Card payment, when enabled, is processed by Stripe. MTN Mobile Money and Orange Money references are verified before confirmation.",
+        "To correct or delete your information, contact the team by WhatsApp. Records useful for delivery, safety and customer follow-up are kept with restraint.",
+      ],
+      title: "Privacy",
+    },
+    returns: {
+      body: [
+        "Sève Racine is a personal care product: an opened bottle cannot be returned for hygiene reasons.",
+        "If a box arrives damaged, incorrect or incomplete, report it at delivery with clear photos. The team then reviews exchange or refund options.",
+        "Cancellations are reviewed before preparation. After dispatch, delivery and hygiene conditions limit available options.",
+      ],
+      title: "Returns and exchanges",
+    },
+    shipping: {
+      body: [
+        "Delivery is organized in Cameroon. The customer provides city, neighborhood, landmark and WhatsApp number before validation.",
+        "Fees are confirmed before payment according to the delivery zone, between 500 F and 3 000 F.",
+      ],
+      title: "Delivery in Cameroon",
+    },
+    terms: {
+      body: [
+        "By ordering Sève Racine or contacting Maison Fondjo, you agree to provide accurate information for delivery and payment verification.",
+        "Sève Racine is a cosmetic oil for external use. It does not diagnose, treat, cure or replace a dermatologist.",
+        "Maison Fondjo may refuse, cancel or refund an order if payment cannot be verified, stock is unavailable or delivery cannot be completed.",
+      ],
+      title: "Terms of use",
+    },
+  },
+} as const;
+
+const advisorEn = {
+  footerLinks: [
+    ["Wholesale", "/grossistes"],
+    ["Contact", "/contact"],
+    ["Delivery", "/policies/shipping"],
+  ],
+  nav: [
+    ["Diagnostic", "/diagnostic"],
+    ["Botanicals", "/botanique"],
+    ["Sève Racine", "/seve-racine"],
+    ["Bespoke", "/sur-mesure"],
+  ],
+  botanique: {
+    body: "This QR destination presents 11 botanicals, Latin names, plant origin and the reason each belongs in Sève Racine.",
+    chosenFor: "Chosen for",
+    description:
+      "Maison Fondjo herbarium: 11 Sève Racine ingredients, Latin names and botanical role.",
+    eyebrow: "Digital herbarium",
+    title: "Eleven ingredients. One precise botanical language.",
+  },
+  diagnostic: {
+    ...advisorFr.diagnostic,
+    eyebrow: "Maison Fondjo diagnostic",
+    nextStep: "Your next step",
+    privateBody:
+      "Some signals need closer attention. The Private Consultation is offered at {price}, credited if a formula is then prepared.",
+    privateTitle: "Private Consultation recommended.",
+    redo: "Retake the diagnostic",
+    standardBody:
+      "Your main concern ({problem}) can be framed through Sève Racine with {botanicalOne} and {botanicalTwo}, without overload.",
+    standardTitle: "Sève Racine can structure your ritual.",
+    title: "Hair diagnostic | Maison Fondjo",
+    description:
+      "Maison Fondjo hair diagnostic in Buea before Sève Racine or a Private Consultation.",
+    whatsapp: "Continue on WhatsApp",
+    questions: [
+      {
+        id: "objectif",
+        prompt: "What concerns you most today?",
+        summaryLabel: "Concern",
+        options: [
+          { label: "Breakage", value: "casse" },
+          { label: "Dryness", value: "secheresse" },
+          { label: "Uncomfortable scalp", value: "cuir_chevelu" },
+          {
+            label: "Sudden shedding or sparse areas",
+            severity: "serious",
+            value: "chute_soudaine",
+          },
+        ],
+      },
+      {
+        id: "texture",
+        prompt: "Which description is closest to your hair?",
+        summaryLabel: "Hair",
+        options: [
+          { label: "natural 4C", value: "naturels_4c" },
+          { label: "Curly", value: "boucles" },
+          { label: "Wavy", value: "ondules" },
+          { label: "Fine or straight", value: "fins_lisses" },
+        ],
+      },
+      {
+        id: "routine",
+        prompt: "Your current routine is mostly...",
+        summaryLabel: "Routine",
+        options: [
+          { label: "Protective styles or braids", value: "protective_styles" },
+          { label: "Regular wash day", value: "wash_day" },
+          { label: "Beard and edges", value: "grooming" },
+          { label: "Very irregular", value: "irreguliere" },
+        ],
+      },
+      {
+        id: "sensibilite",
+        prompt: "Do you have pain, wounds, burning or a persistent reaction?",
+        summaryLabel: "Scalp",
+        options: [
+          { label: "No", value: "non" },
+          { label: "itching", value: "demangeaisons" },
+          {
+            label: "Yes, persistent pain or irritation",
+            severity: "serious",
+            value: "douleur_irritation",
+          },
+        ],
+      },
+      {
+        id: "duree",
+        prompt: "How long have you noticed this concern?",
+        summaryLabel: "Duration",
+        options: [
+          { label: "less than one month", value: "moins_1_mois" },
+          { label: "6 months", value: "6_mois" },
+          { label: "more than one year", value: "plus_1_an" },
+        ],
+      },
+    ],
+  },
+  grossistes: {
+    cardMinimum: "Minimum order",
+    cardPrice: "Professional unit price",
+    cardValidation: "Direct validation",
+    cta: "Contact on WhatsApp",
+    description:
+      "Maison Fondjo wholesale conditions: minimum 20, professional pricing and WhatsApp contact.",
+    eyebrow: "Professional access",
+    title: "Wholesalers and retailers.",
+  },
+  seveRacine: {
+    ...advisorFr.seveRacine,
+    alt: "Sève Racine bottle photographed in a reflective black studio",
+    batchLine: "Numbered box — Founder Batch, 200 pieces",
+    cta: "Order on WhatsApp",
+    description: "Sève Racine by Maison Fondjo: numbered box, 15 000 F, Cameroon delivery.",
+    intro:
+      "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
+    payment: ["MTN Mobile Money", "Orange Money"],
+    shippingCards: [
+      {
+        label: "Cameroon delivery",
+        text: "Zones 500 F–3 000 F. Payment before delivery.",
+      },
+      {
+        label: "Refund",
+        text: "Damage verified at delivery only.",
+      },
+      {
+        label: "Founder Batch",
+        text: "200 numbered boxes.",
+      },
+    ],
+    steps: ["Warm a few drops", "Massage the roots", "Finish lengths or beard"],
+    title: "Sève Racine, prepared for the ritual.",
+  },
+  shell: {
+    cta: "Diagnostic",
+    footer: "Maison Fondjo · Rooted in nature. Made to last.",
+    homeLabel: "Maison Fondjo home",
+    logoAlt: "Maison Fondjo",
+    place: "Buea, Cameroon",
+  },
+  texturePending: {
+    body: "This area will host a Maison Fondjo photography series dedicated to real hair, without reusing one image for several textures.",
+    label: "Real photography pending",
+  },
+  surMesure: {
+    body: "Bespoke care gives structure to needs that require more than a standard bottle. It makes Sève Racine accessible, and the private formula exceptional.",
+    cta: "Request a consultation",
+    description:
+      "Maison Fondjo bespoke care in Buea: diagnostic, Private Consultation and 25 000 F formula.",
+    eyebrow: "The premium ceiling",
+    steps: [
+      ["01", "Diagnostic", "Understand texture, rhythm, scalp and limits."],
+      ["02", "Consultation", "5 000 F, credited if the formula is prepared."],
+      ["03", "Formula", "Bespoke preparation at 25 000 F."],
+    ],
+    title: "Diagnostic. Consultation. Formula.",
+  },
+};
+
+export const copy = {
+  en: {
+    advisor: advisorEn,
+    public: publicEn,
+    storefront: storefrontEn,
+  },
+  fr: {
+    advisor: advisorFr,
+    public: publicFr,
+    storefront: storefrontFr,
+  },
+} as const;
+
+export type Locale = keyof typeof copy;
+
+export const publicCopy = copy.fr.public;

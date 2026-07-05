@@ -4,16 +4,8 @@ import { ArrowRight, Droplets, Leaf, Languages, ShieldCheck, Sparkles } from "lu
 import Image from "next/image";
 
 import { RealPhotographyPendingSlot } from "@/components/HairTexturePanels";
+import { useI18n } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
-
-const trustItems = [
-  "Fabriqué au Cameroun",
-  "11 botaniques vérifiées",
-  "Pour textures multiples",
-  "100ml",
-  "Usage externe",
-  "MTN MoMo + Orange Money",
-] as const;
 
 type CinematicHeroProps = {
   consultationHref?: string;
@@ -40,6 +32,52 @@ export function CinematicHero({
   consultationHref = "/diagnostic",
   productHref = "/seve-racine",
 }: CinematicHeroProps) {
+  const { locale } = useI18n();
+  const heroCopy =
+    locale === "en"
+      ? {
+          backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
+          bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
+          eyebrow: "MAISON FONDJO — BUEA, CAMEROON",
+          primary: "Start my diagnostic",
+          secondary: "Discover Sève Racine",
+          story:
+            "Before the bottle, Maison Fondjo begins by understanding your texture, your rhythm, your scalp and how your hair lives every day.",
+          titleFirst: "Your hair",
+          titleSecond: "has a story.",
+          titleThird: "Let us begin by listening.",
+          trustLabel: "Maison Fondjo trust markers",
+          trustItems: [
+            "Made in Cameroon",
+            "11 verified botanicals",
+            "For multiple textures",
+            "100ml",
+            "External use",
+            "MTN MoMo + Orange Money",
+          ],
+        }
+      : {
+          backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
+          bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
+          eyebrow: "MAISON FONDJO — BUEA, CAMEROUN",
+          primary: "Commencer mon diagnostic",
+          secondary: "Découvrir Sève Racine",
+          story:
+            "Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme, votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.",
+          titleFirst: "Vos cheveux",
+          titleSecond: "ont une histoire.",
+          titleThird: "Commençons par l'écouter.",
+          trustLabel: "Repères de confiance Maison Fondjo",
+          trustItems: [
+            "Fabriqué au Cameroun",
+            "11 botaniques vérifiées",
+            "Pour textures multiples",
+            "100ml",
+            "Usage externe",
+            "MTN MoMo + Orange Money",
+          ],
+        };
+
   return (
     <>
       <section
@@ -49,7 +87,7 @@ export function CinematicHero({
       >
         <div className="sticky top-0 h-svh overflow-hidden">
           <Image
-            alt="Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun"
+            alt={heroCopy.backgroundAlt}
             className="object-cover opacity-42"
             fill
             priority
@@ -67,16 +105,15 @@ export function CinematicHero({
           <div className="relative z-20 mx-auto grid min-h-svh w-full max-w-[1440px] items-center gap-6 px-5 pb-8 pt-[5.7rem] text-center md:grid-cols-[minmax(0,0.94fr)_minmax(18rem,0.72fr)_minmax(12rem,0.28fr)] md:gap-7 md:px-10 md:py-24 md:text-left xl:px-20">
             <div className="mx-auto max-w-[43rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.34em] text-[#D4AF37]">
-                MAISON FONDJO — BUEA, CAMEROUN
+                {heroCopy.eyebrow}
               </p>
               <h1 className="mt-5 font-serif text-[clamp(2.72rem,11.4vw,5.1rem)] font-light leading-[0.92] tracking-normal text-[#F7F4EB] md:mt-6 md:text-[clamp(4rem,6.2vw,7rem)] md:leading-[0.91]">
-                Vos cheveux
-                <span className="block text-[#D4AF37]">ont une histoire.</span>
-                <span className="block">Commençons par l&apos;écouter.</span>
+                {heroCopy.titleFirst}
+                <span className="block text-[#D4AF37]">{heroCopy.titleSecond}</span>
+                <span className="block">{heroCopy.titleThird}</span>
               </h1>
               <p className="mx-auto mt-5 max-w-[40rem] text-[0.96rem] leading-7 text-[#F7F4EB]/78 md:mx-0 md:mt-6 md:text-lg md:leading-8">
-                Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme,
-                votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.
+                {heroCopy.story}
               </p>
 
               <div className="mt-6 grid gap-3 sm:inline-grid sm:grid-cols-2 md:mt-10">
@@ -84,14 +121,14 @@ export function CinematicHero({
                   className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#D4AF37] px-7 text-sm font-semibold text-[#0D0D0D] shadow-[0_22px_80px_rgb(212_175_55/.28)] transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
                   href={consultationHref}
                 >
-                  Commencer mon diagnostic
+                  {heroCopy.primary}
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </a>
                 <a
                   className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F7F4EB]/24 bg-[#0D0D0D]/32 px-7 text-sm font-semibold text-[#F7F4EB] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
                   href={productHref}
                 >
-                  Découvrir Sève Racine
+                  {heroCopy.secondary}
                 </a>
               </div>
             </div>
@@ -101,7 +138,7 @@ export function CinematicHero({
               <div className="absolute inset-x-[15%] bottom-[5%] h-[16%] rounded-full bg-[#D4AF37]/16 blur-2xl" />
               <div className="absolute inset-[3%] rounded-full bg-[#1B5E20]/22 blur-2xl" />
               <Image
-                alt="Flacon Sève Racine, huile capillaire botanique Maison Fondjo"
+                alt={heroCopy.bottleAlt}
                 className="object-contain drop-shadow-[0_34px_70px_rgb(0_0_0/.6)] md:motion-safe:animate-[fondjoFloat_7s_ease-in-out_infinite]"
                 fill
                 priority
@@ -127,11 +164,11 @@ export function CinematicHero({
       </section>
 
       <section
-        aria-label="Repères de confiance Maison Fondjo"
+        aria-label={heroCopy.trustLabel}
         className="border-y border-[#D4AF37]/16 bg-[#0D0D0D] px-4 py-4 text-[#F7F4EB]"
       >
         <div className="mx-auto grid max-w-7xl gap-2 sm:grid-cols-2 lg:grid-cols-6">
-          {trustItems.map((item, index) => {
+          {heroCopy.trustItems.map((item, index) => {
             const Icon = getTrustIcon(index);
 
             return (

@@ -3,17 +3,15 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { advisorCopy } from "@/content/advisor-copy";
 import { advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
+import { useCopy, useI18n } from "@/lib/i18n-context";
 
 type Question = {
   summaryLabel: string;
   id: string;
-  options: ReadonlyArray<{ label: string; severity?: "serious" | "standard"; value: string }>;
+  options: ReadonlyArray<{ label: string; severity?: string; value: string }>;
   prompt: string;
 };
-
-const questions = advisorCopy.diagnostic.questions satisfies readonly Question[];
 
 function getAnswerValue(questionId: string, answers: Record<string, string>) {
   if (questionId === "objectif") {
@@ -39,15 +37,24 @@ function getAnswerValue(questionId: string, answers: Record<string, string>) {
   return undefined;
 }
 
-function getAnswerLabel(questionId: string, answers: Record<string, string>) {
+function getAnswerLabel(
+  questionId: string,
+  answers: Record<string, string>,
+  questions: readonly Question[],
+  fallback: string,
+) {
   const question = questions.find((item) => item.id === questionId);
   const value = getAnswerValue(questionId, answers);
 
-  return question?.options.find((option) => option.value === value)?.label ?? "Non renseigné";
+  return question?.options.find((option) => option.value === value)?.label ?? fallback;
 }
 
-function getMainProblem(answers: Record<string, string>) {
-  return getAnswerLabel("objectif", answers).toLowerCase();
+function getMainProblem(
+  answers: Record<string, string>,
+  questions: readonly Question[],
+  fallback: string,
+) {
+  return getAnswerLabel("objectif", answers, questions, fallback).toLowerCase();
 }
 
 function getRecommendationBotanicals(answers: Record<string, string>) {
@@ -65,6 +72,10 @@ function getRecommendationBotanicals(answers: Record<string, string>) {
 }
 
 export function DiagnosticQuiz() {
+  const { advisor } = useCopy();
+  const { locale } = useI18n();
+  const questions: readonly Question[] = advisor.diagnostic.questions;
+  const fallbackAnswer = locale === "en" ? "Not provided" : "Non renseigné";
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const currentIndex = Math.min(Object.keys(answers).length, questions.length - 1);
   const isComplete = Object.keys(answers).length === questions.length;
@@ -77,24 +88,51 @@ export function DiagnosticQuiz() {
 
         return option && "severity" in option && option.severity === "serious";
       }),
-    [answers],
+    [answers, questions],
   );
-  const severityLabel = hasSeriousSignal ? "élevée" : "standard";
+  const severityLabel = hasSeriousSignal ? (locale === "en" ? "high" : "élevée") : "standard";
   const serializedAnswers = [
-    `Cheveux: ${getAnswerLabel("texture", answers)}`,
-    `Cuir chevelu: ${getAnswerLabel("sensibilite", answers)}`,
-    `Problème: ${getMainProblem(answers)}, ${getAnswerLabel("duree", answers)}`,
-    `Routine: ${getAnswerLabel("routine", answers)}`,
-    `Sévérité: ${severityLabel}`,
+    `${locale === "en" ? "Hair" : "Cheveux"}: ${getAnswerLabel(
+      "texture",
+      answers,
+      questions,
+      fallbackAnswer,
+    )}`,
+    `${locale === "en" ? "Scalp" : "Cuir chevelu"}: ${getAnswerLabel(
+      "sensibilite",
+      answers,
+      questions,
+      fallbackAnswer,
+    )}`,
+    `${locale === "en" ? "Concern" : "Problème"}: ${getMainProblem(
+      answers,
+      questions,
+      fallbackAnswer,
+    )}, ${getAnswerLabel("duree", answers, questions, fallbackAnswer)}`,
+    `${locale === "en" ? "Routine" : "Routine"}: ${getAnswerLabel(
+      "routine",
+      answers,
+      questions,
+      fallbackAnswer,
+    )}`,
+    `${locale === "en" ? "Severity" : "Sévérité"}: ${severityLabel}`,
   ].join(" / ");
   const [botanicalOne, botanicalTwo] = getRecommendationBotanicals(answers);
-  const standardRecommendation = `${serializedAnswers}\nRecommandation Sève Racine: pour ${getMainProblem(
-    answers,
-  )}, commencer par un rituel mesuré avec ${botanicalOne} et ${botanicalTwo}.`;
-  const privateConsultationMessage = `${serializedAnswers}\nOrientation: Consultation Privée recommandée (${advisorPricing.consultationCreditXaf} créditée).`;
+  const standardRecommendation = `${serializedAnswers}\n${
+    locale === "en" ? "Sève Racine recommendation" : "Recommandation Sève Racine"
+  }: ${locale === "en" ? "for" : "pour"} ${getMainProblem(answers, questions, fallbackAnswer)}, ${
+    locale === "en"
+      ? `start with a measured ritual using ${botanicalOne} and ${botanicalTwo}.`
+      : `commencer par un rituel mesuré avec ${botanicalOne} et ${botanicalTwo}.`
+  }`;
+  const privateConsultationMessage = `${serializedAnswers}\n${
+    locale === "en" ? "Direction" : "Orientation"
+  }: ${
+    locale === "en" ? "Private Consultation recommended" : "Consultation Privée recommandée"
+  } (${advisorPricing.consultationCreditXaf} ${locale === "en" ? "credited" : "créditée"}).`;
   const resultUrl = hasSeriousSignal
-    ? buildWhatsAppUrl("consultation", privateConsultationMessage)
-    : buildWhatsAppUrl("diagnostic", standardRecommendation);
+    ? buildWhatsAppUrl("consultation", privateConsultationMessage, locale)
+    : buildWhatsAppUrl("diagnostic", standardRecommendation, locale);
 
   function choose(questionId: string, value: string) {
     setAnswers((current) => ({ ...current, [questionId]: value }));
@@ -112,7 +150,7 @@ export function DiagnosticQuiz() {
       {!isComplete && currentQuestion ? (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
-            {advisorCopy.diagnostic.eyebrow}
+            {advisor.diagnostic.eyebrow}
           </p>
           <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#f6f0e4] sm:text-6xl">
             {currentQuestion.prompt}
@@ -133,21 +171,19 @@ export function DiagnosticQuiz() {
       ) : (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#d6b75b]/18 bg-[#0d0d0d]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
-            {advisorCopy.diagnostic.nextStep}
+            {advisor.diagnostic.nextStep}
           </p>
           <h1 className="mt-5 font-serif text-4xl font-light leading-tight sm:text-6xl">
-            {hasSeriousSignal
-              ? advisorCopy.diagnostic.privateTitle
-              : advisorCopy.diagnostic.standardTitle}
+            {hasSeriousSignal ? advisor.diagnostic.privateTitle : advisor.diagnostic.standardTitle}
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">
             {hasSeriousSignal
-              ? advisorCopy.diagnostic.privateBody.replace(
+              ? advisor.diagnostic.privateBody.replace(
                   "{price}",
                   advisorPricing.consultationCreditXaf,
                 )
-              : advisorCopy.diagnostic.standardBody
-                  .replace("{problem}", getMainProblem(answers))
+              : advisor.diagnostic.standardBody
+                  .replace("{problem}", getMainProblem(answers, questions, fallbackAnswer))
                   .replace("{botanicalOne}", botanicalOne)
                   .replace("{botanicalTwo}", botanicalTwo)}
           </p>
@@ -161,7 +197,7 @@ export function DiagnosticQuiz() {
               rel="noreferrer"
               target="_blank"
             >
-              {advisorCopy.diagnostic.whatsapp}
+              {advisor.diagnostic.whatsapp}
               <MessageCircle className="size-4" aria-hidden="true" />
             </a>
             <button
@@ -169,7 +205,7 @@ export function DiagnosticQuiz() {
               onClick={() => setAnswers({})}
               type="button"
             >
-              {advisorCopy.diagnostic.redo}
+              {advisor.diagnostic.redo}
               <ArrowRight className="size-4" aria-hidden="true" />
             </button>
           </div>

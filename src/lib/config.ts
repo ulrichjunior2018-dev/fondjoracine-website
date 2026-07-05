@@ -1,4 +1,5 @@
 export type WhatsAppMessageKey = "consultation" | "diagnostic" | "order" | "wholesale";
+export type WhatsAppLocale = "en" | "fr";
 
 export const config = {
   batch: { name: "Lot Fondateur 2026", size: 200 },
@@ -18,11 +19,20 @@ export const config = {
   },
   whatsapp: {
     messages: {
-      consultation: "Bonjour, je souhaite réserver une Consultation Privée.",
-      diagnostic: (answers: string) =>
-        `Bonjour 🌿 Voici mon diagnostic capillaire:\n${answers}\nQue me conseillez-vous?`,
-      order: "Bonjour Maison Fondjo 🌿 Je souhaite commander le coffret Sève Racine.",
-      wholesale: "Bonjour, je suis intéressé(e) par l'offre grossiste (MOQ 20).",
+      en: {
+        consultation: "Hello, I would like to book a Private Consultation.",
+        diagnostic: (answers: string) =>
+          `Hello 🌿 Here is my hair diagnostic:\n${answers}\nWhat do you recommend?`,
+        order: "Hello Maison Fondjo 🌿 I would like to order the Sève Racine box.",
+        wholesale: "Hello, I am interested in the wholesale offer (MOQ 20).",
+      },
+      fr: {
+        consultation: "Bonjour, je souhaite réserver une Consultation Privée.",
+        diagnostic: (answers: string) =>
+          `Bonjour 🌿 Voici mon diagnostic capillaire:\n${answers}\nQue me conseillez-vous?`,
+        order: "Bonjour Maison Fondjo 🌿 Je souhaite commander le coffret Sève Racine.",
+        wholesale: "Bonjour, je suis intéressé(e) par l'offre grossiste (MOQ 20).",
+      },
     },
     number:
       process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "[CLARISSE_CAMEROON_NUMBER, format 2376XXXXXXXX]",
@@ -33,17 +43,22 @@ export function formatXaf(amount: number) {
   return `${amount.toLocaleString("fr-FR").replace(/\u202f/g, " ")} F`;
 }
 
-export function buildWaLink(messageKey: WhatsAppMessageKey, dynamicText = "") {
+export function buildWaLink(
+  messageKey: WhatsAppMessageKey,
+  dynamicText = "",
+  locale: WhatsAppLocale = "fr",
+) {
+  const messages = config.whatsapp.messages[locale];
   const message =
     messageKey === "diagnostic"
-      ? config.whatsapp.messages.diagnostic(dynamicText)
+      ? messages.diagnostic(dynamicText)
       : messageKey === "consultation"
         ? dynamicText
-          ? `${config.whatsapp.messages.consultation}\n${dynamicText}`
-          : config.whatsapp.messages.consultation
+          ? `${messages.consultation}\n${dynamicText}`
+          : messages.consultation
         : messageKey === "wholesale"
-          ? config.whatsapp.messages.wholesale
-          : config.whatsapp.messages.order;
+          ? messages.wholesale
+          : messages.order;
   const normalized = config.whatsapp.number.replace(/\D/g, "");
 
   return `https://wa.me/${normalized}?text=${encodeURIComponent(message)}`;

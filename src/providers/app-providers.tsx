@@ -3,9 +3,11 @@
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
+import { LanguageBottle } from "@/components/ui/LanguageBottle";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { MicroInteractions } from "@/components/ui/micro-interactions";
 import { ToastProvider } from "@/components/ui/toast";
+import { I18nProvider } from "@/lib/i18n-context";
 import { SmoothScrollProvider } from "@/providers/smooth-scroll-provider";
 
 type AppProvidersProps = {
@@ -15,11 +17,14 @@ type AppProvidersProps = {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <SmoothScrollProvider>
-        <MicroInteractions />
-        <CustomCursor />
-        <ToastProvider>{children}</ToastProvider>
-      </SmoothScrollProvider>
+      <I18nProvider>
+        <SmoothScrollProvider>
+          <MicroInteractions />
+          <CustomCursor />
+          <LanguageBottle />
+          <ToastProvider>{children}</ToastProvider>
+        </SmoothScrollProvider>
+      </I18nProvider>
     </ThemeProvider>
   );
 }

@@ -36,15 +36,20 @@ export const advisorImages = {
 
 export const herbariumIngredients = formulaIngredients.map((ingredient) => ({
   chosenFor: ingredient.chosen_for,
+  chosenForEn: ingredient.chosen_for_en,
   commonName: ingredient.name_fr,
+  commonNameEn: ingredient.name_en,
   latinName: ingredient.latin,
   properties: ingredient.properties,
+  propertiesEn: ingredient.properties_en,
   region: "Formule botanique",
+  regionEn: "Botanical formula",
 }));
 
 export function buildWhatsAppUrl(
   messageKey: Parameters<typeof buildWaLink>[0],
   dynamicText?: string,
+  locale: Parameters<typeof buildWaLink>[2] = "fr",
 ) {
-  return buildWaLink(messageKey, dynamicText);
+  return buildWaLink(messageKey, dynamicText, locale);
 }

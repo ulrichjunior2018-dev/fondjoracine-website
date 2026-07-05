@@ -13,7 +13,7 @@ import { siteConfig } from "@/config/site";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
-import { fr } from "@/i18n/dictionaries/fr";
+import { useCopy, useI18n } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
 
 type PremiumStorefrontPageProps = {
@@ -21,7 +21,7 @@ type PremiumStorefrontPageProps = {
   locale: Locale;
 };
 
-type Copy = typeof fr;
+type Copy = ReturnType<typeof useCopy>["storefront"];
 
 const blurDataUrl =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTYnIGhlaWdodD0nMTYnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHJlY3QgZmlsbD0nIzA4MDcwNicgd2lkdGg9JzE2JyBoZWlnaHQ9JzE2Jy8+PHBhdGggZD0nTTAgMTZMMTYgME0tNCAxMkwxMi00TTQgMjBMMjAgNCcgc3Ryb2tlPScjYzhhOTUxJyBzdHJva2Utb3BhY2l0eT0nLjE2Jy8+PC9zdmc+";
@@ -879,8 +879,9 @@ function PremiumHeader({ copy }: { copy: Copy }) {
 }
 
 export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
-  const copy = fr;
-  const contentLocale: Locale = "fr";
+  const { copy: localizedCopy, locale } = useI18n();
+  const copy = localizedCopy.storefront;
+  const contentLocale: Locale = locale;
   const whatsappUrl = getWhatsAppUrl(content, contentLocale);
 
   return (
