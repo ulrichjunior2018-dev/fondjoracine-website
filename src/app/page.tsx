@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: siteConfig.url,
       images: [
         {
-          alt: t(image.alt, "en"),
+          alt: t(image.alt, "fr"),
           height: image.height,
           url: image.src,
           width: image.width,

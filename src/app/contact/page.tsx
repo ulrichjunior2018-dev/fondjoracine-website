@@ -26,14 +26,12 @@ export default async function ContactPage() {
   return (
     <main className="min-h-screen bg-background py-16">
       <Container>
-        <Kicker>Contact</Kicker>
+        <Kicker>{publicCopy.contactPage.kicker}</Kicker>
         <Heading as="h1" className="mt-3 max-w-4xl" level="h2">
-          Conseil produit, livraison au Cameroun, presse et sécurité.
+          {publicCopy.contactPage.heading}
         </Heading>
         <Text className="mt-5 max-w-3xl" tone="muted">
-          Maison Fondjo travaille depuis Buea. WhatsApp reste le chemin le plus direct pour
-          confirmer une zone de livraison, poser une question sur Sève Racine ou demander un suivi
-          après diagnostic.
+          {publicCopy.contactPage.intro}
         </Text>
 
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
@@ -42,25 +40,25 @@ export default async function ContactPage() {
               external: true,
               href: whatsappUrl,
               icon: <MessageCircle className="h-5 w-5" aria-hidden="true" />,
-              label: "WhatsApp",
+              label: publicCopy.contactPage.cards.whatsapp.label,
               text: content.whatsapp.phone,
-              title: "Livraison et conseil produit",
+              title: publicCopy.contactPage.cards.whatsapp.title,
             },
             {
               external: false,
               href: `mailto:${email}`,
               icon: <Mail className="h-5 w-5" aria-hidden="true" />,
-              label: "Email",
+              label: publicCopy.contactPage.cards.email.label,
               text: email,
-              title: "Presse et administration",
+              title: publicCopy.contactPage.cards.email.title,
             },
             {
               external: false,
               href: "/policies/terms",
               icon: <ShieldCheck className="h-5 w-5" aria-hidden="true" />,
-              label: "Sécurité",
-              text: "Usage externe. Test cutané recommandé.",
-              title: "Questions sécurité produit",
+              label: publicCopy.contactPage.cards.safety.label,
+              text: publicCopy.contactPage.cards.safety.text,
+              title: publicCopy.contactPage.cards.safety.title,
             },
           ].map((item) => (
             <a

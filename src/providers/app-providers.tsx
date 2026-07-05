@@ -3,7 +3,6 @@
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
-import { LanguageBottle } from "@/components/ui/LanguageBottle";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { MicroInteractions } from "@/components/ui/micro-interactions";
 import { ToastProvider } from "@/components/ui/toast";
@@ -21,7 +20,6 @@ export function AppProviders({ children }: AppProvidersProps) {
         <SmoothScrollProvider>
           <MicroInteractions />
           <CustomCursor />
-          <LanguageBottle />
           <ToastProvider>{children}</ToastProvider>
         </SmoothScrollProvider>
       </I18nProvider>

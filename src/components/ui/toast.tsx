@@ -100,7 +100,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
                 ) : null}
               </div>
               <ToastPrimitive.Close asChild>
-                <Button aria-label="Dismiss notification" size="icon" variant="ghost">
+                <Button aria-label="Fermer la notification" size="icon" variant="ghost">
                   <X aria-hidden="true" className="h-4 w-4" />
                 </Button>
               </ToastPrimitive.Close>
@@ -117,7 +117,7 @@ export function useToast() {
   const context = useContext(ToastContext);
 
   if (!context) {
-    throw new Error("useToast must be used within ToastProvider.");
+    throw new Error("useToast doit etre utilise dans ToastProvider.");
   }
 
   return context;

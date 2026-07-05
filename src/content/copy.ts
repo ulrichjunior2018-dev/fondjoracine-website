@@ -83,6 +83,27 @@ const publicFr = {
     },
     title: "Confirmation de commande",
   },
+  contactPage: {
+    cards: {
+      email: {
+        label: "Email",
+        title: "Presse et administration",
+      },
+      safety: {
+        label: "Sécurité",
+        text: "Usage externe. Test cutané recommandé.",
+        title: "Questions sécurité produit",
+      },
+      whatsapp: {
+        label: "WhatsApp",
+        title: "Livraison et conseil produit",
+      },
+    },
+    heading: "Conseil produit, livraison au Cameroun, presse et sécurité.",
+    intro:
+      "Maison Fondjo travaille depuis Buea. WhatsApp reste le chemin le plus direct pour confirmer une zone de livraison, poser une question sur Sève Racine ou demander un suivi après diagnostic.",
+    kicker: "Contact",
+  },
   policies: {
     backHome: "Retour à l'accueil",
     kicker: "Politique",

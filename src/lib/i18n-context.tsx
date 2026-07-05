@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
 
 import { copy, type Locale } from "@/content/copy";
 
@@ -22,42 +14,31 @@ type I18nContextValue = {
 const I18nContext = createContext<I18nContextValue | null>(null);
 const storageKey = "maison-fondjo-locale";
 
-function isLocale(value: string | null): value is Locale {
-  return value === "fr" || value === "en";
-}
-
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("fr");
+  const locale: Locale = "fr";
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const storedLocale = window.localStorage.getItem(storageKey);
-
-      if (isLocale(storedLocale)) {
-        setLocaleState(storedLocale);
-      }
-    });
-
-    return () => window.cancelAnimationFrame(frame);
+    window.localStorage.setItem(storageKey, "fr");
+    document.documentElement.lang = "fr";
   }, []);
 
   const setLocale = useCallback((nextLocale: Locale) => {
-    setLocaleState(nextLocale);
-    window.localStorage.setItem(storageKey, nextLocale);
-    document.documentElement.lang = nextLocale;
+    void nextLocale;
+    window.localStorage.setItem(storageKey, "fr");
+    document.documentElement.lang = "fr";
   }, []);
 
   const toggleLocale = useCallback(() => {
-    setLocale(locale === "fr" ? "en" : "fr");
-  }, [locale, setLocale]);
+    setLocale("fr");
+  }, [setLocale]);
 
   useEffect(() => {
-    document.documentElement.lang = locale;
-  }, [locale]);
+    document.documentElement.lang = "fr";
+  }, []);
 
   const value = useMemo(
     () => ({
-      copy: copy[locale],
+      copy: copy.fr,
       locale,
       setLocale,
       toggleLocale,
