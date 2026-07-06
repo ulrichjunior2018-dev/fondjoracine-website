@@ -3,7 +3,7 @@
 import { ArrowRight, BadgeCheck, CreditCard, PenLine } from "lucide-react";
 import Image from "next/image";
 
-import { RealPhotographyPendingSlot } from "@/components/HairTexturePanels";
+import { SceneGate } from "@/components/three/SceneGate";
 import { useCopy } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
 
@@ -36,11 +36,11 @@ export function CinematicHero({
           />
           <div className="absolute inset-0 z-10 bg-[#0D0D0D]/42" />
           <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_61%_52%,rgb(212_175_55/.18),transparent_28%),radial-gradient(circle_at_84%_38%,rgb(27_94_32/.3),transparent_36%),linear-gradient(102deg,#0D0D0D_0%,rgb(13_13_13/.92)_36%,rgb(27_94_32/.58)_68%,#0D0D0D_100%)]" />
+          <SceneGate className="pointer-events-none absolute right-[-18vw] top-[13vh] z-[14] h-[58vh] w-[72vw] opacity-55 mix-blend-screen sm:right-[-8vw] sm:w-[56vw] md:right-[2vw] md:top-[16vh] md:h-[68vh] md:w-[42vw] md:opacity-70" />
           <div
             aria-hidden="true"
             className="absolute left-5 top-24 z-20 h-px w-28 bg-[linear-gradient(90deg,transparent,#D4AF37,transparent)] opacity-90 md:left-[7vw] md:top-28 md:w-48"
           />
-          <RealPhotographyPendingSlot />
 
           <div className="relative z-20 mx-auto grid min-h-svh w-full max-w-[1440px] items-center gap-6 px-5 pb-8 pt-[5.7rem] text-center md:grid-cols-[minmax(0,0.94fr)_minmax(18rem,0.72fr)_minmax(12rem,0.28fr)] md:gap-7 md:px-10 md:py-24 md:text-left xl:px-20">
             <div className="mx-auto max-w-[43rem] animate-[fondjoFadeUp_.8s_ease-out_both] md:mx-0">
@@ -75,27 +75,18 @@ export function CinematicHero({
 
             <div className="relative mx-auto aspect-[4/5] w-[min(70vw,18.5rem)] animate-[fondjoFadeUp_1s_ease-out_.18s_both] md:mx-0 md:w-full md:max-w-[30rem]">
               <div className="absolute inset-[7%] rounded-[1.1rem] bg-[#D4AF37]/18 blur-3xl" />
-              <div className="relative flex h-full flex-col justify-between rounded-[0.85rem] border border-[#d6b75b]/38 bg-[linear-gradient(145deg,#030302,#12100b_44%,#050403)] p-5 shadow-[0_34px_90px_rgb(0_0_0/.58)]">
-                <div className="rounded-sm border border-[#d6b75b]/24 bg-[#f6f0e4] px-4 py-5 text-[#14110b] shadow-[inset_0_0_0_1px_rgb(20_17_11/.08)]">
-                  <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#7b622d]">
-                    Maison Fondjo
-                  </p>
-                  <p className="mt-3 font-serif text-4xl font-light leading-none">Sève Racine</p>
-                  <div className="mt-5 h-px bg-[#d6b75b]" />
-                  <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#14110b]/60">
-                    {heroCopy.pending}
-                  </p>
-                </div>
-                <div className="relative mx-auto my-5 h-32 w-32 rounded-full border border-[#d6b75b]/45 bg-[#080706] shadow-[0_0_0_12px_rgb(214_183_91/.05)]">
-                  <span className="absolute inset-5 rounded-full border border-[#d6b75b]/35" />
-                  <span className="absolute inset-x-7 top-1/2 h-px bg-[#d6b75b]/60" />
-                  <span className="absolute inset-y-7 left-1/2 w-px bg-[#d6b75b]/60" />
-                  <span className="absolute inset-0 grid place-items-center font-serif text-2xl text-[#d6b75b]">
-                    MF
-                  </span>
-                </div>
-                <p className="border-t border-[#d6b75b]/24 pt-4 text-center text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-[#f6f0e4]/58">
-                  {heroCopy.bottleAlt}
+              <div className="relative h-full overflow-hidden rounded-[0.85rem] border border-[#d6b75b]/38 bg-[#050403] shadow-[0_34px_90px_rgb(0_0_0/.58)]">
+                <Image
+                  alt={heroCopy.bottleAlt}
+                  className="object-cover"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 30rem, 70vw"
+                  src={siteImages.studioBottle}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_52%,rgb(5_4_3/.78)_100%)]" />
+                <p className="absolute inset-x-5 bottom-5 border-t border-[#d6b75b]/24 pt-4 text-center text-[0.64rem] font-semibold uppercase tracking-[0.22em] text-[#f6f0e4]/78">
+                  Sève Racine · Maison Fondjo
                 </p>
               </div>
             </div>
