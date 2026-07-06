@@ -26,7 +26,7 @@ export const defaultMetadata: Metadata = {
         url: `${siteConfig.url}/images/facebook-cover.png`,
         width: 1640,
         height: 624,
-        alt: "Maison Fondjo — Sève Racine 100ml, huile capillaire botanique née à Buea, Cameroun",
+        alt: "Maison Fondjo — Sève Racine 100ml botanical hair oil born in Buea, Cameroon",
       },
     ],
   },
