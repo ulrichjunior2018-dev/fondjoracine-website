@@ -6,7 +6,7 @@ export const en = {
     "The path stays simple: diagnostic, 15 000 F price, Cameroon delivery zone confirmed before payment.",
   closingCards: [
     ["Hair consultation", "Answer before deciding how the 11 botanicals enter your routine."],
-    ["Delivery", "Check Cameroon delivery zones, from 500 F to 3 000 F."],
+    ["Delivery", "Nationwide delivery across Cameroon from Buea, starting at 1,000 FCFA."],
     ["Direct assistance", "Speak with the Buea team about timing, fees and product guidance."],
   ],
   closingEyebrow: "Next step",
@@ -19,10 +19,10 @@ export const en = {
   ctaDiscover: "Discover SÈVE",
   ctaShipping: "Delivery",
   delivery: {
-    body: "Delivery is available in confirmed zones across Cameroon before payment. For timelines, delivery fees and order assistance, contact the Maison Fondjo team directly.",
+    body: "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
     cards: [
       ["National delivery in Cameroon", "Delivery assistance across Cameroon."],
-      ["Delivery zones", "Fees are confirmed before payment."],
+      ["Delivery fees", "Fees start at 1,000 FCFA and increase with distance from Buea."],
       ["WhatsApp assistance", "Direct help for timelines, fees and orders."],
       ["Future retailers", "Points of sale will be announced as the brand expands."],
     ],

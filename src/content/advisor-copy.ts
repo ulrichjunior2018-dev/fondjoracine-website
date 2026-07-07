@@ -1,6 +1,4 @@
 import { config, formatXaf } from "@/lib/config";
-
-const deliveryRange = `${formatXaf(config.delivery.min)}–${formatXaf(config.delivery.max)}`;
 const batchName = config.batch.name.replace(/\s+2026$/, "");
 const consultationPrice = formatXaf(config.pricing.consultation);
 const surMesurePrice = formatXaf(config.pricing.surMesure);
@@ -124,7 +122,7 @@ export const advisorCopy = {
     shippingCards: [
       {
         label: "Livraison Cameroun",
-        text: `Zones ${deliveryRange}. ${config.delivery.policy}.`,
+        text: `${config.delivery.text.fr} ${config.delivery.policy}.`,
       },
       {
         label: "Remboursement",

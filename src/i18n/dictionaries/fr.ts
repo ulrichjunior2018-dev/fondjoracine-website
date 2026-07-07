@@ -9,7 +9,7 @@ export const fr = {
       "Consultation cheveux",
       "Repondez avant de choisir comment les 11 botaniques entrent dans votre routine.",
     ],
-    ["Livraison", "Consultez les zones de livraison au Cameroun, de 500 F a 3 000 F."],
+    ["Livraison", "Livraison partout au Cameroun depuis Buea, à partir de 1 000 FCFA."],
     [
       "Assistance directe",
       "Echangez avec l'equipe de Buea pour les delais, tarifs et conseils produit.",
@@ -25,10 +25,13 @@ export const fr = {
   ctaDiscover: "Decouvrir SEVE",
   ctaShipping: "Livraison",
   delivery: {
-    body: "La livraison est disponible dans les zones du Cameroun confirmees avant paiement. Pour les delais, les frais de livraison et l'assistance commande, contactez directement l'equipe Maison Fondjo.",
+    body: "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
     cards: [
       ["Livraison nationale au Cameroun", "Assistance livraison partout au Cameroun."],
-      ["Zones de livraison", "Les frais sont confirmes avant paiement."],
+      [
+        "Frais de livraison",
+        "Les frais commencent à 1 000 FCFA et augmentent selon la distance depuis Buea.",
+      ],
       ["Assistance WhatsApp", "Aide directe pour delais, tarifs et commandes."],
       ["Futurs revendeurs", "Les points de vente seront annonces avec l'expansion."],
     ],

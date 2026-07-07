@@ -73,7 +73,7 @@ export default async function HomePage() {
       addressLocality: "Buea",
       addressCountry: "CM",
     },
-    areaServed: ["Cameroun", "Buea", "Douala", "Yaounde"],
+    areaServed: ["Cameroon"],
     makesOffer: {
       "@type": "Offer",
       itemOffered: {

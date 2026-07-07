@@ -499,12 +499,8 @@ export const defaultElixirContent: ElixirContent = {
     cta: localized("DM OIL on WhatsApp", "Envoyer OIL sur WhatsApp"),
     eyebrow: localized("Product and delivery support", "Conseil produit et livraison"),
     intro: {
-      en: `Contact the team for guidance, Cameroon delivery zones (${formatXaf(
-        config.delivery.min,
-      )}–${formatXaf(config.delivery.max)}), and order support.`,
-      fr: `Contactez l'equipe pour conseils, zones de livraison au Cameroun (${formatXaf(
-        config.delivery.min,
-      )}–${formatXaf(config.delivery.max)}) et assistance commande.`,
+      en: `Contact the team for guidance, order support, and delivery from Buea. ${config.delivery.text.en}`,
+      fr: `Contactez l'equipe pour conseils, assistance commande et livraison depuis Buea. ${config.delivery.text.fr}`,
     },
     priceXaf: `${formatXaf(config.pricing.seveRacine)} local equivalent`,
     title: {
@@ -634,12 +630,8 @@ export const defaultElixirContent: ElixirContent = {
     },
   },
   shipping: {
-    en: `Cameroon delivery is coordinated on WhatsApp. Zones: ${formatXaf(
-      config.delivery.min,
-    )}–${formatXaf(config.delivery.max)}.`,
-    fr: `Livraison au Cameroun coordonnee sur WhatsApp. Zones : ${formatXaf(
-      config.delivery.min,
-    )}–${formatXaf(config.delivery.max)}.`,
+    en: config.delivery.text.en,
+    fr: config.delivery.text.fr,
   },
   slug: "seve-hair-treatment-oil",
   socialLinks: {
@@ -655,8 +647,8 @@ export const defaultElixirContent: ElixirContent = {
       {
         approved: true,
         location: {
-          en: "Douala, Cameroon",
-          fr: "Douala, Cameroun",
+          en: "Cameroon",
+          fr: "Cameroun",
         },
         name: "Mireille",
         quote: {
@@ -671,8 +663,8 @@ export const defaultElixirContent: ElixirContent = {
       {
         approved: true,
         location: {
-          en: "Yaounde, Cameroon",
-          fr: "Yaounde, Cameroun",
+          en: "Cameroon",
+          fr: "Cameroun",
         },
         name: "Clarisse",
         quote: {

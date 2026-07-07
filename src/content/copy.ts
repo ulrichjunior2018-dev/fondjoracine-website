@@ -125,8 +125,8 @@ const publicFr = {
     },
     shipping: {
       body: [
-        "La livraison est organisée au Cameroun. Le client fournit la ville, le quartier, le repère et le numéro WhatsApp avant validation.",
-        "Les frais sont confirmés avant paiement selon la zone de livraison, entre 500 F et 3 000 F.",
+        "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
+        "Le client fournit la ville, le quartier, le repère et le numéro WhatsApp avant validation.",
       ],
       title: "Livraison au Cameroun",
     },
@@ -241,8 +241,8 @@ const publicEn = {
     },
     shipping: {
       body: [
-        "Delivery is organized in Cameroon. The customer provides city, neighborhood, landmark and WhatsApp number before validation.",
-        "Fees are confirmed before payment according to the delivery zone, between 500 F and 3 000 F.",
+        "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
+        "The customer provides city, neighborhood, landmark and WhatsApp number before validation.",
       ],
       title: "Delivery in Cameroon",
     },
@@ -378,7 +378,7 @@ const advisorEn = {
     shippingCards: [
       {
         label: "Cameroon delivery",
-        text: "Zones 500 F–3 000 F. Payment before delivery.",
+        text: "Nationwide delivery from 1,000 FCFA. Payment before delivery.",
       },
       {
         label: "Refund",

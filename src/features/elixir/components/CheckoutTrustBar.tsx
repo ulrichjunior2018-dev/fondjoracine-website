@@ -35,36 +35,36 @@ const stripePromise =
   stripePublishableKey && walletPaymentsEnabled ? loadStripe(stripePublishableKey) : null;
 
 function getShippingEstimate(countryCode: string | null) {
-  const deliveryRange = `${formatXaf(config.delivery.min)}–${formatXaf(config.delivery.max)}`;
+  const deliveryStart = formatXaf(config.delivery.min).replace("F", "FCFA");
 
   if (countryCode === "CM") {
     return {
-      estimate: `Livraison Cameroun : zones ${deliveryRange}, délai confirmé avant paiement.`,
+      estimate: `Livraison partout au Cameroun depuis Buea, à partir de ${deliveryStart}.`,
       isCameroon: true,
-      notice: config.delivery.policy,
+      notice: `${config.delivery.policy}. Les frais augmentent selon la distance depuis Buea.`,
     };
   }
 
   if (countryCode === "US" || countryCode === "CA") {
     return {
-      estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
+      estimate: "International shipping coming soon.",
       isCameroon: false,
-      notice: "Contactez WhatsApp si vous commandez pour une adresse au Cameroun.",
+      notice: config.delivery.text.en,
     };
   }
 
   if (["ES", "FR", "DE", "IT", "NL", "BE", "PT"].includes(countryCode ?? "")) {
     return {
-      estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
+      estimate: "International shipping coming soon.",
       isCameroon: false,
-      notice: "Contactez WhatsApp si vous commandez pour une adresse au Cameroun.",
+      notice: config.delivery.text.en,
     };
   }
 
   return {
-    estimate: `Livraison disponible au Cameroun : zones ${deliveryRange}.`,
+    estimate: config.delivery.text.fr,
     isCameroon: false,
-    notice: "L'équipe confirme la ville, le quartier et les frais avant paiement.",
+    notice: "International shipping coming soon.",
   };
 }
 
