@@ -30,10 +30,10 @@ export const advisorImages = {
   frontLabel: siteImages.frontLabel,
   herbariumCover: siteImages.mountCameroonRiverBottle,
   logo: siteImages.profileLogo,
-  origin: siteImages.heroOrigin,
+  origin: siteImages.originMountCameroon,
   product: siteImages.studioBottle,
-  ritual: siteImages.nightRoutine,
-  unboxing: siteImages.packingOrders,
+  ritual: siteImages.lifestyleScalpRitual,
+  unboxing: siteImages.lifestyleDiaspora,
 } as const;
 
 export const herbariumIngredients = formulaIngredients.map((ingredient) => ({

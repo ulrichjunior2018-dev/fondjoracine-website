@@ -10,6 +10,21 @@ type SmoothScrollProviderProps = {
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   useEffect(() => {
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const constrainedNetwork =
+      connection?.saveData === true ||
+      ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
+
+    if (isCoarsePointer || reducedMotion || constrainedNetwork) {
+      return;
+    }
+
     const lenis = new Lenis({
       orientation: "vertical",
       smoothWheel: true,

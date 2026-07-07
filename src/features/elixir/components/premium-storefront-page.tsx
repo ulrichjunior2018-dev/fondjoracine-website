@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Menu, MessageCircle, Sparkles, Truck, X } from "lucide-react";
+import { ArrowRight, Menu, MessageCircle, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +9,7 @@ import { CinematicHero } from "@/components/CinematicHero";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
-import { formulaIngredients, formulaNote, getFormulaIngredientCopy } from "@/content/formula";
+import { formulaIngredients, getFormulaIngredientCopy } from "@/content/formula";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -30,35 +29,22 @@ const blurDataUrl =
 const campaignImages = {
   backLabel: siteImages.backLabel,
   barbershop: siteImages.barbershop,
-  facebookCover: siteImages.facebookCover,
+  banner: siteImages.wordmarkLockup,
+  family: siteImages.lifestyleMotherChild,
+  flatlay: siteImages.flatlayFormula,
   frontLabel: siteImages.frontLabel,
-  hero: siteImages.hero,
+  hero: siteImages.volcanicBottle,
   hairTexture: siteImages.hairTextureLifestyle,
-  market: siteImages.marketLifestyle,
-  night: siteImages.nightRoutine,
+  market: siteImages.originBueaHarvest,
+  night: siteImages.lifestyleScalpRitual,
   origin: siteImages.originMountCameroon,
-  packing: siteImages.packingOrders,
+  productMacro: siteImages.productMacro,
   profileLogo: siteImages.profileLogo,
   reflection: siteImages.studioBottle,
-  ingredientAvocadoOil: siteImages.ingredientAvocadoOil,
-  ingredientCastorOil: siteImages.ingredientCastorOil,
-  ingredientCoconutOil: siteImages.ingredientCoconutOil,
-  ingredientJojobaOil: siteImages.ingredientJojobaOil,
-  ingredientOliveOil: siteImages.ingredientOliveOil,
 } as const;
 
 function FadeUp({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 18 }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true, margin: "-12%" }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 function ImagePanel({
@@ -122,55 +108,55 @@ function EngravedBotanicalIllustration({ index }: { index: number }) {
   );
 }
 
-export function ProductShowcase({ copy }: { copy: Copy }) {
+export function ProductShowcase({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string }) {
   return (
     <section
-      className="border-y border-[#d6b75b]/14 bg-[#0d0b08] py-16"
+      className="border-y border-[#d6b75b]/10 bg-[#0d0b08] py-20 sm:py-28"
       data-mobile-cta-section="product"
       id="product"
     >
-      <Container className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-        <FadeUp className="grid gap-3 sm:grid-cols-[1fr_0.72fr] sm:gap-4">
+      <Container className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.72fr)] lg:items-center">
+        <FadeUp>
           <ImagePanel
             alt={copy.mediaAlts.product}
-            className="relative aspect-[4/5] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
-            sizes="(min-width: 1024px) 34vw, 100vw"
+            className="relative min-h-[34rem] overflow-hidden border border-[#d6b75b]/18 bg-[#17130e] sm:min-h-[42rem]"
+            sizes="(min-width: 1024px) 58vw, 100vw"
             src={campaignImages.reflection}
           />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-1">
-            <ImagePanel
-              alt={copy.mediaAlts.frontLabel}
-              className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
-              sizes="(min-width: 1024px) 18vw, 50vw"
-              src={campaignImages.frontLabel}
-            />
-            <ImagePanel
-              alt={copy.mediaAlts.backLabel}
-              className="relative aspect-[3/4] overflow-hidden rounded-md border border-[#d6b75b]/18 bg-[#17130e]"
-              sizes="(min-width: 1024px) 18vw, 50vw"
-              src={campaignImages.backLabel}
-            />
-          </div>
         </FadeUp>
         <FadeUp>
           <p className="text-xs font-semibold uppercase tracking-[0.36em] text-[#d6b75b]">
             {copy.productEyebrow}
           </p>
-          <h2 className="mt-4 font-serif text-[clamp(2.7rem,7vw,6.6rem)] font-light leading-[0.86] text-[#f6f0e4]">
+          <h2 className="mt-5 font-serif text-[clamp(3rem,8vw,6.8rem)] font-light leading-[0.88] text-[#f6f0e4]">
             {copy.productTitle}
           </h2>
+          <div aria-hidden="true" className="mt-7 text-lg text-[#d6b75b]">
+            ◆
+          </div>
           <p className="mt-6 max-w-xl text-sm leading-8 text-[#f6f0e4]/68">{copy.productText}</p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <dl className="mt-9 grid gap-4 border-y border-[#d6b75b]/16 py-6 text-sm text-[#f6f0e4]/72">
             {[copy.productSpecOne, copy.productSpecTwo, copy.productSpecThree].map(
               ([label, value]) => (
-                <div className="border border-[#d6b75b]/16 bg-white/[0.03] p-4" key={label}>
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b]">
+                <div className="grid grid-cols-[8rem_1fr] gap-4" key={label}>
+                  <dt className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b]">
                     {label}
-                  </p>
-                  <p className="mt-2 font-mono text-sm text-[#f6f0e4]">{value}</p>
+                  </dt>
+                  <dd className="font-mono text-[#f6f0e4]">{value}</dd>
                 </div>
               ),
             )}
+          </dl>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#d6b75b] px-7 text-sm font-semibold text-[#080706] transition-transform duration-100 active:scale-[0.98]"
+              href={whatsappUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {copy.contact}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </a>
           </div>
         </FadeUp>
       </Container>
@@ -181,28 +167,31 @@ export function ProductShowcase({ copy }: { copy: Copy }) {
 export function OriginSection({ copy }: { copy: Copy }) {
   return (
     <section
-      className="bg-[#f4eddf] py-20 text-[#14110b] sm:py-28"
+      className="relative min-h-[82svh] overflow-hidden bg-[#080706] text-[#f6f0e4]"
       data-mobile-cta-section="origin"
       id="origin"
     >
-      <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-        <FadeUp>
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#7b622d]">
+      <ImagePanel
+        alt={copy.mediaAlts.origin}
+        className="absolute inset-0"
+        sizes="100vw"
+        src={campaignImages.market}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.7)_48%,rgb(8_7_6/.22)_100%),linear-gradient(180deg,rgb(8_7_6/.18),#080706_100%)]" />
+      <Container className="relative flex min-h-[82svh] items-end py-20 sm:py-28">
+        <FadeUp className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
             {copy.originEyebrow}
           </p>
-          <h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.8rem,8vw,7rem)] font-light leading-[0.86]">
+          <h2 className="mt-5 max-w-3xl font-serif text-[clamp(3rem,8vw,7rem)] font-light leading-[0.86]">
             {copy.originTitle}
           </h2>
-          <p className="mt-6 max-w-xl text-base leading-8 text-[#14110b]/70">{copy.originBody}</p>
-        </FadeUp>
-        <FadeUp className="relative min-h-[34rem] overflow-hidden rounded-md">
-          <ImagePanel
-            alt={copy.mediaAlts.origin}
-            className="absolute inset-0"
-            sizes="(min-width: 1024px) 52vw, 100vw"
-            src={campaignImages.origin}
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_48%,rgb(0_0_0/.45))]" />
+          <div aria-hidden="true" className="mt-7 text-lg text-[#d6b75b]">
+            ◆
+          </div>
+          <p className="mt-7 max-w-2xl font-serif text-2xl leading-[1.45] text-[#f6f0e4]/82 sm:text-3xl">
+            {copy.originBody}
+          </p>
         </FadeUp>
       </Container>
     </section>
@@ -243,14 +232,7 @@ export function FounderStorySection({ content, locale }: PremiumStorefrontPagePr
       id="founder"
       ref={sectionRef}
     >
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0"
-        initial={{ scale: 1.04 }}
-        whileInView={{ scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
-      >
+      <div aria-hidden="true" className="absolute inset-0">
         <Image
           alt=""
           blurDataURL={blurDataUrl}
@@ -258,9 +240,9 @@ export function FounderStorySection({ content, locale }: PremiumStorefrontPagePr
           fill
           placeholder="blur"
           sizes="100vw"
-          src={campaignImages.origin}
+          src={campaignImages.family}
         />
-      </motion.div>
+      </div>
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(8_7_6/.88)_0%,rgb(8_7_6/.66)_48%,rgb(8_7_6/.2)_100%),linear-gradient(180deg,rgb(8_7_6/.18)_0%,rgb(8_7_6/.72)_100%)]" />
 
       <Container className="relative flex min-h-[92svh] items-center py-24 sm:py-32">
@@ -269,7 +251,10 @@ export function FounderStorySection({ content, locale }: PremiumStorefrontPagePr
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
+          <p className="font-serif text-4xl leading-none text-[#d6b75b] sm:text-6xl">
+            Maison Fondjo
+          </p>
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
             {t(content.founder.eyebrow, locale)}
           </p>
           <h2 className="mt-6 max-w-3xl font-serif text-5xl font-light leading-[1.08] text-[#f6f0e4] sm:text-7xl lg:text-8xl">
@@ -316,22 +301,22 @@ export function IngredientCarousel({
           <p className="mt-5 max-w-2xl text-sm leading-8 text-[#f6f0e4]/65">{copy.formulaBody}</p>
         </FadeUp>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div
+          className="mt-12 flex gap-4 overflow-x-auto pb-5 [scrollbar-color:#d6b75b_transparent] [scrollbar-width:thin]"
+          role="list"
+        >
           {ingredients.map((ingredient, index) => {
             const ingredientCopy = getFormulaIngredientCopy(ingredient, locale);
 
             return (
-              <motion.article
-                className="group relative min-h-[24rem] overflow-hidden rounded-sm border border-[#d6b75b]/46 bg-[#f6f0e4] p-6 text-[#14110b] shadow-[0_24px_80px_rgb(0_0_0/.2)]"
-                initial={{ opacity: 0, y: 18 }}
+              <article
+                className="group relative min-h-[23rem] w-[18rem] shrink-0 overflow-hidden rounded-sm border border-[#d6b75b]/46 bg-[#f6f0e4] p-6 text-[#14110b] shadow-[0_24px_80px_rgb(0_0_0/.2)] sm:w-[21rem]"
                 key={`${ingredientCopy.name}-${index}`}
-                transition={{ duration: 0.45, delay: index * 0.025, ease: [0.16, 1, 0.3, 1] }}
-                viewport={{ once: true, margin: "-12%" }}
-                whileInView={{ opacity: 1, y: 0 }}
+                role="listitem"
               >
                 <div aria-hidden="true" className="absolute inset-3 border border-[#d6b75b]/30" />
                 <div className="relative">
-                  <p className="text-center text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#7b622d]/80">
+                  <p className="text-center text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#5f4a22]">
                     Maison Fondjo Herbier
                   </p>
                   <EngravedBotanicalIllustration index={index} />
@@ -341,16 +326,18 @@ export function IngredientCarousel({
                   <p className="mt-2 text-center font-serif text-lg italic text-[#7b622d]">
                     {ingredient.latin}
                   </p>
-                  <div className="mx-auto mt-5 h-px w-24 bg-[#d6b75b]" />
+                  <div aria-hidden="true" className="mt-5 text-center text-[#d6b75b]">
+                    ◆
+                  </div>
                   <p className="mt-6 text-center text-sm leading-7 text-[#14110b]/70">
                     {ingredientCopy.chosenFor}
                   </p>
                 </div>
-              </motion.article>
+              </article>
             );
           })}
         </div>
-        <p className="mt-8 max-w-3xl text-xs leading-6 text-[#f6f0e4]/45">{formulaNoteText}</p>
+        <p className="mt-8 max-w-3xl text-xs leading-6 text-[#f6f0e4]/62">{formulaNoteText}</p>
       </Container>
     </section>
   );
@@ -411,7 +398,7 @@ export function RitualSection({ copy }: { copy: Copy }) {
     <section className="bg-[#100d0a] text-[#f6f0e4]" data-mobile-cta-section="ritual" id="ritual">
       <Container className="grid gap-0 px-0 lg:grid-cols-2" size="full">
         <ImagePanel
-          alt={copy.mediaAlts.nightRoutine}
+          alt={copy.mediaAlts.scalpRitual}
           className="relative min-h-[34rem] overflow-hidden"
           sizes="(min-width: 1024px) 50vw, 100vw"
           src={campaignImages.night}
@@ -424,6 +411,9 @@ export function RitualSection({ copy }: { copy: Copy }) {
             <h2 className="mt-4 font-serif text-[clamp(2.7rem,7vw,6rem)] font-light leading-[0.86]">
               {copy.ritualTitle}
             </h2>
+            <div aria-hidden="true" className="mt-7 text-lg text-[#d6b75b]">
+              ◆
+            </div>
             <p className="mt-6 text-sm leading-8 text-[#f6f0e4]/68">{copy.ritualBody}</p>
             <div className="mt-8 grid gap-4">
               {copy.ritualSteps.map((step, index) => (
@@ -445,18 +435,22 @@ export function RitualSection({ copy }: { copy: Copy }) {
 export function LifestyleGallery({ copy }: { copy: Copy }) {
   const moments = [
     {
+      image: campaignImages.night,
       text: copy.nightText,
       title: copy.nightTitle,
     },
     {
+      image: campaignImages.market,
       text: copy.marketText,
       title: copy.marketTitle,
     },
     {
+      image: campaignImages.barbershop,
       text: copy.barbershopText,
       title: copy.barbershopTitle,
     },
     {
+      image: campaignImages.family,
       text: copy.packingText,
       title: copy.packingTitle,
     },
@@ -477,24 +471,28 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
             {copy.lifestyleTitle}
           </h2>
         </FadeUp>
-        <div className="mt-12 grid gap-4 md:grid-cols-4">
+        <div aria-hidden="true" className="mt-7 text-lg text-[#7b622d]">
+          ◆
+        </div>
+        <div className="mt-12 grid gap-14">
           {moments.map((moment, index) => (
-            <FadeUp className={index % 2 === 1 ? "md:mt-10" : ""} key={moment.title}>
-              <article className="group rounded-sm border border-[#7b622d]/18 bg-white/42 p-3">
-                <div className="relative grid aspect-[4/5] place-items-center overflow-hidden rounded-sm border border-[#7b622d]/22 bg-[#14110b] text-[#f6f0e4]">
-                  <div aria-hidden="true" className="absolute inset-5 border border-[#d6b75b]/24" />
-                  <div className="relative px-5 text-center">
-                    <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#d6b75b]">
-                      {copy.textureTitle}
-                    </p>
-                    <p className="mt-4 font-serif text-3xl leading-none">{moment.title}</p>
-                    <p className="mt-5 text-xs uppercase tracking-[0.16em] text-[#f6f0e4]/48">
-                      {copy.textureText}
-                    </p>
-                  </div>
+            <FadeUp key={moment.title}>
+              <article className="grid gap-7 border-t border-[#7b622d]/18 pt-7 md:grid-cols-[minmax(0,0.82fr)_minmax(18rem,0.5fr)] md:items-end">
+                <ImagePanel
+                  alt={moment.title}
+                  className="relative min-h-[27rem] overflow-hidden bg-[#14110b]"
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  src={moment.image}
+                />
+                <div className={index % 2 === 1 ? "md:pb-16" : ""}>
+                  <p className="font-mono text-xs text-[#5f4a22]">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-4 max-w-md font-serif text-4xl leading-none sm:text-5xl">
+                    {moment.title}
+                  </h3>
+                  <p className="mt-5 max-w-md text-sm leading-7 text-[#14110b]/64">{moment.text}</p>
                 </div>
-                <h3 className="mt-4 font-serif text-3xl">{moment.title}</h3>
-                <p className="mt-2 text-sm leading-7 text-[#14110b]/64">{moment.text}</p>
               </article>
             </FadeUp>
           ))}
@@ -505,71 +503,36 @@ export function LifestyleGallery({ copy }: { copy: Copy }) {
 }
 
 export function ClosingChapter({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string }) {
-  const [consultationCard, shippingCard, supportCard] = copy.closingCards;
-  const actions = [
-    {
-      body: consultationCard?.[1] ?? "",
-      href: "/diagnostic",
-      icon: Sparkles,
-      title: consultationCard?.[0] ?? "",
-    },
-    {
-      body: shippingCard?.[1] ?? "",
-      href: "/policies/shipping",
-      icon: Truck,
-      title: shippingCard?.[0] ?? "",
-    },
-    {
-      body: supportCard?.[1] ?? "",
-      href: whatsappUrl,
-      icon: MessageCircle,
-      title: supportCard?.[0] ?? "",
-    },
-  ] as const;
-
   return (
     <section
-      className="relative overflow-hidden bg-[#080706] py-20 text-[#f6f0e4] sm:py-28"
+      className="relative overflow-hidden bg-[#080706] py-24 text-[#f6f0e4] sm:py-32"
       data-mobile-cta-section="contact"
       id="contact"
     >
-      <ImagePanel
-        alt={copy.mediaAlts.banner}
-        className="absolute inset-0 opacity-42"
-        sizes="100vw"
-        src={campaignImages.facebookCover}
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,#080706_0%,rgb(8_7_6/.74)_48%,#080706_100%),linear-gradient(180deg,rgb(8_7_6/.1),#080706_100%)]" />
       <Container className="relative">
-        <FadeUp className="max-w-4xl">
+        <FadeUp className="mx-auto max-w-4xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#d6b75b]">
             {copy.closingEyebrow}
           </p>
-          <h2 className="mt-4 max-w-3xl font-serif text-[clamp(3rem,8vw,7rem)] font-light leading-[0.86]">
+          <h2 className="mx-auto mt-5 max-w-3xl font-serif text-[clamp(3rem,8vw,7rem)] font-light leading-[0.86]">
             {copy.closingTitle}
           </h2>
-          <p className="mt-6 max-w-2xl text-sm leading-8 text-[#f6f0e4]/68">{copy.closingBody}</p>
+          <div aria-hidden="true" className="mt-7 text-lg text-[#d6b75b]">
+            ◆
+          </div>
+          <p className="mx-auto mt-7 max-w-2xl font-serif text-2xl leading-[1.45] text-[#f6f0e4]/76 sm:text-3xl">
+            {copy.closingBody}
+          </p>
+          <a
+            className="mt-10 inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#d6b75b] px-8 text-sm font-semibold text-[#080706] transition-transform duration-100 active:scale-[0.98]"
+            href={whatsappUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {copy.whatsapp}
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </a>
         </FadeUp>
-        <div className="mt-12 grid gap-3 lg:grid-cols-3">
-          {actions.map(({ body, href, icon: Icon, title }) => {
-            const external = href.startsWith("http");
-
-            return (
-              <a
-                className="group min-h-48 rounded-md border border-[#d6b75b]/16 bg-[#080706]/72 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
-                href={href}
-                key={title}
-                rel={external ? "noreferrer" : undefined}
-                target={external ? "_blank" : undefined}
-              >
-                <Icon className="size-6 text-[#d6b75b]" aria-hidden="true" />
-                <h3 className="mt-6 font-serif text-3xl leading-none">{title}</h3>
-                <p className="mt-4 text-sm leading-7 text-[#f6f0e4]/62">{body}</p>
-                <span className="mt-6 block h-px bg-[linear-gradient(90deg,#d6b75b,transparent)] opacity-45 transition-opacity group-hover:opacity-90" />
-              </a>
-            );
-          })}
-        </div>
       </Container>
     </section>
   );
@@ -652,7 +615,8 @@ export function LuxuryFooter({
     <footer className="bg-[#080706] px-5 pb-28 pt-16 text-[#f6f0e4] md:pb-16">
       <Container className="grid gap-8 border-t border-[#d6b75b]/16 pt-10 md:grid-cols-[1fr_auto]">
         <div>
-          <p className="font-serif text-4xl text-[#d6b75b]">Maison Fondjo</p>
+          <p className="font-serif text-4xl text-[#d6b75b] md:hidden">MF</p>
+          <p className="hidden font-serif text-4xl text-[#d6b75b] md:block">Maison Fondjo</p>
           <p className="mt-2 text-sm font-semibold text-[#d6b75b]/82">{siteConfig.tagline}</p>
           <p className="mt-3 max-w-xl text-sm leading-7 text-[#f6f0e4]/58">
             {t(content.brandPositioning.primary, locale)}
@@ -686,14 +650,14 @@ function PremiumHeader({ copy }: { copy: Copy }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080706]/70 text-[#f6f0e4] backdrop-blur-xl">
       <Container className="flex h-20 items-center justify-between gap-4">
-        <a className="flex items-center gap-3" href="#hero">
+        <a aria-label="Maison Fondjo home" className="flex items-center gap-3" href="#hero">
           <span
             aria-hidden="true"
             className="grid size-9 place-items-center rounded-full border border-[#d6b75b]/35 bg-[#0f2415] font-serif text-xs text-[#d6b75b]"
           >
             MF
           </span>
-          <span>
+          <span className="hidden sm:block">
             <span className="block font-serif text-2xl leading-none text-[#d6b75b]">
               Maison Fondjo
             </span>
@@ -753,28 +717,57 @@ function PremiumHeader({ copy }: { copy: Copy }) {
 
 export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
   const { copy: localizedCopy, locale } = useI18n();
+  const [showNarrative, setShowNarrative] = useState(false);
   const copy = localizedCopy.home;
   const contentLocale: Locale = locale;
   const whatsappUrl = getWhatsAppUrl(content, contentLocale);
+
+  useEffect(() => {
+    if (showNarrative) {
+      return;
+    }
+
+    const reveal = () => {
+      window.clearTimeout(timer);
+      setShowNarrative(true);
+    };
+
+    const timer = window.setTimeout(reveal, 9000);
+    window.addEventListener("scroll", reveal, { once: true, passive: true });
+    window.addEventListener("pointerdown", reveal, { once: true, passive: true });
+    window.addEventListener("keydown", reveal, { once: true });
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", reveal);
+      window.removeEventListener("pointerdown", reveal);
+      window.removeEventListener("keydown", reveal);
+    };
+  }, [showNarrative]);
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#080706]">
       <PremiumHeader copy={copy} />
       <CinematicHero />
-      <ProductShowcase copy={copy} />
-      <OriginSection copy={copy} />
-      <FounderStorySection content={content} locale={contentLocale} />
-      <IngredientCarousel content={content} copy={copy} locale={contentLocale} />
-      <WhyItWorksSection copy={copy} />
-      <RitualSection copy={copy} />
-      <LifestyleGallery copy={copy} />
-      <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />
-      <LuxuryFooter
-        content={content}
-        copy={copy}
-        locale={contentLocale}
-        whatsappUrl={whatsappUrl}
-      />
+      <ProductShowcase copy={copy} whatsappUrl={whatsappUrl} />
+      {showNarrative ? (
+        <>
+          <OriginSection copy={copy} />
+          <FounderStorySection content={content} locale={contentLocale} />
+          <IngredientCarousel content={content} copy={copy} locale={contentLocale} />
+          <RitualSection copy={copy} />
+          <LifestyleGallery copy={copy} />
+          <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />
+          <LuxuryFooter
+            content={content}
+            copy={copy}
+            locale={contentLocale}
+            whatsappUrl={whatsappUrl}
+          />
+        </>
+      ) : (
+        <div aria-hidden="true" className="h-px bg-[#080706]" />
+      )}
     </main>
   );
 }

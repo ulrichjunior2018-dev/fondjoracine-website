@@ -60,7 +60,7 @@ export const fr = {
     banner: "Bannière de campagne Maison Fondjo à Buea",
     backLabel: "Étiquette arrière du flacon Sève Racine",
     frontLabel: "Étiquette avant du flacon Sève Racine",
-    nightRoutine: "Sève Racine dans une scène de soin du soir à Buea",
+    scalpRitual: "Sève Racine appliquée directement sur le cuir chevelu à Buea",
     origin: "Paysage de Buea et du Mont Cameroun pour Maison Fondjo",
     product: "Flacon Sève Racine en studio noir réfléchissant",
   },

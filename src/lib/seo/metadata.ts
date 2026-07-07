@@ -20,13 +20,12 @@ export const defaultMetadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     locale: siteConfig.locale,
-    // facebook-cover.png: 1640×624 — close to recommended OG 1.91:1 ratio
     images: [
       {
-        url: `${siteConfig.url}/images/facebook-cover.png`,
-        width: 1640,
-        height: 624,
-        alt: "Maison Fondjo — Sève Racine 100ml botanical hair oil born in Buea, Cameroon",
+        url: `${siteConfig.url}/images/wordmark-lockup.png`,
+        width: 1254,
+        height: 1254,
+        alt: "Maison Fondjo wordmark lockup on black",
       },
     ],
   },

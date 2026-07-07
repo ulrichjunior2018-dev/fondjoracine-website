@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 type CursorState = "default" | "hover";
 
@@ -26,12 +25,9 @@ export function CustomCursor() {
     getPointerSnapshot,
     getServerPointerSnapshot,
   );
+  const dotRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<CursorState>("default");
-  const rawX = useMotionValue(-100);
-  const rawY = useMotionValue(-100);
-  const dotX = useTransform(rawX, (v) => v - 3.5);
-  const dotY = useTransform(rawY, (v) => v - 3.5);
 
   useEffect(() => {
     if (isTouch) return;
@@ -39,8 +35,11 @@ export function CustomCursor() {
     document.documentElement.classList.add("custom-cursor-active");
 
     function onMove(e: MouseEvent) {
-      rawX.set(e.clientX);
-      rawY.set(e.clientY);
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${e.clientX - 3.5}px, ${e.clientY - 3.5}px, 0) scale(${
+          state === "hover" ? 1.7 : 1
+        })`;
+      }
       if (!visible) setVisible(true);
     }
 
@@ -92,20 +91,19 @@ export function CustomCursor() {
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
     };
-  }, [isTouch, rawX, rawY, visible]);
+  }, [isTouch, state, visible]);
 
   if (isTouch) return null;
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]">
-      <motion.div
-        animate={{
+      <div
+        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#d6b75b] opacity-0 shadow-[0_0_14px_rgb(214_183_91/.28)] transition-[opacity,transform] duration-100 ease-out"
+        ref={dotRef}
+        style={{
           opacity: visible ? 1 : 0,
-          scale: state === "hover" ? 1.7 : 1,
+          transform: `translate3d(-100px, -100px, 0) scale(${state === "hover" ? 1.7 : 1})`,
         }}
-        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#d6b75b] shadow-[0_0_14px_rgb(214_183_91/.28)]"
-        style={{ x: dotX, y: dotY }}
-        transition={{ duration: 0.1, ease: "easeOut" }}
       />
     </div>
   );

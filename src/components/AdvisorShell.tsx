@@ -29,7 +29,7 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
             >
               MF
             </span>
-            <span>
+            <span className="hidden sm:block">
               <span className="block font-serif text-2xl leading-none text-[#d6b75b]">
                 Maison Fondjo
               </span>
@@ -63,7 +63,10 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
       {children}
       <footer className="border-t border-[#d6b75b]/14 bg-[#050504] px-4 py-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 text-sm text-[#f6f0e4]/58 md:flex-row md:items-center md:justify-between">
-          <p>{shell.footer}</p>
+          <p>
+            <span className="font-serif text-xl text-[#d6b75b] md:hidden">MF</span>
+            <span className="hidden md:inline">{shell.footer}</span>
+          </p>
           <nav className="flex flex-wrap gap-5">
             {advisorFooterLinks.map(([label, href]) => (
               <a className="transition-colors hover:text-[#d6b75b]" href={href} key={href}>

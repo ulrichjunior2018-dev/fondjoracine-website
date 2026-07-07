@@ -27,7 +27,7 @@ export const featuredProducts = [
     name: "Silk Repair Hair Masque",
     description: "A weekly cream masque that cushions strands with slip, softness, and resilience.",
     price: "$64",
-    image: "/images/night-routine.png",
+    image: "/images/lifestyle-scalp-ritual.png",
   },
 ] as const;
 
@@ -87,8 +87,8 @@ export const testimonials = [
 export const instagramGallery = [
   "/images/hero-origin.png",
   "/images/hair-texture-lifestyle.png",
-  "/images/night-routine.png",
-  "/images/packing-orders.png",
+  "/images/lifestyle-scalp-ritual.png",
+  "/images/lifestyle-diaspora-travel.png",
 ] as const;
 
 export const trustBadges = [

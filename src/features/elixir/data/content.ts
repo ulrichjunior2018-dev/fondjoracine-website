@@ -170,11 +170,11 @@ export type ElixirContent = {
 };
 
 const formulaImageFallbacks = [
-  siteImages.ingredientCastorOil,
-  siteImages.ingredientAvocadoOil,
-  siteImages.ingredientCoconutOil,
-  siteImages.ingredientOliveOil,
-  siteImages.ingredientJojobaOil,
+  siteImages.flatlayFormula,
+  siteImages.productMacro,
+  siteImages.originBueaHarvest,
+  siteImages.lifestyleScalpRitual,
+  siteImages.lifestyleMotherChild,
   siteImages.hairTextureLifestyle,
 ] as const;
 
@@ -212,18 +212,18 @@ export const defaultElixirContent: ElixirContent = {
             en: "Grooming and styling at a Cameroonian barbershop — hair texture detail",
             fr: "Coiffage et soin dans un salon camerounais — detail texture capillaire",
           },
-          height: 1300,
+          height: 1537,
           src: "/images/hair-texture-lifestyle.png",
-          width: 1800,
+          width: 1023,
         },
         before: {
           alt: {
             en: "Everyday market lifestyle scene in Buea, Cameroon — context for Maison Fondjo",
             fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie Maison Fondjo",
           },
-          height: 1300,
+          height: 1448,
           src: "/images/hero-origin.png",
-          width: 1800,
+          width: 1086,
         },
         caption: {
           en: "A guided routine designed to support scalp comfort, softness, and visible shine.",
@@ -238,18 +238,18 @@ export const defaultElixirContent: ElixirContent = {
             en: "Evening self-care ritual with Sève oil by candlelight — nighttime hair care routine",
             fr: "Rituel de soin du soir avec huile Seve a la bougie — routine capillaire nocturne",
           },
-          height: 1300,
-          src: "/images/night-routine.png",
-          width: 1800,
+          height: 1402,
+          src: "/images/lifestyle-scalp-ritual.png",
+          width: 1122,
         },
         before: {
           alt: {
             en: "Mount Cameroon and Buea landscape at dusk — origin of Maison Fondjo botanical sourcing",
             fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques Maison Fondjo",
           },
-          height: 1300,
+          height: 1448,
           src: "/images/hero-origin.png",
-          width: 1800,
+          width: 1086,
         },
         caption: {
           en: "Botanical care that helps hair look polished without a heavy finish.",
@@ -335,9 +335,9 @@ export const defaultElixirContent: ElixirContent = {
         en: "Mount Cameroon from Buea — the landscape where Maison Fondjo botanicals are sourced",
         fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques Maison Fondjo",
       },
-      height: 1300,
+      height: 1448,
       src: "/images/hero-origin.png",
-      width: 1800,
+      width: 1086,
     },
     intro: {
       en: "Fondjo is the family name. Racine means root. Together they set the discipline of Maison Fondjo: begin with the scalp, respect the material, and make every bottle with the restraint expected of something carrying a name.",
@@ -461,18 +461,18 @@ export const defaultElixirContent: ElixirContent = {
         en: "Sève Racine bottle front label",
         fr: "Etiquette avant du flacon Sève Racine",
       },
-      height: 1600,
+      height: 1448,
       src: "/images/front-label.png",
-      width: 1200,
+      width: 1086,
     },
     {
       alt: {
         en: "Sève Racine bottle back label — ingredients and directions",
         fr: "Etiquette arriere du flacon Sève Racine — ingredients et mode d emploi",
       },
-      height: 1600,
-      src: "/images/back-label.png",
-      width: 1200,
+      height: 1536,
+      src: "/images/bottle-back-label-v2.png",
+      width: 1024,
     },
   ],
   ingredientScience: {

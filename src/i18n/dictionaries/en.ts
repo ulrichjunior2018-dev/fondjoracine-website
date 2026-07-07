@@ -49,7 +49,7 @@ export const en = {
     banner: "Maison Fondjo campaign banner in Buea",
     backLabel: "Back label of the Sève Racine bottle",
     frontLabel: "Front label of the Sève Racine bottle",
-    nightRoutine: "Sève Racine in an evening care scene in Buea",
+    scalpRitual: "Sève Racine applied directly to the scalp in Buea",
     origin: "Buea and Mount Cameroon landscape for Maison Fondjo",
     product: "Sève Racine bottle in a reflective black studio",
   },
