@@ -774,7 +774,7 @@ export const defaultElixirContent: ElixirContent = {
       "Hello Maison Fondjo, I want a free hair diagnosis for breakage, slow growth, dryness, or thinning. Please help me start the Sève Racine routine.",
       "Bonjour Maison Fondjo, je veux un diagnostic gratuit pour casse, pousse lente, secheresse ou zones clairsemees. Aidez-moi a commencer le plan Sève Racine.",
     ),
-    phone: "+19295046726",
+    phone: "+237682109136",
   },
 };
 
