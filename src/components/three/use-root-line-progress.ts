@@ -2,6 +2,44 @@
 
 import { useEffect, useState } from "react";
 
+export const BRANCH_LO = 0.4;
+export const BRANCH_HI = 0.55;
+
+export const BRANCH_INGREDIENTS = [
+  "Menthe",
+  "Moringa",
+  "Graine noire",
+  "Laurier",
+  "Ricin",
+  "Coco",
+  "Olive",
+  "Amande douce",
+  "Avocat",
+  "Argan",
+  "Jojoba",
+] as const;
+
+/** Triangle envelope: 0 at BRANCH_LO, peak 1 at midpoint, 0 at BRANCH_HI */
+export function getBranchPhase(progress: number): number {
+  if (progress <= BRANCH_LO || progress >= BRANCH_HI) return 0;
+  const mid = (BRANCH_LO + BRANCH_HI) / 2;
+  return progress <= mid
+    ? (progress - BRANCH_LO) / (mid - BRANCH_LO)
+    : 1 - (progress - mid) / (BRANCH_HI - mid);
+}
+
+/**
+ * Per-node opacity: staggered entry (nodes reveal sequentially),
+ * uniform exit (all retract together).
+ */
+export function getNodePhase(progress: number, phase: number, index: number): number {
+  const mid = (BRANCH_LO + BRANCH_HI) / 2;
+  if (progress <= mid) {
+    return Math.max(0, Math.min(1, (phase - index * 0.06) / 0.35));
+  }
+  return phase;
+}
+
 type ProgressTarget = {
   current: HTMLElement | null;
 };

@@ -343,7 +343,7 @@ export const defaultElixirContent: ElixirContent = {
       en: "Fondjo is the family name. Racine means root. Together they set the discipline of Maison Fondjo: begin with the scalp, respect the material, and make every bottle with the restraint expected of something carrying a name.",
       fr: "Fondjo est le nom de famille. Racine signifie racine. Ensemble, ils donnent la discipline de Maison Fondjo : commencer par le cuir chevelu, respecter la matiere et fabriquer chaque flacon avec la retenue qu'exige un nom.",
     },
-    name: "Fondjo Ulrich — Fondateur / Fondjo Clarisse — Co-fondatrice",
+    name: "La famille Fondjo",
     signature: {
       en: "Buea is not decoration in this story. It is the place where the product is made, tested, handled, and held to a standard.",
       fr: "Buea n'est pas un decor dans cette histoire. C'est le lieu ou le produit est fabrique, teste, manipule et tenu a une exigence.",

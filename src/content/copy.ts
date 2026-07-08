@@ -437,7 +437,7 @@ const homeFr = {
     trustLabel: "Repères du coffret Maison Fondjo",
     trustItems: [
       ["Coffret numéroté", "Lot Fondateur 2026, 200 exemplaires"],
-      ["Ligne signature", "Fondjo Ulrich / Fondjo Clarisse"],
+      ["Ligne signature", "La famille Fondjo"],
       ["Marques paiement", "MTN Mobile Money + Orange Money"],
     ],
   },
@@ -469,7 +469,7 @@ const homeEn = {
     trustLabel: "Maison Fondjo box trust signals",
     trustItems: [
       ["Numbered box", "Founder Batch 2026, 200 pieces"],
-      ["Founder signature", "Fondjo Ulrich / Fondjo Clarisse"],
+      ["Founder signature", "The Fondjo family"],
       ["Payment marks", "MTN Mobile Money + Orange Money"],
     ],
   },
