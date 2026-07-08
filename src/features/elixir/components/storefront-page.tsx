@@ -779,7 +779,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
         <footer className="border-t border-border bg-[#07150b] py-8 text-[#F7F4EB]/70">
           <Container className="flex flex-col gap-5 text-sm sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-semibold tracking-[0.18em] text-[#D4AF37]">Maison Fondjo</p>
+              <p className="font-semibold tracking-[0.18em] text-[#B8935A]">Maison Fondjo</p>
               <p className="mt-2 text-xs leading-5">Enracinée dans la nature. Faite pour durer.</p>
             </div>
             <nav className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold">
@@ -790,7 +790,7 @@ export function StorefrontPage({ content, locale }: StorefrontPageProps) {
                 ["Returns", "/policies/returns"],
                 ["Delivery", "/policies/shipping"],
               ].map(([label, href]) => (
-                <Link className="hover:text-[#D4AF37]" href={href as Route} key={href}>
+                <Link className="hover:text-[#B8935A]" href={href as Route} key={href}>
                   {label}
                 </Link>
               ))}

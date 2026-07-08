@@ -11,6 +11,7 @@ export const en = {
   ],
   closingEyebrow: "Next step",
   closingTitle: "Calm service. Clear decisions.",
+  buy: "Shop",
   contact: "Contact",
   coverEyebrow: "About Maison Fondjo",
   coverSubtitle: "Delivery in Cameroon. Direct assistance.",

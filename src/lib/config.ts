@@ -26,19 +26,18 @@ export const config = {
         consultation: "Hello, I would like to book a Private Consultation.",
         diagnostic: (answers: string) =>
           `Hello 🌿 Here is my hair diagnostic:\n${answers}\nWhat do you recommend?`,
-        order: "Hello Maison Fondjo 🌿 I would like to order the Sève Racine box.",
+        order: "Hello, I would like to order Sève Racine (15 000 FCFA).",
         wholesale: "Hello, I am interested in the wholesale offer (MOQ 20).",
       },
       fr: {
         consultation: "Bonjour, je souhaite réserver une Consultation Privée.",
         diagnostic: (answers: string) =>
           `Bonjour 🌿 Voici mon diagnostic capillaire:\n${answers}\nQue me conseillez-vous?`,
-        order: "Bonjour Maison Fondjo 🌿 Je souhaite commander le coffret Sève Racine.",
+        order: "Bonjour, je souhaite commander Sève Racine (15 000 FCFA).",
         wholesale: "Bonjour, je suis intéressé(e) par l'offre grossiste (MOQ 20).",
       },
     },
-    number:
-      process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "[CLARISSE_CAMEROON_NUMBER, format 2376XXXXXXXX]",
+    number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "237682109136",
   },
 } as const;
 

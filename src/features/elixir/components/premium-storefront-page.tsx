@@ -684,7 +684,7 @@ export function LuxuryFooter({
   );
 }
 
-function PremiumHeader({ copy }: { copy: Copy }) {
+function PremiumHeader({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -710,25 +710,26 @@ function PremiumHeader({ copy }: { copy: Copy }) {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="flex items-center gap-3">
           <a
-            className="inline-flex h-10 items-center rounded-md bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B]"
-            href="#contact"
+            className="inline-flex h-10 items-center rounded-sm bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href={whatsappUrl}
+            rel="noreferrer"
+            target="_blank"
           >
-            {copy.contact}
+            {copy.buy}
           </a>
+          <Button
+            aria-expanded={isOpen}
+            aria-label={isOpen ? copy.navigationClose : copy.navigationOpen}
+            className="border-white/12 bg-white/8 text-[#F5EFE3] lg:hidden"
+            onClick={() => setIsOpen((current) => !current)}
+            size="icon"
+            variant="secondary"
+          >
+            {isOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+          </Button>
         </div>
-
-        <Button
-          aria-expanded={isOpen}
-          aria-label={isOpen ? copy.navigationClose : copy.navigationOpen}
-          className="border-white/12 bg-white/8 text-[#F5EFE3] lg:hidden"
-          onClick={() => setIsOpen((current) => !current)}
-          size="icon"
-          variant="secondary"
-        >
-          {isOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-        </Button>
       </Container>
       {isOpen ? (
         <div className="absolute inset-x-3 top-24 z-50 border border-[#B8935A]/18 bg-[#0B0B0B]/96 p-3 shadow-[0_24px_80px_rgb(0_0_0/.5)] backdrop-blur-xl lg:hidden">
@@ -782,7 +783,7 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#0B0B0B]">
-      <PremiumHeader copy={copy} />
+      <PremiumHeader copy={copy} whatsappUrl={whatsappUrl} />
       <CinematicHero />
       <ProductShowcase copy={copy} whatsappUrl={whatsappUrl} />
       {showNarrative ? (

@@ -112,6 +112,14 @@ export function SeveRacineRouteSection() {
         </h1>
         <p className="mt-6 text-lg leading-8 text-[#F5EFE3]/68">{seveRacine.intro}</p>
         <p className="mt-7 font-mono text-2xl text-[#B8935A]">{advisorPricing.productXaf}</p>
+        <a
+          className="mt-6 inline-flex min-h-13 items-center justify-center rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+          href={whatsappUrl}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {seveRacine.cta}
+        </a>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           {seveRacine.steps.map((step, index) => (
             <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={step}>
@@ -154,14 +162,6 @@ export function SeveRacineRouteSection() {
             </div>
           ))}
         </div>
-        <a
-          className="mt-9 inline-flex min-h-13 items-center justify-center rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
-          href={whatsappUrl}
-          rel="noreferrer"
-          target="_blank"
-        >
-          {seveRacine.cta}
-        </a>
       </div>
     </section>
   );

@@ -4,7 +4,8 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 import { SceneGate } from "@/components/three/SceneGate";
-import { useCopy } from "@/lib/i18n-context";
+import { buildWaLink } from "@/lib/config";
+import { useCopy, useI18n } from "@/lib/i18n-context";
 import { siteImages } from "@/lib/site-images";
 
 type CinematicHeroProps = {
@@ -16,7 +17,10 @@ export function CinematicHero({
   consultationHref = "/diagnostic",
   productHref = "/seve-racine",
 }: CinematicHeroProps) {
-  const heroCopy = useCopy().home.hero;
+  const homeCopy = useCopy().home;
+  const heroCopy = homeCopy.hero;
+  const { locale } = useI18n();
+  const waOrderUrl = buildWaLink("order", "", locale);
 
   return (
     <section
@@ -58,16 +62,18 @@ export function CinematicHero({
           <div className="mt-8 grid gap-3 sm:inline-grid sm:grid-cols-2 md:mt-11">
             <a
               className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] shadow-[0_22px_80px_rgb(184_147_90/.24)] transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
-              href={consultationHref}
+              href={waOrderUrl}
+              rel="noreferrer"
+              target="_blank"
             >
-              {heroCopy.primary}
+              {homeCopy.buy}
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <a
               className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F5EFE3]/24 bg-[#0B0B0B]/28 px-7 text-sm font-semibold text-[#F5EFE3] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
-              href={productHref}
+              href={consultationHref}
             >
-              {heroCopy.secondary}
+              {heroCopy.primary}
             </a>
           </div>
         </div>

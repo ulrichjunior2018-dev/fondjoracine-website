@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 
-import { useCopy } from "@/lib/i18n-context";
+import { buildWaLink } from "@/lib/config";
+import { useCopy, useI18n } from "@/lib/i18n-context";
 
 type AdvisorShellProps = {
   children: React.ReactNode;
@@ -10,8 +11,10 @@ type AdvisorShellProps = {
 
 export function AdvisorShell({ children }: AdvisorShellProps) {
   const copy = useCopy();
+  const { locale } = useI18n();
   const shell = copy.home.shell;
   const advisorNav = copy.home.nav;
+  const waOrderUrl = buildWaLink("order", "", locale);
   const advisorFooterLinks = [
     [copy.grossistes.title, "/grossistes"],
     ["Contact", "/contact"],
@@ -46,10 +49,12 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
             ))}
           </nav>
           <a
-            className="inline-flex min-h-11 items-center justify-center rounded-sm bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
-            href="/diagnostic"
+            className="inline-flex min-h-11 items-center justify-center rounded-sm bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href={waOrderUrl}
+            rel="noreferrer"
+            target="_blank"
           >
-            {shell.cta}
+            {copy.home.buy}
           </a>
         </div>
         <nav className="flex gap-4 overflow-x-auto border-t border-[#B8935A]/10 px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 md:hidden">
