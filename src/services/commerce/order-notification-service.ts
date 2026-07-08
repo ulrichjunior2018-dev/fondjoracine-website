@@ -15,7 +15,7 @@ export type OrderNotificationPayload = {
   transactionReference?: string;
 };
 
-const DEFAULT_ADMIN_NOTIFICATION_EMAIL = "hello@fondjoracine.com";
+const DEFAULT_ADMIN_NOTIFICATION_EMAIL = "hello@maisonfondjo.com";
 
 function escapeHtml(value: string) {
   return value
@@ -130,7 +130,7 @@ function buildAdminNotificationHtml(payload: OrderNotificationPayload): string {
 
         <tr>
           <td style="padding:16px 32px;background:#f9fafb;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;font-size:12px;color:#9ca3af;">Maison Fondjo · fondjoracine.com · This notification was sent automatically when the order was created.</p>
+            <p style="margin:0;font-size:12px;color:#9ca3af;">Maison Fondjo · maisonfondjo.com · This notification was sent automatically when the order was created.</p>
           </td>
         </tr>
 
@@ -147,7 +147,7 @@ export async function queueOrderNotifications(payload: OrderNotificationPayload)
     return;
   }
 
-  const fromEmail = env.RESEND_FROM_EMAIL || "care@fondjoracine.com";
+  const fromEmail = env.RESEND_FROM_EMAIL || "care@maisonfondjo.com";
   const adminEmail = env.ADMIN_EMAIL || DEFAULT_ADMIN_NOTIFICATION_EMAIL;
 
   try {
