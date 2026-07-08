@@ -44,12 +44,12 @@ export function IngredientGallery({ content, locale }: IngredientGalleryProps) {
     : content.ingredientScience.title.en;
 
   return (
-    <section className="bg-[#080706] px-5 py-16 text-[#f6f0e4] sm:px-8 lg:px-12" id="ingredients">
+    <section className="bg-[#0B0B0B] px-5 py-16 text-[#F5EFE3] sm:px-8 lg:px-12" id="ingredients">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d6b75b]">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
           {eyebrow}
         </p>
-        <h2 className="mt-3 max-w-3xl font-serif text-4xl font-light leading-tight text-[#f6f0e4] sm:text-6xl">
+        <h2 className="mt-3 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-6xl">
           {title}
         </h2>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -59,14 +59,14 @@ export function IngredientGallery({ content, locale }: IngredientGalleryProps) {
 
             return (
               <motion.article
-                className="relative min-h-[22rem] overflow-hidden rounded-sm border border-[#d6b75b]/46 bg-[#f6f0e4] p-6 text-[#14110b]"
+                className="relative min-h-[22rem] overflow-hidden rounded-sm border border-[#B8935A]/46 bg-[#F5EFE3] p-6 text-[#0B0B0B]"
                 initial={{ opacity: 0, y: 16 }}
                 key={ingredient.latin}
                 transition={{ duration: 0.42, delay: index * 0.02 }}
                 viewport={{ once: true, margin: "-12%" }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                <div aria-hidden="true" className="absolute inset-3 border border-[#d6b75b]/28" />
+                <div aria-hidden="true" className="absolute inset-3 border border-[#B8935A]/28" />
                 <div className="relative text-center">
                   <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#7b622d]/80">
                     Maison Fondjo Herbier
@@ -76,8 +76,8 @@ export function IngredientGallery({ content, locale }: IngredientGalleryProps) {
                   <p className="mt-2 font-serif text-lg italic text-[#7b622d]">
                     {ingredient.latin}
                   </p>
-                  <div className="mx-auto mt-5 h-px w-20 bg-[#d6b75b]" />
-                  <p className="mt-5 text-sm leading-7 text-[#14110b]/70">{note}</p>
+                  <div className="mx-auto mt-5 h-px w-20 bg-[#B8935A]" />
+                  <p className="mt-5 text-sm leading-7 text-[#0B0B0B]/70">{note}</p>
                 </div>
               </motion.article>
             );

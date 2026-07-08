@@ -52,7 +52,7 @@ const leafMaterial = new MeshStandardMaterial({
 });
 
 const goldMaterial = new MeshStandardMaterial({
-  color: "#c9a24b",
+  color: "#B8935A",
   emissive: "#251a05",
   metalness: 0.64,
   roughness: 0.26,
@@ -262,7 +262,7 @@ function MaisonScene({ isMobile, progress }: SceneProps) {
     <>
       <SceneCamera isMobile={isMobile} progress={progress} />
       <ambientLight color="#f5f0e6" intensity={0.38} />
-      <directionalLight color="#c9a24b" intensity={2.35} position={[2.2, 3.4, 2.8]} />
+      <directionalLight color="#B8935A" intensity={2.35} position={[2.2, 3.4, 2.8]} />
       <pointLight color="#0e2a1c" intensity={3.2} position={[-2.4, 1.8, 1.4]} />
       <VolcanicSoil />
       <DustField isMobile={isMobile} progress={progress} />

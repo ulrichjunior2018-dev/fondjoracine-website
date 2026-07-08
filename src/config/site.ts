@@ -8,5 +8,5 @@ export const siteConfig = {
   description:
     "Maison Fondjo presents Sève Racine, a 100ml botanical hair oil born in Buea with 11 botanicals and Cameroon delivery.",
   locale: "en_US",
-  twitterHandle: "@fondjoracine",
+  twitterHandle: "@maison.fondjo",
 } as const;

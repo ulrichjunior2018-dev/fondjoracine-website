@@ -176,7 +176,7 @@ export function WebGLHeroEnhancement() {
       </div>
       <button
         aria-label={soundOn ? "Turn ambient sound off" : "Turn ambient sound on"}
-        className="pointer-events-auto absolute right-4 top-24 inline-flex size-10 items-center justify-center rounded-full border border-[#D4AF37]/30 bg-[#0D0D0D]/52 text-[#D4AF37] shadow-[0_18px_60px_rgb(0_0_0/.35)] backdrop-blur-md transition-transform duration-100 ease-out hover:scale-105 active:scale-[0.98] md:right-8 md:top-28"
+        className="pointer-events-auto absolute right-4 top-24 inline-flex size-10 items-center justify-center rounded-full border border-[#B8935A]/30 bg-[#0B0B0B]/52 text-[#B8935A] shadow-[0_18px_60px_rgb(0_0_0/.35)] backdrop-blur-md transition-transform duration-100 ease-out hover:scale-105 active:scale-[0.98] md:right-8 md:top-28"
         onClick={toggleSound}
         type="button"
       >

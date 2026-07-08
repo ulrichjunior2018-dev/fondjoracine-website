@@ -44,7 +44,7 @@ export function RootLineFallback({
       <path
         d="M79 545 C 138 476, 120 382, 199 330 C 254 294, 306 318, 336 251 C 365 188, 415 139, 548 92"
         pathLength={pathLength}
-        stroke="#C9A24B"
+        stroke="#B8935A"
         strokeDasharray={pathLength}
         strokeDashoffset={dashOffset}
         strokeLinecap="round"

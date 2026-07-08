@@ -12,7 +12,7 @@ export function LanguageToggle() {
   return (
     <div
       aria-label={copy.home.language.toggleLabel}
-      className="fixed right-4 top-5 z-[70] inline-flex rounded-full border border-[#d6b75b]/24 bg-[#080706]/88 p-1 text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#f6f0e4] shadow-[0_18px_60px_rgb(0_0_0/.32)] backdrop-blur-xl sm:text-[0.68rem] sm:tracking-[0.16em] md:right-5 md:top-5"
+      className="fixed right-4 top-5 z-[70] inline-flex rounded-full border border-[#B8935A]/24 bg-[#0B0B0B]/88 p-1 text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#F5EFE3] shadow-[0_18px_60px_rgb(0_0_0/.32)] backdrop-blur-xl sm:text-[0.68rem] sm:tracking-[0.16em] md:right-5 md:top-5"
       role="group"
     >
       {labels.map((item) => {
@@ -26,8 +26,8 @@ export function LanguageToggle() {
             onClick={() => setLocale(item.value)}
             type="button"
           >
-            {isActive ? <span className="absolute inset-0 rounded-full bg-[#d6b75b]" /> : null}
-            <span className={`relative z-10 ${isActive ? "text-[#080706]" : "text-[#f6f0e4]/70"}`}>
+            {isActive ? <span className="absolute inset-0 rounded-full bg-[#B8935A]" /> : null}
+            <span className={`relative z-10 ${isActive ? "text-[#0B0B0B]" : "text-[#F5EFE3]/70"}`}>
               {item.label}
             </span>
           </button>

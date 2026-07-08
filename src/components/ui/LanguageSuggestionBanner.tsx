@@ -41,19 +41,19 @@ export function LanguageSuggestionBanner() {
   }
 
   return (
-    <div className="fixed inset-x-0 top-0 z-[80] border-b border-[#d6b75b]/30 bg-[#f6f0e4] px-4 py-3 text-[#080706] shadow-[0_12px_40px_rgb(0_0_0/.18)]">
+    <div className="fixed inset-x-0 top-0 z-[80] border-b border-[#B8935A]/30 bg-[#F5EFE3] px-4 py-3 text-[#0B0B0B] shadow-[0_12px_40px_rgb(0_0_0/.18)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-center">
         <span className="font-serif text-base">{bannerCopy.bannerText}</span>
         <div className="flex flex-wrap items-center gap-2">
           <button
-            className="rounded-full bg-[#080706] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#d6b75b]"
+            className="rounded-full bg-[#0B0B0B] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#B8935A]"
             onClick={acceptFrench}
             type="button"
           >
             {bannerCopy.bannerAccept}
           </button>
           <button
-            className="inline-flex items-center gap-1 rounded-full border border-[#080706]/18 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em]"
+            className="inline-flex items-center gap-1 rounded-full border border-[#0B0B0B]/18 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em]"
             onClick={keepEnglish}
             type="button"
           >

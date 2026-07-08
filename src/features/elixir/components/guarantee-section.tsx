@@ -85,7 +85,7 @@ function AnimatedRingCounter({
           cy={RING_CY}
           r={RING_R}
           fill="none"
-          stroke="#c8a951"
+          stroke="#B8935A"
           strokeWidth="2"
           strokeLinecap="round"
           initial={{ pathLength: skipAnimation ? 1 : 0 }}
@@ -96,7 +96,7 @@ function AnimatedRingCounter({
 
       {/* Centered number display */}
       <div className="relative text-center" aria-label="60 days">
-        <span className="block font-serif text-[3.5rem] font-light leading-none text-[#c8a951]">
+        <span className="block font-serif text-[3.5rem] font-light leading-none text-[#B8935A]">
           {count}
         </span>
         <span className="mt-1 block text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-foreground/48">
@@ -157,7 +157,7 @@ function StepCard({
         <motion.path
           d={BORDER_PATH}
           fill="none"
-          stroke="#c8a951"
+          stroke="#B8935A"
           strokeWidth="1.5"
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
@@ -172,7 +172,7 @@ function StepCard({
       </svg>
 
       {/* Step number */}
-      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-[#c8a951]/52">
+      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-[#B8935A]/52">
         {String(index + 1).padStart(2, "0")}
       </p>
 
@@ -228,7 +228,7 @@ export function GuaranteeSection({ content, locale }: GuaranteeSectionProps) {
             {/* Eyebrow */}
             <motion.p
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              className="text-xs font-semibold uppercase tracking-[0.22em] text-[#c8a951]"
+              className="text-xs font-semibold uppercase tracking-[0.22em] text-[#B8935A]"
               initial={{ opacity: 0, y: 8 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >

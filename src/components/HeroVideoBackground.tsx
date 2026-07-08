@@ -61,7 +61,7 @@ export function HeroVideoBackground({
     !prefersReducedMotion && !videoFailed && (desktopVideoSrc || mobileVideoSrc);
 
   return (
-    <div aria-hidden="true" className="absolute inset-0 overflow-hidden bg-[#0D0D0D]">
+    <div aria-hidden="true" className="absolute inset-0 overflow-hidden bg-[#0B0B0B]">
       {canRenderVideo && desktopVideoSrc ? (
         <video
           autoPlay

@@ -78,7 +78,7 @@ function buildAdminNotificationHtml(payload: OrderNotificationPayload): string {
 
         <tr>
           <td style="background:#0a0905;padding:24px 32px;">
-            <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#c8a951;">Maison Fondjo</p>
+            <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#B8935A;">Maison Fondjo</p>
             <h1 style="margin:8px 0 0;font-size:20px;font-weight:600;color:#f5f0e8;">New Order — ${safePayload.orderNumber}</h1>
           </td>
         </tr>
@@ -118,7 +118,7 @@ function buildAdminNotificationHtml(payload: OrderNotificationPayload): string {
             <table cellpadding="0" cellspacing="0" style="margin-top:32px;">
               <tr>
                 <td style="padding-right:12px;">
-                  <a href="${adminUrl}" style="display:inline-block;background:#c8a951;color:#0a0905;padding:12px 20px;text-decoration:none;border-radius:6px;font-weight:700;font-size:14px;">Verify in Admin Dashboard →</a>
+                  <a href="${adminUrl}" style="display:inline-block;background:#B8935A;color:#0a0905;padding:12px 20px;text-decoration:none;border-radius:6px;font-weight:700;font-size:14px;">Verify in Admin Dashboard →</a>
                 </td>
                 <td>
                   <a href="${safePayload.confirmationUrl}" style="display:inline-block;color:#6b7280;padding:12px 4px;text-decoration:underline;font-size:14px;">View Confirmation Page</a>

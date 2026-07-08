@@ -133,25 +133,25 @@ export function DiagnosticQuiz() {
 
   return (
     <section className="mx-auto grid min-h-[calc(100svh-5rem)] w-full max-w-5xl content-center px-4 py-14 sm:px-6 lg:px-8">
-      <div className="mb-8 h-px overflow-hidden bg-[#f6f0e4]/12">
+      <div className="mb-8 h-px overflow-hidden bg-[#F5EFE3]/12">
         <div
-          className="h-full bg-[#d6b75b] transition-all duration-500"
+          className="h-full bg-[#B8935A] transition-all duration-500"
           style={{ width: `${((Object.keys(answers).length || 1) / questions.length) * 100}%` }}
         />
       </div>
 
       {!isComplete && currentQuestion ? (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.eyebrow}
           </p>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#f6f0e4] sm:text-6xl">
+          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-6xl">
             {currentQuestion.prompt}
           </h1>
           <div className="mt-9 grid gap-3 sm:grid-cols-2">
             {currentQuestion.options.map((option) => (
               <button
-                className="min-h-20 rounded-sm border border-[#d6b75b]/18 bg-white/[0.035] px-5 text-left text-base text-[#f6f0e4]/82 transition duration-100 hover:border-[#d6b75b]/45 hover:bg-[#d6b75b]/8 active:scale-[0.98]"
+                className="min-h-20 rounded-sm border border-[#B8935A]/18 bg-white/[0.035] px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
                 key={option.value}
                 onClick={() => choose(currentQuestion.id, option.value)}
                 type="button"
@@ -162,14 +162,14 @@ export function DiagnosticQuiz() {
           </div>
         </div>
       ) : (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#d6b75b]/18 bg-[#0d0d0d]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d6b75b]">
+        <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#B8935A]/18 bg-[#0B0B0B]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.nextStep}
           </p>
           <h1 className="mt-5 font-serif text-4xl font-light leading-tight sm:text-6xl">
             {hasSeriousSignal ? diagnostic.privateTitle : diagnostic.standardTitle}
           </h1>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#f6f0e4]/68">
+          <p className="mt-6 max-w-2xl text-base leading-8 text-[#F5EFE3]/68">
             {hasSeriousSignal
               ? diagnostic.privateBody.replace("{price}", advisorPricing.consultationCreditXaf)
               : diagnostic.standardBody
@@ -177,12 +177,12 @@ export function DiagnosticQuiz() {
                   .replace("{botanicalOne}", botanicalOne)
                   .replace("{botanicalTwo}", botanicalTwo)}
           </p>
-          <div className="mt-6 rounded-sm border border-[#d6b75b]/14 bg-white/[0.025] p-4 text-sm leading-7 text-[#f6f0e4]/68">
+          <div className="mt-6 rounded-sm border border-[#B8935A]/14 bg-white/[0.025] p-4 text-sm leading-7 text-[#F5EFE3]/68">
             {serializedAnswers}
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#d6b75b] px-6 text-sm font-semibold text-[#080706] transition-transform duration-100 active:scale-[0.98]"
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
               href={resultUrl}
               rel="noreferrer"
               target="_blank"
@@ -191,7 +191,7 @@ export function DiagnosticQuiz() {
               <MessageCircle className="size-4" aria-hidden="true" />
             </a>
             <button
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#f6f0e4]/16 px-6 text-sm font-semibold text-[#f6f0e4] transition-transform duration-100 active:scale-[0.98]"
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#F5EFE3]/16 px-6 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 active:scale-[0.98]"
               onClick={() => setAnswers({})}
               type="button"
             >

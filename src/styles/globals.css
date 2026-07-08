@@ -1,7 +1,3 @@
-@import "@fontsource/cormorant-garamond/300.css";
-@import "@fontsource/inter/300.css";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -10,26 +6,27 @@
   color-scheme: dark;
 
   /* ── Maison Fondjo brand tokens ──────────────────────────────── */
-  --fr-forest: #0e2a1c;
-  --fr-void: #07120c;
-  --fr-gold: #c9a24b;
-  --fr-ivory: #f5f0e6;
-  --fr-clay: #b5793f;
+  --fr-forest: #102018;
+  --fr-void: #0b0b0b;
+  --fr-gold: #b8935a;
+  --fr-ivory: #f5efe3;
+  --fr-clay: #9b7248;
 
-  --obsidian: #0a0905;
-  --obsidian-card: #0f0e0a;
-  --obsidian-raised: #161410;
-  --gold: #c8a951;
-  --gold-bright: #f0d860;
-  --gold-dark: #8c7435;
-  --gold-muted: #a08040;
-  --ivory: #f5f0e8;
-  --ivory-dim: #c8c0b0;
-  --ivory-ghost: #888070;
+  --obsidian: #0b0b0b;
+  --obsidian-card: #11100e;
+  --obsidian-raised: #171511;
+  --gold: #b8935a;
+  --gold-bright: #c9a24b;
+  --gold-dark: #7f633a;
+  --gold-muted: #9a7847;
+  --warm-cream: #e4d2b4;
+  --ivory: #f5efe3;
+  --ivory-dim: #d7c9b4;
+  --ivory-ghost: #958872;
   --green-whatsapp: #25d366;
 
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--fr-font-display), ui-serif, Georgia, serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --display-hero-size: clamp(64px, 10vw, 120px);
   --display-large-size: clamp(40px, 6vw, 72px);
@@ -66,14 +63,14 @@
   --space-128: 128px;
   --space-160: 160px;
 
-  --border-gold-hairline: 1px solid rgba(200, 169, 81, 0.15);
-  --border-gold-subtle: 1px solid rgba(200, 169, 81, 0.25);
-  --border-gold-medium: 1px solid rgba(200, 169, 81, 0.45);
-  --border-gold-strong: 1px solid rgba(200, 169, 81, 0.8);
+  --border-gold-hairline: 1px solid rgba(184, 147, 90, 0.15);
+  --border-gold-subtle: 1px solid rgba(184, 147, 90, 0.25);
+  --border-gold-medium: 1px solid rgba(184, 147, 90, 0.45);
+  --border-gold-strong: 1px solid rgba(184, 147, 90, 0.8);
 
-  --shadow-gold-glow-sm: 0 0 16px rgba(200, 169, 81, 0.2);
-  --shadow-gold-glow-md: 0 0 32px rgba(200, 169, 81, 0.3);
-  --shadow-gold-glow-lg: 0 0 64px rgba(200, 169, 81, 0.25);
+  --shadow-gold-glow-sm: 0 0 16px rgba(184, 147, 90, 0.2);
+  --shadow-gold-glow-md: 0 0 32px rgba(184, 147, 90, 0.3);
+  --shadow-gold-glow-lg: 0 0 64px rgba(184, 147, 90, 0.25);
   --shadow-elevation-sm: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-elevation-md: 0 8px 48px rgba(0, 0, 0, 0.5);
   --shadow-elevation-lg: 0 16px 80px rgba(0, 0, 0, 0.6);
@@ -90,12 +87,12 @@
   --surface: var(--obsidian-card);
   --surface-elevated: var(--obsidian-raised);
   --surface-muted: #1d1a14;
-  --surface-inverse: var(--ivory);
-  --border: rgba(200, 169, 81, 0.15);
-  --border-strong: rgba(200, 169, 81, 0.45);
+  --surface-inverse: var(--warm-cream);
+  --border: rgba(184, 147, 90, 0.15);
+  --border-strong: rgba(184, 147, 90, 0.45);
   --accent: var(--gold);
   --accent-foreground: var(--obsidian);
-  --accent-muted: rgba(200, 169, 81, 0.16);
+  --accent-muted: rgba(184, 147, 90, 0.16);
   --sage: #7da66f;
   --sage-muted: rgba(125, 166, 111, 0.18);
   --rose: #c89283;
@@ -108,7 +105,7 @@
   --success-muted: rgba(37, 211, 102, 0.14);
   --warning: var(--gold-bright);
   --warning-muted: rgba(240, 216, 96, 0.14);
-  --ring: var(--gold-bright);
+  --ring: var(--gold);
   --shadow-soft: var(--shadow-elevation-sm);
   --shadow-lifted: var(--shadow-elevation-md);
   --radius-xs: 0.25rem;
@@ -221,8 +218,8 @@ img {
 }
 
 ::selection {
-  background: rgba(200, 169, 81, 0.3);
-  color: #f5f0e8;
+  background: rgba(184, 147, 90, 0.3);
+  color: #f5efe3;
 }
 
 ::-webkit-scrollbar {
@@ -380,11 +377,58 @@ section[id] {
 @keyframes fondjoFloat {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(-0.4deg);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(0, -12px, 0) rotate(0.45deg);
+    transform: translate3d(0, -4px, 0);
   }
+}
+
+.fondjo-section-reveal {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 400ms var(--ease-luxury),
+    transform 400ms var(--ease-luxury);
+}
+
+.fondjo-section-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.fondjo-section-reveal > * {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 400ms var(--ease-luxury),
+    transform 400ms var(--ease-luxury);
+}
+
+.fondjo-section-reveal.is-visible > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.fondjo-section-reveal.is-visible > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+
+.fondjo-section-reveal.is-visible > *:nth-child(3) {
+  transition-delay: 120ms;
+}
+
+.fondjo-section-reveal.is-visible > *:nth-child(4) {
+  transition-delay: 180ms;
+}
+
+.fondjo-section-reveal.is-visible > *:nth-child(n + 5) {
+  transition-delay: 240ms;
+}
+
+.fondjo-idle-float {
+  animation: fondjoFloat 8s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes fondjoGlow {
@@ -407,5 +451,15 @@ section[id] {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .fondjo-section-reveal,
+  .fondjo-section-reveal > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .fondjo-idle-float {
+    animation: none !important;
   }
 }

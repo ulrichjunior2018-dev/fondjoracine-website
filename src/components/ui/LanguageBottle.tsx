@@ -18,7 +18,7 @@ export function LanguageBottle() {
   return (
     <button
       aria-label="Switch language / Changer de langue"
-      className="fixed bottom-4 right-4 z-[70] grid size-13 place-items-center rounded-full border border-[#d6b75b]/28 bg-[#080706]/82 shadow-[0_18px_60px_rgb(0_0_0/.38)] backdrop-blur-xl transition-transform duration-100 active:scale-[0.98] md:bottom-auto md:right-5 md:top-5"
+      className="fixed bottom-4 right-4 z-[70] grid size-13 place-items-center rounded-full border border-[#B8935A]/28 bg-[#0B0B0B]/82 shadow-[0_18px_60px_rgb(0_0_0/.38)] backdrop-blur-xl transition-transform duration-100 active:scale-[0.98] md:bottom-auto md:right-5 md:top-5"
       onClick={toggleLocale}
       onKeyDown={onKeyDown}
       type="button"
@@ -42,18 +42,18 @@ export function LanguageBottle() {
             <stop offset="1" stopColor="#9b7a28" />
           </linearGradient>
         </defs>
-        <path d="M16 3h8v9l3 4v7H13v-7l3-4V3Z" fill="#0b1b10" stroke="#d6b75b" />
+        <path d="M16 3h8v9l3 4v7H13v-7l3-4V3Z" fill="#0b1b10" stroke="#B8935A" />
         <path
           d="M11 22h18c3.1 0 5.6 2.5 5.6 5.6v20.1c0 4-3.2 7.3-7.3 7.3H12.7c-4 0-7.3-3.2-7.3-7.3V27.6C5.4 24.5 7.9 22 11 22Z"
           fill="url(#languageBottleGlass)"
-          stroke="#d6b75b"
+          stroke="#B8935A"
           strokeOpacity="0.74"
           strokeWidth="1.2"
         />
         <path d="M12 35h16v11H12z" fill="url(#languageBottleGold)" opacity="0.95" />
-        <path d="M14 8h12" stroke="#d6b75b" strokeWidth="1.1" />
+        <path d="M14 8h12" stroke="#B8935A" strokeWidth="1.1" />
         <text
-          fill="#080706"
+          fill="#0B0B0B"
           fontFamily="ui-sans-serif, system-ui, sans-serif"
           fontSize="6.6"
           fontWeight="700"

@@ -199,7 +199,7 @@ export function CheckoutTrustBar({
     <aside
       aria-label="Confiance paiement, livraison et assistance"
       className={cn(
-        "rounded-md border border-[#d6b75b]/18 bg-[#0b0906]/88 p-3 text-[#f6f0e4] shadow-[0_18px_70px_rgb(0_0_0/.22)] backdrop-blur-xl",
+        "rounded-md border border-[#B8935A]/18 bg-[#0b0906]/88 p-3 text-[#F5EFE3] shadow-[0_18px_70px_rgb(0_0_0/.22)] backdrop-blur-xl",
         compact ? "sm:p-3" : "sm:p-4",
         className,
       )}
@@ -207,29 +207,29 @@ export function CheckoutTrustBar({
       <div className="grid gap-3 md:grid-cols-[1.15fr_.85fr] md:items-start">
         <div className="grid gap-3">
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-full border border-[#d6b75b]/28 bg-[#d6b75b]/10 text-[#d6b75b]">
+            <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-full border border-[#B8935A]/28 bg-[#B8935A]/10 text-[#B8935A]">
               <Truck className="size-4" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-[#d6b75b]">
+              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-[#B8935A]">
                 Estimation livraison
               </p>
-              <p className="mt-1 text-sm leading-6 text-[#f6f0e4]/82">
+              <p className="mt-1 text-sm leading-6 text-[#F5EFE3]/82">
                 {geo.status === "loading"
                   ? "Verification de votre zone de livraison..."
                   : shipping.estimate}
               </p>
-              <p className="mt-1 text-xs leading-5 text-[#f6f0e4]/58">{shipping.notice}</p>
+              <p className="mt-1 text-xs leading-5 text-[#F5EFE3]/58">{shipping.notice}</p>
             </div>
           </div>
 
           <a
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-[#d6b75b]/24 bg-white/[0.04] px-4 text-sm font-semibold text-[#f6f0e4] transition-transform active:scale-[0.98]"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-[#B8935A]/24 bg-white/[0.04] px-4 text-sm font-semibold text-[#F5EFE3] transition-transform active:scale-[0.98]"
             href={whatsappUrl}
             rel="noreferrer"
             target="_blank"
           >
-            <MessageCircle className="size-4 text-[#d6b75b]" aria-hidden="true" />
+            <MessageCircle className="size-4 text-[#B8935A]" aria-hidden="true" />
             Assistance WhatsApp
           </a>
         </div>
@@ -237,18 +237,18 @@ export function CheckoutTrustBar({
         <div className="grid gap-3">
           <div className="grid gap-2">
             <PaymentRequestSlot />
-            <p className="text-sm leading-6 text-[#f6f0e4]/74">
+            <p className="text-sm leading-6 text-[#F5EFE3]/74">
               {stripePromise ? "Apple Pay / Google Pay apparait ici si disponible, " : ""}
               ou paiement par carte.
             </p>
             {shipping.isCameroon ? (
-              <p className="text-sm leading-6 text-[#f6f0e4]/74">
+              <p className="text-sm leading-6 text-[#F5EFE3]/74">
                 MTN Mobile Money et Orange Money sont disponibles au Cameroun.
               </p>
             ) : null}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#f6f0e4]/68 sm:grid-cols-4 md:grid-cols-2">
+          <div className="grid grid-cols-2 gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/68 sm:grid-cols-4 md:grid-cols-2">
             {[
               { icon: LockKeyhole, label: "SSL" },
               { icon: CreditCard, label: "Carte Stripe" },
@@ -259,7 +259,7 @@ export function CheckoutTrustBar({
                 className="inline-flex min-h-10 items-center gap-2 rounded-sm border border-white/10 bg-white/[0.035] px-3"
                 key={badge.label}
               >
-                <badge.icon className="size-3.5 text-[#d6b75b]" aria-hidden="true" />
+                <badge.icon className="size-3.5 text-[#B8935A]" aria-hidden="true" />
                 {badge.label}
               </span>
             ))}

@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Sève Racine par Maison Fondjo. Enracinée dans la nature. Faite pour durer.",
     start_url: "/",
     display: "standalone",
-    background_color: "#080706",
-    theme_color: "#080706",
+    background_color: "#0B0B0B",
+    theme_color: "#0B0B0B",
     icons: [
       {
         src: "/icon.svg",

@@ -240,7 +240,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
   return (
     <div className="grid gap-5">
-      <div className="h-1 overflow-hidden rounded-full bg-[#14110b]/10">
+      <div className="h-1 overflow-hidden rounded-full bg-[#0B0B0B]/10">
         <div
           className="h-full rounded-full bg-[#7b622d] transition-all duration-300"
           style={{ width: checkoutStep === 1 ? "50%" : "100%" }}
@@ -255,31 +255,31 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
                   {locale.startsWith("fr") ? "Etape 1" : "Etape 1"}
                 </p>
-                <h3 className="mt-3 text-2xl font-semibold text-[#14110b]">
+                <h3 className="mt-3 text-2xl font-semibold text-[#0B0B0B]">
                   {t(content.product.name, locale)}
                 </h3>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-[#14110b]/68">
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#0B0B0B]/68">
                   {t(content.product.description, locale)}
                 </p>
               </div>
               <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-[#7b622d]" aria-hidden="true" />
             </div>
 
-            <div className="rounded-md bg-[#f4eddf] p-5">
+            <div className="rounded-md bg-[#E4D2B4] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
                 {locale.startsWith("fr") ? "Prix" : "Prix"}
               </p>
-              <p className="mt-2 font-serif text-5xl font-light leading-none text-[#14110b]">
+              <p className="mt-2 font-serif text-5xl font-light leading-none text-[#0B0B0B]">
                 {displayedPrix}
               </p>
-              <p className="mt-3 text-sm leading-6 text-[#14110b]/64">
+              <p className="mt-3 text-sm leading-6 text-[#0B0B0B]/64">
                 {locale.startsWith("fr")
                   ? "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."
                   : "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."}
               </p>
             </div>
 
-            <div className="grid gap-3 text-sm leading-6 text-[#14110b]/70 sm:grid-cols-3">
+            <div className="grid gap-3 text-sm leading-6 text-[#0B0B0B]/70 sm:grid-cols-3">
               <p className="rounded-md border border-[#7b622d]/12 p-3">Rituel botanique</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">100ml</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">
@@ -288,7 +288,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             </div>
 
             <Button
-              className="min-h-14 w-full bg-[#14110b] text-[#f4eddf] hover:bg-[#2a2113]"
+              className="min-h-14 w-full bg-[#0B0B0B] text-[#E4D2B4] hover:bg-[#2a2113]"
               onClick={() => setCheckoutStep(2)}
               size="lg"
               trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
@@ -303,10 +303,10 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
                 {locale.startsWith("fr") ? "Etape 2" : "Etape 2"}
               </p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#14110b]">
+              <h3 className="mt-3 text-2xl font-semibold text-[#0B0B0B]">
                 {locale.startsWith("fr") ? "Contact et paiement" : "Contact et paiement"}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-[#14110b]/64">
+              <p className="mt-2 text-sm leading-6 text-[#0B0B0B]/64">
                 {locale.startsWith("fr")
                   ? "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."
                   : "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."}
@@ -387,7 +387,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             />
 
             <div className="grid gap-3">
-              <p className="text-sm font-semibold text-[#14110b]">
+              <p className="text-sm font-semibold text-[#0B0B0B]">
                 {locale.startsWith("fr") ? "Choisir le paiement" : "Choisir le paiement"}
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -399,8 +399,8 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                       aria-pressed={selected}
                       className={`min-h-28 rounded-md border p-4 text-left transition-colors ${
                         selected
-                          ? "border-[#7b622d] bg-[#f4eddf] text-[#14110b]"
-                          : "border-[#7b622d]/14 bg-white text-[#14110b] hover:bg-[#f9f3e6]"
+                          ? "border-[#7b622d] bg-[#E4D2B4] text-[#0B0B0B]"
+                          : "border-[#7b622d]/14 bg-white text-[#0B0B0B] hover:bg-[#f9f3e6]"
                       }`}
                       key={option.value}
                       onClick={() =>
@@ -415,7 +415,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                         {getPaymentIcon(option.icon)}
                         {option.label}
                       </span>
-                      <span className="mt-3 block text-xs leading-5 text-[#14110b]/64">
+                      <span className="mt-3 block text-xs leading-5 text-[#0B0B0B]/64">
                         {t(option.description, locale)}
                       </span>
                     </button>
@@ -423,7 +423,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 })}
               </div>
               {isManualPayment ? (
-                <p className="rounded-md bg-[#f4eddf] p-3 text-xs leading-5 text-[#14110b]/70">
+                <p className="rounded-md bg-[#E4D2B4] p-3 text-xs leading-5 text-[#0B0B0B]/70">
                   {locale.startsWith("fr")
                     ? "Mobile Money couvre MTN MoMo et Orange Money. Le numero de paiement est confirme sur WhatsApp."
                     : "Mobile Money couvre MTN MoMo et Orange Money. Le numero est confirme sur WhatsApp."}
@@ -439,7 +439,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
-                className="border-[#7b622d]/20 bg-transparent text-[#14110b] hover:bg-[#f4eddf]"
+                className="border-[#7b622d]/20 bg-transparent text-[#0B0B0B] hover:bg-[#E4D2B4]"
                 onClick={() => setCheckoutStep(1)}
                 type="button"
                 variant="secondary"
@@ -447,7 +447,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 {locale.startsWith("fr") ? "Retour" : "Retour"}
               </Button>
               <Button
-                className="min-h-14 flex-1 bg-[#14110b] text-[#f4eddf] hover:bg-[#2a2113]"
+                className="min-h-14 flex-1 bg-[#0B0B0B] text-[#E4D2B4] hover:bg-[#2a2113]"
                 isLoading={form.formState.isSubmitting}
                 size="lg"
                 trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}

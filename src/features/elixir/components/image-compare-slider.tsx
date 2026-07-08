@@ -15,7 +15,7 @@ const BLUR_URL =
 function SliderHandle() {
   return (
     // Gold circle with left/right chevrons indicating drag direction
-    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#c8a951] shadow-[0_4px_20px_rgb(0_0_0/.40)] ring-2 ring-[#c8a951]/30">
+    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#B8935A] shadow-[0_4px_20px_rgb(0_0_0/.40)] ring-2 ring-[#B8935A]/30">
       <ChevronLeft
         aria-hidden="true"
         className="absolute left-[5px] h-3.5 w-3.5 text-[#0a0905]"
@@ -187,7 +187,7 @@ export function ImageCompareSlider({
         {/* Vertical gold line */}
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 w-[2px] bg-[#c8a951]"
+          className="absolute inset-y-0 w-[2px] bg-[#B8935A]"
           style={{ left: "-1px" }}
         />
         {/* Grab handle */}

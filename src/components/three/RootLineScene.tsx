@@ -43,8 +43,8 @@ function RootTube({ onProgressChange }: Pick<RootLineSceneProps, "onProgressChan
   return (
     <mesh ref={meshRef} geometry={geometry}>
       <meshStandardMaterial
-        color="#C9A24B"
-        emissive="#4B3514"
+        color="#B8935A"
+        emissive="#3A2816"
         emissiveIntensity={0.38}
         metalness={0.62}
         roughness={0.34}

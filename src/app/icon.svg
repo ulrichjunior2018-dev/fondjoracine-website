@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#080706" />
-  <circle cx="256" cy="256" r="172" fill="#0f2415" stroke="#d6b75b" stroke-width="10" />
+  <rect width="512" height="512" rx="96" fill="#0B0B0B" />
+  <circle cx="256" cy="256" r="172" fill="#102018" stroke="#B8935A" stroke-width="10" />
   <text
     x="256"
     y="285"
-    fill="#d6b75b"
+    fill="#B8935A"
     font-family="Georgia, 'Times New Roman', serif"
     font-size="126"
     text-anchor="middle"

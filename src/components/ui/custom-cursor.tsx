@@ -98,7 +98,7 @@ export function CustomCursor() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]">
       <div
-        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#d6b75b] opacity-0 shadow-[0_0_14px_rgb(214_183_91/.28)] transition-[opacity,transform] duration-100 ease-out"
+        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#B8935A] opacity-0 shadow-[0_0_14px_rgb(184_147_90/.28)] transition-[opacity,transform] duration-100 ease-out"
         ref={dotRef}
         style={{
           opacity: visible ? 1 : 0,
