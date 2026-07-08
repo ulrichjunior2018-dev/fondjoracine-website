@@ -476,7 +476,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
           </p>
           <a
             className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-[#25d366] px-4 text-sm font-semibold text-white"
-            href={buildWaLink("order")}
+            href={buildWaLink("order", "", locale)}
             rel="noreferrer"
             target="_blank"
           >

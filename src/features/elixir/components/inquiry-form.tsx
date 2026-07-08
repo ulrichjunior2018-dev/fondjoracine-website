@@ -37,7 +37,7 @@ export function InquiryForm({ locale, productName, whatsappPhone }: InquiryFormP
     void locale;
     void productName;
     void whatsappPhone;
-    window.open(buildWaLink("order"), "_blank", "noopener,noreferrer");
+    window.open(buildWaLink("order", "", locale), "_blank", "noopener,noreferrer");
   }
 
   return (
