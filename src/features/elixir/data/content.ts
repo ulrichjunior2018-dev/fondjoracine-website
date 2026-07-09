@@ -636,7 +636,7 @@ export const defaultElixirContent: ElixirContent = {
   slug: "seve-hair-treatment-oil",
   socialLinks: {
     instagram: "https://www.instagram.com/maison.fondjo",
-    tiktok: "https://www.tiktok.com/@fondjoracine",
+    tiktok: "https://www.tiktok.com/@maison.fondjo",
   },
   testimonials: {
     eyebrow: {
