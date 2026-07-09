@@ -1,7 +1,11 @@
+import { config, formatXaf } from "@/lib/config";
 import { en as storefrontEn } from "@/i18n/dictionaries/en";
 import { fr as storefrontFr } from "@/i18n/dictionaries/fr";
 
 import { advisorCopy as advisorFr } from "./advisor-copy";
+
+const consultationPrice = formatXaf(config.pricing.consultation);
+const surMesurePrice = formatXaf(config.pricing.surMesure);
 
 const publicFr = {
   errors: {
@@ -442,13 +446,12 @@ const advisorEn = {
   surMesure: {
     body: "Bespoke care gives structure to needs that require more than a standard bottle. It makes Sève Racine accessible, and the private formula exceptional.",
     cta: "Request a consultation",
-    description:
-      "Maison Fondjo bespoke care in Buea: diagnostic, Private Consultation and 25 000 F formula.",
+    description: `Maison Fondjo bespoke care in Buea: diagnostic, Private Consultation and ${surMesurePrice} formula.`,
     eyebrow: "The premium ceiling",
     steps: [
       ["01", "Diagnostic", "Understand texture, rhythm, scalp and limits."],
-      ["02", "Consultation", "5 000 F, credited if the formula is prepared."],
-      ["03", "Formula", "Bespoke preparation at 25 000 F."],
+      ["02", "Consultation", `${consultationPrice}, credited if the formula is prepared.`],
+      ["03", "Formula", `Bespoke preparation at ${surMesurePrice}.`],
     ],
     title: "Diagnostic. Consultation. Formula.",
   },

@@ -186,8 +186,7 @@ export const advisorCopy = {
   surMesure: {
     body: "Le sur-mesure donne un cadre aux besoins qui demandent plus qu'un flacon standard. Il rend Sève Racine accessible, et la formule privée exceptionnelle.",
     cta: "Demander une consultation",
-    description:
-      "Sur-mesure Maison Fondjo à Buea : diagnostic, Consultation Privée et formule à 25 000 F.",
+    description: `Sur-mesure Maison Fondjo à Buea : diagnostic, Consultation Privée et formule à ${surMesurePrice}.`,
     eyebrow: "Le plafond premium",
     steps: [
       ["01", "Diagnostic", "Comprendre la texture, le rythme, le cuir chevelu et les limites."],
