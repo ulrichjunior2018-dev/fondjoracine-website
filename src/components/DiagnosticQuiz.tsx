@@ -1,6 +1,28 @@
 "use client";
 
-import { ArrowRight, ChevronRight, MessageCircle } from "lucide-react";
+import {
+  AlertCircle,
+  AlertOctagon,
+  AlertTriangle,
+  ArrowRight,
+  Check,
+  ChevronRight,
+  Clock3,
+  Clock9,
+  Droplet,
+  Droplets,
+  History,
+  Layers,
+  MessageCircle,
+  Minus,
+  Repeat,
+  Scissors,
+  Shuffle,
+  Sparkles,
+  Waves,
+  Wind,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
@@ -56,6 +78,33 @@ function getMainProblem(
 ) {
   return getAnswerLabel("objectif", answers, questions, fallback).toLowerCase();
 }
+
+const OPTION_ICONS: Record<string, LucideIcon> = {
+  // objectif
+  casse: Scissors,
+  secheresse: Droplet,
+  cuir_chevelu: AlertCircle,
+  chute_soudaine: Wind,
+  autre: MessageCircle,
+  // texture
+  naturels_4c: Sparkles,
+  boucles: Repeat,
+  ondules: Waves,
+  fins_lisses: Minus,
+  // routine
+  protective_styles: Layers,
+  wash_day: Droplets,
+  grooming: Scissors,
+  irreguliere: Shuffle,
+  // sensibilite
+  non: Check,
+  demangeaisons: AlertTriangle,
+  douleur_irritation: AlertOctagon,
+  // duree
+  moins_1_mois: Clock3,
+  "6_mois": Clock9,
+  plus_1_an: History,
+};
 
 function getRecommendationBotanicals(answers: Record<string, string>) {
   const problem = answers.objectif;
@@ -225,20 +274,28 @@ export function DiagnosticQuiz() {
             {currentQuestion.prompt}
           </h1>
           <div className="mt-9 grid gap-3 sm:grid-cols-2">
-            {currentQuestion.options.map((option) => (
-              <button
-                className="flex min-h-20 items-center justify-between rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
-                key={option.value}
-                onClick={() => handleOptionClick(currentQuestion.id, option.value)}
-                type="button"
-              >
-                {option.label}
-                <ChevronRight
-                  className="ml-3 size-5 shrink-0 text-[#B8935A]/60"
-                  aria-hidden="true"
-                />
-              </button>
-            ))}
+            {currentQuestion.options.map((option) => {
+              const OptionIcon = OPTION_ICONS[option.value];
+              return (
+                <button
+                  className="flex min-h-20 items-center justify-between rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
+                  key={option.value}
+                  onClick={() => handleOptionClick(currentQuestion.id, option.value)}
+                  type="button"
+                >
+                  <span className="flex items-center gap-3">
+                    {OptionIcon && (
+                      <OptionIcon aria-hidden className="shrink-0 text-[#B8935A]/70" size={18} />
+                    )}
+                    {option.label}
+                  </span>
+                  <ChevronRight
+                    className="ml-3 size-5 shrink-0 text-[#B8935A]/60"
+                    aria-hidden="true"
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : isComplete && !notesShown ? (
