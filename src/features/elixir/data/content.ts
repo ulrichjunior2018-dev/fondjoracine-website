@@ -222,7 +222,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie Maison Fondjo",
           },
           height: 1448,
-          src: "/images/hero-origin.png",
+          src: "/images/hero.png",
           width: 1086,
         },
         caption: {
@@ -248,7 +248,7 @@ export const defaultElixirContent: ElixirContent = {
             fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques Maison Fondjo",
           },
           height: 1448,
-          src: "/images/hero-origin.png",
+          src: "/images/hero.png",
           width: 1086,
         },
         caption: {
@@ -336,7 +336,7 @@ export const defaultElixirContent: ElixirContent = {
         fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques Maison Fondjo",
       },
       height: 1448,
-      src: "/images/hero-origin.png",
+      src: "/images/hero.png",
       width: 1086,
     },
     intro: {

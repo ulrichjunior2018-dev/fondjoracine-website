@@ -34,7 +34,7 @@ export const defaultMetadata: Metadata = {
     site: siteConfig.twitterHandle,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/images/studio-reflection.png`],
+    images: [`${siteConfig.url}/images/studio.png`],
   },
   robots: {
     index: isProduction,

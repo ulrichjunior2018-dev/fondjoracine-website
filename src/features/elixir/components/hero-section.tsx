@@ -76,7 +76,7 @@ export function HeroSection(_props: HeroSectionProps) {
     >
       {/* ── Split-screen video (50 / 50 desktop, stacked mobile) ──────── */}
       <div aria-hidden="true" className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2">
-        <VideoPanel poster="/images/hero-origin.png" side="left" />
+        <VideoPanel poster="/images/hero.png" side="left" />
         <VideoPanel poster="/images/hair-texture-lifestyle.png" side="right" />
       </div>
 

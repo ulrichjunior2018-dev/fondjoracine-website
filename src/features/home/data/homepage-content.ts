@@ -21,7 +21,7 @@ export const featuredProducts = [
     name: "Botanical Density Oil",
     description: "A featherweight oil blend for pre-wash massage and high-shine finishing.",
     price: "$72",
-    image: "/images/studio-reflection.png",
+    image: "/images/studio.png",
   },
   {
     name: "Silk Repair Hair Masque",
@@ -53,7 +53,7 @@ export const ingredients = [
 export const transformations = [
   {
     label: "Week 1",
-    image: "/images/hero-origin.png",
+    image: "/images/hero.png",
     caption: "A Buea origin image used as a temporary visual reference.",
   },
   {
@@ -85,7 +85,7 @@ export const testimonials = [
 ] as const;
 
 export const instagramGallery = [
-  "/images/hero-origin.png",
+  "/images/hero.png",
   "/images/hair-texture-lifestyle.png",
   "/images/lifestyle-scalp-ritual.png",
   "/images/lifestyle-diaspora-travel.png",
