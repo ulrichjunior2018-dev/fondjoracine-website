@@ -60,6 +60,7 @@ export const en = {
     ["Botanicals", "/botanique"],
     ["Sève Racine", "/seve-racine"],
     ["Bespoke", "/sur-mesure"],
+    ["Story", "/histoire"],
   ],
   navigationClose: "Close navigation",
   navigationOpen: "Open navigation",

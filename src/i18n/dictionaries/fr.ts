@@ -73,6 +73,7 @@ export const fr = {
     ["Botanique", "/botanique"],
     ["Sève Racine", "/seve-racine"],
     ["Sur-mesure", "/sur-mesure"],
+    ["Histoire", "/histoire"],
   ],
   nightText:
     "Quelques gouttes de Sève Racine chauffees dans les mains, puis travaillees lentement avant la fin du jour.",
