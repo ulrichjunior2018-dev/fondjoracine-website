@@ -12,13 +12,6 @@ export const advisorPricing = {
   wholesaleUnitXaf: formatXaf(config.pricing.wholesale),
 } as const;
 
-export const advisorNav = [
-  ["Diagnostic", "/diagnostic"],
-  ["Botanique", "/botanique"],
-  ["Sève Racine", "/seve-racine"],
-  ["Sur-mesure", "/sur-mesure"],
-] as const;
-
 export const advisorFooterLinks = [
   ["Grossistes", "/grossistes"],
   ["Contact", "/contact"],
