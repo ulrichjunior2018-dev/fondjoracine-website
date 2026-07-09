@@ -484,8 +484,8 @@ const homeFr = {
     secondary: "Découvrir Sève Racine",
     story: "Avant le flacon, nous commençons par vous écouter.",
     pending: "Photographie produit réelle en attente",
-    titleFirst: "Onze racines.",
-    titleSecond: "Une seule sève.",
+    titleFirst: "Racines fortes.",
+    titleSecond: "Cheveux forts.",
     titleThird: "",
     trustLabel: "Repères du coffret Maison Fondjo",
     trustItems: [
@@ -515,8 +515,8 @@ const homeEn = {
     secondary: "Discover Sève Racine",
     story: "Before the bottle, we begin by listening.",
     pending: "Real product photography pending",
-    titleFirst: "Eleven roots.",
-    titleSecond: "One sap.",
+    titleFirst: "Strong roots.",
+    titleSecond: "Strong hair.",
     titleThird: "",
     trustLabel: "Maison Fondjo box trust signals",
     trustItems: [
