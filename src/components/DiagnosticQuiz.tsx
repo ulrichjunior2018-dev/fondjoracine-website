@@ -79,6 +79,10 @@ export function DiagnosticQuiz() {
   const questions: readonly Question[] = diagnostic.questions;
   const fallbackAnswer = recommendation.fallbackAnswer;
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [pendingAutre, setPendingAutre] = useState(false);
+  const [autreText, setAutreText] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
+  const [notesShown, setNotesShown] = useState(false);
   const currentIndex = Math.min(Object.keys(answers).length, questions.length - 1);
   const isComplete = Object.keys(answers).length === questions.length;
   const currentQuestion = questions.find((_, index) => index === currentIndex);
@@ -95,6 +99,10 @@ export function DiagnosticQuiz() {
   const severityLabel = hasSeriousSignal
     ? recommendation.severityHigh
     : recommendation.severityStandard;
+  const concernText =
+    answers.objectif === "autre" && autreText
+      ? autreText
+      : getMainProblem(answers, questions, fallbackAnswer);
   const serializedAnswers = [
     `${recommendation.summaryHair}: ${getAnswerLabel("texture", answers, questions, fallbackAnswer)}`,
     `${recommendation.summaryScalp}: ${getAnswerLabel(
@@ -103,11 +111,7 @@ export function DiagnosticQuiz() {
       questions,
       fallbackAnswer,
     )}`,
-    `${recommendation.summaryConcern}: ${getMainProblem(
-      answers,
-      questions,
-      fallbackAnswer,
-    )}, ${getAnswerLabel("duree", answers, questions, fallbackAnswer)}`,
+    `${recommendation.summaryConcern}: ${concernText}, ${getAnswerLabel("duree", answers, questions, fallbackAnswer)}`,
     `${recommendation.summaryRoutine}: ${getAnswerLabel(
       "routine",
       answers,
@@ -117,12 +121,22 @@ export function DiagnosticQuiz() {
     `${recommendation.summarySeverity}: ${severityLabel}`,
   ].join(" / ");
   const [botanicalOne, botanicalTwo] = getRecommendationBotanicals(answers);
-  const standardRecommendation = `${serializedAnswers}\n${recommendation.recommendationLabel}: ${
-    recommendation.for
-  } ${getMainProblem(answers, questions, fallbackAnswer)}, ${recommendation.recommendationText
-    .replace("{botanicalOne}", botanicalOne)
-    .replace("{botanicalTwo}", botanicalTwo)}`;
-  const privateConsultationMessage = `${serializedAnswers}\n${recommendation.summaryDirection}: ${recommendation.privateDirection} (${advisorPricing.consultationCreditXaf} ${recommendation.credited}).`;
+  const standardRecommendation = [
+    serializedAnswers,
+    `${recommendation.recommendationLabel}: ${recommendation.for} ${concernText}, ${recommendation.recommendationText
+      .replace("{botanicalOne}", botanicalOne)
+      .replace("{botanicalTwo}", botanicalTwo)}`,
+    additionalNotes ? additionalNotes : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const privateConsultationMessage = [
+    serializedAnswers,
+    `${recommendation.summaryDirection}: ${recommendation.privateDirection} (${advisorPricing.consultationCreditXaf} ${recommendation.credited}).`,
+    additionalNotes ? additionalNotes : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
   const resultUrl = hasSeriousSignal
     ? buildWhatsAppUrl("consultation", privateConsultationMessage, locale)
     : buildWhatsAppUrl("diagnostic", standardRecommendation, locale);
@@ -131,16 +145,78 @@ export function DiagnosticQuiz() {
     setAnswers((current) => ({ ...current, [questionId]: value }));
   }
 
+  function handleOptionClick(questionId: string, value: string) {
+    if (questionId === "objectif" && value === "autre") {
+      setPendingAutre(true);
+    } else {
+      choose(questionId, value);
+    }
+  }
+
+  function confirmAutre() {
+    choose("objectif", "autre");
+    setPendingAutre(false);
+  }
+
+  function reset() {
+    setAnswers({});
+    setPendingAutre(false);
+    setAutreText("");
+    setAdditionalNotes("");
+    setNotesShown(false);
+  }
+
+  const progressSteps = pendingAutre
+    ? 1
+    : isComplete
+      ? questions.length
+      : Object.keys(answers).length || 1;
+
   return (
     <section className="mx-auto grid min-h-[calc(100svh-5rem)] w-full max-w-5xl content-center px-4 py-14 sm:px-6 lg:px-8">
       <div className="mb-8 h-px overflow-hidden bg-[#F5EFE3]/12">
         <div
           className="h-full bg-[#B8935A] transition-all duration-500"
-          style={{ width: `${((Object.keys(answers).length || 1) / questions.length) * 100}%` }}
+          style={{ width: `${(progressSteps / questions.length) * 100}%` }}
         />
       </div>
 
-      {!isComplete && currentQuestion ? (
+      {pendingAutre ? (
+        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
+            {diagnostic.eyebrow}
+          </p>
+          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-6xl">
+            {diagnostic.autrePrompt}
+          </h1>
+          <textarea
+            autoFocus
+            className="mt-9 w-full resize-none rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 py-4 text-base text-[#F5EFE3]/82 placeholder-[#F5EFE3]/30 outline-none focus:border-[#B8935A]/45"
+            onChange={(e) => setAutreText(e.target.value)}
+            placeholder={diagnostic.notesPlaceholder}
+            rows={4}
+            value={autreText}
+          />
+          <div className="mt-4 flex gap-3">
+            <button
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#F5EFE3]/16 px-6 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 active:scale-[0.98]"
+              onClick={() => setPendingAutre(false)}
+              type="button"
+            >
+              {diagnostic.autreBack}
+            </button>
+            <button
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98] disabled:opacity-40"
+              disabled={!autreText.trim()}
+              onClick={confirmAutre}
+              type="button"
+            >
+              {diagnostic.notesContinue}
+              <ChevronRight className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      ) : !isComplete && currentQuestion ? (
         <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.eyebrow}
@@ -153,7 +229,7 @@ export function DiagnosticQuiz() {
               <button
                 className="flex min-h-20 items-center justify-between rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
                 key={option.value}
-                onClick={() => choose(currentQuestion.id, option.value)}
+                onClick={() => handleOptionClick(currentQuestion.id, option.value)}
                 type="button"
               >
                 {option.label}
@@ -163,6 +239,33 @@ export function DiagnosticQuiz() {
                 />
               </button>
             ))}
+          </div>
+        </div>
+      ) : isComplete && !notesShown ? (
+        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
+            {diagnostic.eyebrow}
+          </p>
+          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
+            {diagnostic.notesPrompt}
+          </h1>
+          <textarea
+            autoFocus
+            className="mt-9 w-full resize-none rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 py-4 text-base text-[#F5EFE3]/82 placeholder-[#F5EFE3]/30 outline-none focus:border-[#B8935A]/45"
+            onChange={(e) => setAdditionalNotes(e.target.value)}
+            placeholder={diagnostic.notesPlaceholder}
+            rows={4}
+            value={additionalNotes}
+          />
+          <div className="mt-4">
+            <button
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
+              onClick={() => setNotesShown(true)}
+              type="button"
+            >
+              {diagnostic.notesContinue}
+              <ChevronRight className="size-4" aria-hidden="true" />
+            </button>
           </div>
         </div>
       ) : (
@@ -177,7 +280,7 @@ export function DiagnosticQuiz() {
             {hasSeriousSignal
               ? diagnostic.privateBody.replace("{price}", advisorPricing.consultationCreditXaf)
               : diagnostic.standardBody
-                  .replace("{problem}", getMainProblem(answers, questions, fallbackAnswer))
+                  .replace("{problem}", concernText)
                   .replace("{botanicalOne}", botanicalOne)
                   .replace("{botanicalTwo}", botanicalTwo)}
           </p>
@@ -196,7 +299,7 @@ export function DiagnosticQuiz() {
             </a>
             <button
               className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#F5EFE3]/16 px-6 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 active:scale-[0.98]"
-              onClick={() => setAnswers({})}
+              onClick={reset}
               type="button"
             >
               {diagnostic.redo}

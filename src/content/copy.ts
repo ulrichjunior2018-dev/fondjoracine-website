@@ -280,6 +280,11 @@ const advisorEn = {
   },
   diagnostic: {
     ...advisorFr.diagnostic,
+    autreBack: "← Back",
+    autrePrompt: "Describe what you're experiencing",
+    notesContinue: "Continue",
+    notesPlaceholder: "Optional",
+    notesPrompt: "Anything else you'd like us to know?",
     eyebrow: "Maison Fondjo diagnostic",
     nextStep: "Your next step",
     privateBody:
@@ -306,6 +311,11 @@ const advisorEn = {
             label: "Sudden shedding or sparse areas",
             severity: "serious",
             value: "chute_soudaine",
+          },
+          {
+            label: "Other — tell us",
+            severity: "serious",
+            value: "autre",
           },
         ],
       },

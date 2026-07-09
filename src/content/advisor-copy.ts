@@ -25,6 +25,11 @@ export const advisorCopy = {
     title: "Onze ingrédients. Un langage botanique précis.",
   },
   diagnostic: {
+    autreBack: "← Autre choix",
+    autrePrompt: "Décrivez ce que vous ressentez",
+    notesContinue: "Continuer",
+    notesPlaceholder: "Facultatif",
+    notesPrompt: "Autre chose à nous dire ?",
     eyebrow: "Diagnostic Maison Fondjo",
     nextStep: "Votre prochaine étape",
     privateBody:
@@ -51,6 +56,11 @@ export const advisorCopy = {
             label: "Chute soudaine ou zones clairsemées",
             severity: "serious",
             value: "chute_soudaine",
+          },
+          {
+            label: "Autre — dites-nous",
+            severity: "serious",
+            value: "autre",
           },
         ],
       },
