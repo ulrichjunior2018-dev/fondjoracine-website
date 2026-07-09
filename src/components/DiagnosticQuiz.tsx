@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, ChevronRight, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
@@ -151,12 +151,16 @@ export function DiagnosticQuiz() {
           <div className="mt-9 grid gap-3 sm:grid-cols-2">
             {currentQuestion.options.map((option) => (
               <button
-                className="min-h-20 rounded-sm border border-[#B8935A]/18 bg-white/[0.035] px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
+                className="flex min-h-20 items-center justify-between rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
                 key={option.value}
                 onClick={() => choose(currentQuestion.id, option.value)}
                 type="button"
               >
                 {option.label}
+                <ChevronRight
+                  className="ml-3 size-5 shrink-0 text-[#B8935A]/60"
+                  aria-hidden="true"
+                />
               </button>
             ))}
           </div>
