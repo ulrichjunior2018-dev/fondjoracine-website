@@ -1,10 +1,12 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 import { SceneGate } from "@/components/three/SceneGate";
 import { buildWaLink } from "@/lib/config";
 import { useCopy, useI18n } from "@/lib/i18n-context";
+import { siteImages } from "@/lib/site-images";
 
 type CinematicHeroProps = {
   consultationHref?: string;
@@ -22,6 +24,16 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
       data-mobile-cta-section="hero"
       id="hero"
     >
+      <Image
+        alt=""
+        className="object-cover object-center"
+        fill
+        priority
+        sizes="100vw"
+        src={siteImages.productMacro}
+      />
+      {/* Dark gradient: left side heavy for text contrast, lifts on right to reveal product */}
+      <div className="absolute inset-0 z-[5] bg-gradient-to-r from-[#0B0B0B]/95 via-[#0B0B0B]/72 to-[#0B0B0B]/32" />
       <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_45%,rgb(184_147_90/.18),transparent_32%)]" />
       <SceneGate className="pointer-events-none absolute right-[2vw] top-[16vh] z-[14] hidden h-[68vh] w-[42vw] opacity-62 mix-blend-screen md:block" />
 

@@ -4,7 +4,6 @@ import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
 import { LanguageSuggestionBanner } from "@/components/ui/LanguageSuggestionBanner";
-import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { ToastProvider } from "@/components/ui/toast";
 import { I18nProvider } from "@/lib/i18n-context";
@@ -21,7 +20,6 @@ export function AppProviders({ children }: AppProvidersProps) {
         <SmoothScrollProvider>
           <CustomCursor />
           <LanguageSuggestionBanner />
-          <LanguageToggle />
           <ToastProvider>{children}</ToastProvider>
         </SmoothScrollProvider>
       </I18nProvider>

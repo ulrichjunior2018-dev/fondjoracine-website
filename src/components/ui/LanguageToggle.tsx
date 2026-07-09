@@ -12,7 +12,7 @@ export function LanguageToggle() {
   return (
     <div
       aria-label={copy.home.language.toggleLabel}
-      className="fixed right-4 top-5 z-[70] inline-flex rounded-full border border-[#B8935A]/24 bg-[#0B0B0B]/88 p-1 text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#F5EFE3] shadow-[0_18px_60px_rgb(0_0_0/.32)] backdrop-blur-xl sm:text-[0.68rem] sm:tracking-[0.16em] md:right-5 md:top-5"
+      className="inline-flex rounded-full border border-[#B8935A]/24 bg-[#0B0B0B]/60 p-0.5 text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#F5EFE3]"
       role="group"
     >
       {labels.map((item) => {
