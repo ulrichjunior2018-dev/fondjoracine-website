@@ -26,7 +26,7 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
     >
       <Image
         alt=""
-        className="object-cover object-center"
+        className="object-cover [object-position:50%_25%]"
         fill
         priority
         sizes="100vw"
@@ -34,6 +34,8 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
       />
       {/* Dark gradient: left side heavy for text contrast, lifts on right to reveal product */}
       <div className="absolute inset-0 z-[5] bg-gradient-to-r from-[#0B0B0B]/95 via-[#0B0B0B]/72 to-[#0B0B0B]/32" />
+      {/* Bottom-to-top scrim behind CTA row — guarantees button contrast at all crop positions */}
+      <div className="absolute bottom-0 left-0 right-0 z-[6] h-48 bg-gradient-to-t from-[#0B0B0B]/80 to-transparent" />
       <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_45%,rgb(184_147_90/.18),transparent_32%)]" />
       <SceneGate className="pointer-events-none absolute right-[2vw] top-[16vh] z-[14] hidden h-[68vh] w-[42vw] opacity-62 mix-blend-screen md:block" />
 
