@@ -47,7 +47,7 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
           <p className="mt-5 text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]/82 sm:text-[0.66rem] sm:tracking-[0.34em]">
             {heroCopy.eyebrow}
           </p>
-          <h1 className="mt-5 font-serif text-[2.36rem] font-light leading-[0.98] tracking-normal text-[#F5EFE3] sm:text-[clamp(3.05rem,12vw,5.4rem)] md:mt-7 md:text-[clamp(4.4rem,6.4vw,7.2rem)] md:leading-[0.92]">
+          <h1 className="mt-6 font-serif text-[2.36rem] font-light leading-[0.98] tracking-normal text-[#F5EFE3] sm:text-[clamp(3.05rem,12vw,5.4rem)] md:mt-7 md:text-[clamp(4.4rem,6.4vw,7.2rem)] md:leading-[0.92]">
             {heroCopy.titleFirst}
             <span className="block text-[#B8935A]">{heroCopy.titleSecond}</span>
           </h1>
