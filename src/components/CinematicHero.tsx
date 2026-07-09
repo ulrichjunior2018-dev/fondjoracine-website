@@ -67,7 +67,7 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <a
-              className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#F5EFE3]/24 bg-[#0B0B0B]/28 px-7 text-sm font-semibold text-[#F5EFE3] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
+              className="inline-flex min-h-13 items-center justify-center rounded-sm border-2 border-[#F5EFE3]/60 bg-[#0B0B0B]/50 px-7 text-sm font-semibold text-[#F5EFE3] backdrop-blur-md transition-transform duration-100 ease-out hover:-translate-y-0.5 active:scale-[0.98]"
               href={consultationHref}
             >
               {heroCopy.primary}
