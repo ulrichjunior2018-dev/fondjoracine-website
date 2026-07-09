@@ -428,12 +428,11 @@ const homeFr = {
     eyebrow: "MAISON FONDJO — BUEA, CAMEROUN",
     primary: "Commencer mon diagnostic",
     secondary: "Découvrir Sève Racine",
-    story:
-      "Avant le flacon, Maison Fondjo commence par comprendre votre texture, votre rythme, votre cuir chevelu et la manière dont vos cheveux vivent au quotidien.",
+    story: "Avant le flacon, nous commençons par vous écouter.",
     pending: "Photographie produit réelle en attente",
-    titleFirst: "Vos cheveux",
-    titleSecond: "ont une histoire.",
-    titleThird: "Commençons par l'écouter.",
+    titleFirst: "Onze racines.",
+    titleSecond: "Une seule sève.",
+    titleThird: "",
     trustLabel: "Repères du coffret Maison Fondjo",
     trustItems: [
       ["Coffret numéroté", "Lot Fondateur 2026, 200 exemplaires"],
@@ -460,12 +459,11 @@ const homeEn = {
     eyebrow: "MAISON FONDJO — BUEA, CAMEROON",
     primary: "Start my diagnostic",
     secondary: "Discover Sève Racine",
-    story:
-      "Before the bottle, Maison Fondjo begins by understanding texture, rhythm, scalp condition and daily use.",
+    story: "Before the bottle, we begin by listening.",
     pending: "Real product photography pending",
-    titleFirst: "Your hair",
-    titleSecond: "has a story.",
-    titleThird: "Let us begin by listening.",
+    titleFirst: "Eleven roots.",
+    titleSecond: "One sap.",
+    titleThird: "",
     trustLabel: "Maison Fondjo box trust signals",
     trustItems: [
       ["Numbered box", "Founder Batch 2026, 200 pieces"],

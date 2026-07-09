@@ -36,7 +36,6 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
           <h1 className="mt-5 font-serif text-[2.36rem] font-light leading-[0.98] tracking-normal text-[#F5EFE3] sm:text-[clamp(3.05rem,12vw,5.4rem)] md:mt-7 md:text-[clamp(4.4rem,6.4vw,7.2rem)] md:leading-[0.92]">
             {heroCopy.titleFirst}
             <span className="block text-[#B8935A]">{heroCopy.titleSecond}</span>
-            <span className="block">{heroCopy.titleThird}</span>
           </h1>
           <div aria-hidden="true" className="mx-auto mt-7 text-lg text-[#B8935A] md:mx-0">
             ◆
