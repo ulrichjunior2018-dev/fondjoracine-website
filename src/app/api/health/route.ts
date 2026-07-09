@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export function GET() {
   return ok({
     status: "ok",
-    service: "fondjoracine",
+    service: "maisonfondjo",
     timestamp: new Date().toISOString(),
   });
 }

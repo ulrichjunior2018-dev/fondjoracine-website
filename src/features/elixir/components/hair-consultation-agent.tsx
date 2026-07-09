@@ -459,7 +459,7 @@ export function HairConsultationAgent({ locale }: HairConsultationAgentProps) {
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = "fondjoracine-routine-summary.png";
+      anchor.download = "maisonfondjo-routine-summary.png";
       anchor.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch {

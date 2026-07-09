@@ -14,7 +14,7 @@ export async function GET() {
 
     return new NextResponse(csv, {
       headers: {
-        "Content-Disposition": 'attachment; filename="fondjoracine-customers.csv"',
+        "Content-Disposition": 'attachment; filename="maisonfondjo-customers.csv"',
         "Content-Type": "text/csv; charset=utf-8",
       },
     });
