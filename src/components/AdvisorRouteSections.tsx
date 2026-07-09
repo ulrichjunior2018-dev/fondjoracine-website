@@ -3,6 +3,8 @@
 import { BadgeCheck, CreditCard, PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 
+import { ArrowRight } from "lucide-react";
+
 import {
   advisorImages,
   advisorPricing,
@@ -162,6 +164,21 @@ export function SeveRacineRouteSection() {
             </div>
           ))}
         </div>
+
+        <div className="mt-12 border-t border-[#B8935A]/14 pt-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]">
+            {seveRacine.howToUse.title}
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {seveRacine.howToUse.steps.map((step) => (
+              <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={step.num}>
+                <p className="font-mono text-xs text-[#B8935A]">{step.num}</p>
+                <p className="mt-2 text-sm font-semibold text-[#F5EFE3]">{step.title}</p>
+                <p className="mt-2 text-sm leading-6 text-[#F5EFE3]/68">{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -241,6 +258,63 @@ export function GrossistesRouteSection() {
       >
         {grossistes.cta}
       </a>
+    </section>
+  );
+}
+
+export function HistoireRouteSection() {
+  const copy = useCopy();
+  const { locale } = useI18n();
+  const whatsappUrl = buildWhatsAppUrl("order", "", locale);
+  const histoire = copy.histoire;
+
+  const chapters = [histoire.origin, histoire.name, histoire.product, histoire.family] as const;
+
+  return (
+    <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]">
+          {histoire.eyebrow}
+        </p>
+        <h1 className="mt-6 font-serif text-5xl font-light leading-tight sm:text-7xl">
+          {histoire.title}
+        </h1>
+
+        <div className="mt-14 grid gap-px border border-[#B8935A]/14">
+          {chapters.map((chapter) => (
+            <article
+              className="grid gap-6 border-b border-[#B8935A]/14 bg-white/[0.018] p-8 last:border-b-0 sm:grid-cols-[10rem_1fr]"
+              key={chapter.label}
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#B8935A]">
+                {chapter.label}
+              </p>
+              <div>
+                <h2 className="font-serif text-2xl font-light leading-snug">{chapter.heading}</h2>
+                <p className="mt-4 text-sm leading-7 text-[#F5EFE3]/68">{chapter.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-wrap gap-3">
+          <a
+            className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href={whatsappUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {histoire.cta}
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </a>
+          <a
+            className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/24 px-7 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href="/botanique"
+          >
+            {histoire.ctaSecondary}
+          </a>
+        </div>
+      </div>
     </section>
   );
 }

@@ -268,6 +268,7 @@ const advisorEn = {
     ["Botanicals", "/botanique"],
     ["Sève Racine", "/seve-racine"],
     ["Bespoke", "/sur-mesure"],
+    ["Story", "/histoire"],
   ],
   botanique: {
     body: "This QR destination presents 11 botanicals, Latin names, plant origin and the reason each belongs in Sève Racine.",
@@ -391,6 +392,31 @@ const advisorEn = {
     ],
     steps: ["Warm a few drops", "Massage the roots", "Finish lengths or beard"],
     title: "Sève Racine, prepared for the ritual.",
+    howToUse: {
+      title: "How to use",
+      steps: [
+        {
+          num: "01",
+          title: "Apply",
+          text: "A few drops directly to the scalp, target areas, or lengths.",
+        },
+        {
+          num: "02",
+          title: "Massage",
+          text: "3 to 5 minutes to distribute the oil and activate microcirculation at the root.",
+        },
+        {
+          num: "03",
+          title: "Leave on",
+          text: "Several hours or overnight for deeper care.",
+        },
+        {
+          num: "04",
+          title: "Frequency",
+          text: "2 to 4 times per week. Patch test recommended on first use.",
+        },
+      ],
+    },
   },
   shell: {
     cta: "Diagnostic",
@@ -415,6 +441,34 @@ const advisorEn = {
       ["03", "Formula", "Bespoke preparation at 25 000 F."],
     ],
     title: "Diagnostic. Consultation. Formula.",
+  },
+  histoire: {
+    description:
+      "The story of Maison Fondjo: a family, Buea, Mount Cameroon and eleven carefully chosen botanicals.",
+    eyebrow: "Our story",
+    title: "A family. A territory. Eleven botanicals.",
+    origin: {
+      label: "The origin",
+      heading: "Buea, at the foot of Mount Cameroon.",
+      body: "Maison Fondjo was born in the South West Region, in Buea, a city set on the slopes of an active volcano. This territory — altitude, tropical humidity, ash-enriched soils — shapes the botanical sensibility that runs through every bottle.",
+    },
+    name: {
+      label: "The name",
+      heading: "Fondjo.",
+      body: "Fondjo is a family name. Not a brand name built to sound a certain way, but a name that was handed down — the one the family carries, and chooses to put on the label. It is a way of being accountable for what goes into the bottle.",
+    },
+    product: {
+      label: "The product",
+      heading: "Sève Racine.",
+      body: "The formula brings together eleven oils and botanical extracts selected for their specific role — not for the label. Castor for the root, argan for lengths, black seed for scalp balance, moringa for vitamins. Each ingredient has a reason to be there.",
+    },
+    family: {
+      label: "The family",
+      heading: "The Fondjo family.",
+      body: "Maison Fondjo is carried by the Fondjo family. The bottle is developed together, tested within the family, and the names behind the brand are those who take responsibility for it.",
+    },
+    cta: "Order Sève Racine",
+    ctaSecondary: "See the botanical formula",
   },
 };
 
@@ -525,6 +579,7 @@ export const copy = {
     botanique: advisorEn.botanique,
     diagnostic: diagnosticEn,
     grossistes: advisorEn.grossistes,
+    histoire: advisorEn.histoire,
     home: homeEn,
     seveRacine: advisorEn.seveRacine,
     surMesure: advisorEn.surMesure,
@@ -533,6 +588,7 @@ export const copy = {
     botanique: advisorFr.botanique,
     diagnostic: diagnosticFr,
     grossistes: advisorFr.grossistes,
+    histoire: advisorFr.histoire,
     home: homeFr,
     seveRacine: advisorFr.seveRacine,
     surMesure: advisorFr.surMesure,

@@ -14,6 +14,7 @@ export const advisorCopy = {
     ["Botanique", "/botanique"],
     ["Sève Racine", "/seve-racine"],
     ["Sur-mesure", "/sur-mesure"],
+    ["Histoire", "/histoire"],
   ],
   botanique: {
     body: "Cette page sert de destination QR : 11 botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
@@ -135,6 +136,31 @@ export const advisorCopy = {
     ],
     steps: ["Chauffer quelques gouttes", "Masser la racine", "Finir longueurs ou barbe"],
     title: "Sève Racine, préparée pour le rituel.",
+    howToUse: {
+      title: "Mode d'emploi",
+      steps: [
+        {
+          num: "01",
+          title: "Appliquer",
+          text: "Quelques gouttes directement sur le cuir chevelu, les zones ciblées ou la longueur.",
+        },
+        {
+          num: "02",
+          title: "Masser",
+          text: "3 à 5 minutes pour répartir l'huile et activer la microcirculation à la racine.",
+        },
+        {
+          num: "03",
+          title: "Laisser poser",
+          text: "Plusieurs heures ou toute une nuit pour un soin en profondeur.",
+        },
+        {
+          num: "04",
+          title: "Fréquence",
+          text: "2 à 4 fois par semaine. Test cutané recommandé à la première utilisation.",
+        },
+      ],
+    },
   },
   shell: {
     cta: "Diagnostic",
@@ -159,5 +185,33 @@ export const advisorCopy = {
       ["03", "Formule", `Préparation sur-mesure à ${surMesurePrice}.`],
     ],
     title: "Diagnostic. Consultation. Formule.",
+  },
+  histoire: {
+    description:
+      "L'histoire de Maison Fondjo : une famille, Buea, le Mont Cameroun et onze botaniques choisis avec soin.",
+    eyebrow: "Notre histoire",
+    title: "Une famille. Un territoire. Onze botaniques.",
+    origin: {
+      label: "L'origine",
+      heading: "Buea, au pied du Mont Cameroun.",
+      body: "Maison Fondjo naît dans la région du Sud-Ouest, à Buea, ville posée au flanc d'un volcan actif. Ce territoire — altitude, humidité tropicale, sols enrichis de cendres — façonne la sensibilité botanique qui traverse chaque flacon.",
+    },
+    name: {
+      label: "Le nom",
+      heading: "Fondjo.",
+      body: "Fondjo est le nom de famille. Pas un nom de marque construit pour sonner, mais un nom transmis — celui que la famille porte, et qu'elle choisit d'inscrire sur l'étiquette. C'est une manière de répondre de ce qu'on met dans le flacon.",
+    },
+    product: {
+      label: "Le produit",
+      heading: "Sève Racine.",
+      body: "La formule réunit onze huiles et extraits botaniques sélectionnés pour leur rôle précis — pas pour l'étiquette. Castor pour la racine, argan pour les longueurs, nigelle pour l'équilibre du cuir chevelu, moringa pour les vitamines. Chaque ingrédient a une raison d'être.",
+    },
+    family: {
+      label: "La famille",
+      heading: "La famille Fondjo.",
+      body: "Maison Fondjo est portée par la famille Fondjo. Le flacon est développé ensemble, testé en famille, et les noms qui apparaissent derrière la marque sont ceux qui en assument la responsabilité.",
+    },
+    cta: "Commander Sève Racine",
+    ctaSecondary: "Voir la formule botanique",
   },
 } as const;

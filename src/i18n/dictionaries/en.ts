@@ -43,7 +43,7 @@ export const en = {
   heroTitleFirst: "FROM THE SOIL",
   heroTitleSecond: "TO THE BOTTLE",
   lifestyle: "Everyday life",
-  lifestyleTitle: "The product leaves the shelf and enters the routine.",
+  lifestyleTitle: "In the morning. After the wash. Before bed.",
   marketText: "A bottle in Buea's rhythm: heat, movement, errands and protective styles.",
   marketTitle: "In the city",
   mediaAlts: {

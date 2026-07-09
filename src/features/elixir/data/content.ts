@@ -252,8 +252,8 @@ export const defaultElixirContent: ElixirContent = {
           width: 1086,
         },
         caption: {
-          en: "Botanical care that helps hair look polished without a heavy finish.",
-          fr: "Un soin botanique pour une finition soignee sans effet lourd.",
+          en: "Argan, olive and coconut coat the hair shaft and reduce dryness on lengths and ends.",
+          fr: "Argan, olive et coco gainent la fibre et reduisent la secheresse sur les longueurs et pointes.",
         },
         isPlaceholder: true,
         label: localized("Visible polish", "Finition visible"),
@@ -369,7 +369,7 @@ export const defaultElixirContent: ElixirContent = {
       fr: "La garantie demande preuve d achat, regularite et photos de suivi au Jour 0 et Jour 60.",
     },
     title: {
-      en: "Beautiful care should also be careful.",
+      en: "Safe use. Clear terms. Direct support.",
       fr: "Une promesse de resultats avec methode, pas du bruit.",
     },
   },
@@ -479,7 +479,7 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: localized("Ingredients", "Ingredients"),
     ingredients: defaultFormulaIngredients,
     intro: {
-      en: "A botanical blend presented as cosmetic hair-care support, never as a medical treatment.",
+      en: "Eleven oils and extracts, each selected for a specific role in scalp and hair-fibre care.",
       fr: "Un melange botanique concu autour de la vraie vie des cheveux africains : coiffes, proteges, laves et repares.",
     },
     title: {

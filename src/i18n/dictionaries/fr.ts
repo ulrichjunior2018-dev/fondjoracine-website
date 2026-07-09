@@ -53,7 +53,7 @@ export const fr = {
   heroTitleFirst: "DE LA TERRE",
   heroTitleSecond: "AU FLACON",
   lifestyle: "Vie quotidienne",
-  lifestyleTitle: "Le produit quitte l'etagere et entre dans les routines.",
+  lifestyleTitle: "Le matin. Apres le lavage. Avant de dormir.",
   marketText:
     "Un flacon dans le rythme de Buea : chaleur, mouvement, courses et coiffures protectrices.",
   marketTitle: "Dans la ville",

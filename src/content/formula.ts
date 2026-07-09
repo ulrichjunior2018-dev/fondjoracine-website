@@ -14,104 +14,124 @@ export type FormulaIngredient = {
 export const formulaIngredients: FormulaIngredient[] = [
   {
     chosen_for:
-      "Choisie pour apporter une sensation de fraîcheur et accompagner le massage du cuir chevelu.",
-    chosen_for_en: "Chosen to bring a fresh sensation and support scalp massage.",
+      "Le menthol stimule les récepteurs du froid et favorise la microcirculation du cuir chevelu, rendant chaque application perceptible. Ses propriétés antimicrobiennes contribuent à maintenir un environnement sain à la racine.",
+    chosen_for_en:
+      "Menthol activates cold receptors and stimulates scalp microcirculation, making every application perceptible. Its antimicrobial properties help maintain a healthy environment at the root.",
     latin: "Mentha",
     name_en: "Mint",
     name_fr: "Menthe",
-    properties: ["fraîcheur", "confort du cuir chevelu", "rituel tonifiant"],
-    properties_en: ["freshness", "scalp comfort", "toning ritual"],
+    properties: ["microcirculation", "confort du cuir chevelu", "action antimicrobienne"],
+    properties_en: ["microcirculation", "scalp comfort", "antimicrobial action"],
   },
   {
-    chosen_for: "Choisi pour soutenir une routine racines-longueurs riche en actifs végétaux.",
-    chosen_for_en: "Chosen to support a roots-to-lengths routine rich in plant actives.",
+    chosen_for:
+      "L'huile de moringa est riche en acide béhénique, un acide gras rare qui gaine la fibre capillaire et facilite le démêlage. Sa teneur en vitamines A, C et E en fait un actif antioxydant efficace contre le stress oxydatif du cuir chevelu.",
+    chosen_for_en:
+      "Moringa oil is rich in behenic acid, a rare fatty acid that coats the hair shaft and eases detangling. Its vitamins A, C, and E content makes it an effective antioxidant against scalp oxidative stress.",
     latin: "Moringa oleifera",
     name_en: "Moringa",
     name_fr: "Moringa",
-    properties: ["nutrition", "souplesse", "soin botanique"],
-    properties_en: ["nutrition", "suppleness", "botanical care"],
+    properties: ["acide béhénique", "vitamines A·C·E", "protection antioxydante"],
+    properties_en: ["behenic acid", "vitamins A·C·E", "antioxidant protection"],
   },
   {
-    chosen_for: "Choisie pour renforcer la dimension protectrice du rituel sans alourdir la fibre.",
+    chosen_for:
+      "La nigelle est concentrée en thymoquinone, un antioxydant puissant, et en acide linoléique (oméga-6) qui aide à restaurer l'équilibre hydrique du cuir chevelu. Utilisée traditionnellement pour les cheveux fragilisés, elle renforce la fibre sans la charger.",
     chosen_for_en:
-      "Chosen to reinforce the protective dimension of the ritual without weighing down the fibre.",
+      "Black seed is concentrated in thymoquinone, a potent antioxidant, and linoleic acid (omega-6) which helps restore the scalp's moisture balance. Traditionally used for weakened hair, it strengthens the fibre without weighing it down.",
     latin: "Nigella sativa",
     name_en: "Black seed",
     name_fr: "Graine noire / Nigelle",
-    properties: ["protection", "équilibre", "cuir chevelu"],
-    properties_en: ["protection", "balance", "scalp"],
+    properties: ["thymoquinone", "acide linoléique (ω-6)", "équilibre hydrique"],
+    properties_en: ["thymoquinone", "linoleic acid (ω-6)", "moisture balance"],
   },
   {
-    chosen_for: "Choisi pour sa place traditionnelle dans les soins botaniques disciplinés.",
-    chosen_for_en: "Chosen for its traditional place in disciplined botanical care.",
+    chosen_for:
+      "L'huile de laurier noble contient du cinéol et du linalol, des composés terpéniques qui assainissent le cuir chevelu et apportent une légère action apaisante. Elle est présente dans les rituels capillaires méditerranéens depuis des siècles.",
+    chosen_for_en:
+      "Bay laurel oil contains cineole and linalool, terpenic compounds that cleanse the scalp and provide a mild soothing action. It has been part of Mediterranean hair rituals for centuries.",
     latin: "Laurus nobilis",
     name_en: "Bay laurel",
     name_fr: "Laurier",
-    properties: ["discipline", "tradition botanique", "confort"],
-    properties_en: ["discipline", "botanical tradition", "comfort"],
+    properties: ["cinéol", "linalol", "action apaisante"],
+    properties_en: ["cineole", "linalool", "soothing action"],
   },
   {
-    chosen_for: "Choisi pour nourrir la racine et aider à limiter la casse visible.",
-    chosen_for_en: "Chosen to nourish the root and help limit visible breakage.",
+    chosen_for:
+      "L'huile de ricin est exceptionnellement riche en acide ricinoléique (environ 89 %), un acide gras hydroxylé qui pénètre le cortex capillaire et aide à retenir l'humidité au niveau du follicule. Elle soutient la résistance de la fibre à la racine.",
+    chosen_for_en:
+      "Castor oil is exceptionally rich in ricinoleic acid (around 89%), a hydroxyl fatty acid that penetrates the hair cortex and helps retain moisture at the follicle level. It supports fibre resilience at the root.",
     latin: "Ricinus communis",
     name_en: "Castor",
     name_fr: "Ricin",
-    properties: ["racines", "nutrition", "casse"],
-    properties_en: ["roots", "nutrition", "breakage"],
+    properties: ["acide ricinoléique (89%)", "rétention d'humidité", "résistance à la racine"],
+    properties_en: ["ricinoleic acid (89%)", "moisture retention", "root resilience"],
   },
   {
-    chosen_for: "Choisi pour aider la fibre à retenir l'hydratation et gagner en brillance.",
-    chosen_for_en: "Chosen to help the hair fibre retain hydration and gain shine.",
+    chosen_for:
+      "L'acide laurique de l'huile de coco a une affinité moléculaire unique avec la kératine : sa petite chaîne lui permet de pénétrer la fibre capillaire, réduisant la perte de protéines lors des manipulations. Elle réduit aussi les frottements inter-fibres.",
+    chosen_for_en:
+      "Coconut oil's lauric acid has a unique molecular affinity with keratin: its small chain allows it to penetrate the hair fibre, reducing protein loss during manipulation. It also reduces friction between fibres.",
     latin: "Cocos nucifera",
     name_en: "Coconut",
     name_fr: "Coco",
-    properties: ["hydratation", "brillance", "fibre capillaire"],
-    properties_en: ["hydration", "shine", "hair fibre"],
+    properties: ["acide laurique", "affinité avec la kératine", "réduction de la casse"],
+    properties_en: ["lauric acid", "keratin affinity", "breakage reduction"],
   },
   {
-    chosen_for: "Choisi pour sceller le soin et améliorer la douceur des pointes sèches.",
-    chosen_for_en: "Chosen to seal in care and improve the softness of dry ends.",
+    chosen_for:
+      "Riche en acide oléique (70–80 %) et en squalène, l'huile d'olive présente une haute affinité avec la cuticule capillaire. Elle scelle les écailles et améliore la douceur des longueurs, tandis que son hydroxytyrosol agit comme antioxydant.",
+    chosen_for_en:
+      "Rich in oleic acid (70–80%) and squalene, olive oil has a high affinity with the hair cuticle. It seals the scales and improves the softness of lengths, while its hydroxytyrosol acts as an antioxidant.",
     latin: "Olea europaea",
     name_en: "Olive",
     name_fr: "Olive",
-    properties: ["douceur", "scellage", "pointes sèches"],
-    properties_en: ["softness", "sealing", "dry ends"],
+    properties: ["acide oléique (70–80%)", "squalène", "hydroxytyrosol antioxydant"],
+    properties_en: ["oleic acid (70–80%)", "squalene", "hydroxytyrosol antioxidant"],
   },
   {
-    chosen_for: "Choisie pour adoucir la fibre et améliorer la glisse à l'application.",
-    chosen_for_en: "Chosen to soften the fibre and improve slip during application.",
+    chosen_for:
+      "L'huile d'amande douce est constituée à 70 % d'acide oléique et contient de l'acide linoléique. Légère et pénétrante, elle lisse la cuticule, améliore la glisse à l'application et rend la fibre plus souple sans résidu.",
+    chosen_for_en:
+      "Sweet almond oil is 70% oleic acid and also contains linoleic acid. Light and penetrating, it smooths the cuticle, improves slip during application, and leaves the fibre more supple with no residue.",
     latin: "Prunus amygdalus dulcis",
     name_en: "Sweet almond",
     name_fr: "Amande douce",
-    properties: ["glisse", "douceur", "application"],
-    properties_en: ["slip", "softness", "application"],
+    properties: ["acide oléique (70%)", "acide linoléique", "glisse sans résidu"],
+    properties_en: ["oleic acid (70%)", "linoleic acid", "slip with no residue"],
   },
   {
-    chosen_for: "Choisi pour nourrir les cheveux exigeants avec une texture riche.",
-    chosen_for_en: "Chosen to nourish demanding hair with a rich texture.",
+    chosen_for:
+      "L'huile d'avocat contient de l'acide palmitoléique et des stérols végétaux dont le profil lipidique est proche du sébum humain. Elle pénètre profondément dans la fibre et soutient la barrière du cuir chevelu, particulièrement utile pour les textures denses.",
+    chosen_for_en:
+      "Avocado oil contains palmitoleic acid and plant sterols whose lipid profile is close to human sebum. It penetrates deeply into the fibre and supports the scalp barrier, particularly useful for dense textures.",
     latin: "Persea americana",
     name_en: "Avocado",
     name_fr: "Avocat",
-    properties: ["nutrition", "souplesse", "conditionnement"],
-    properties_en: ["nutrition", "suppleness", "conditioning"],
+    properties: ["acide palmitoléique", "stérols végétaux", "pénétration profonde"],
+    properties_en: ["palmitoleic acid", "plant sterols", "deep penetration"],
   },
   {
-    chosen_for: "Choisi pour protéger les longueurs et donner un fini plus souple.",
-    chosen_for_en: "Chosen to protect lengths and leave a more supple finish.",
+    chosen_for:
+      "L'huile d'argan est riche en tocophérols (vitamine E) et en acides gras insaturés — oléique et linoléique — qui protègent la fibre des agressions mécaniques et thermiques. Elle réduit les frottements entre mèches et donne un fini souple sans effet gras.",
+    chosen_for_en:
+      "Argan oil is rich in tocopherols (vitamin E) and unsaturated fatty acids — oleic and linoleic — that protect the fibre from mechanical and thermal stress. It reduces friction between strands and gives a supple finish with no greasy feel.",
     latin: "Argania spinosa",
     name_en: "Argan",
     name_fr: "Argan",
-    properties: ["protection", "fini souple", "longueurs"],
-    properties_en: ["protection", "supple finish", "lengths"],
+    properties: ["tocophérols (vit. E)", "acides oléique et linoléique", "protection thermique"],
+    properties_en: ["tocopherols (vit. E)", "oleic and linoleic acids", "thermal protection"],
   },
   {
-    chosen_for: "Choisi pour équilibrer la sensation du cuir chevelu sans effet lourd.",
-    chosen_for_en: "Chosen to balance the scalp feel without a heavy effect.",
+    chosen_for:
+      "Le jojoba est techniquement une cire liquide — non une huile — dont la structure en esters de cires mime celle du sébum humain. Il régule naturellement la production de sébum du cuir chevelu, est non-comédogène et ne laisse aucun résidu lourd.",
+    chosen_for_en:
+      "Jojoba is technically a liquid wax — not an oil — whose wax ester structure mimics human sebum. It naturally regulates scalp sebum production, is non-comedogenic, and leaves no heavy residue.",
     latin: "Simmondsia chinensis",
     name_en: "Jojoba",
     name_fr: "Jojoba",
-    properties: ["équilibre", "légèreté", "cuir chevelu"],
-    properties_en: ["balance", "lightness", "scalp"],
+    properties: ["cire liquide (esters de cires)", "régulation du sébum", "non-comédogène"],
+    properties_en: ["liquid wax (wax esters)", "sebum regulation", "non-comedogenic"],
   },
 ];
 
