@@ -28,15 +28,7 @@ export function CinematicHero({
       data-mobile-cta-section="hero"
       id="hero"
     >
-      <Image
-        alt={heroCopy.backgroundAlt}
-        className="object-cover opacity-45"
-        fill
-        priority
-        sizes="100vw"
-        src={siteImages.originMountCameroon}
-      />
-      <div className="absolute inset-0 z-10 bg-[linear-gradient(100deg,#0B0B0B_0%,rgb(11_11_11/.84)_42%,rgb(11_11_11/.36)_100%),radial-gradient(circle_at_72%_45%,rgb(184_147_90/.18),transparent_32%)]" />
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_45%,rgb(184_147_90/.18),transparent_32%)]" />
       <SceneGate className="pointer-events-none absolute right-[2vw] top-[16vh] z-[14] hidden h-[68vh] w-[42vw] opacity-62 mix-blend-screen md:block" />
 
       <div className="relative z-20 mx-auto grid min-h-svh w-full max-w-[1440px] items-center gap-10 overflow-hidden px-5 pb-14 pt-28 text-center md:grid-cols-[minmax(0,0.92fr)_minmax(18rem,0.72fr)] md:px-10 md:py-28 md:text-left xl:px-20">
