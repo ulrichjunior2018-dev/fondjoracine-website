@@ -101,4 +101,26 @@ export const en = {
     ["Ends", "Olive helps seal moisture where dryness appears first."],
   ],
   whyTitle: "A formula considered from roots to ends.",
+  testimonials: {
+    eyebrow: "Customer results",
+    title: "Real results from Buea.",
+    beforeLabel: "Before",
+    afterLabel: "After",
+    items: [
+      {
+        name: "Janice",
+        quote: "My hair is growing so much — the back and the front are both filling in.",
+      },
+      {
+        name: "Ako",
+        quote:
+          "I hadn't even used it every day, for only two weeks, but you should see my front hair now — even my mom noticed and asked me to get her a bottle.",
+      },
+      {
+        name: "Mary",
+        quote:
+          "If you saw my hair before, you'd know I never really had much — now it's gotten so thick I'll need to relax it again soon.",
+      },
+    ],
+  },
 } as const;

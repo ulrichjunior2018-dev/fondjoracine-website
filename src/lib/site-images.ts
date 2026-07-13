@@ -19,6 +19,12 @@ export const siteImages = {
   originBueaHarvest: "/images/origin-buea-harvest.png",
   shopDisplay: "/images/shop.png",
   labPreparation: "/images/lab-prepation.png",
+  testimonialJaniceBefore: "/images/testimonial-janice-before.jpg",
+  testimonialJaniceAfter: "/images/testimonial-janice-after.jpg",
+  testimonialAkoBefore: "/images/testimonial-ako-before.jpg",
+  testimonialAkoAfter: "/images/testimonial-ako-after.jpg",
+  testimonialMaryBefore: "/images/testimonial-mary-before.jpg",
+  testimonialMaryAfter: "/images/testimonial-mary-after.jpg",
 } as const;
 
 export type SiteImageKey = keyof typeof siteImages;

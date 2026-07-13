@@ -116,4 +116,26 @@ export const fr = {
     ["Pointes", "L'olive aide a sceller l'hydratation la ou la secheresse apparait d'abord."],
   ],
   whyTitle: "Une formule pensee des racines aux pointes.",
+  testimonials: {
+    eyebrow: "Résultats clients",
+    title: "Des résultats réels depuis Buea.",
+    beforeLabel: "Avant",
+    afterLabel: "Après",
+    items: [
+      {
+        name: "Janice",
+        quote: "My hair is growing so much — the back and the front are both filling in.",
+      },
+      {
+        name: "Ako",
+        quote:
+          "I hadn't even used it every day, for only two weeks, but you should see my front hair now — even my mom noticed and asked me to get her a bottle.",
+      },
+      {
+        name: "Mary",
+        quote:
+          "If you saw my hair before, you'd know I never really had much — now it's gotten so thick I'll need to relax it again soon.",
+      },
+    ],
+  },
 } as const;

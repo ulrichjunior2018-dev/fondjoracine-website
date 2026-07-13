@@ -382,6 +382,91 @@ export function IngredientCarousel({
   );
 }
 
+const testimonialImages = [
+  {
+    before: siteImages.testimonialJaniceBefore,
+    after: siteImages.testimonialJaniceAfter,
+  },
+  {
+    before: siteImages.testimonialAkoBefore,
+    after: siteImages.testimonialAkoAfter,
+  },
+  {
+    before: siteImages.testimonialMaryBefore,
+    after: siteImages.testimonialMaryAfter,
+  },
+] as const;
+
+export function TestimonialsSection({ copy }: { copy: Copy }) {
+  const t = copy.testimonials;
+
+  return (
+    <section
+      className="bg-[#0B0B0B] py-20 text-[#F5EFE3] sm:py-28"
+      data-mobile-cta-section="testimonials"
+      id="testimonials"
+    >
+      <Container>
+        <FadeUp className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#B8935A]">
+            {t.eyebrow}
+          </p>
+          <h2 className="mt-4 font-serif text-5xl font-light leading-[0.9] sm:text-6xl lg:text-7xl">
+            {t.title}
+          </h2>
+        </FadeUp>
+
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {t.items.map((item, index) => {
+            const images = testimonialImages[index];
+
+            if (!images) return null;
+
+            return (
+              <FadeUp className="flex flex-col gap-6" key={item.name}>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <div className="relative overflow-hidden">
+                    <div className="absolute left-2 top-2 z-10 rounded-sm bg-[#0B0B0B]/70 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-[#F5EFE3]/80">
+                      {t.beforeLabel}
+                    </div>
+                    <Image
+                      alt={`${item.name} — ${t.beforeLabel}`}
+                      className="aspect-[3/4] w-full object-cover"
+                      height={480}
+                      src={images.before}
+                      width={360}
+                    />
+                  </div>
+                  <div className="relative overflow-hidden">
+                    <div className="absolute right-2 top-2 z-10 rounded-sm bg-[#B8935A] px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-[#0B0B0B]">
+                      {t.afterLabel}
+                    </div>
+                    <Image
+                      alt={`${item.name} — ${t.afterLabel}`}
+                      className="aspect-[3/4] w-full object-cover"
+                      height={480}
+                      src={images.after}
+                      width={360}
+                    />
+                  </div>
+                </div>
+                <div className="border border-[#B8935A]/14 bg-white/[0.025] p-6">
+                  <p className="font-serif text-xl font-light italic leading-8 text-[#F5EFE3]/88">
+                    &ldquo;{item.quote}&rdquo;
+                  </p>
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+                    — {item.name}
+                  </p>
+                </div>
+              </FadeUp>
+            );
+          })}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
 export function WhyItWorksSection({ copy }: { copy: Copy }) {
   return (
     <section
@@ -792,6 +877,7 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
         <>
           <OriginSection copy={copy} />
           <FounderStorySection content={content} locale={contentLocale} />
+          <TestimonialsSection copy={copy} />
           <RitualSection copy={copy} />
           <LifestyleGallery copy={copy} />
           <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />
