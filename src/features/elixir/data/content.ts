@@ -479,12 +479,12 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: localized("Ingredients", "Ingredients"),
     ingredients: defaultFormulaIngredients,
     intro: {
-      en: "Eleven oils and extracts, each selected for a specific role in scalp and hair-fibre care.",
+      en: "A rich blend of botanical oils and herbs, each selected for a specific role in scalp and hair-fibre care.",
       fr: "Un melange botanique concu autour de la vraie vie des cheveux africains : coiffes, proteges, laves et repares.",
     },
     title: {
-      en: "Eleven botanicals for scalp, strands, beard, and protective styles.",
-      fr: "Onze botaniques. Un rituel capillaire discipline.",
+      en: "A botanical blend for scalp, strands, beard, and protective styles.",
+      fr: "Un mélange botanique. Un rituel capillaire discipliné.",
     },
   },
   innerCircle: {

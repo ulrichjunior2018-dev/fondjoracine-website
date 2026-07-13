@@ -792,7 +792,6 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
         <>
           <OriginSection copy={copy} />
           <FounderStorySection content={content} locale={contentLocale} />
-          <IngredientCarousel content={content} copy={copy} locale={contentLocale} />
           <RitualSection copy={copy} />
           <LifestyleGallery copy={copy} />
           <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />

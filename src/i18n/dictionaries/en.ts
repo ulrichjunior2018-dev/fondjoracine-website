@@ -5,7 +5,7 @@ export const en = {
   closingBody:
     "The path stays simple: diagnostic, 15 000 F price, Cameroon delivery zone confirmed before payment.",
   closingCards: [
-    ["Hair consultation", "Answer before deciding how the 11 botanicals enter your routine."],
+    ["Hair consultation", "Answer before deciding how this botanical blend enters your routine."],
     ["Delivery", "Nationwide delivery across Cameroon from Buea, starting at 1,000 FCFA."],
     ["Direct assistance", "Speak with the Buea team about timing, fees and product guidance."],
   ],
@@ -35,11 +35,11 @@ export const en = {
   footerTerms: "Terms",
   formula: "Formula",
   formulaBody:
-    "The formula follows 11 botanicals: mint, moringa, black seed, bay laurel, castor, coconut, olive, sweet almond, avocado, argan and jojoba. Each card states why the ingredient is present.",
-  formulaTitle: "11 botanicals, edited with care.",
+    "A rich blend of botanical oils and herbs, each present for a specific role in scalp and hair-fibre care.",
+  formulaTitle: "A botanical blend, edited with care.",
   gallery: "Gallery",
   heroEyebrow: "Maison Fondjo · Hair ritual oil",
-  heroStory: "A hair ritual rooted in Buea, built around 11 botanical oils and extracts.",
+  heroStory: "A hair ritual rooted in Buea, built around a rich blend of botanical oils and herbs.",
   heroTitleFirst: "FROM THE SOIL",
   heroTitleSecond: "TO THE BOTTLE",
   lifestyle: "Everyday life",

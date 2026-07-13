@@ -7,7 +7,7 @@ export const fr = {
   closingCards: [
     [
       "Consultation cheveux",
-      "Repondez avant de choisir comment les 11 botaniques entrent dans votre routine.",
+      "Repondez avant de choisir comment ce melange botanique entre dans votre routine.",
     ],
     ["Livraison", "Livraison partout au Cameroun depuis Buea, à partir de 1 000 FCFA."],
     [
@@ -44,12 +44,12 @@ export const fr = {
   footerTerms: "Conditions",
   formula: "Formule",
   formulaBody:
-    "La formule suit 11 botaniques : menthe, moringa, nigelle, laurier, ricin, coco, olive, amande douce, avocat, argan et jojoba. Chaque carte indique pourquoi l'ingrédient est présent.",
-  formulaTitle: "11 botaniques, editees avec soin.",
+    "Un mélange riche d'huiles et d'herbes botaniques, chaque ingrédient présent pour un rôle précis dans le soin du cuir chevelu et de la fibre capillaire.",
+  formulaTitle: "Un mélange botanique, edité avec soin.",
   gallery: "Galerie",
   heroEyebrow: "Maison Fondjo · Huile rituel capillaire",
   heroStory:
-    "Un rituel capillaire enracine a Buea, construit autour de 11 huiles et extraits botaniques.",
+    "Un rituel capillaire enracine a Buea, construit autour d'un mélange riche d'huiles et d'herbes botaniques.",
   heroTitleFirst: "DE LA TERRE",
   heroTitleSecond: "AU FLACON",
   lifestyle: "Vie quotidienne",

@@ -17,12 +17,12 @@ export const advisorCopy = {
     ["Histoire", "/histoire"],
   ],
   botanique: {
-    body: "Cette page sert de destination QR : 11 botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
+    body: "Cette page sert de destination QR : un mélange riche d'huiles et d'herbes botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
     chosenFor: "Choisi pour",
     description:
-      "Herbier Maison Fondjo : 11 ingrédients de Sève Racine, noms latins et rôle botanique.",
+      "Herbier Maison Fondjo : les ingrédients de Sève Racine, noms latins et rôle botanique.",
     eyebrow: "Herbier digital",
-    title: "Onze ingrédients. Un langage botanique précis.",
+    title: "Un langage botanique précis.",
   },
   diagnostic: {
     autreBack: "← Autre choix",
@@ -197,9 +197,9 @@ export const advisorCopy = {
   },
   histoire: {
     description:
-      "L'histoire de Maison Fondjo : une famille, Buea, le Mont Cameroun et onze botaniques choisis avec soin.",
+      "L'histoire de Maison Fondjo : une famille, Buea, le Mont Cameroun et un mélange riche d'huiles et d'herbes botaniques.",
     eyebrow: "Notre histoire",
-    title: "Une famille. Un territoire. Onze botaniques.",
+    title: "Une famille. Un territoire. Une formule botanique.",
     origin: {
       label: "L'origine",
       heading: "Buea, au pied du Mont Cameroun.",
@@ -213,7 +213,7 @@ export const advisorCopy = {
     product: {
       label: "Le produit",
       heading: "Sève Racine.",
-      body: "La formule réunit onze huiles et extraits botaniques sélectionnés pour leur rôle précis — pas pour l'étiquette. Castor pour la racine, argan pour les longueurs, nigelle pour l'équilibre du cuir chevelu, moringa pour les vitamines. Chaque ingrédient a une raison d'être.",
+      body: "La formule réunit un mélange riche d'huiles et d'herbes botaniques, sélectionnés pour leur rôle précis — pas pour l'étiquette. Chaque ingrédient a une raison d'être.",
     },
     family: {
       label: "La famille",

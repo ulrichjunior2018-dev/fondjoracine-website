@@ -22,7 +22,7 @@ const publicFr = {
     },
     faq: {
       description:
-        "Réponses sur Sève Racine, les 11 botaniques, la livraison au Cameroun, la sécurité produit et l'assistance WhatsApp.",
+        "Réponses sur Sève Racine, la livraison au Cameroun, la sécurité produit et l'assistance WhatsApp.",
       title: "FAQ | Maison Fondjo",
     },
     howToUse: {
@@ -160,7 +160,7 @@ const publicEn = {
     },
     faq: {
       description:
-        "Answers about Sève Racine, the 11 botanicals, Cameroon delivery, product safety and WhatsApp assistance.",
+        "Answers about Sève Racine, Cameroon delivery, product safety and WhatsApp assistance.",
       title: "FAQ | Maison Fondjo",
     },
     howToUse: {
@@ -275,12 +275,12 @@ const advisorEn = {
     ["Story", "/histoire"],
   ],
   botanique: {
-    body: "This QR destination presents 11 botanicals, Latin names, plant origin and the reason each belongs in Sève Racine.",
+    body: "This QR destination presents a rich blend of botanical oils and herbs, Latin names, plant origin and the reason each belongs in Sève Racine.",
     chosenFor: "Chosen for",
     description:
-      "Maison Fondjo herbarium: 11 Sève Racine ingredients, Latin names and botanical role.",
+      "Maison Fondjo herbarium: Sève Racine ingredients, Latin names and botanical role.",
     eyebrow: "Digital herbarium",
-    title: "Eleven ingredients. One precise botanical language.",
+    title: "A botanical blend. One precise language.",
   },
   diagnostic: {
     ...advisorFr.diagnostic,
@@ -457,9 +457,9 @@ const advisorEn = {
   },
   histoire: {
     description:
-      "The story of Maison Fondjo: a family, Buea, Mount Cameroon and eleven carefully chosen botanicals.",
+      "The story of Maison Fondjo: a family, Buea, Mount Cameroon and a rich blend of botanical oils and herbs.",
     eyebrow: "Our story",
-    title: "A family. A territory. Eleven botanicals.",
+    title: "A family. A territory. A botanical formula.",
     origin: {
       label: "The origin",
       heading: "Buea, at the foot of Mount Cameroon.",
@@ -473,7 +473,7 @@ const advisorEn = {
     product: {
       label: "The product",
       heading: "Sève Racine.",
-      body: "The formula brings together eleven oils and botanical extracts selected for their specific role — not for the label. Castor for the root, argan for lengths, black seed for scalp balance, moringa for vitamins. Each ingredient has a reason to be there.",
+      body: "The formula brings together a rich blend of botanical oils and herbs, each selected for a specific role — not for the label. Each ingredient has a reason to be there.",
     },
     family: {
       label: "The family",

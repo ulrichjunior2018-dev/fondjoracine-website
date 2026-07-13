@@ -6,7 +6,7 @@ export const siteConfig = {
   tagline: "Enracinée dans la nature. Faite pour durer.",
   url: config.env === "production" ? "https://maisonfondjo.com" : env.NEXT_PUBLIC_SITE_URL,
   description:
-    "Maison Fondjo presents Sève Racine, a 100ml botanical hair oil born in Buea with 11 botanicals and Cameroon delivery.",
+    "Maison Fondjo presents Sève Racine, a 100ml botanical hair oil born in Buea — a rich blend of botanical oils and herbs, with Cameroon delivery.",
   locale: "en_US",
   twitterHandle: "@maison.fondjo",
 } as const;
