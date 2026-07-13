@@ -39,6 +39,8 @@ const campaignImages = {
   market: siteImages.originBueaHarvest,
   night: siteImages.lifestyleScalpRitual,
   origin: siteImages.originMountCameroon,
+  ritualBefore: siteImages.ritualBefore,
+  ritualAfter: siteImages.ritualAfter,
   productMacro: siteImages.productMacro,
   profileLogo: siteImages.profileLogo,
   reflection: siteImages.studioBottle,
@@ -474,12 +476,29 @@ export function RitualSection({ copy }: { copy: Copy }) {
   return (
     <section className="bg-[#100d0a] text-[#F5EFE3]" data-mobile-cta-section="ritual" id="ritual">
       <Container className="grid gap-0 px-0 lg:grid-cols-2" size="full">
-        <ImagePanel
-          alt={copy.mediaAlts.scalpRitual}
-          className="relative min-h-[34rem] overflow-hidden"
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          src={campaignImages.night}
-        />
+        <div className="flex min-h-[34rem] items-center justify-center bg-[#100d0a] px-6 py-10 lg:px-8 lg:py-12">
+          <div className="grid w-full max-w-sm grid-cols-2 gap-4">
+            {[
+              { src: campaignImages.ritualBefore, label: copy.testimonials.beforeLabel },
+              { src: campaignImages.ritualAfter, label: copy.testimonials.afterLabel },
+            ].map(({ src, label }) => (
+              <div key={label} className="flex flex-col items-center gap-3">
+                <div className="relative w-full aspect-[2/3] overflow-hidden rounded-sm border border-[#B8935A]/28">
+                  <Image
+                    alt={label}
+                    className="object-cover"
+                    fill
+                    sizes="(min-width: 1024px) 25vw, 50vw"
+                    src={src}
+                  />
+                </div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+                  {label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="flex items-center px-5 py-20 sm:px-10 lg:px-16">
           <FadeUp className="max-w-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#B8935A]">
