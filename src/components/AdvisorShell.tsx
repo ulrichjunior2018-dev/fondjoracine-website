@@ -76,12 +76,35 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
             <span className="font-serif text-xl text-[#B8935A] md:hidden">MF</span>
             <span className="hidden md:inline">{shell.footer}</span>
           </p>
-          <nav className="flex flex-wrap gap-5">
+          <nav className="flex flex-wrap items-center gap-5">
             {advisorFooterLinks.map(([label, href]) => (
               <a className="transition-colors hover:text-[#B8935A]" href={href} key={href}>
                 {label}
               </a>
             ))}
+            <a
+              aria-label="Instagram"
+              className="transition-colors hover:text-[#B8935A]"
+              href="https://www.instagram.com/maison.fondjo"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <svg
+                aria-hidden="true"
+                className="size-4 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect height="20" rx="5" ry="5" width="20" x="2" y="2" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+              </svg>
+            </a>
           </nav>
         </div>
       </footer>

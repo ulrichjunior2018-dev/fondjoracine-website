@@ -3,6 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { LanguageSuggestionBanner } from "@/components/ui/LanguageSuggestionBanner";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { ToastProvider } from "@/components/ui/toast";
@@ -19,6 +20,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       <I18nProvider>
         <SmoothScrollProvider>
           <CustomCursor />
+          <FloatingWhatsApp />
           <LanguageSuggestionBanner />
           <ToastProvider>{children}</ToastProvider>
         </SmoothScrollProvider>
