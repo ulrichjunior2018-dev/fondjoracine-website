@@ -240,76 +240,53 @@ export function OriginSection({ copy }: { copy: Copy }) {
 }
 
 export function FounderStorySection({ content, locale }: PremiumStorefrontPageProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const founderIntro = content.founder.intro ?? content.founder.title;
-
-  useEffect(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "-20% 0px -20% 0px", threshold: 0.28 },
-    );
-
-    observer.observe(section);
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      className="relative min-h-[92svh] overflow-hidden bg-[#0B0B0B] text-[#F5EFE3]"
-      data-mobile-cta-section="founder"
-      id="founder"
-      ref={sectionRef}
-    >
-      <div aria-hidden="true" className="absolute inset-0">
-        <Image
-          alt=""
-          blurDataURL={blurDataUrl}
-          className="object-cover"
-          fill
-          placeholder="blur"
-          sizes="100vw"
-          src={campaignImages.family}
-        />
-      </div>
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(8_7_6/.88)_0%,rgb(8_7_6/.66)_48%,rgb(8_7_6/.2)_100%),linear-gradient(180deg,rgb(8_7_6/.18)_0%,rgb(8_7_6/.72)_100%)]" />
+    <section className="bg-[#F5EFE3] text-[#0B0B0B]" data-mobile-cta-section="founder" id="founder">
+      <Container className="grid gap-0 px-0 lg:grid-cols-2" size="full">
+        {/* Text — left */}
+        <div className="flex items-center px-5 py-20 sm:px-10 lg:px-16 lg:py-28">
+          <FadeUp className="max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#B8935A]">
+              {t(content.founder.eyebrow, locale)}
+            </p>
+            <h2 className="mt-4 font-serif text-[clamp(2.6rem,6vw,5rem)] font-light leading-[0.92] text-[#0B0B0B]">
+              {t(content.founder.title, locale)}
+            </h2>
+            <p className="mt-8 text-sm leading-8 text-[#0B0B0B]/68">
+              {t(content.founder.signature, locale)}
+            </p>
 
-      <Container className="relative flex min-h-[92svh] items-center py-24 sm:py-32">
-        <div
-          className={`max-w-4xl transition-all duration-700 ease-out ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-          }`}
-        >
-          <p className="font-serif text-4xl leading-none text-[#B8935A] sm:text-6xl">
-            Maison Fondjo
-          </p>
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.38em] text-[#B8935A]">
-            {t(content.founder.eyebrow, locale)}
-          </p>
-          <h2 className="mt-6 max-w-3xl font-serif text-5xl font-light leading-[1.08] text-[#F5EFE3] sm:text-7xl lg:text-8xl">
-            {t(content.founder.title, locale)}
-          </h2>
-          <p className="mt-8 max-w-2xl font-serif text-2xl leading-[1.55] text-[#F5EFE3]/82 sm:text-3xl">
-            {t(content.founder.signature, locale)}
-          </p>
-          <p className="mt-8 max-w-2xl text-sm leading-8 text-[#F5EFE3]/68 sm:text-base">
-            {t(founderIntro, locale)}
-          </p>
-          <p className="mt-10 text-xs font-semibold uppercase tracking-[0.32em] text-[#B8935A]/82">
-            {content.founder.name}
-          </p>
+            {/* Signature block */}
+            <div className="mt-10 border-t border-[#0B0B0B]/12 pt-8">
+              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+                MF
+              </p>
+              <p className="mt-3 text-xs leading-7 text-[#0B0B0B]/52">
+                {t(content.founder.intro ?? content.founder.title, locale)}
+              </p>
+              <p className="mt-5 font-serif text-lg font-light italic text-[#B8935A]">
+                — {content.founder.name}
+              </p>
+            </div>
+          </FadeUp>
+        </div>
+
+        {/* Photo — right */}
+        <div className="relative min-h-[32rem] overflow-hidden lg:min-h-0">
+          <Image
+            alt={t(content.founder.image.alt, locale)}
+            blurDataURL={blurDataUrl}
+            className="object-cover"
+            fill
+            placeholder="blur"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            src={campaignImages.family}
+          />
+          {/* Edge vignette only — no darkening over faces */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgb(245_239_227/.22)_100%)]"
+          />
         </div>
       </Container>
     </section>
