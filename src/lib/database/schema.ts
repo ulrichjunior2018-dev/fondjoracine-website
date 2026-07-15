@@ -1,10 +1,22 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type {
+  Database,
+  Enums,
+  Json,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from "@/lib/database/types.generated";
 
+/**
+ * Every table in the `public` schema (source of truth:
+ * `supabase/migrations/000001`–`000009`). Useful for typing `.from(table)`
+ * arguments. Column-level typing comes from `types.generated.ts`.
+ */
 export type CommerceTable =
+  | "addresses"
   | "admin_roles"
   | "admin_user_roles"
   | "analytics_events"
-  | "addresses"
   | "audit_logs"
   | "cart_items"
   | "carts"
@@ -12,11 +24,15 @@ export type CommerceTable =
   | "collection_products"
   | "collections"
   | "coupons"
+  | "customer_notification_preferences"
   | "customers"
   | "discounts"
+  | "hair_consultations"
+  | "inner_circle_members"
   | "inventory_items"
   | "inventory_locations"
   | "inventory_movements"
+  | "newsletter_signups"
   | "notifications"
   | "order_items"
   | "orders"
@@ -30,6 +46,7 @@ export type CommerceTable =
   | "reviews"
   | "shipments"
   | "shipping_rates"
+  | "storefront_content"
   | "subscription_items"
   | "subscriptions"
   | "support_ticket_messages"
@@ -68,13 +85,3 @@ export const adminPermissions = {
 } as const;
 
 export type AdminPermission = (typeof adminPermissions)[keyof typeof adminPermissions];
-
-export type Database = {
-  public: {
-    Tables: Record<CommerceTable, never>;
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-    CompositeTypes: Record<string, never>;
-  };
-};
