@@ -1,0 +1,86 @@
+# CODEOWNERS — module ownership for parallel development
+#
+# Purpose: let 10+ developers work concurrently without stepping on each other.
+# Each bounded context has a clear owner; cross-context changes require the
+# owning team's review. See docs/repository-discovery/CONTRIBUTING-architecture.md
+# for the boundary rules.
+#
+# NOTE: Replace the @maison-fondjo/* placeholders below with real GitHub
+# teams or usernames before enabling required reviews.
+
+# --- Platform: API contract, shared client/SDK, config, types ---------------
+/src/lib/api/                 @maison-fondjo/platform
+/src/lib/api-client/          @maison-fondjo/platform
+/src/app/api/v1/              @maison-fondjo/platform
+/src/config/                  @maison-fondjo/platform
+/src/lib/database/            @maison-fondjo/platform
+/src/lib/errors/              @maison-fondjo/platform
+
+# --- Identity & access ------------------------------------------------------
+/src/lib/auth/                @maison-fondjo/identity
+/src/services/auth/           @maison-fondjo/identity
+/src/domain/auth/             @maison-fondjo/identity
+
+# --- Catalog ----------------------------------------------------------------
+/src/services/catalog/        @maison-fondjo/catalog
+/src/services/commerce/catalog-service.ts   @maison-fondjo/catalog
+/src/domain/catalog/          @maison-fondjo/catalog
+
+# --- Cart & orders ----------------------------------------------------------
+/src/services/order/          @maison-fondjo/orders
+/src/services/commerce/cart-service.ts             @maison-fondjo/orders
+/src/services/commerce/order-service.ts            @maison-fondjo/orders
+/src/services/commerce/one-product-order-service.ts @maison-fondjo/orders
+/src/domain/order/            @maison-fondjo/orders
+
+# --- Customer accounts -------------------------------------------------------
+/src/features/account/       @maison-fondjo/accounts
+/src/app/account/            @maison-fondjo/accounts
+/src/app/login/              @maison-fondjo/accounts
+/src/app/signup/             @maison-fondjo/accounts
+/src/app/forgot-password/    @maison-fondjo/accounts
+/src/app/reset-password/     @maison-fondjo/accounts
+/src/app/auth/               @maison-fondjo/accounts
+/src/app/api/v1/account/     @maison-fondjo/accounts
+/src/services/customer/      @maison-fondjo/accounts
+/src/domain/customer/        @maison-fondjo/accounts
+
+# --- Payments ---------------------------------------------------------------
+/src/lib/payments/            @maison-fondjo/payments
+/src/app/api/webhooks/        @maison-fondjo/payments
+
+# --- Notifications ----------------------------------------------------------
+/src/lib/email/               @maison-fondjo/notifications
+/src/services/commerce/order-notification-service.ts @maison-fondjo/notifications
+
+# --- Consultations ----------------------------------------------------------
+/src/services/commerce/hair-consultation-service.ts @maison-fondjo/consultations
+/src/app/api/hair-consultation/  @maison-fondjo/consultations
+
+# --- Admin ------------------------------------------------------------------
+/src/features/admin/          @maison-fondjo/admin
+/src/app/admin/               @maison-fondjo/admin
+/src/app/api/admin/           @maison-fondjo/admin
+/src/services/commerce/admin-dashboard-service.ts @maison-fondjo/admin
+/src/services/commerce/admin-service.ts           @maison-fondjo/admin
+
+# --- Storefront UI & content ------------------------------------------------
+/src/features/elixir/         @maison-fondjo/storefront
+/src/features/home/           @maison-fondjo/storefront
+/src/features/commerce/       @maison-fondjo/storefront
+/src/app/                     @maison-fondjo/storefront
+
+# --- Design system & shared UI ----------------------------------------------
+/src/components/              @maison-fondjo/design-system
+/src/styles/                  @maison-fondjo/design-system
+/src/lib/design-system/       @maison-fondjo/design-system
+/src/lib/design-tokens.ts     @maison-fondjo/design-system
+
+# --- Motion (GSAP / Lenis / Framer Motion) ----------------------------------
+/src/providers/smooth-scroll-provider.tsx   @maison-fondjo/design-system
+/src/lib/motion/              @maison-fondjo/design-system
+
+# --- Docs & architecture ----------------------------------------------------
+/docs/                        @maison-fondjo/architecture
+/CODEOWNERS                   @maison-fondjo/architecture
+/.github/                     @maison-fondjo/architecture
