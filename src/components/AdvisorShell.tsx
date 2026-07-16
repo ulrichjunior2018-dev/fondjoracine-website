@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { buildWaLink } from "@/lib/config";
 import { useCopy, useI18n } from "@/lib/i18n-context";
 
@@ -50,7 +49,6 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
             ))}
           </nav>
           <div className="flex items-center gap-3">
-            <LanguageToggle />
             <a
               className="inline-flex min-h-11 items-center justify-center rounded-sm bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
               href={waOrderUrl}

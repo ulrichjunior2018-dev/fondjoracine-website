@@ -3,12 +3,12 @@
 import { ArrowRight, Menu, MessageCircle, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CinematicHero } from "@/components/CinematicHero";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { siteConfig } from "@/config/site";
 import { formulaIngredients, getFormulaIngredientCopy } from "@/content/formula";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
@@ -46,45 +46,12 @@ const campaignImages = {
   reflection: siteImages.studioBottle,
 } as const;
 
+/** Section rise — GSAP ScrollTrigger (runs on mobile via native scroll). */
 function FadeUp({ children, className }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const element = ref.current;
-
-    if (!element) {
-      return;
-    }
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    if (reduceMotion.matches) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.18 },
-    );
-
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div
-      className={`fondjo-section-reveal ${isVisible ? "is-visible" : ""} ${className ?? ""}`}
-      ref={ref}
-    >
+    <ScrollReveal className={className} staggerChildren>
       {children}
-    </div>
+    </ScrollReveal>
   );
 }
 
@@ -770,7 +737,6 @@ function PremiumHeader({ copy, whatsappUrl }: { copy: Copy; whatsappUrl: string 
         </nav>
 
         <div className="flex items-center gap-3">
-          <LanguageToggle />
           <a
             className="hidden h-10 items-center rounded-sm bg-[#B8935A] px-4 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98] lg:inline-flex"
             href={whatsappUrl}

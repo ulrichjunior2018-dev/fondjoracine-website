@@ -511,7 +511,6 @@ const homeFr = {
     bannerAccept: "Passer en français",
     bannerDismiss: "Continuer en anglais",
     bannerText: "On dirait que vous préférez le français",
-    toggleLabel: "Switch language / Changer de langue",
   },
   shell: advisorFr.shell,
 } as const;
@@ -539,10 +538,9 @@ const homeEn = {
     ],
   },
   language: {
-    bannerAccept: "Switch to French",
-    bannerDismiss: "Continue in English",
-    bannerText: "It looks like you prefer French",
-    toggleLabel: "Switch language / Changer de langue",
+    bannerAccept: "Switch to English",
+    bannerDismiss: "Continue in French",
+    bannerText: "It looks like you prefer English",
   },
   shell: advisorEn.shell,
 } as const;
