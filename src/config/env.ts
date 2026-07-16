@@ -20,6 +20,13 @@ const envSchema = z.object({
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
+  /**
+   * Shows the "Continue with Google" button on /login and /signup. Google
+   * OAuth itself is configured in the Supabase dashboard (client id/secret),
+   * not here — flip this on once that's done. Apple sign-in is future work
+   * (see src/features/account/README.md).
+   */
+  NEXT_PUBLIC_AUTH_GOOGLE_ENABLED: z.string().optional().or(z.literal("")),
 });
 
 export const env = envSchema.parse(process.env);
