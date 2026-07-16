@@ -33,7 +33,7 @@ export const accountNavGroups: AccountNavGroup[] = [
   {
     id: "core",
     items: [
-      { href: "/account", icon: "home", label: "Overview" },
+      { href: "/account", icon: "home", label: "Home" },
       { href: "/account/orders", icon: "package", label: "My Orders" },
       { href: "/account/profile", icon: "user", label: "My Profile" },
     ],
@@ -85,7 +85,7 @@ export const accountNavGroups: AccountNavGroup[] = [
         comingSoon: true,
         href: futureRoute("/account/billing"),
         icon: "creditCard",
-        label: "Billing",
+        label: "Billing & Receipts",
       },
       {
         comingSoon: true,
@@ -99,6 +99,7 @@ export const accountNavGroups: AccountNavGroup[] = [
         icon: "lifeBuoy",
         label: "Support",
       },
+      { href: "/account/settings", icon: "settings", label: "Settings" },
     ],
   },
   {

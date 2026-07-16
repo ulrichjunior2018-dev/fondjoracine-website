@@ -9,7 +9,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/utils/currency";
 import { getAccountOverview } from "@/services/customer/customer-service";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Home" };
 
 function getOrderStatusTone(status: string) {
   return status === "confirmed" || status === "delivered" ? "sage" : "accent";
