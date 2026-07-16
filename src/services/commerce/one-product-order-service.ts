@@ -12,6 +12,7 @@ import { t } from "@/features/elixir/data/content";
 import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
 import { buildWaLink } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
+import { getPaymentProvider } from "@/lib/payments/registry";
 import { getStripeClient } from "@/lib/payments/stripe";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -173,28 +174,24 @@ async function recordPayment(
   input: CreateOneProductOrderInput,
   content: ElixirContent,
 ) {
-  if (input.payment_method === "whatsapp") {
+  const provider = getPaymentProvider(input.payment_method);
+
+  if (!provider.recordsPaymentOnCreate) {
     return;
   }
 
-  if (
-    (input.payment_method === "mtn_momo" || input.payment_method === "orange_money") &&
-    !input.transaction_reference
-  ) {
+  if (provider.requiresTransactionReference && !input.transaction_reference) {
     return;
   }
 
-  const providerPaymentId =
-    input.payment_method === "stripe"
-      ? `stripe_checkout:${order.id}`
-      : `${input.payment_method}:${input.transaction_reference}`;
+  const amountCents =
+    provider.kind === "redirect"
+      ? content.priceCents * input.quantity
+      : parseXafAmount(content.product.priceXaf) * input.quantity;
 
   const { error } = await supabase.from("payments").insert({
-    amount_cents:
-      input.payment_method === "stripe"
-        ? content.priceCents * input.quantity
-        : parseXafAmount(content.product.priceXaf) * input.quantity,
-    currency: input.payment_method === "stripe" ? content.currency : "XAF",
+    amount_cents: amountCents,
+    currency: provider.resolveSettlementCurrency(content.currency),
     metadata: {
       customer_phone: input.phone,
       manual_reference: input.transaction_reference || null,
@@ -202,8 +199,11 @@ async function recordPayment(
     },
     order_id: order.id,
     provider: input.payment_method,
-    provider_payment_id: providerPaymentId,
-    status: input.payment_method === "stripe" ? "requires_confirmation" : "processing",
+    provider_payment_id: provider.buildProviderPaymentId({
+      orderId: order.id,
+      transactionReference: input.transaction_reference,
+    }),
+    status: provider.initialPaymentStatus,
   });
 
   if (error) {
@@ -218,15 +218,16 @@ export async function createOneProductOrder(
   const content = await getElixirContent();
   const locale = input.locale;
   const instructions = getPaymentInstructions(content, locale, input.payment_method);
-  const isManualPayment =
-    input.payment_method === "mtn_momo" || input.payment_method === "orange_money";
+  const provider = getPaymentProvider(input.payment_method);
+  const isManualPayment = provider.kind === "manual_reference";
+  const settlementCurrency = provider.resolveSettlementCurrency(content.currency);
 
-  if (input.payment_method === "stripe") {
+  if (provider.kind === "redirect") {
     getStripeClient();
   }
 
   const subtotalCents =
-    input.payment_method === "stripe"
+    provider.kind === "redirect"
       ? content.priceCents * input.quantity
       : parseXafAmount(content.product.priceXaf) * input.quantity;
 
@@ -235,12 +236,12 @@ export async function createOneProductOrder(
     .insert({
       billing_address: {
         city: input.city,
-        country: input.payment_method === "stripe" ? null : "CM",
+        country: provider.kind === "redirect" ? null : "CM",
         line1: input.delivery_address,
         name: input.name,
         phone: normalizePhone(input.phone),
       },
-      currency: input.payment_method === "stripe" ? content.currency : "XAF",
+      currency: settlementCurrency,
       customer_name: input.name,
       customer_phone: normalizePhone(input.phone),
       delivery_address: input.delivery_address,
@@ -262,7 +263,7 @@ export async function createOneProductOrder(
       placed_at: new Date().toISOString(),
       shipping_address: {
         city: input.city,
-        country: input.payment_method === "stripe" ? null : "CM",
+        country: provider.kind === "redirect" ? null : "CM",
         line1: input.delivery_address,
         name: input.name,
         phone: normalizePhone(input.phone),
@@ -311,7 +312,7 @@ export async function createOneProductOrder(
     ...(input.transaction_reference ? { transactionReference: input.transaction_reference } : {}),
   });
 
-  if (input.payment_method === "stripe") {
+  if (provider.kind === "redirect") {
     const session = await createStripeCheckoutSession(order, input);
     await supabase
       .from("orders")
