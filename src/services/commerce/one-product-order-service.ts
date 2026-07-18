@@ -17,8 +17,6 @@ import { getStripeClient } from "@/lib/payments/stripe";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-type ManualPaymentMethod = Extract<OneProductPaymentMethod, "mtn_momo" | "orange_money">;
-
 type CreatedOrderRow = {
   confirmation_token: string;
   id: string;
@@ -47,16 +45,19 @@ function parseXafAmount(price: string) {
   return numeric;
 }
 
-function getManualPaymentMethod(content: ElixirContent, method: ManualPaymentMethod) {
-  const label = method === "mtn_momo" ? "MTN MoMo" : "Orange Money";
+function getManualPaymentMethod(content: ElixirContent, method: OneProductPaymentMethod) {
+  const provider = getPaymentProvider(method);
+  const match = (provider.cmsLabelMatch ?? provider.defaultLabel).toLowerCase();
   const paymentMethod = content.manualPayments.methods.find((item) =>
-    item.label.toLowerCase().includes(method === "mtn_momo" ? "mtn" : "orange"),
+    item.label.toLowerCase().includes(match),
   );
 
   if (!paymentMethod) {
-    throw new AppError("INTERNAL", `${label} payment instructions are not configured.`, {
-      expose: false,
-    });
+    throw new AppError(
+      "INTERNAL",
+      `${provider.defaultLabel} payment instructions are not configured.`,
+      { expose: false },
+    );
   }
 
   return paymentMethod;
@@ -71,22 +72,24 @@ function getPaymentInstructions(
   locale: Locale,
   method: OneProductPaymentMethod,
 ) {
-  if (method === "whatsapp") {
+  const provider = getPaymentProvider(method);
+
+  if (provider.kind === "external_handoff") {
     return {
       heading: t(content.whatsapp.label, locale),
       instructions: t(content.whatsapp.message, locale),
-      label: "WhatsApp",
+      label: provider.defaultLabel,
       number: content.whatsapp.phone,
     };
   }
 
-  if (method === "stripe") {
+  if (provider.kind === "redirect") {
     return {
       heading: "Stripe Checkout",
       instructions: locale.startsWith("fr")
         ? "Vous serez redirige vers Stripe pour finaliser le paiement par carte."
         : "You will be redirected to Stripe to complete card payment.",
-      label: "Stripe",
+      label: provider.defaultLabel,
       number: "",
     };
   }
@@ -214,6 +217,7 @@ async function recordPayment(
 export async function createOneProductOrder(
   supabase: SupabaseClient,
   input: CreateOneProductOrderInput,
+  options?: { customerId?: string | null },
 ) {
   const content = await getElixirContent();
   const locale = input.locale;
@@ -221,6 +225,7 @@ export async function createOneProductOrder(
   const provider = getPaymentProvider(input.payment_method);
   const isManualPayment = provider.kind === "manual_reference";
   const settlementCurrency = provider.resolveSettlementCurrency(content.currency);
+  const customerId = options?.customerId ?? null;
 
   if (provider.kind === "redirect") {
     getStripeClient();
@@ -242,6 +247,7 @@ export async function createOneProductOrder(
         phone: normalizePhone(input.phone),
       },
       currency: settlementCurrency,
+      customer_id: customerId,
       customer_name: input.name,
       customer_phone: normalizePhone(input.phone),
       delivery_address: input.delivery_address,
@@ -256,6 +262,7 @@ export async function createOneProductOrder(
         product_id: content.id,
         product_name: t(content.product.name, locale),
         quantity: input.quantity,
+        ...(customerId ? { linked_customer_id: customerId } : {}),
       },
       order_number: createOrderNumber(),
       payment_instructions: instructions,
@@ -376,8 +383,13 @@ export async function submitOrderPaymentReference(
     throw new AppError("NOT_FOUND", "Order confirmation was not found.");
   }
 
-  if (order.payment_method !== "mtn_momo" && order.payment_method !== "orange_money") {
-    throw new AppError("BAD_REQUEST", "This order does not use manual Mobile Money payment.");
+  if (!order.payment_method) {
+    throw new AppError("BAD_REQUEST", "This order has no payment method.");
+  }
+
+  const provider = getPaymentProvider(order.payment_method);
+  if (!provider.requiresTransactionReference) {
+    throw new AppError("BAD_REQUEST", "This order does not use manual reference payment.");
   }
 
   if (order.status === "confirmed" || order.status === "cancelled" || order.status === "refunded") {
@@ -407,7 +419,10 @@ export async function submitOrderPaymentReference(
     },
     order_id: order.id,
     provider: order.payment_method,
-    provider_payment_id: `${order.payment_method}:${input.transaction_reference}`,
+    provider_payment_id: provider.buildProviderPaymentId({
+      orderId: order.id,
+      transactionReference: input.transaction_reference,
+    }),
     status: "processing",
   });
 
@@ -420,7 +435,7 @@ export async function submitOrderPaymentReference(
     confirmationUrl: getConfirmationUrl(order.confirmation_token),
     customerName: order.customer_name ?? "Customer",
     orderNumber: order.order_number,
-    paymentMethod: order.payment_method === "mtn_momo" ? "MTN MoMo" : "Orange Money",
+    paymentMethod: provider.defaultLabel,
     phone: order.customer_phone ?? "Unknown",
     totalLabel: `${order.total_cents.toLocaleString("en-US")} XAF`,
     transactionReference: input.transaction_reference,

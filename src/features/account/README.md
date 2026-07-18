@@ -10,9 +10,9 @@ Everything a signed-in customer sees about their relationship with Maison Fondjo
 
 ## What lives here
 
-- **`lib/auth-client.ts`** — browser-side Supabase auth calls (`signUp`, `signIn`, `signOut`, Google OAuth, password reset/update). Auth itself talks to Supabase directly from the client (the standard Next.js + Supabase pattern, so session cookies are set correctly); everything else (profile, addresses, orders, notification prefs) goes through `/api/v1/account/*` via the typed SDK (`lib/api-client/resources/account.ts`), never direct Supabase table access from components.
+- **`lib/auth-client.ts`** — browser-side auth (`signUp` / `signIn` password, `startIdentityProvider` for OAuth/social, password reset). Methods resolve from `src/lib/identity` — same registry pattern as payments. Session cookies via Supabase client; profile/orders go through `/api/v1/account/*`.
 - **`lib/nav.ts`** — `accountNavGroups` (and flat `accountNavItems`), the single source of truth for the dashboard sidebar/drawer. Live items + `comingSoon` placeholders for deferred sections.
-- **`components/auth-card.tsx`**, **`login-form.tsx`**, **`signup-form.tsx`**, **`forgot-password-form.tsx`**, **`reset-password-form.tsx`**, **`google-auth-button.tsx`** — auth UI, mounted by `app/login`, `app/signup`, `app/forgot-password`, `app/reset-password`.
+- **`components/auth-card.tsx`**, **`login-form.tsx`**, **`signup-form.tsx`**, **`forgot-password-form.tsx`**, **`reset-password-form.tsx`**, **`social-auth-buttons.tsx`** — auth UI, mounted by `app/login`, `app/signup`, `app/forgot-password`, `app/reset-password`.
 - **`components/account-shell.tsx`** — mobile-first dashboard shell: hamburger on the right opens a slide-down feature menu; persistent sidebar on `lg+`. Light account palette (gray bg / near-black text / gold accents).
 - **`components/profile-form.tsx`**, **`address-form.tsx`**, **`address-list.tsx`**, **`change-password-form.tsx`**, **`notification-preferences-form.tsx`**, **`sign-out-button.tsx`** — the essentials-tier dashboard pages' interactive pieces, mounted by `app/account/*/page.tsx`.
 
@@ -35,7 +35,11 @@ Hair Profile, Consultation History (link to `hair_consultations`), Wishlist (tab
 
 - Mobile-first: design for the hamburger slide-down menu first, then enhance at `lg:`.
 - Never store raw payment card data — tokenize via the provider (see `src/lib/payments/README.md`).
-- Google/Apple sign-in are feature-flagged (`NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`) — the button renders `null` until enabled.
+- Signup **and** all other auth surfaces are registry-driven (`src/lib/identity`): login, signup, Security, Settings, `/api/v1/identity-providers`. Add/remove methods via a provider module + env flag — do not rewrite those pages.
+
+## How to add or remove a sign-in method (system-wide)
+
+See **`src/lib/identity/README.md`**. Short version: descriptor → registry → env flag → Supabase config. Applies to the whole product, not only signup.
 
 ## Related
 

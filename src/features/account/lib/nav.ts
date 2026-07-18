@@ -1,20 +1,23 @@
 import type { Route } from "next";
 
 import type { Icons } from "@/components/icons/icons";
+import type { SurfacesDictionary } from "@/i18n/dictionaries/surfaces";
+
+export type AccountNavLabelKey = keyof SurfacesDictionary["account"]["nav"];
 
 export type AccountNavItem = {
   /** When true, item is visible in the menu but not yet navigable (future features). */
   comingSoon?: boolean;
   href: Route;
   icon: keyof typeof Icons;
-  label: string;
+  labelKey: AccountNavLabelKey;
 };
 
 export type AccountNavGroup = {
   id: string;
   items: AccountNavItem[];
-  /** Optional section label shown above the group (omit for the first “core” group). */
-  label?: string;
+  /** Optional section label key shown above the group. */
+  labelKey?: AccountNavLabelKey;
 };
 
 /** Cast helper for deferred account paths that do not exist as routes yet. */
@@ -24,99 +27,97 @@ function futureRoute(path: string): Route {
 
 /**
  * Single source of truth for the account mobile drawer + desktop sidebar.
- *
- * Essentials are live; `comingSoon: true` items stay visible so customers see the
- * full Maison Fondjo relationship roadmap. When a deferred section ships, set
- * `comingSoon` to false (or remove it) and add the matching page + API.
+ * Labels resolve via `account.nav.*` translation keys.
  */
 export const accountNavGroups: AccountNavGroup[] = [
   {
     id: "core",
     items: [
-      { href: "/account", icon: "home", label: "Home" },
-      { href: "/account/orders", icon: "package", label: "My Orders" },
-      { href: "/account/profile", icon: "user", label: "My Profile" },
+      { href: "/account", icon: "home", labelKey: "dashboard" },
+      { href: "/", icon: "shoppingBag", labelKey: "backToWebsite" },
+      { href: "/account/orders", icon: "package", labelKey: "myOrders" },
+      { href: "/account/profile", icon: "user", labelKey: "myProfile" },
     ],
   },
   {
     id: "hair-care",
-    label: "Hair care",
+    labelKey: "hairCare",
     items: [
       {
         comingSoon: true,
         href: futureRoute("/account/hair-profile"),
         icon: "sparkles",
-        label: "Hair Profile",
+        labelKey: "hairProfile",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/consultations"),
         icon: "clipboardList",
-        label: "Consultation History",
+        labelKey: "consultationHistory",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/hair-progress"),
         icon: "camera",
-        label: "Hair Progress",
+        labelKey: "hairProgress",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/wishlist"),
         icon: "heart",
-        label: "Wishlist",
+        labelKey: "wishlist",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/reviews"),
         icon: "star",
-        label: "Reviews",
+        labelKey: "reviews",
       },
     ],
   },
   {
     id: "account",
-    label: "Account",
+    labelKey: "account",
     items: [
-      { href: "/account/addresses", icon: "mapPin", label: "Addresses" },
-      { href: "/account/security", icon: "lock", label: "Security" },
-      { href: "/account/notifications", icon: "bell", label: "Notifications" },
+      { href: "/account/addresses", icon: "mapPin", labelKey: "addresses" },
+      { href: "/account/security", icon: "lock", labelKey: "security" },
+      { href: "/account/notifications", icon: "bell", labelKey: "notifications" },
       {
         comingSoon: true,
         href: futureRoute("/account/billing"),
         icon: "creditCard",
-        label: "Billing & Receipts",
+        labelKey: "billing",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/payment-methods"),
         icon: "wallet",
-        label: "Saved Payment Methods",
+        labelKey: "paymentMethods",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/support"),
         icon: "lifeBuoy",
-        label: "Support",
+        labelKey: "support",
       },
-      { href: "/account/settings", icon: "settings", label: "Settings" },
+      { href: "/account/settings", icon: "settings", labelKey: "settings" },
     ],
   },
   {
     id: "rewards",
-    label: "Rewards",
+    labelKey: "rewards",
     items: [
       {
         comingSoon: true,
         href: futureRoute("/account/referrals"),
         icon: "gift",
-        label: "Refer friends",
+        labelKey: "referFriends",
       },
       {
         comingSoon: true,
         href: futureRoute("/account/loyalty"),
         icon: "award",
-        label: "Loyalty Program",
+        labelKey: "loyalty",
       },
     ],
   },

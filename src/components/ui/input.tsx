@@ -1,15 +1,19 @@
-import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
+/** Shared field chrome — min-w-0 / max-w-full keeps long input from blowing out mobile layouts. */
 const fieldClassName =
-  "w-full rounded-md border border-border bg-surface px-3.5 text-sm text-foreground shadow-sm transition-colors placeholder:text-foreground/42 hover:border-border-strong focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-foreground/45";
+  "box-border w-full min-w-0 max-w-full rounded-md border border-border bg-surface px-3.5 text-base text-foreground shadow-sm transition-colors placeholder:text-foreground/42 hover:border-border-strong focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-foreground/45 sm:text-sm";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   isInvalid?: boolean;
 };
 
-export function Input({ className, isInvalid = false, ...props }: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { className, isInvalid = false, ...props },
+  ref,
+) {
   return (
     <input
       aria-invalid={isInvalid || undefined}
@@ -19,16 +23,20 @@ export function Input({ className, isInvalid = false, ...props }: InputProps) {
         isInvalid && "border-destructive focus:border-destructive",
         className,
       )}
+      ref={ref}
       {...props}
     />
   );
-}
+});
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   isInvalid?: boolean;
 };
 
-export function Textarea({ className, isInvalid = false, ...props }: TextareaProps) {
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
+  { className, isInvalid = false, ...props },
+  ref,
+) {
   return (
     <textarea
       aria-invalid={isInvalid || undefined}
@@ -38,10 +46,11 @@ export function Textarea({ className, isInvalid = false, ...props }: TextareaPro
         isInvalid && "border-destructive focus:border-destructive",
         className,
       )}
+      ref={ref}
       {...props}
     />
   );
-}
+});
 
 type FieldProps = {
   children: React.ReactNode;
@@ -61,16 +70,20 @@ export function Field({
   required = false,
 }: FieldProps) {
   return (
-    <label className={cn("grid gap-2 text-sm font-medium text-foreground", className)}>
-      <span>
+    <label className={cn("grid min-w-0 gap-2 text-sm font-medium text-foreground", className)}>
+      <span className="min-w-0 break-words">
         {label}
         {required ? <span className="text-destructive"> *</span> : null}
       </span>
-      {children}
+      <span className="min-w-0">{children}</span>
       {description ? (
-        <span className="text-xs leading-5 text-foreground/58">{description}</span>
+        <span className="min-w-0 break-words text-xs leading-5 text-foreground/58">
+          {description}
+        </span>
       ) : null}
-      {error ? <span className="text-xs leading-5 text-destructive">{error}</span> : null}
+      {error ? (
+        <span className="min-w-0 break-words text-xs leading-5 text-destructive">{error}</span>
+      ) : null}
     </label>
   );
 }

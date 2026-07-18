@@ -22,7 +22,11 @@ function getCardVariantClassName(variant: CardVariant) {
 export function Card({ className, variant = "default", ...props }: CardProps) {
   return (
     <section
-      className={cn("rounded-lg border p-5 sm:p-6", getCardVariantClassName(variant), className)}
+      className={cn(
+        "min-w-0 max-w-full rounded-lg border p-5 sm:p-6",
+        getCardVariantClassName(variant),
+        className,
+      )}
       {...props}
     />
   );
