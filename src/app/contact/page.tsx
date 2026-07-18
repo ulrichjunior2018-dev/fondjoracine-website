@@ -4,21 +4,16 @@ import { Mail, MessageCircle, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
 import { env } from "@/config/env";
-import { publicCopy } from "@/content/copy";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 import { buildWaLink } from "@/lib/config";
+import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = {
-  title: publicCopy.metadata.contact.title,
-  description: publicCopy.metadata.contact.description,
-  openGraph: {
-    description: publicCopy.metadata.contact.description,
-    locale: "fr_FR",
-    title: publicCopy.metadata.contact.title,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPublicMetadata((publicCopy) => publicCopy.metadata.contact);
+}
 
 export default async function ContactPage() {
+  const { publicCopy } = await resolvePublicCopy();
   const content = await getElixirContent();
   const email = env.ADMIN_EMAIL || "hello@maisonfondjo.com";
   const whatsappUrl = buildWaLink("consultation");

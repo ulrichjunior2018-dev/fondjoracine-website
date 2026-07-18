@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { GrossistesRouteSection } from "@/components/AdvisorRouteSections";
-import { copy } from "@/content/copy";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
+import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = buildAdvisorRouteMetadata({
-  title: "Wholesale",
-  description: copy.en.grossistes.description,
-  path: "/grossistes",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, copy } = await resolveAdvisorCopy();
+  return buildAdvisorRouteMetadata({
+    title: locale === "fr" ? "Grossistes" : "Wholesale",
+    description: copy.grossistes.description,
+    locale,
+    path: "/grossistes",
+  });
+}
 
 export default function GrossistesPage() {
   return (

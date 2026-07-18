@@ -11,12 +11,14 @@ import { useToast } from "@/components/ui/toast";
 import type { AddressInput } from "@/domain/customer/schemas";
 import type { Address } from "@/domain/customer/types";
 import { AddressForm } from "@/features/account/components/address-form";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getApiClient } from "@/lib/api-client/instance";
 import {
   createAccountAddress,
   deleteAccountAddress,
   updateAccountAddress,
 } from "@/lib/api-client/resources/account";
+import { useI18n } from "@/lib/i18n-context";
 
 type AddressListProps = {
   initialAddresses: Address[];
@@ -24,6 +26,9 @@ type AddressListProps = {
 
 export function AddressList({ initialAddresses }: AddressListProps) {
   const { toast } = useToast();
+  const { locale } = useI18n();
+  const a = getDictionary(locale).account.addresses;
+  const auth = getDictionary(locale).auth;
   const [addresses, setAddresses] = useState(initialAddresses);
   const [editing, setEditing] = useState<Address | "new" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,18 +41,18 @@ export function AddressList({ initialAddresses }: AddressListProps) {
     try {
       if (editing && editing !== "new") {
         const updated = await updateAccountAddress(client, editing.id, values);
-        setAddresses((current) => current.map((a) => (a.id === updated.id ? updated : a)));
+        setAddresses((current) => current.map((row) => (row.id === updated.id ? updated : row)));
       } else {
         const created = await createAccountAddress(client, values);
         setAddresses((current) => [created, ...current]);
       }
 
-      toast({ title: "Address saved", tone: "success" });
+      toast({ title: a.saved, tone: "success" });
       setEditing(null);
     } catch (error) {
       toast({
-        title: "Couldn't save address",
-        description: error instanceof Error ? error.message : "Please try again.",
+        title: a.error,
+        description: error instanceof Error ? error.message : auth.tryAgain,
         tone: "danger",
       });
     } finally {
@@ -60,12 +65,12 @@ export function AddressList({ initialAddresses }: AddressListProps) {
 
     try {
       await deleteAccountAddress(getApiClient(), address.id);
-      setAddresses((current) => current.filter((a) => a.id !== address.id));
-      toast({ title: "Address removed", tone: "success" });
+      setAddresses((current) => current.filter((row) => row.id !== address.id));
+      toast({ title: a.removed, tone: "success" });
     } catch (error) {
       toast({
-        title: "Couldn't remove address",
-        description: error instanceof Error ? error.message : "Please try again.",
+        title: a.error,
+        description: error instanceof Error ? error.message : auth.tryAgain,
         tone: "danger",
       });
     } finally {
@@ -80,13 +85,13 @@ export function AddressList({ initialAddresses }: AddressListProps) {
           leadingIcon={<Icons.plus aria-hidden="true" className="h-4 w-4" />}
           onClick={() => setEditing("new")}
         >
-          Add address
+          {a.add}
         </Button>
       </div>
 
       {addresses.length === 0 ? (
         <Card>
-          <p className="text-sm text-foreground/68">No saved addresses yet.</p>
+          <p className="text-sm text-foreground/68">{a.empty}</p>
         </Card>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
@@ -95,11 +100,13 @@ export function AddressList({ initialAddresses }: AddressListProps) {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{address.label || "Address"}</p>
+                    <p className="font-semibold">{address.label || a.addressFallback}</p>
                     {address.isDefaultShipping ? (
-                      <Badge tone="accent">Default shipping</Badge>
+                      <Badge tone="accent">{a.defaultShipping}</Badge>
                     ) : null}
-                    {address.isDefaultBilling ? <Badge tone="accent">Default billing</Badge> : null}
+                    {address.isDefaultBilling ? (
+                      <Badge tone="accent">{a.defaultBilling}</Badge>
+                    ) : null}
                   </div>
                   <p className="mt-2 text-sm text-foreground/78">
                     {address.firstName} {address.lastName}
@@ -118,7 +125,7 @@ export function AddressList({ initialAddresses }: AddressListProps) {
                 </div>
                 <div className="flex shrink-0 gap-1">
                   <Button
-                    aria-label="Edit address"
+                    aria-label={a.edit}
                     onClick={() => setEditing(address)}
                     size="icon"
                     variant="ghost"
@@ -126,7 +133,7 @@ export function AddressList({ initialAddresses }: AddressListProps) {
                     <Icons.edit aria-hidden="true" className="h-4 w-4" />
                   </Button>
                   <Button
-                    aria-label="Delete address"
+                    aria-label={a.remove}
                     isLoading={deletingId === address.id}
                     onClick={() => handleDelete(address)}
                     size="icon"
@@ -142,7 +149,7 @@ export function AddressList({ initialAddresses }: AddressListProps) {
       )}
 
       <Modal onOpenChange={(open) => !open && setEditing(null)} open={editing !== null}>
-        <ModalContent title={editing === "new" ? "Add address" : "Edit address"}>
+        <ModalContent title={editing === "new" ? a.add : a.edit}>
           <AddressForm
             address={editing !== "new" ? (editing ?? undefined) : undefined}
             isSubmitting={isSubmitting}

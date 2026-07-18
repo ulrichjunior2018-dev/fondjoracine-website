@@ -66,6 +66,7 @@ const publicFr = {
       backHome: "Retour à l'accueil",
       newOrder: "Commander à nouveau",
     },
+    customer: "Client",
     delivery: "Livraison",
     missing: {
       body: "Revenez au parcours de commande Sève Racine ou contactez l'assistance WhatsApp pour retrouver votre confirmation.",
@@ -86,6 +87,7 @@ const publicFr = {
       shipped: "La commande est en livraison.",
     },
     title: "Confirmation de commande",
+    total: "Total",
   },
   contactPage: {
     cards: {
@@ -204,6 +206,7 @@ const publicEn = {
       backHome: "Back home",
       newOrder: "Order again",
     },
+    customer: "Customer",
     delivery: "Delivery",
     missing: {
       body: "Return to the Sève Racine order flow or contact WhatsApp assistance to recover your confirmation.",
@@ -223,6 +226,28 @@ const publicEn = {
       shipped: "The order is out for delivery.",
     },
     title: "Order confirmation",
+    total: "Total",
+  },
+  contactPage: {
+    cards: {
+      email: {
+        label: "Email",
+        title: "Press and administration",
+      },
+      safety: {
+        label: "Safety",
+        text: "External use. Patch test recommended.",
+        title: "Product safety questions",
+      },
+      whatsapp: {
+        label: "WhatsApp",
+        title: "Delivery and product advice",
+      },
+    },
+    heading: "Product advice, delivery in Cameroon, press and safety.",
+    intro:
+      "Maison Fondjo works from Buea. WhatsApp remains the most direct path to confirm a delivery zone, ask about Sève Racine or request follow-up after a diagnostic.",
+    kicker: "Contact",
   },
   policies: {
     backHome: "Back home",
@@ -268,9 +293,11 @@ const advisorEn = {
     ["Delivery", "/policies/shipping"],
   ],
   nav: [
+    ["Home", "/"],
     ["Diagnostic", "/diagnostic"],
     ["Botanicals", "/botanique"],
-    ["Sève Racine", "/seve-racine"],
+    ["Learn", "/learn"],
+    ["Shop", "/shop"],
     ["Bespoke", "/sur-mesure"],
     ["Story", "/histoire"],
   ],
@@ -317,7 +344,7 @@ const advisorEn = {
             value: "chute_soudaine",
           },
           {
-            label: "Other — tell us",
+            label: "Other. Tell us",
             severity: "serious",
             value: "autre",
           },
@@ -336,7 +363,7 @@ const advisorEn = {
       },
       {
         id: "routine",
-        prompt: "Your current routine is mostly...",
+        prompt: "Your current routine is mostly..",
         summaryLabel: "Routine",
         options: [
           { label: "Protective styles or braids", value: "protective_styles" },
@@ -384,8 +411,9 @@ const advisorEn = {
   seveRacine: {
     ...advisorFr.seveRacine,
     alt: "Sève Racine bottle photographed in a reflective black studio",
-    batchLine: "Numbered box — Founder Batch, 200 pieces",
-    cta: "Order on WhatsApp",
+    batchLine: "Numbered box. Founder Batch, 200 pieces",
+    cta: "Order now",
+    ctaBuy: "Buy now",
     description: "Sève Racine by Maison Fondjo: numbered box, 15 000 F, Cameroon delivery.",
     intro:
       "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
@@ -434,7 +462,7 @@ const advisorEn = {
   },
   shell: {
     cta: "Diagnostic",
-    footer: "Maison Fondjo · Rooted in nature. Made to last.",
+    footer: "Maison Fondjo Rooted in nature. Made to last.",
     homeLabel: "Maison Fondjo home",
     logoAlt: "Maison Fondjo",
     place: "Buea, Cameroon",
@@ -463,17 +491,17 @@ const advisorEn = {
     origin: {
       label: "The origin",
       heading: "Buea, at the foot of Mount Cameroon.",
-      body: "Maison Fondjo was born in the South West Region, in Buea, a city set on the slopes of an active volcano. This territory — altitude, tropical humidity, ash-enriched soils — shapes the botanical sensibility that runs through every bottle.",
+      body: "Maison Fondjo was born in the South West Region, in Buea, a city set on the slopes of an active volcano. This territory. Altitude, tropical humidity, ash-enriched soils. Shapes the botanical sensibility that runs through every bottle.",
     },
     name: {
       label: "The name",
       heading: "Fondjo.",
-      body: "Fondjo is a family name. Not a brand name built to sound a certain way, but a name that was handed down — the one the family carries, and chooses to put on the label. It is a way of being accountable for what goes into the bottle.",
+      body: "Fondjo is a family name. Not a brand name built to sound a certain way, but a name that was handed down. The one the family carries, and chooses to put on the label. It is a way of being accountable for what goes into the bottle.",
     },
     product: {
       label: "The product",
       heading: "Sève Racine.",
-      body: "The formula brings together a rich blend of botanical oils and herbs, each selected for a specific role — not for the label. Each ingredient has a reason to be there.",
+      body: "The formula brings together a rich blend of botanical oils and herbs, each selected for a specific role. Not for the label. Each ingredient has a reason to be there.",
     },
     family: {
       label: "The family",
@@ -492,10 +520,12 @@ const homeFr = {
   hero: {
     backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
     bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
-    eyebrow: "MAISON FONDJO — BUEA, CAMEROUN",
+    eyebrow: "MAISON FONDJO. BUEA, CAMEROUN",
     primary: "Commencer mon diagnostic",
     secondary: "Découvrir Sève Racine",
     story: "Avant le flacon, nous commençons par vous écouter.",
+    subtitle:
+      "Découvrez des soins capillaires botaniques premium conçus pour nourrir le cuir chevelu, renforcer les cheveux et soutenir une apparence plus saine grâce à un soin régulier.",
     pending: "Photographie produit réelle en attente",
     titleFirst: "Racines fortes.",
     titleSecond: "Cheveux forts.",
@@ -512,6 +542,45 @@ const homeFr = {
     bannerDismiss: "Continuer en anglais",
     bannerText: "On dirait que vous préférez le français",
   },
+  footer: {
+    brandBlurb:
+      "Soins capillaires botaniques naturels, conçus au Cameroun pour des cheveux d’apparence plus saine.",
+    brandLocation: "Buea, Cameroun",
+    brandRights: "Tous droits réservés.",
+    companyTitle: "Entreprise",
+    companyLinks: [
+      ["À propos", "/histoire"],
+      ["Notre histoire", "/origin-story"],
+      ["Ingrédients", "/ingredients"],
+      ["FAQ", "/faq"],
+      ["Contact", "/contact"],
+    ] as const,
+    cookies: "Cookies",
+    newsletterBody: "Recevez les nouveautés produit, conseils capillaires et offres exclusives.",
+    newsletterPlaceholder: "Adresse e-mail",
+    newsletterSubmit: "S’abonner",
+    newsletterTitle: "Restez informé",
+    privacy: "Confidentialité",
+    shopTitle: "Boutique",
+    shopLinks: [
+      ["Tous les produits", "/shop"],
+      ["Sève Racine", "/seve-racine"],
+    ] as const,
+    shopSoon: [["Suivre une commande", "/account/orders"]] as const,
+    socialTitle: "Nous suivre",
+    supportHelp: "Besoin d’aide ?",
+    supportTitle: "Assistance",
+    supportLinks: [
+      ["Livraison", "/policies/shipping"],
+      ["Retours", "/policies/returns"],
+      ["Confidentialité", "/policies/privacy"],
+      ["Conditions", "/policies/terms"],
+      ["Contacter le support", "/contact"],
+    ] as const,
+    supportSoon: [["Centre d’aide", "/faq"]] as const,
+    terms: "Conditions",
+    whatsapp: "WhatsApp",
+  },
   shell: advisorFr.shell,
 } as const;
 
@@ -522,10 +591,12 @@ const homeEn = {
   hero: {
     backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
     bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
-    eyebrow: "MAISON FONDJO — BUEA, CAMEROON",
+    eyebrow: "MAISON FONDJO. BUEA, CAMEROON",
     primary: "Start my diagnostic",
     secondary: "Discover Sève Racine",
     story: "Before the bottle, we begin by listening.",
+    subtitle:
+      "Discover premium botanical hair care designed to nourish the scalp, strengthen hair, and support healthier-looking hair through consistent care.",
     pending: "Real product photography pending",
     titleFirst: "Strong roots.",
     titleSecond: "Strong hair.",
@@ -541,6 +612,45 @@ const homeEn = {
     bannerAccept: "Switch to English",
     bannerDismiss: "Continue in French",
     bannerText: "It looks like you prefer English",
+  },
+  footer: {
+    brandBlurb:
+      "Natural botanical hair care, crafted in Cameroon to support healthier-looking hair.",
+    brandLocation: "Buea, Cameroon",
+    brandRights: "All rights reserved.",
+    companyTitle: "Company",
+    companyLinks: [
+      ["About Us", "/histoire"],
+      ["Our Story", "/origin-story"],
+      ["Ingredients", "/ingredients"],
+      ["FAQs", "/faq"],
+      ["Contact", "/contact"],
+    ] as const,
+    cookies: "Cookies",
+    newsletterBody: "Get product updates, hair care tips, and exclusive offers.",
+    newsletterPlaceholder: "Email address",
+    newsletterSubmit: "Subscribe",
+    newsletterTitle: "Stay Updated",
+    privacy: "Privacy",
+    shopTitle: "Shop",
+    shopLinks: [
+      ["All Products", "/shop"],
+      ["Sève Racine", "/seve-racine"],
+    ] as const,
+    shopSoon: [["Track Order", "/account/orders"]] as const,
+    socialTitle: "Follow Us",
+    supportHelp: "Need help?",
+    supportTitle: "Support",
+    supportLinks: [
+      ["Shipping", "/policies/shipping"],
+      ["Returns", "/policies/returns"],
+      ["Privacy Policy", "/policies/privacy"],
+      ["Terms & Conditions", "/policies/terms"],
+      ["Contact Support", "/contact"],
+    ] as const,
+    supportSoon: [["Help Center", "/faq"]] as const,
+    terms: "Terms",
+    whatsapp: "WhatsApp",
   },
   shell: advisorEn.shell,
 } as const;
@@ -608,4 +718,11 @@ export const copy = {
 
 export type Locale = keyof typeof copy;
 
+export type PublicCopy = typeof publicFr | typeof publicEn;
+
+export function getPublicCopy(locale: Locale = "en"): PublicCopy {
+  return locale === "fr" ? publicFr : publicEn;
+}
+
+/** @deprecated Prefer getPublicCopy(locale). Defaults to French for legacy imports. */
 export const publicCopy = publicFr;

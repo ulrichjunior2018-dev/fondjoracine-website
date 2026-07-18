@@ -47,7 +47,7 @@ function buildAdminNotificationHtml(payload: OrderPlacedNotification): string {
         <tr>
           <td style="background:#0a0905;padding:24px 32px;">
             <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#B8935A;">Maison Fondjo</p>
-            <h1 style="margin:8px 0 0;font-size:20px;font-weight:600;color:#f5f0e8;">New Order — ${safePayload.orderNumber}</h1>
+            <h1 style="margin:8px 0 0;font-size:20px;font-weight:600;color:#f5f0e8;">New Order ${safePayload.orderNumber}</h1>
           </td>
         </tr>
 
@@ -130,7 +130,7 @@ export const adminEmailChannel: NotificationChannel = {
       await resend.emails.send({
         from: `Maison Fondjo Orders <${fromEmail}>`,
         to: adminEmail,
-        subject: `New Maison Fondjo Order — ${event.orderNumber}`,
+        subject: `New Maison Fondjo Order ${event.orderNumber}`,
         html: buildAdminNotificationHtml(event),
       });
 

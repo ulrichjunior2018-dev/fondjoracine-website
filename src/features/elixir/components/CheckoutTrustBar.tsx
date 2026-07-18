@@ -14,7 +14,10 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 import { fondjoProductPricing } from "@/config/product-pricing";
+import { getDictionary } from "@/i18n/dictionaries";
 import { config, formatXaf } from "@/lib/config";
+import { useI18n } from "@/lib/i18n-context";
+import { resolveShippingZone } from "@/lib/shipping/registry";
 import { cn } from "@/lib/utils/cn";
 
 type GeoState = {
@@ -34,44 +37,33 @@ const walletPaymentsEnabled = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENA
 const stripePromise =
   stripePublishableKey && walletPaymentsEnabled ? loadStripe(stripePublishableKey) : null;
 
-function getShippingEstimate(countryCode: string | null) {
+function getShippingEstimate(countryCode: string | null, locale: "en" | "fr", feesNotice: string) {
   const deliveryStart = formatXaf(config.delivery.min).replace("F", "FCFA");
+  const zone = resolveShippingZone(countryCode);
+  const policy = locale === "fr" ? config.delivery.policy.fr : config.delivery.policy.en;
 
-  if (countryCode === "CM") {
+  if (zone.id === "cameroon") {
     return {
-      estimate: `Livraison partout au Cameroun depuis Buea, à partir de ${deliveryStart}.`,
+      estimate:
+        locale === "fr"
+          ? `Livraison partout au Cameroun depuis Buea, à partir de ${deliveryStart}.`
+          : `Nationwide delivery across Cameroon from Buea, from ${deliveryStart}.`,
       isCameroon: true,
-      notice: `${config.delivery.policy}. Les frais augmentent selon la distance depuis Buea.`,
-    };
-  }
-
-  if (countryCode === "US" || countryCode === "CA") {
-    return {
-      estimate: "International shipping coming soon.",
-      isCameroon: false,
-      notice: config.delivery.text.en,
-    };
-  }
-
-  if (["ES", "FR", "DE", "IT", "NL", "BE", "PT"].includes(countryCode ?? "")) {
-    return {
-      estimate: "International shipping coming soon.",
-      isCameroon: false,
-      notice: config.delivery.text.en,
+      notice: `${policy}. ${feesNotice}`,
     };
   }
 
   return {
-    estimate: config.delivery.text.fr,
+    estimate: locale === "fr" ? zone.blurbFr : zone.blurbEn,
     isCameroon: false,
-    notice: "International shipping coming soon.",
+    notice: locale === "fr" ? zone.blurbFr : zone.blurbEn,
   };
 }
 
-function useGeoLocation(): GeoState {
+function useGeoLocation(yourZone: string): GeoState {
   const [geo, setGeo] = useState<GeoState>({
     countryCode: null,
-    countryName: "votre zone",
+    countryName: yourZone,
     status: "loading",
   });
 
@@ -97,13 +89,13 @@ function useGeoLocation(): GeoState {
 
         setGeo({
           countryCode: data.country_code?.toUpperCase() ?? null,
-          countryName: data.country_name || "votre zone",
+          countryName: data.country_name || yourZone,
           status: "ready",
         });
       } catch {
         setGeo({
           countryCode: null,
-          countryName: "votre zone",
+          countryName: yourZone,
           status: "fallback",
         });
       } finally {
@@ -115,9 +107,8 @@ function useGeoLocation(): GeoState {
 
     return () => {
       controller.abort();
-      window.clearTimeout(timeout);
     };
-  }, []);
+  }, [yourZone]);
 
   return geo;
 }
@@ -192,12 +183,17 @@ export function CheckoutTrustBar({
   compact = false,
   whatsappUrl,
 }: CheckoutTrustBarProps) {
-  const geo = useGeoLocation();
-  const shipping = useMemo(() => getShippingEstimate(geo.countryCode), [geo.countryCode]);
+  const { locale } = useI18n();
+  const c = getDictionary(locale).checkoutTrust;
+  const geo = useGeoLocation(c.yourZone);
+  const shipping = useMemo(
+    () => getShippingEstimate(geo.countryCode, locale, c.feesNotice),
+    [geo.countryCode, locale, c.feesNotice],
+  );
 
   return (
     <aside
-      aria-label="Confiance paiement, livraison et assistance"
+      aria-label={c.ariaLabel}
       className={cn(
         "rounded-md border border-[#B8935A]/18 bg-[#0b0906]/88 p-3 text-[#F5EFE3] shadow-[0_18px_70px_rgb(0_0_0/.22)] backdrop-blur-xl",
         compact ? "sm:p-3" : "sm:p-4",
@@ -212,12 +208,10 @@ export function CheckoutTrustBar({
             </span>
             <div>
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-[#B8935A]">
-                Estimation livraison
+                {c.estimateLabel}
               </p>
               <p className="mt-1 text-sm leading-6 text-[#F5EFE3]/82">
-                {geo.status === "loading"
-                  ? "Verification de votre zone de livraison..."
-                  : shipping.estimate}
+                {geo.status === "loading" ? c.verifyingZone : shipping.estimate}
               </p>
               <p className="mt-1 text-xs leading-5 text-[#F5EFE3]/58">{shipping.notice}</p>
             </div>
@@ -230,7 +224,7 @@ export function CheckoutTrustBar({
             target="_blank"
           >
             <MessageCircle className="size-4 text-[#B8935A]" aria-hidden="true" />
-            Assistance WhatsApp
+            {c.whatsappHelp}
           </a>
         </div>
 
@@ -238,22 +232,20 @@ export function CheckoutTrustBar({
           <div className="grid gap-2">
             <PaymentRequestSlot />
             <p className="text-sm leading-6 text-[#F5EFE3]/74">
-              {stripePromise ? "Apple Pay / Google Pay apparait ici si disponible, " : ""}
-              ou paiement par carte.
+              {stripePromise ? c.appleGooglePay : ""}
+              {c.orCard}
             </p>
             {shipping.isCameroon ? (
-              <p className="text-sm leading-6 text-[#F5EFE3]/74">
-                MTN Mobile Money et Orange Money sont disponibles au Cameroun.
-              </p>
+              <p className="text-sm leading-6 text-[#F5EFE3]/74">{c.momoAvailable}</p>
             ) : null}
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/68 sm:grid-cols-4 md:grid-cols-2">
             {[
-              { icon: LockKeyhole, label: "SSL" },
-              { icon: CreditCard, label: "Carte Stripe" },
-              { icon: ShieldCheck, label: "Chiffré" },
-              { icon: BadgeCheck, label: "Assistance" },
+              { icon: LockKeyhole, label: c.badgeSsl },
+              { icon: CreditCard, label: c.badgeCard },
+              { icon: ShieldCheck, label: c.badgeEncrypted },
+              { icon: BadgeCheck, label: c.badgeSupport },
             ].map((badge) => (
               <span
                 className="inline-flex min-h-10 items-center gap-2 rounded-sm border border-white/10 bg-white/[0.035] px-3"

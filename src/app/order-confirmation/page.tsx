@@ -5,20 +5,24 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
-import { publicCopy } from "@/content/copy";
+import type { PublicCopy } from "@/content/copy";
 import { getSupabaseAdminClient } from "@/lib/database/admin";
+import { getOrderStatus } from "@/lib/order-status/registry";
+import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 import { getOrderByConfirmationToken } from "@/services/commerce/one-product-order-service";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  description: publicCopy.metadata.orderConfirmation.description,
-  robots: {
-    follow: false,
-    index: false,
-  },
-  title: publicCopy.metadata.orderConfirmation.title,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const metadata = await buildPublicMetadata((publicCopy) => publicCopy.metadata.orderConfirmation);
+  return {
+    ...metadata,
+    robots: {
+      follow: false,
+      index: false,
+    },
+  };
+}
 
 type ConfirmationPageProps = {
   searchParams: Promise<{
@@ -50,33 +54,16 @@ function readInstructionValue(instructions: unknown, key: string) {
 }
 
 function getStatusTone(status: string) {
-  return status === "confirmed" || status === "delivered" ? "sage" : "accent";
+  return getOrderStatus(status).tone;
 }
 
-function getStatusMessage(status: string) {
-  switch (status) {
-    case "pending_payment":
-      return publicCopy.orderConfirmation.status.pending_payment;
-    case "payment_submitted":
-      return publicCopy.orderConfirmation.status.payment_submitted;
-    case "confirmed":
-      return publicCopy.orderConfirmation.status.confirmed;
-    case "packed":
-      return publicCopy.orderConfirmation.status.packed;
-    case "shipped":
-      return publicCopy.orderConfirmation.status.shipped;
-    case "delivered":
-      return publicCopy.orderConfirmation.status.delivered;
-    case "cancelled":
-      return publicCopy.orderConfirmation.status.cancelled;
-    case "refunded":
-      return publicCopy.orderConfirmation.status.refunded;
-    default:
-      return publicCopy.orderConfirmation.status.fallback;
-  }
+function getStatusMessage(status: string, publicCopy: PublicCopy) {
+  const statusCopy = publicCopy.orderConfirmation.status as Record<string, string | undefined>;
+  return statusCopy[status] ?? statusCopy.fallback ?? getOrderStatus(status).labelEn;
 }
 
 export default async function OrderConfirmationPage({ searchParams }: ConfirmationPageProps) {
+  const { publicCopy } = await resolvePublicCopy();
   const params = await searchParams;
 
   if (!params.token) {
@@ -116,19 +103,21 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
             {order.order_number}
           </Heading>
           <Text className="mt-4" tone="muted">
-            {getStatusMessage(order.status)}
+            {getStatusMessage(order.status, publicCopy)}
           </Text>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="rounded-md bg-surface-muted p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                Customer
+                {publicCopy.orderConfirmation.customer}
               </p>
               <p className="mt-2 font-semibold">{order.customer_name}</p>
               <p className="mt-1 text-sm text-foreground/62">{order.customer_phone}</p>
             </div>
             <div className="rounded-md bg-surface-muted p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Total</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                {publicCopy.orderConfirmation.total}
+              </p>
               <p className="mt-2 font-mono font-semibold">
                 {formatAmount(order.total_cents, order.currency)}
               </p>

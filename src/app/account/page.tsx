@@ -4,40 +4,45 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading, Text } from "@/components/ui/typography";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/auth/session";
+import { getServerLocale } from "@/lib/locale-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/utils/currency";
 import { getAccountOverview } from "@/services/customer/customer-service";
 
-export const metadata: Metadata = { title: "Home" };
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return { title: getDictionary(locale).account.dashboard.metaTitle };
+}
 
 function getOrderStatusTone(status: string) {
   return status === "confirmed" || status === "delivered" ? "sage" : "accent";
 }
 
 export default async function AccountHomePage() {
+  const locale = await getServerLocale();
+  const d = getDictionary(locale).account.dashboard;
   const user = await getCurrentUser();
   const supabase = await createSupabaseServerClient();
-  // `user` is guaranteed by the layout guard; the non-null assertion here is
-  // scoped to this already-authenticated request.
   const overview = await getAccountOverview(supabase, user!.id);
-  const firstName = overview.account.firstName ?? "there";
+  const firstName = overview.account.firstName ?? d.welcomeFallback;
 
   return (
     <div className="grid gap-6">
       <div>
         <Heading as="h1" level="h2">
-          Welcome back, {firstName}
+          {d.welcome.replace("{name}", firstName)}
         </Heading>
         <Text className="mt-2" tone="muted">
-          Here&apos;s what&apos;s happening with your Maison Fondjo account.
+          {d.subtitle}
         </Text>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Card variant="elevated">
           <CardHeader>
-            <CardTitle>Current order</CardTitle>
+            <CardTitle>{d.currentOrder}</CardTitle>
           </CardHeader>
           <CardContent>
             {overview.latestOrder ? (
@@ -50,14 +55,12 @@ export default async function AccountHomePage() {
                 </div>
                 <p className="text-sm text-foreground/68">
                   {formatMoney(overview.latestOrder.totalCents, overview.latestOrder.currency)} ·{" "}
-                  {overview.latestOrder.itemsCount} item
-                  {overview.latestOrder.itemsCount === 1 ? "" : "s"}
+                  {overview.latestOrder.itemsCount}{" "}
+                  {overview.latestOrder.itemsCount === 1 ? d.itemsOne : d.itemsMany}
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-foreground/68">
-                You haven&apos;t placed an order yet. Sève Racine is waiting for you.
-              </p>
+              <p className="text-sm text-foreground/68">{d.noOrder}</p>
             )}
           </CardContent>
           <CardFooter>
@@ -66,14 +69,14 @@ export default async function AccountHomePage() {
                 className="text-sm font-semibold text-accent"
                 href={`/account/orders/${overview.latestOrder.id}`}
               >
-                View order →
+                {d.viewOrder}
               </Link>
             ) : (
               <Link
                 className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
                 href="/#order"
               >
-                Order Sève Racine
+                {d.orderSeve}
               </Link>
             )}
           </CardFooter>
@@ -81,7 +84,7 @@ export default async function AccountHomePage() {
 
         <Card variant="elevated">
           <CardHeader>
-            <CardTitle>Account completion</CardTitle>
+            <CardTitle>{d.accountCompletion}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted">
@@ -91,13 +94,13 @@ export default async function AccountHomePage() {
               />
             </div>
             <p className="mt-3 text-sm text-foreground/68">
-              {overview.profileCompletionPercent}% complete
-              {overview.profileCompletionPercent < 100 ? " — add a phone number and address." : "."}
+              {d.percentComplete.replace("{percent}", String(overview.profileCompletionPercent))}
+              {overview.profileCompletionPercent < 100 ? d.addPhoneAddress : "."}
             </p>
           </CardContent>
           <CardFooter>
             <Link className="text-sm font-semibold text-accent" href="/account/profile">
-              Complete your profile →
+              {d.completeProfile}
             </Link>
           </CardFooter>
         </Card>
@@ -105,19 +108,31 @@ export default async function AccountHomePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Buy again</CardTitle>
+          <CardTitle>{d.buyAgain}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-foreground/68">
-            Restock your Sève Racine hair oil — recommended 2–4 times a week for best results.
-          </p>
+          <p className="text-sm text-foreground/68">{d.buyAgainBody}</p>
         </CardContent>
         <CardFooter>
           <Link
             className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
             href="/#order"
           >
-            Order again
+            {d.orderAgain}
+          </Link>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{d.securityCard}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-foreground/68">{d.securityBody}</p>
+        </CardContent>
+        <CardFooter>
+          <Link className="text-sm font-semibold text-accent" href="/account/security">
+            {d.openSecurity}
           </Link>
         </CardFooter>
       </Card>

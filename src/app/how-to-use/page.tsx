@@ -1,14 +1,13 @@
-import {
-  buildRouteMetadata,
-  LandingRoutePage,
-} from "@/features/elixir/components/landing-route-page";
-import { publicCopy } from "@/content/copy";
+import type { Metadata } from "next";
 
-export const metadata = buildRouteMetadata(
-  publicCopy.metadata.howToUse.title,
-  publicCopy.metadata.howToUse.description,
-);
+import { LandingRoutePage } from "@/features/elixir/components/landing-route-page";
+import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
-export default function HowToUsePage() {
-  return <LandingRoutePage />;
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPublicMetadata((publicCopy) => publicCopy.metadata.howToUse);
+}
+
+export default async function HowToUsePage() {
+  const { locale } = await resolvePublicCopy();
+  return <LandingRoutePage locale={locale} />;
 }

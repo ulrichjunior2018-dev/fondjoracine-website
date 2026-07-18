@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { HistoireRouteSection } from "@/components/AdvisorRouteSections";
-import { copy } from "@/content/copy";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
+import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = buildAdvisorRouteMetadata({
-  title: "Story",
-  description: copy.en.histoire.description,
-  path: "/histoire",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, copy } = await resolveAdvisorCopy();
+  return buildAdvisorRouteMetadata({
+    title: locale === "fr" ? "Histoire" : "Story",
+    description: copy.histoire.description,
+    locale,
+    path: "/histoire",
+  });
+}
 
 export default function HistoirePage() {
   return (

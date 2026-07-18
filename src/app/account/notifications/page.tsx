@@ -3,16 +3,23 @@ import type { Metadata } from "next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading, Text } from "@/components/ui/typography";
 import { NotificationPreferencesForm } from "@/features/account/components/notification-preferences-form";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/auth/session";
+import { getServerLocale } from "@/lib/locale-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   getNotificationPreferences,
   getOrCreateCustomerAccount,
 } from "@/services/customer/customer-service";
 
-export const metadata: Metadata = { title: "Notifications" };
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return { title: getDictionary(locale).account.notifications.metaTitle };
+}
 
 export default async function AccountNotificationsPage() {
+  const locale = await getServerLocale();
+  const n = getDictionary(locale).account.notifications;
   const user = await getCurrentUser();
   const supabase = await createSupabaseServerClient();
   const account = await getOrCreateCustomerAccount(supabase, user!.id);
@@ -22,10 +29,10 @@ export default async function AccountNotificationsPage() {
     <div className="grid gap-6">
       <div>
         <Heading as="h1" level="h2">
-          Notifications
+          {n.title}
         </Heading>
         <Text className="mt-2" tone="muted">
-          Choose what Maison Fondjo can send you.
+          {n.subtitle}
         </Text>
       </div>
 

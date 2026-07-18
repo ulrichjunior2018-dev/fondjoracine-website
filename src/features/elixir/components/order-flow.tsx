@@ -15,11 +15,15 @@ import {
 } from "@/domain/commerce/schemas";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
+import { getDictionary } from "@/i18n/dictionaries";
 import { buildWaLink } from "@/lib/config";
+import type { PaymentMethodOption } from "@/lib/payments/types";
 
 type OrderFlowProps = {
   content: ElixirContent;
   locale: Locale;
+  /** From `listAvailablePaymentMethods()` — never hardcode methods in this UI. */
+  paymentMethods: PaymentMethodOption[];
 };
 
 type OrderFormValues = z.input<typeof createOneProductOrderSchema>;
@@ -50,40 +54,32 @@ function localized(english: string, french: string): Record<Locale, string> {
   return { ["en"]: english, ["fr"]: french };
 }
 
-const paymentOptions: Array<{
-  description: Record<Locale, string>;
-  icon: "whatsapp" | "mobile" | "stripe";
-  label: string;
-  value: OneProductPaymentMethod;
-}> = [
-  {
+const paymentKindCopy: Record<
+  PaymentMethodOption["kind"],
+  { description: Record<Locale, string>; icon: "whatsapp" | "mobile" | "stripe" }
+> = {
+  external_handoff: {
     description: localized(
       "Create the order and continue with Maison Fondjo on WhatsApp.",
       "Creez la commande et continuez le diagnostic avec Maison Fondjo sur WhatsApp.",
     ),
     icon: "whatsapp",
-    label: "WhatsApp",
-    value: "whatsapp",
   },
-  {
+  manual_reference: {
     description: localized(
-      "Use MTN MoMo or Orange Money. The number is confirmed on WhatsApp.",
-      "Utilisez MTN MoMo ou Orange Money. Le numero est confirme sur WhatsApp.",
+      "Pay by mobile money, then submit your transaction reference.",
+      "Payez par mobile money, puis envoyez votre reference de transaction.",
     ),
     icon: "mobile",
-    label: "Mobile Money",
-    value: "mtn_momo",
   },
-  {
+  redirect: {
     description: localized(
-      "Pay by card through Stripe Checkout when available.",
-      "Payez par carte via Stripe Checkout si disponible.",
+      "Pay by card through a secure checkout when available.",
+      "Payez par carte via un paiement securise si disponible.",
     ),
     icon: "stripe",
-    label: "Stripe",
-    value: "stripe",
   },
-];
+};
 
 function getPaymentIcon(icon: "whatsapp" | "mobile" | "stripe") {
   switch (icon) {
@@ -97,22 +93,21 @@ function getPaymentIcon(icon: "whatsapp" | "mobile" | "stripe") {
 }
 
 function getManualMethod(content: ElixirContent, method: OneProductPaymentMethod) {
-  if (method !== "mtn_momo" && method !== "orange_money") {
+  const match = method === "mtn_momo" ? "mtn" : method === "orange_money" ? "orange" : null;
+  if (!match) {
     return null;
   }
-
-  return content.manualPayments.methods.find((item) =>
-    item.label.toLowerCase().includes(method === "mtn_momo" ? "mtn" : "orange"),
-  );
+  return content.manualPayments.methods.find((item) => item.label.toLowerCase().includes(match));
 }
 
-export function OrderFlow({ content, locale }: OrderFlowProps) {
+export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
   const [checkoutStep, setCheckoutStep] = useState<1 | 2>(1);
   const [serverError, setServerError] = useState<string | null>(null);
   const [createdOrder, setCreatedOrder] = useState<ApiOrderResponse["data"] | null>(null);
   const [paymentReference, setPaymentReference] = useState("");
   const [referenceMessage, setReferenceMessage] = useState<string | null>(null);
   const [isSubmittingReference, setIsSubmittingReference] = useState(false);
+  const defaultMethod = paymentMethods[0]?.method ?? "whatsapp";
   const form = useForm<OrderFormValues>({
     defaultValues: {
       city: "",
@@ -121,7 +116,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
       email: "",
       locale,
       name: "",
-      payment_method: "whatsapp",
+      payment_method: defaultMethod,
       phone: "",
       quantity: 1,
     },
@@ -131,13 +126,15 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     useWatch({
       control: form.control,
       name: "payment_method",
-    }) ?? "whatsapp";
+    }) ?? defaultMethod;
+  const selectedOption = paymentMethods.find((item) => item.method === paymentMethod);
   const selectedManualMethod = useMemo(
     () => getManualMethod(content, paymentMethod),
     [content, paymentMethod],
   );
-  const isManualPayment = paymentMethod === "mtn_momo" || paymentMethod === "orange_money";
+  const isManualPayment = Boolean(selectedOption?.requiresTransactionReference);
   const displayedPrix = fondjoProductPricing.preorderDisplay;
+  const o = getDictionary(locale).orderFlow;
 
   async function submitOrder(values: OrderFormValues) {
     setServerError(null);
@@ -155,12 +152,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     const payload = (await response.json()) as ApiOrderResponse;
 
     if (!response.ok || !payload.data) {
-      setServerError(
-        payload.error?.message ??
-          (locale.startsWith("fr")
-            ? "Impossible de creer la commande pour le moment."
-            : "Impossible de creer la commande pour le moment."),
-      );
+      setServerError(payload.error?.message ?? o.errorCreateOrder);
       return;
     }
 
@@ -174,11 +166,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
   async function submitReference() {
     if (!createdOrder || paymentReference.trim().length < 4) {
-      setServerError(
-        locale.startsWith("fr")
-          ? "Ajoutez une reference de transaction valide."
-          : "Ajoutez une reference de transaction valide.",
-      );
+      setServerError(o.errorValidReference);
       return;
     }
 
@@ -189,11 +177,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     const token = new URL(createdOrder.confirmationUrl).searchParams.get("token");
 
     if (!token) {
-      setServerError(
-        locale.startsWith("fr")
-          ? "Lien de confirmation invalide."
-          : "Lien de confirmation invalide.",
-      );
+      setServerError(o.errorInvalidLink);
       setIsSubmittingReference(false);
       return;
     }
@@ -211,12 +195,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
     setIsSubmittingReference(false);
 
     if (!response.ok || !payload.data) {
-      setServerError(
-        payload.error?.message ??
-          (locale.startsWith("fr")
-            ? "Impossible d enregistrer la reference."
-            : "Impossible d enregistrer la reference."),
-      );
+      setServerError(payload.error?.message ?? o.errorSaveReference);
       return;
     }
 
@@ -231,11 +210,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
           }
         : current,
     );
-    setReferenceMessage(
-      locale.startsWith("fr")
-        ? "Reference recue. Votre commande attend maintenant la verification admin."
-        : "Reference recue. Votre commande attend la verification admin.",
-    );
+    setReferenceMessage(o.referenceReceived);
   }
 
   return (
@@ -253,7 +228,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                  {locale.startsWith("fr") ? "Etape 1" : "Etape 1"}
+                  {o.step1}
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold text-[#0B0B0B]">
                   {t(content.product.name, locale)}
@@ -267,24 +242,18 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <div className="rounded-md bg-[#E4D2B4] p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {locale.startsWith("fr") ? "Prix" : "Prix"}
+                {o.price}
               </p>
               <p className="mt-2 font-serif text-5xl font-light leading-none text-[#0B0B0B]">
                 {displayedPrix}
               </p>
-              <p className="mt-3 text-sm leading-6 text-[#0B0B0B]/64">
-                {locale.startsWith("fr")
-                  ? "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."
-                  : "Prix unique en XAF. Les details de livraison sont confirmes avant paiement."}
-              </p>
+              <p className="mt-3 text-sm leading-6 text-[#0B0B0B]/64">{o.priceHint}</p>
             </div>
 
             <div className="grid gap-3 text-sm leading-6 text-[#0B0B0B]/70 sm:grid-cols-3">
-              <p className="rounded-md border border-[#7b622d]/12 p-3">Rituel botanique</p>
+              <p className="rounded-md border border-[#7b622d]/12 p-3">{o.botanicalRitual}</p>
               <p className="rounded-md border border-[#7b622d]/12 p-3">100ml</p>
-              <p className="rounded-md border border-[#7b622d]/12 p-3">
-                {locale.startsWith("fr") ? "Livraison au Cameroun" : "Livraison au Cameroun"}
-              </p>
+              <p className="rounded-md border border-[#7b622d]/12 p-3">{o.deliveryCameroon}</p>
             </div>
 
             <Button
@@ -294,44 +263,26 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               type="button"
             >
-              {locale.startsWith("fr") ? "Confirmer le produit" : "Confirmer le produit"}
+              {o.confirmProduct}
             </Button>
           </div>
         ) : (
           <div className="grid gap-5 rounded-md border border-[#7b622d]/16 bg-white p-5 sm:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {locale.startsWith("fr") ? "Etape 2" : "Etape 2"}
+                {o.step2}
               </p>
-              <h3 className="mt-3 text-2xl font-semibold text-[#0B0B0B]">
-                {locale.startsWith("fr") ? "Contact et paiement" : "Contact et paiement"}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-[#0B0B0B]/64">
-                {locale.startsWith("fr")
-                  ? "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."
-                  : "Gardez simple. Les details de livraison peuvent etre confirmes sur WhatsApp."}
-              </p>
+              <h3 className="mt-3 text-2xl font-semibold text-[#0B0B0B]">{o.contactPayment}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#0B0B0B]/64">{o.contactHint}</p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                error={form.formState.errors.name?.message}
-                label={locale.startsWith("fr") ? "Nom complet" : "Nom complet"}
-                required
-              >
-                <Input
-                  aria-label={locale.startsWith("fr") ? "Nom complet" : "Nom complet"}
-                  autoComplete="name"
-                  {...form.register("name")}
-                />
+            <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+              <Field error={form.formState.errors.name?.message} label={o.fullName} required>
+                <Input aria-label={o.fullName} autoComplete="name" {...form.register("name")} />
               </Field>
-              <Field
-                error={form.formState.errors.phone?.message}
-                label={locale.startsWith("fr") ? "Telephone" : "Telephone"}
-                required
-              >
+              <Field error={form.formState.errors.phone?.message} label={o.phone} required>
                 <Input
-                  aria-label={locale.startsWith("fr") ? "Telephone" : "Telephone"}
+                  aria-label={o.phone}
                   autoComplete="tel"
                   inputMode="tel"
                   {...form.register("phone")}
@@ -339,14 +290,10 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               </Field>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                error={form.formState.errors.city?.message}
-                label={locale.startsWith("fr") ? "Ville" : "Ville"}
-                required
-              >
+            <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+              <Field error={form.formState.errors.city?.message} label={o.city} required>
                 <Input
-                  aria-label={locale.startsWith("fr") ? "Ville" : "Ville"}
+                  aria-label={o.city}
                   autoComplete="address-level2"
                   {...form.register("city")}
                 />
@@ -364,18 +311,14 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
 
             <Field
               error={form.formState.errors.delivery_address?.message}
-              label={locale.startsWith("fr") ? "Adresse courte" : "Adresse courte"}
+              label={o.shortAddress}
               required
             >
               <Textarea
-                aria-label={locale.startsWith("fr") ? "Adresse courte" : "Adresse courte"}
+                aria-label={o.shortAddress}
                 autoComplete="street-address"
                 className="min-h-24"
-                placeholder={
-                  locale.startsWith("fr")
-                    ? "Quartier, repere, ville..."
-                    : "Quartier, repere, ville..."
-                }
+                placeholder={o.addressPlaceholder}
                 {...form.register("delivery_address")}
               />
             </Field>
@@ -387,12 +330,11 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             />
 
             <div className="grid gap-3">
-              <p className="text-sm font-semibold text-[#0B0B0B]">
-                {locale.startsWith("fr") ? "Choisir le paiement" : "Choisir le paiement"}
-              </p>
+              <p className="text-sm font-semibold text-[#0B0B0B]">{o.choosePayment}</p>
               <div className="grid gap-3 sm:grid-cols-3">
-                {paymentOptions.map((option) => {
-                  const selected = option.value === paymentMethod;
+                {paymentMethods.map((option) => {
+                  const selected = option.method === paymentMethod;
+                  const kindUi = paymentKindCopy[option.kind];
 
                   return (
                     <button
@@ -402,9 +344,9 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                           ? "border-[#7b622d] bg-[#E4D2B4] text-[#0B0B0B]"
                           : "border-[#7b622d]/14 bg-white text-[#0B0B0B] hover:bg-[#f9f3e6]"
                       }`}
-                      key={option.value}
+                      key={option.method}
                       onClick={() =>
-                        form.setValue("payment_method", option.value, {
+                        form.setValue("payment_method", option.method, {
                           shouldDirty: true,
                           shouldValidate: true,
                         })
@@ -412,11 +354,11 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                       type="button"
                     >
                       <span className="flex items-center gap-2 text-base font-semibold">
-                        {getPaymentIcon(option.icon)}
+                        {getPaymentIcon(kindUi.icon)}
                         {option.label}
                       </span>
                       <span className="mt-3 block text-xs leading-5 text-[#0B0B0B]/64">
-                        {t(option.description, locale)}
+                        {t(kindUi.description, locale)}
                       </span>
                     </button>
                   );
@@ -424,9 +366,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
               </div>
               {isManualPayment ? (
                 <p className="rounded-md bg-[#E4D2B4] p-3 text-xs leading-5 text-[#0B0B0B]/70">
-                  {locale.startsWith("fr")
-                    ? "Mobile Money couvre MTN MoMo et Orange Money. Le numero de paiement est confirme sur WhatsApp."
-                    : "Mobile Money couvre MTN MoMo et Orange Money. Le numero est confirme sur WhatsApp."}
+                  {o.manualPayTip}
                 </p>
               ) : null}
             </div>
@@ -444,7 +384,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 type="button"
                 variant="secondary"
               >
-                {locale.startsWith("fr") ? "Retour" : "Retour"}
+                {o.back}
               </Button>
               <Button
                 className="min-h-14 flex-1 bg-[#0B0B0B] text-[#E4D2B4] hover:bg-[#2a2113]"
@@ -453,13 +393,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                 trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
                 type="submit"
               >
-                {paymentMethod === "stripe"
-                  ? locale.startsWith("fr")
-                    ? "Continuer vers Stripe"
-                    : "Continuer vers Stripe"
-                  : locale.startsWith("fr")
-                    ? "Creer la commande"
-                    : "Creer la commande"}
+                {paymentMethod === "stripe" ? o.continueStripe : o.createOrder}
               </Button>
             </div>
           </div>
@@ -469,11 +403,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
       {selectedManualMethod ? (
         <div className="rounded-md border border-[#7b622d]/18 bg-[#fff8e4] p-5">
           <p className="text-sm font-semibold text-[#1C1C1C]">Mobile Money</p>
-          <p className="mt-3 text-sm leading-6 text-[#1C1C1C]/80">
-            {locale.startsWith("fr")
-              ? "Numero fourni via WhatsApp pour eviter les erreurs de paiement."
-              : "Numero fourni via WhatsApp pour eviter les erreurs de paiement."}
-          </p>
+          <p className="mt-3 text-sm leading-6 text-[#1C1C1C]/80">{o.mobileMoneyNumber}</p>
           <a
             className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-[#25d366] px-4 text-sm font-semibold text-white"
             href={buildWaLink("order", "", locale)}
@@ -492,27 +422,16 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <div>
               <p className="font-semibold">
-                {locale.startsWith("fr") ? "Commande creee" : "Commande creee"}{" "}
-                {createdOrder.order.order_number}
+                {o.orderCreated} {createdOrder.order.order_number}
               </p>
               <p className="mt-2 text-sm leading-6">
-                {locale.startsWith("fr")
-                  ? "Votre commande est en attente de verification de paiement."
-                  : createdOrder.order.status === "payment_submitted"
-                    ? "Votre reference a ete soumise et attend la verification admin."
-                    : "Votre commande attend le paiement. Envoyez le paiement, puis ajoutez la reference de transaction."}
+                {createdOrder.order.status === "payment_submitted"
+                  ? o.orderReferenceSubmitted
+                  : o.orderPendingPayment}
               </p>
               {isManualPayment && createdOrder.order.status !== "payment_submitted" ? (
                 <div className="mt-4 grid gap-3 rounded-md border border-success/30 bg-background/10 p-4">
-                  <Field
-                    className="text-success"
-                    label={
-                      locale.startsWith("fr")
-                        ? "Reference de transaction"
-                        : "Reference de transaction"
-                    }
-                    required
-                  >
+                  <Field className="text-success" label={o.transactionReference} required>
                     <Input
                       className="border-success/30 bg-background/20 text-success"
                       value={paymentReference}
@@ -524,7 +443,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                     isLoading={isSubmittingReference}
                     onClick={() => void submitReference()}
                   >
-                    {locale.startsWith("fr") ? "Soumettre la reference" : "Soumettre la reference"}
+                    {o.submitReference}
                   </Button>
                 </div>
               ) : null}
@@ -538,7 +457,7 @@ export function OrderFlow({ content, locale }: OrderFlowProps) {
                   className="inline-flex h-10 items-center justify-center rounded-md bg-success px-4 text-sm font-semibold text-white"
                   href={createdOrder.confirmationUrl}
                 >
-                  {locale.startsWith("fr") ? "Voir la confirmation" : "Voir la confirmation"}
+                  {o.viewConfirmation}
                 </a>
                 <a
                   className="inline-flex h-10 items-center justify-center rounded-md border border-success/30 px-4 text-sm font-semibold"

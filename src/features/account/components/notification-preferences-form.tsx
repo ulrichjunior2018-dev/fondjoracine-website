@@ -5,8 +5,10 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/toast";
 import type { NotificationPreferences } from "@/domain/customer/types";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getApiClient } from "@/lib/api-client/instance";
 import { updateAccountNotificationPreferences } from "@/lib/api-client/resources/account";
+import { useI18n } from "@/lib/i18n-context";
 
 type NotificationPreferencesFormProps = {
   initialPreferences: NotificationPreferences;
@@ -14,35 +16,22 @@ type NotificationPreferencesFormProps = {
 
 type PreferenceKey = keyof NotificationPreferences;
 
-const rows: Array<{ description: string; key: PreferenceKey; label: string }> = [
-  {
-    key: "orderUpdates",
-    label: "Order updates",
-    description: "Confirmations, shipping, and delivery status.",
-  },
-  {
-    key: "promotions",
-    label: "Promotions",
-    description: "Discounts and limited-time offers.",
-  },
-  {
-    key: "productLaunches",
-    label: "Product launches",
-    description: "New products from Maison Fondjo.",
-  },
-  {
-    key: "hairCareTips",
-    label: "Hair care tips",
-    description: "Guidance on getting the most from Sève Racine.",
-  },
-];
-
 export function NotificationPreferencesForm({
   initialPreferences,
 }: NotificationPreferencesFormProps) {
   const { toast } = useToast();
+  const { locale } = useI18n();
+  const n = getDictionary(locale).account.notifications;
+  const auth = getDictionary(locale).auth;
   const [preferences, setPreferences] = useState(initialPreferences);
   const [savingKey, setSavingKey] = useState<PreferenceKey | null>(null);
+
+  const rows: Array<{ description: string; key: PreferenceKey; label: string }> = [
+    { key: "orderUpdates", label: n.orderUpdates, description: n.orderUpdatesDesc },
+    { key: "promotions", label: n.promotions, description: n.promotionsDesc },
+    { key: "productLaunches", label: n.productLaunches, description: n.productLaunchesDesc },
+    { key: "hairCareTips", label: n.hairCareTips, description: n.hairCareTipsDesc },
+  ];
 
   async function handleToggle(key: PreferenceKey, checked: boolean) {
     const next = { ...preferences, [key]: checked };
@@ -54,8 +43,8 @@ export function NotificationPreferencesForm({
     } catch (error) {
       setPreferences(preferences);
       toast({
-        title: "Couldn't update preference",
-        description: error instanceof Error ? error.message : "Please try again.",
+        title: n.error,
+        description: error instanceof Error ? error.message : auth.tryAgain,
         tone: "danger",
       });
     } finally {
@@ -82,9 +71,7 @@ export function NotificationPreferencesForm({
           />
         </div>
       ))}
-      <p className="text-xs text-foreground/50">
-        Delivered by email today. SMS and push notifications are planned for the mobile app.
-      </p>
+      <p className="text-xs text-foreground/50">{n.channelNote}</p>
     </div>
   );
 }

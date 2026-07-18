@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 
+import type { Locale } from "@/content/copy";
 import { siteConfig } from "@/config/site";
+import { openGraphLocale } from "@/lib/locale";
 
 type AdvisorRouteMetadataInput = {
   description: string;
+  locale?: Locale;
   path: string;
   title: string;
 };
 
 export function buildAdvisorRouteMetadata({
   description,
+  locale = "en",
   path,
   title,
 }: AdvisorRouteMetadataInput): Metadata {
@@ -21,7 +25,7 @@ export function buildAdvisorRouteMetadata({
     openGraph: {
       title: `${title} | ${siteConfig.name}`,
       description,
-      locale: "en_US",
+      locale: openGraphLocale(locale),
       url,
     },
     twitter: {

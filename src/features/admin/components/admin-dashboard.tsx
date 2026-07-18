@@ -11,6 +11,8 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ElixirContent } from "@/features/elixir/data/content";
 import { AdminOrdersTable } from "@/features/admin/components/admin-orders-table";
+import { getDictionary } from "@/i18n/dictionaries";
+import { useI18n } from "@/lib/i18n-context";
 import type { HairConsultationRecommendation } from "@/services/commerce/hair-consultation-service";
 
 type AdminDashboardProps = {
@@ -70,6 +72,8 @@ export function AdminDashboard({
   newsletter,
   orders,
 }: AdminDashboardProps) {
+  const { locale } = useI18n();
+  const admin = getDictionary(locale).admin;
   const [cmsContent, setCmsContent] = useState(content);
   const [contentJson, setContentJson] = useState(getJson(content));
   const [stockCount, setStockCount] = useState(String(content.inventory.stockCount));
@@ -97,11 +101,11 @@ export function AdminDashboard({
     const payload = (await response.json()) as ApiResponse<T>;
 
     if (!response.ok || !payload.data) {
-      setErrorMessage(payload.error?.message ?? "Admin action failed.");
+      setErrorMessage(payload.error?.message ?? admin.actionFailed);
       return null;
     }
 
-    setStatusMessage("Changes saved.");
+    setStatusMessage(admin.changesSaved);
     return payload.data;
   }
 
@@ -111,7 +115,7 @@ export function AdminDashboard({
     try {
       parsed = JSON.parse(contentJson) as ElixirContent;
     } catch {
-      setErrorMessage("Content JSON is invalid.");
+      setErrorMessage(admin.invalidJson);
       return;
     }
 
@@ -236,15 +240,15 @@ export function AdminDashboard({
 
       <Tabs defaultValue="content">
         <TabsList className="flex w-full flex-wrap justify-start">
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="media">Media</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="consultations">Consultations</TabsTrigger>
-          <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
-          <TabsTrigger value="stock">Stock</TabsTrigger>
-          <TabsTrigger value="inner-circle">Inner Circle</TabsTrigger>
-          <TabsTrigger value="customers">Customers</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="content">{admin.contentTab}</TabsTrigger>
+          <TabsTrigger value="media">{admin.mediaTab}</TabsTrigger>
+          <TabsTrigger value="orders">{admin.ordersTab}</TabsTrigger>
+          <TabsTrigger value="consultations">{admin.consultationsTab}</TabsTrigger>
+          <TabsTrigger value="testimonials">{admin.testimonialsTab}</TabsTrigger>
+          <TabsTrigger value="stock">{admin.stockTab}</TabsTrigger>
+          <TabsTrigger value="inner-circle">{admin.membersTab}</TabsTrigger>
+          <TabsTrigger value="customers">{admin.customersTab}</TabsTrigger>
+          <TabsTrigger value="analytics">{admin.analyticsTab}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content">

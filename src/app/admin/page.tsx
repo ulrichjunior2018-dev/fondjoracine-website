@@ -4,21 +4,25 @@ import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
 import { AdminDashboard } from "@/features/admin/components/admin-dashboard";
 import { AdminLockedState } from "@/features/admin/components/admin-locked-state";
+import { getDictionary } from "@/i18n/dictionaries";
 import { requireAdminPermission } from "@/lib/auth/rbac";
 import { adminPermissions } from "@/lib/database/schema";
+import { getServerLocale } from "@/lib/locale-server";
 import { getAdminDashboardData } from "@/services/commerce/admin-dashboard-service";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  robots: {
-    follow: false,
-    index: false,
-  },
-  title: "Admin Dashboard | Maison Fondjo",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    robots: { follow: false, index: false },
+    title: getDictionary(locale).admin.metaTitle,
+  };
+}
 
 export default async function AdminPage() {
+  const locale = await getServerLocale();
+  const admin = getDictionary(locale).admin;
   const access = await requireAdminPermission(adminPermissions.analyticsRead).catch(() => null);
 
   if (!access) {
@@ -30,13 +34,12 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen bg-background py-10">
       <Container>
-        <Kicker>Admin</Kicker>
+        <Kicker>{admin.kicker}</Kicker>
         <Heading as="h1" className="mt-3" level="h2">
-          Maison Fondjo command center
+          {admin.title}
         </Heading>
         <Text className="mt-4 max-w-3xl" tone="muted">
-          Edit the live storefront, manage orders and Mobile Money verification, approve proof,
-          track stock, manage Inner Circle members, export customers, and monitor core metrics.
+          {admin.subtitle}
         </Text>
         <div className="mt-8">
           <AdminDashboard

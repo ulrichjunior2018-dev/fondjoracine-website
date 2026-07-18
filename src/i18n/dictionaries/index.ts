@@ -20,3 +20,12 @@ export const languageLabels: Record<SiteLanguage, string> = {
 export function isSiteLanguage(value: string | null): value is SiteLanguage {
   return value === "en" || value === "fr" || value === "es";
 }
+
+/** Resolve translation keys for a site locale (en | fr). */
+export function getDictionary(locale: "en" | "fr"): SiteDictionary {
+  if (locale === "fr") {
+    return dictionaries.fr;
+  }
+
+  return dictionaries.en;
+}

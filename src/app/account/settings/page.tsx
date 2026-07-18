@@ -3,45 +3,58 @@ import Link from "next/link";
 
 import { Icons } from "@/components/icons/icons";
 import { Heading, Text } from "@/components/ui/typography";
+import { getDictionary } from "@/i18n/dictionaries";
+import { listConfiguredIdentityProviders } from "@/lib/identity/registry";
+import { getServerLocale } from "@/lib/locale-server";
 
-export const metadata: Metadata = { title: "Settings" };
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return { title: getDictionary(locale).account.settings.metaTitle };
+}
 
-const settingsLinks = [
-  {
-    description: "Update your name, email, and phone number.",
-    href: "/account/profile" as const,
-    icon: "user" as const,
-    title: "My Profile",
-  },
-  {
-    description: "Password, connected accounts, and sign-out.",
-    href: "/account/security" as const,
-    icon: "lock" as const,
-    title: "Security",
-  },
-  {
-    description: "Choose what Maison Fondjo can send you.",
-    href: "/account/notifications" as const,
-    icon: "bell" as const,
-    title: "Notifications",
-  },
-  {
-    description: "Delivery and billing addresses.",
-    href: "/account/addresses" as const,
-    icon: "mapPin" as const,
-    title: "Addresses",
-  },
-];
+export default async function AccountSettingsPage() {
+  const locale = await getServerLocale();
+  const s = getDictionary(locale).account.settings;
+  const nav = getDictionary(locale).account.nav;
+  const methodCount = listConfiguredIdentityProviders().length;
+  const methodSummary =
+    methodCount === 1 ? s.methodsOne : s.methodsMany.replace("{count}", String(methodCount));
 
-export default function AccountSettingsPage() {
+  const settingsLinks = [
+    {
+      description: s.profileDesc,
+      href: "/account/profile" as const,
+      icon: "user" as const,
+      title: nav.myProfile,
+    },
+    {
+      description: s.securityDesc.replace("{methods}", methodSummary),
+      href: "/account/security" as const,
+      icon: "lock" as const,
+      title: nav.security,
+    },
+    {
+      description: s.notificationsDesc,
+      href: "/account/notifications" as const,
+      icon: "bell" as const,
+      title: nav.notifications,
+    },
+    {
+      description: s.addressesDesc,
+      href: "/account/addresses" as const,
+      icon: "mapPin" as const,
+      title: nav.addresses,
+    },
+  ];
+
   return (
     <div className="grid gap-6">
       <div>
         <Heading as="h1" level="h2">
-          Settings
+          {s.title}
         </Heading>
         <Text className="mt-2" tone="muted">
-          Manage your Maison Fondjo account preferences from one place.
+          {s.subtitle}
         </Text>
       </div>
 

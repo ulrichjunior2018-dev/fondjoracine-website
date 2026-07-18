@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { BotaniqueRouteSection } from "@/components/AdvisorRouteSections";
-import { copy } from "@/content/copy";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
+import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = buildAdvisorRouteMetadata({
-  title: "Botanicals",
-  description: copy.en.botanique.description,
-  path: "/botanique",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, copy } = await resolveAdvisorCopy();
+  return buildAdvisorRouteMetadata({
+    title: locale === "fr" ? "Botanique" : "Botanicals",
+    description: copy.botanique.description,
+    locale,
+    path: "/botanique",
+  });
+}
 
 export default function BotaniquePage() {
   return (

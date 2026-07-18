@@ -10,9 +10,11 @@ export const advisorCopy = {
     ["Livraison", "/policies/shipping"],
   ],
   nav: [
+    ["Accueil", "/"],
     ["Diagnostic", "/diagnostic"],
     ["Botanique", "/botanique"],
-    ["Sève Racine", "/seve-racine"],
+    ["Comprendre", "/learn"],
+    ["Boutique", "/shop"],
     ["Sur-mesure", "/sur-mesure"],
     ["Histoire", "/histoire"],
   ],
@@ -58,7 +60,7 @@ export const advisorCopy = {
             value: "chute_soudaine",
           },
           {
-            label: "Autre — dites-nous",
+            label: "Autre. Dites-nous",
             severity: "serious",
             value: "autre",
           },
@@ -77,7 +79,7 @@ export const advisorCopy = {
       },
       {
         id: "routine",
-        prompt: "Votre routine actuelle est plutôt...",
+        prompt: "Votre routine actuelle est plutôt..",
         summaryLabel: "Routine",
         options: [
           { label: "Coiffures protectrices ou tresses", value: "protective_styles" },
@@ -124,8 +126,9 @@ export const advisorCopy = {
   },
   seveRacine: {
     alt: "Flacon Sève Racine photographié en studio noir réfléchissant",
-    batchLine: `Coffret numéroté — ${batchName}, ${config.batch.size} exemplaires`,
-    cta: "Commander sur WhatsApp",
+    batchLine: `Coffret numéroté. ${batchName}, ${config.batch.size} exemplaires`,
+    cta: "Commander maintenant",
+    ctaBuy: "Acheter maintenant",
     description: "Sève Racine par Maison Fondjo : coffret numéroté, 15 000 F, livraison Cameroun.",
     intro:
       "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",
@@ -133,11 +136,11 @@ export const advisorCopy = {
     shippingCards: [
       {
         label: "Livraison Cameroun",
-        text: `${config.delivery.text.fr} ${config.delivery.policy}.`,
+        text: `${config.delivery.text.fr} ${config.delivery.policy.fr}.`,
       },
       {
         label: "Remboursement",
-        text: `${config.delivery.refund}.`,
+        text: `${config.delivery.refund.fr}.`,
       },
       {
         label: "Batch Fondateur",
@@ -174,7 +177,7 @@ export const advisorCopy = {
   },
   shell: {
     cta: "Diagnostic",
-    footer: "Maison Fondjo · Enracinée dans la nature. Faite pour durer.",
+    footer: "Maison Fondjo Enracinée dans la nature. Faite pour durer.",
     homeLabel: "Maison Fondjo accueil",
     logoAlt: "Maison Fondjo",
     place: "Buea, Cameroun",
@@ -203,17 +206,17 @@ export const advisorCopy = {
     origin: {
       label: "L'origine",
       heading: "Buea, au pied du Mont Cameroun.",
-      body: "Maison Fondjo naît dans la région du Sud-Ouest, à Buea, ville posée au flanc d'un volcan actif. Ce territoire — altitude, humidité tropicale, sols enrichis de cendres — façonne la sensibilité botanique qui traverse chaque flacon.",
+      body: "Maison Fondjo naît dans la région du Sud-Ouest, à Buea, ville posée au flanc d'un volcan actif. Ce territoire. Altitude, humidité tropicale, sols enrichis de cendres. Façonne la sensibilité botanique qui traverse chaque flacon.",
     },
     name: {
       label: "Le nom",
       heading: "Fondjo.",
-      body: "Fondjo est le nom de famille. Pas un nom de marque construit pour sonner, mais un nom transmis — celui que la famille porte, et qu'elle choisit d'inscrire sur l'étiquette. C'est une manière de répondre de ce qu'on met dans le flacon.",
+      body: "Fondjo est le nom de famille. Pas un nom de marque construit pour sonner, mais un nom transmis. Celui que la famille porte, et qu'elle choisit d'inscrire sur l'étiquette. C'est une manière de répondre de ce qu'on met dans le flacon.",
     },
     product: {
       label: "Le produit",
       heading: "Sève Racine.",
-      body: "La formule réunit un mélange riche d'huiles et d'herbes botaniques, sélectionnés pour leur rôle précis — pas pour l'étiquette. Chaque ingrédient a une raison d'être.",
+      body: "La formule réunit un mélange riche d'huiles et d'herbes botaniques, sélectionnés pour leur rôle précis. Pas pour l'étiquette. Chaque ingrédient a une raison d'être.",
     },
     family: {
       label: "La famille",

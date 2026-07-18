@@ -3,19 +3,15 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
-import { publicCopy } from "@/content/copy";
+import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = {
-  title: publicCopy.metadata.terms.title,
-  description: publicCopy.metadata.terms.description,
-  openGraph: {
-    description: publicCopy.metadata.terms.description,
-    locale: "fr_FR",
-    title: publicCopy.metadata.terms.title,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPublicMetadata((publicCopy) => publicCopy.metadata.terms);
+}
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const { publicCopy } = await resolvePublicCopy();
+
   return (
     <main className="bg-background py-16">
       <Container size="lg">

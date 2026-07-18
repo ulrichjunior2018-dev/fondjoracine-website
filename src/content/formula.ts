@@ -80,14 +80,14 @@ export const formulaIngredients: FormulaIngredient[] = [
   },
   {
     chosen_for:
-      "Riche en acide oléique (70–80 %) et en squalène, l'huile d'olive présente une haute affinité avec la cuticule capillaire. Elle scelle les écailles et améliore la douceur des longueurs, tandis que son hydroxytyrosol agit comme antioxydant.",
+      "Riche en acide oléique (70 to 80 %) et en squalène, l'huile d'olive présente une haute affinité avec la cuticule capillaire. Elle scelle les écailles et améliore la douceur des longueurs, tandis que son hydroxytyrosol agit comme antioxydant.",
     chosen_for_en:
-      "Rich in oleic acid (70–80%) and squalene, olive oil has a high affinity with the hair cuticle. It seals the scales and improves the softness of lengths, while its hydroxytyrosol acts as an antioxidant.",
+      "Rich in oleic acid (70 to 80%) and squalene, olive oil has a high affinity with the hair cuticle. It seals the scales and improves the softness of lengths, while its hydroxytyrosol acts as an antioxidant.",
     latin: "Olea europaea",
     name_en: "Olive",
     name_fr: "Olive",
-    properties: ["acide oléique (70–80%)", "squalène", "hydroxytyrosol antioxydant"],
-    properties_en: ["oleic acid (70–80%)", "squalene", "hydroxytyrosol antioxidant"],
+    properties: ["acide oléique (70 to 80%)", "squalène", "hydroxytyrosol antioxydant"],
+    properties_en: ["oleic acid (70 to 80%)", "squalene", "hydroxytyrosol antioxidant"],
   },
   {
     chosen_for:
@@ -113,9 +113,9 @@ export const formulaIngredients: FormulaIngredient[] = [
   },
   {
     chosen_for:
-      "L'huile d'argan est riche en tocophérols (vitamine E) et en acides gras insaturés — oléique et linoléique — qui protègent la fibre des agressions mécaniques et thermiques. Elle réduit les frottements entre mèches et donne un fini souple sans effet gras.",
+      "L'huile d'argan est riche en tocophérols (vitamine E) et en acides gras insaturés. Oléique et linoléique. Qui protègent la fibre des agressions mécaniques et thermiques. Elle réduit les frottements entre mèches et donne un fini souple sans effet gras.",
     chosen_for_en:
-      "Argan oil is rich in tocopherols (vitamin E) and unsaturated fatty acids — oleic and linoleic — that protect the fibre from mechanical and thermal stress. It reduces friction between strands and gives a supple finish with no greasy feel.",
+      "Argan oil is rich in tocopherols (vitamin E) and unsaturated fatty acids. Oleic and linoleic. That protect the fibre from mechanical and thermal stress. It reduces friction between strands and gives a supple finish with no greasy feel.",
     latin: "Argania spinosa",
     name_en: "Argan",
     name_fr: "Argan",
@@ -124,9 +124,9 @@ export const formulaIngredients: FormulaIngredient[] = [
   },
   {
     chosen_for:
-      "Le jojoba est techniquement une cire liquide — non une huile — dont la structure en esters de cires mime celle du sébum humain. Il régule naturellement la production de sébum du cuir chevelu, est non-comédogène et ne laisse aucun résidu lourd.",
+      "Le jojoba est techniquement une cire liquide. Non une huile. Dont la structure en esters de cires mime celle du sébum humain. Il régule naturellement la production de sébum du cuir chevelu, est non-comédogène et ne laisse aucun résidu lourd.",
     chosen_for_en:
-      "Jojoba is technically a liquid wax — not an oil — whose wax ester structure mimics human sebum. It naturally regulates scalp sebum production, is non-comedogenic, and leaves no heavy residue.",
+      "Jojoba is technically a liquid wax. Not an oil. Whose wax ester structure mimics human sebum. It naturally regulates scalp sebum production, is non-comedogenic, and leaves no heavy residue.",
     latin: "Simmondsia chinensis",
     name_en: "Jojoba",
     name_fr: "Jojoba",

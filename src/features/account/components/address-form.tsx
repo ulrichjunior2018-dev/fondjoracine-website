@@ -10,11 +10,9 @@ import { Field, Input } from "@/components/ui/input";
 import { ModalFooter } from "@/components/ui/modal";
 import { addressSchema, type AddressInput } from "@/domain/customer/schemas";
 import type { Address } from "@/domain/customer/types";
+import { getDictionary } from "@/i18n/dictionaries";
+import { useI18n } from "@/lib/i18n-context";
 
-// `z.input<>` (not `z.infer`/`z.output<>`) so the defaulted boolean fields stay
-// optional at the form-values level, matching zodResolver's expectations under
-// `exactOptionalPropertyTypes` (see src/features/elixir/components/order-flow.tsx
-// for the same pattern).
 type AddressFormValues = z.input<typeof addressSchema>;
 
 type AddressFormProps = {
@@ -25,6 +23,12 @@ type AddressFormProps = {
 };
 
 export function AddressForm({ address, isSubmitting, onCancel, onSubmit }: AddressFormProps) {
+  const { locale } = useI18n();
+  const a = getDictionary(locale).account.addresses;
+  const auth = getDictionary(locale).auth;
+  const profile = getDictionary(locale).account.profile;
+  const orderFlow = getDictionary(locale).orderFlow;
+
   const {
     control,
     register,
@@ -54,40 +58,40 @@ export function AddressForm({ address, isSubmitting, onCancel, onSubmit }: Addre
   }
 
   return (
-    <form className="grid gap-4" onSubmit={handleSubmit(handleValidSubmit)}>
-      <Field description='e.g. "Home", "Office"' label="Label">
+    <form className="grid min-w-0 gap-4" onSubmit={handleSubmit(handleValidSubmit)}>
+      <Field description={a.labelHint} label={a.label}>
         <Input {...register("label")} />
       </Field>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field error={errors.firstName?.message} label="First name" required>
+      <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+        <Field error={errors.firstName?.message} label={auth.firstName} required>
           <Input {...register("firstName")} />
         </Field>
-        <Field error={errors.lastName?.message} label="Last name" required>
+        <Field error={errors.lastName?.message} label={auth.lastName} required>
           <Input {...register("lastName")} />
         </Field>
       </div>
-      <Field error={errors.line1?.message} label="Address" required>
+      <Field error={errors.line1?.message} label={a.line1} required>
         <Input {...register("line1")} />
       </Field>
-      <Field error={errors.line2?.message} label="Apartment, suite, etc.">
+      <Field error={errors.line2?.message} label={a.line2Hint}>
         <Input {...register("line2")} />
       </Field>
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Field error={errors.city?.message} label="City" required>
+      <div className="grid min-w-0 gap-4 sm:grid-cols-3">
+        <Field error={errors.city?.message} label={orderFlow.city} required>
           <Input {...register("city")} />
         </Field>
-        <Field error={errors.region?.message} label="Region" required>
+        <Field error={errors.region?.message} label={a.region} required>
           <Input {...register("region")} />
         </Field>
-        <Field error={errors.postalCode?.message} label="Postal code" required>
+        <Field error={errors.postalCode?.message} label={a.postalCode} required>
           <Input {...register("postalCode")} />
         </Field>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field error={errors.countryCode?.message} label="Country code" required>
+        <Field error={errors.countryCode?.message} label={a.countryCode} required>
           <Input maxLength={2} {...register("countryCode")} />
         </Field>
-        <Field error={errors.phone?.message} label="Phone">
+        <Field error={errors.phone?.message} label={profile.phone}>
           <Input {...register("phone")} />
         </Field>
       </div>
@@ -98,7 +102,7 @@ export function AddressForm({ address, isSubmitting, onCancel, onSubmit }: Addre
           render={({ field }) => (
             <Checkbox
               checked={field.value ?? false}
-              label="Default shipping address"
+              label={a.defaultShippingAddress}
               onCheckedChange={(checked) => field.onChange(checked === true)}
             />
           )}
@@ -109,7 +113,7 @@ export function AddressForm({ address, isSubmitting, onCancel, onSubmit }: Addre
           render={({ field }) => (
             <Checkbox
               checked={field.value ?? false}
-              label="Default billing address"
+              label={a.defaultBillingAddress}
               onCheckedChange={(checked) => field.onChange(checked === true)}
             />
           )}
@@ -117,10 +121,10 @@ export function AddressForm({ address, isSubmitting, onCancel, onSubmit }: Addre
       </div>
       <ModalFooter>
         <Button onClick={onCancel} type="button" variant="secondary">
-          Cancel
+          {a.cancel}
         </Button>
         <Button isLoading={isSubmitting} type="submit">
-          Save address
+          {a.save}
         </Button>
       </ModalFooter>
     </form>

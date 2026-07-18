@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { DiagnosticQuiz } from "@/components/DiagnosticQuiz";
-import { copy } from "@/content/copy";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
+import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = buildAdvisorRouteMetadata({
-  title: "Hair diagnostic",
-  description: copy.en.diagnostic.description,
-  path: "/diagnostic",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, copy } = await resolveAdvisorCopy();
+  return buildAdvisorRouteMetadata({
+    title: locale === "fr" ? "Diagnostic cheveux" : "Hair diagnostic",
+    description: copy.diagnostic.description,
+    locale,
+    path: "/diagnostic",
+  });
+}
 
 export default function DiagnosticPage() {
   return (

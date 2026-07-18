@@ -1,4 +1,4 @@
-export type WhatsAppMessageKey = "consultation" | "diagnostic" | "order" | "wholesale";
+export type WhatsAppMessageKey = "consultation" | "diagnostic" | "order" | "support" | "wholesale";
 export type WhatsAppLocale = "en" | "fr";
 
 export const config = {
@@ -6,8 +6,14 @@ export const config = {
   contact_secondary: "",
   delivery: {
     min: 1_000,
-    policy: "Paiement avant livraison",
-    refund: "Dommage vérifié à la livraison uniquement",
+    policy: {
+      en: "Payment before delivery",
+      fr: "Paiement avant livraison",
+    },
+    refund: {
+      en: "Damage verified at delivery only",
+      fr: "Dommage vérifié à la livraison uniquement",
+    },
     text: {
       en: "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
       fr: "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
@@ -27,6 +33,7 @@ export const config = {
         diagnostic: (answers: string) =>
           `Hello 🌿 Here is my hair diagnostic:\n${answers}\nWhat do you recommend?`,
         order: "Hello, I would like to order Sève Racine (15 000 FCFA).",
+        support: "Hello, I need help with my Maison Fondjo order or account.",
         wholesale: "Hello, I am interested in the wholesale offer (MOQ 20).",
       },
       fr: {
@@ -34,6 +41,7 @@ export const config = {
         diagnostic: (answers: string) =>
           `Bonjour 🌿 Voici mon diagnostic capillaire:\n${answers}\nQue me conseillez-vous?`,
         order: "Bonjour, je souhaite commander Sève Racine (15 000 FCFA).",
+        support: "Bonjour, j’ai besoin d’aide pour ma commande ou mon compte Maison Fondjo.",
         wholesale: "Bonjour, je suis intéressé(e) par l'offre grossiste (MOQ 20).",
       },
     },
@@ -50,17 +58,26 @@ export function buildWaLink(
   dynamicText = "",
   locale: WhatsAppLocale = "en",
 ) {
-  const messages = config.whatsapp.messages[locale];
-  const message =
-    messageKey === "diagnostic"
-      ? messages.diagnostic(dynamicText)
-      : messageKey === "consultation"
-        ? dynamicText
-          ? `${messages.consultation}\n${dynamicText}`
-          : messages.consultation
-        : messageKey === "wholesale"
-          ? messages.wholesale
-          : messages.order;
+  const messages = locale === "fr" ? config.whatsapp.messages.fr : config.whatsapp.messages.en;
+  let message: string;
+
+  switch (messageKey) {
+    case "diagnostic":
+      message = messages.diagnostic(dynamicText);
+      break;
+    case "consultation":
+      message = dynamicText ? `${messages.consultation}\n${dynamicText}` : messages.consultation;
+      break;
+    case "support":
+      message = messages.support;
+      break;
+    case "wholesale":
+      message = messages.wholesale;
+      break;
+    default:
+      message = messages.order;
+  }
+
   const normalized = config.whatsapp.number.replace(/\D/g, "");
 
   return `https://wa.me/${normalized}?text=${encodeURIComponent(message)}`;

@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { SeveRacineRouteSection } from "@/components/AdvisorRouteSections";
-import { copy } from "@/content/copy";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
+import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = buildAdvisorRouteMetadata({
-  title: "Sève Racine",
-  description: copy.en.seveRacine.description,
-  path: "/seve-racine",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, copy } = await resolveAdvisorCopy();
+  return buildAdvisorRouteMetadata({
+    title: "Sève Racine",
+    description: copy.seveRacine.description,
+    locale,
+    path: "/seve-racine",
+  });
+}
 
 export default function SeveRacinePage() {
   return (

@@ -3,19 +3,15 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
-import { publicCopy } from "@/content/copy";
+import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
-export const metadata: Metadata = {
-  title: publicCopy.metadata.privacy.title,
-  description: publicCopy.metadata.privacy.description,
-  openGraph: {
-    description: publicCopy.metadata.privacy.description,
-    locale: "fr_FR",
-    title: publicCopy.metadata.privacy.title,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPublicMetadata((publicCopy) => publicCopy.metadata.privacy);
+}
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const { publicCopy } = await resolvePublicCopy();
+
   return (
     <main className="bg-background py-16">
       <Container size="lg">

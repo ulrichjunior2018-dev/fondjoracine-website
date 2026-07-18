@@ -6,12 +6,18 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
 import { copy, type Locale } from "@/content/copy";
-import { isLocale, localeStorageKey, localeSuggestionStorageKey, pickLocale } from "@/lib/locale";
+import {
+  isLocale,
+  localeStorageKey,
+  localeSuggestionStorageKey,
+  pickLocale,
+  writeLocaleCookie,
+} from "@/lib/locale";
 
 type I18nContextValue = {
   copy: (typeof copy)[Locale];
@@ -22,27 +28,56 @@ type I18nContextValue = {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+const listeners = new Set<() => void>();
+let memoryLocale: Locale | null = null;
+
+function emitLocaleChange() {
+  listeners.forEach((listener) => listener());
+}
+
+function subscribeLocale(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function readClientLocale(fallback: Locale): Locale {
+  if (memoryLocale) {
+    return memoryLocale;
+  }
+
+  const storedLocale = window.localStorage.getItem(localeStorageKey);
+  return isLocale(storedLocale) ? storedLocale : fallback;
+}
+
+function persistLocale(nextLocale: Locale) {
+  memoryLocale = nextLocale;
+  window.localStorage.setItem(localeStorageKey, nextLocale);
+  window.localStorage.setItem(localeSuggestionStorageKey, "resolved");
+  writeLocaleCookie(nextLocale);
+  document.documentElement.lang = nextLocale;
+  emitLocaleChange();
+}
+
+export function I18nProvider({
+  children,
+  initialLocale = "en",
+}: {
+  children: ReactNode;
+  initialLocale?: Locale;
+}) {
+  const locale = useSyncExternalStore(
+    subscribeLocale,
+    () => readClientLocale(initialLocale),
+    () => initialLocale,
+  );
 
   useEffect(() => {
-    const storedLocale = window.localStorage.getItem(localeStorageKey);
-    const nextLocale = isLocale(storedLocale) ? storedLocale : "en";
-
-    document.documentElement.lang = nextLocale;
-
-    if (nextLocale.charCodeAt(0) !== locale.charCodeAt(0)) {
-      const frame = window.requestAnimationFrame(() => setLocaleState(nextLocale));
-
-      return () => window.cancelAnimationFrame(frame);
-    }
-  }, []);
+    document.documentElement.lang = locale;
+    writeLocaleCookie(locale);
+  }, [locale]);
 
   const setLocale = useCallback((nextLocale: Locale) => {
-    setLocaleState(nextLocale);
-    window.localStorage.setItem(localeStorageKey, nextLocale);
-    window.localStorage.setItem(localeSuggestionStorageKey, "resolved");
-    document.documentElement.lang = nextLocale;
+    persistLocale(nextLocale);
   }, []);
 
   const toggleLocale = useCallback(() => {
@@ -51,7 +86,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      copy: copy[locale],
+      copy: locale === "fr" ? copy.fr : copy.en,
       locale,
       setLocale,
       toggleLocale,
