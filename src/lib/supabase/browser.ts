@@ -2,12 +2,12 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 
-import { env } from "@/config/env";
+import { publicEnv } from "@/config/public-env";
 
 export function createSupabaseBrowserClient() {
-  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (!publicEnv.supabaseUrl || !publicEnv.supabaseAnonKey) {
     throw new Error("Supabase public environment variables are not configured.");
   }
 
-  return createBrowserClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  return createBrowserClient(publicEnv.supabaseUrl, publicEnv.supabaseAnonKey);
 }

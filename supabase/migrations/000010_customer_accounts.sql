@@ -26,11 +26,18 @@
 -- 1) Auto-provision `profiles` + `customers` for every new auth user (email,
 --    OAuth, or magic link). Without this, an authenticated user would have no
 --    profile/customer row until some app code happened to create one.
+-- NOTE: `search_path` intentionally includes `extensions` because Supabase
+-- installs pgcrypto/uuid functions there, not in `public`. A security-definer
+-- function with `search_path = public` alone cannot resolve extension
+-- functions at runtime, which would raise inside the auth signup transaction
+-- and surface as an HTTP 500 from /auth/v1/signup. The referral code below
+-- deliberately uses only built-ins (md5/random) so it does not depend on
+-- pgcrypto being present at all.
 create or replace function public.handle_new_customer_user()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   new_referral_code text;
@@ -44,9 +51,9 @@ begin
   )
   on conflict (id) do nothing;
 
-  -- Short, URL-safe referral code; collision retry is unnecessary in practice
-  -- given the keyspace, but the unique constraint below is the real guarantee.
-  new_referral_code := upper(substr(replace(encode(gen_random_bytes(6), 'base64'), '/', 'x'), 1, 8));
+  -- Short, URL-safe referral code built from Postgres built-ins (no pgcrypto
+  -- dependency). The unique constraint below is the real collision guarantee.
+  new_referral_code := upper(substr(md5(random()::text || clock_timestamp()::text), 1, 8));
 
   insert into public.customers (profile_id, referral_code)
   values (new.id, new_referral_code)

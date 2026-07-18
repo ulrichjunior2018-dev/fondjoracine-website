@@ -21,12 +21,14 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
   /**
-   * Shows the "Continue with Google" button on /login and /signup. Google
-   * OAuth itself is configured in the Supabase dashboard (client id/secret),
-   * not here — flip this on once that's done. Apple sign-in is future work
-   * (see src/features/account/README.md).
+   * Identity provider feature flags. Secrets live in the Supabase dashboard;
+   * these only toggle whether each method appears in the UI. See
+   * `src/lib/identity/README.md` for how to add/remove methods.
    */
   NEXT_PUBLIC_AUTH_GOOGLE_ENABLED: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_AUTH_APPLE_ENABLED: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_AUTH_FACEBOOK_ENABLED: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_AUTH_PHONE_ENABLED: z.string().optional().or(z.literal("")),
 });
 
 export const env = envSchema.parse(process.env);

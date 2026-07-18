@@ -25,9 +25,18 @@ export async function createSupabaseServerClient() {
       return cookieStore.getAll();
     },
     setAll(cookiesToSet) {
-      cookiesToSet.forEach(({ name, value, options }) => {
-        cookieStore.set(name, value, options);
-      });
+      try {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          cookieStore.set(name, value, options);
+        });
+      } catch {
+        // `setAll` is called from a Server Component render, where cookies are
+        // read-only. This is safe to ignore: the session is refreshed and its
+        // cookies are persisted from a Route Handler / Server Action instead
+        // (see /auth/callback and the browser auth client). Without this guard
+        // Next.js throws "Cookies can only be modified in a Server Action or
+        // Route Handler" during account page renders.
+      }
     },
   };
 
