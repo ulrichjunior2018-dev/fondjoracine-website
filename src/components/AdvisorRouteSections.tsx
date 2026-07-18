@@ -1,9 +1,8 @@
 "use client";
 
-import { BadgeCheck, CreditCard, PackageCheck, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight, BadgeCheck, CreditCard, PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
-
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import {
   advisorImages,
@@ -114,14 +113,24 @@ export function SeveRacineRouteSection() {
         </h1>
         <p className="mt-6 text-lg leading-8 text-[#F5EFE3]/68">{seveRacine.intro}</p>
         <p className="mt-7 font-mono text-2xl text-[#B8935A]">{advisorPricing.productXaf}</p>
-        <a
-          className="mt-6 inline-flex min-h-13 items-center justify-center rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
-          href={whatsappUrl}
-          rel="noreferrer"
-          target="_blank"
-        >
-          {seveRacine.cta}
-        </a>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a
+            className="inline-flex min-h-13 items-center justify-center rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href={whatsappUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {seveRacine.cta}
+          </a>
+          <a
+            className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/45 px-7 text-sm font-semibold text-[#F5EFE3] transition-colors hover:border-[#B8935A] hover:text-[#B8935A]"
+            href={whatsappUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {seveRacine.ctaBuy}
+          </a>
+        </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           {seveRacine.steps.map((step, index) => (
             <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={step}>
@@ -264,8 +273,6 @@ export function GrossistesRouteSection() {
 
 export function HistoireRouteSection() {
   const copy = useCopy();
-  const { locale } = useI18n();
-  const whatsappUrl = buildWhatsAppUrl("order", "", locale);
   const histoire = copy.histoire;
 
   const chapters = [histoire.origin, histoire.name, histoire.product, histoire.family] as const;
@@ -298,21 +305,19 @@ export function HistoireRouteSection() {
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <a
+          <Link
             className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
-            href={whatsappUrl}
-            rel="noreferrer"
-            target="_blank"
+            href="/shop"
           >
             {histoire.cta}
             <ArrowRight className="size-4" aria-hidden="true" />
-          </a>
-          <a
+          </Link>
+          <Link
             className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/24 px-7 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
             href="/botanique"
           >
             {histoire.ctaSecondary}
-          </a>
+          </Link>
         </div>
       </div>
     </section>

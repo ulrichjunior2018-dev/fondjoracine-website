@@ -1,28 +1,24 @@
 import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
-import { SeveRacineRouteSection } from "@/components/AdvisorRouteSections";
+import { LearnRouteSection } from "@/components/LearnRouteSection";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
 import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { locale, copy } = await resolveAdvisorCopy();
   return buildAdvisorRouteMetadata({
-    title: copy.home.shop.metaTitle,
-    description: copy.home.shop.metaDescription,
+    title: copy.home.learn.metaTitle,
+    description: copy.home.learn.metaDescription,
     locale,
-    path: "/shop",
+    path: "/learn",
   });
 }
 
-/**
- * Shop lands on the product page first. Order / Buy open WhatsApp from there.
- * When the catalog grows beyond one SKU, restore the grid listing above the PDP.
- */
-export default function ShopPage() {
+export default function LearnPage() {
   return (
     <AdvisorShell>
-      <SeveRacineRouteSection />
+      <LearnRouteSection />
     </AdvisorShell>
   );
 }
