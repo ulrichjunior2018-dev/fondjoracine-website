@@ -14,6 +14,7 @@ export type {
 export * from "./resources/health";
 export * from "./resources/catalog";
 export * from "./resources/payments";
+export * from "./resources/identity";
 export * from "./resources/account";
 
 /**

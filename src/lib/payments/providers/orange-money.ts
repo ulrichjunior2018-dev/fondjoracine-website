@@ -14,4 +14,5 @@ export const orangeMoneyProvider: PaymentProviderDescriptor = {
   buildProviderPaymentId: ({ transactionReference }) =>
     `orange_money:${transactionReference ?? ""}`,
   isConfigured: () => Boolean(env.ORANGE_MONEY_NUMBER),
+  cmsLabelMatch: "orange",
 };

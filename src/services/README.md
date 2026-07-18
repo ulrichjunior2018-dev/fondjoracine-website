@@ -29,7 +29,7 @@ The verbs of the system: place an order, list the catalog, record a payment, sen
 ## Rules & boundaries
 
 - No framework/UI imports; keep services transport-agnostic.
-- Don't hardcode vendor names — resolve via registries (payments, and future notifications).
+- Don't hardcode vendor names — resolve via registries (`payments`, `identity`, `notifications`, `shipping`, `order-status`, `media`). See `docs/EXTENSIBILITY.md`.
 - One operation = one well-named function.
 
 ## Related

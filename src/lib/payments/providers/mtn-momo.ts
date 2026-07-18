@@ -13,4 +13,5 @@ export const mtnMomoProvider: PaymentProviderDescriptor = {
   resolveSettlementCurrency: () => "XAF",
   buildProviderPaymentId: ({ transactionReference }) => `mtn_momo:${transactionReference ?? ""}`,
   isConfigured: () => Boolean(env.MTN_MOMO_NUMBER),
+  cmsLabelMatch: "mtn",
 };

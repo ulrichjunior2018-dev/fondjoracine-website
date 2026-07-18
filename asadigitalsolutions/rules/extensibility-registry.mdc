@@ -1,0 +1,54 @@
+---
+description: Extensibility — registry pattern for add/remove/update without rewrites
+alwaysApply: true
+---
+
+# Extensibility (registry pattern)
+
+Maison Fondjo must grow by **adding modules**, not rewriting features.
+
+## Rule
+
+When a capability has **multiple interchangeable implementations** (providers, channels, methods, locales, statuses, zones, media backends, signup methods, nav sections gated by flags), do **not** hardcode `if (x === "google")` / `switch` trees in pages or services.
+
+Use a **descriptor + registry** (same shape as payments / identity / notifications):
+
+1. `types.ts` — interface / capability fields  
+2. `providers/` or `channels/` — one module per option  
+3. `registry.ts` — `list*` / `get*` / `isConfigured`  
+4. Optional `GET /api/v1/<resource>` + `api-client` resource for clients  
+
+Consumers resolve from the registry and read **capabilities** (`kind`, flags), never provider names.
+
+## Already established
+
+| Domain | Path |
+| --- | --- |
+| Payments | `src/lib/payments` |
+| Identity / sign-in | `src/lib/identity` |
+| Notifications | `src/lib/notifications` |
+| Shipping zones | `src/lib/shipping` |
+| Order status presentation | `src/lib/order-status` |
+| Media delivery | `src/lib/media` |
+
+## How to add something new
+
+1. New descriptor module  
+2. One line in the registry array  
+3. Env flag / config if needed  
+4. Wire UI/API to `list*` — **do not** edit every call site with a new `if`
+
+## How to remove or pause
+
+Flip `isConfigured()` / env flag, or drop the registry entry.
+
+## Do not over-abstract
+
+- One-off UI copy, a single form, or a static page → no registry  
+- Editorial CMS content → content/data, not a provider registry  
+- Use a registry when the set of options is expected to **grow or swap**
+
+## Docs
+
+- `docs/EXTENSIBILITY.md` — full pattern  
+- `docs/ARCHITECTURE.md` — layers + this rule  

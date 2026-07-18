@@ -58,6 +58,11 @@ export interface PaymentProviderDescriptor {
   buildProviderPaymentId: (args: BuildProviderPaymentIdArgs) => string;
   /** Whether this provider is usable given the current environment config. */
   isConfigured: () => boolean;
+  /**
+   * Optional substring to match CMS `manualPayments.methods` labels
+   * (e.g. `"mtn"`). Used only for `manual_reference` providers.
+   */
+  cmsLabelMatch?: string;
 }
 
 /** Lightweight, client-safe view of an available payment method. */
