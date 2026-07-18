@@ -209,8 +209,8 @@ export const defaultElixirContent: ElixirContent = {
       {
         after: {
           alt: {
-            en: "Grooming and styling at a Cameroonian barbershop — hair texture detail",
-            fr: "Coiffage et soin dans un salon camerounais — detail texture capillaire",
+            en: "Grooming and styling at a Cameroonian barbershop. Hair texture detail",
+            fr: "Coiffage et soin dans un salon camerounais. Detail texture capillaire",
           },
           height: 1537,
           src: "/images/hair-texture-lifestyle.png",
@@ -218,8 +218,8 @@ export const defaultElixirContent: ElixirContent = {
         },
         before: {
           alt: {
-            en: "Everyday market lifestyle scene in Buea, Cameroon — context for Maison Fondjo",
-            fr: "Scene de marche quotidien a Buea, Cameroun — contexte de vie Maison Fondjo",
+            en: "Everyday market lifestyle scene in Buea, Cameroon. Context for Maison Fondjo",
+            fr: "Scene de marche quotidien a Buea, Cameroun. Contexte de vie Maison Fondjo",
           },
           height: 1448,
           src: "/images/hero.png",
@@ -235,8 +235,8 @@ export const defaultElixirContent: ElixirContent = {
       {
         after: {
           alt: {
-            en: "Evening self-care ritual with Sève oil by candlelight — nighttime hair care routine",
-            fr: "Rituel de soin du soir avec huile Seve a la bougie — routine capillaire nocturne",
+            en: "Evening self-care ritual with Sève oil by candlelight. Nighttime hair care routine",
+            fr: "Rituel de soin du soir avec huile Seve a la bougie. Routine capillaire nocturne",
           },
           height: 1402,
           src: "/images/lifestyle-scalp-ritual.png",
@@ -244,8 +244,8 @@ export const defaultElixirContent: ElixirContent = {
         },
         before: {
           alt: {
-            en: "Mount Cameroon and Buea landscape at dusk — origin of Maison Fondjo botanical sourcing",
-            fr: "Paysage du Mont Cameroun et Buea au crepuscule — origine des botaniques Maison Fondjo",
+            en: "Mount Cameroon and Buea landscape at dusk. Origin of Maison Fondjo botanical sourcing",
+            fr: "Paysage du Mont Cameroun et Buea au crepuscule. Origine des botaniques Maison Fondjo",
           },
           height: 1448,
           src: "/images/hero.png",
@@ -332,8 +332,8 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: localized("Founder story", "Histoire fondatrice"),
     image: {
       alt: {
-        en: "Mount Cameroon from Buea — the landscape where Maison Fondjo botanicals are sourced",
-        fr: "Le Mont Cameroun depuis Buea — paysage d origine des botaniques Maison Fondjo",
+        en: "Mount Cameroon from Buea. The landscape where Maison Fondjo botanicals are sourced",
+        fr: "Le Mont Cameroun depuis Buea. Paysage d origine des botaniques Maison Fondjo",
       },
       height: 1448,
       src: "/images/hero.png",
@@ -375,7 +375,7 @@ export const defaultElixirContent: ElixirContent = {
   },
   hero: {
     eyebrow: {
-      en: "Maison Fondjo · Sève Racine",
+      en: "Maison Fondjo Sève Racine",
       fr: "Soin capillaire botanique africain premium",
     },
     primaryCta: {
@@ -467,8 +467,8 @@ export const defaultElixirContent: ElixirContent = {
     },
     {
       alt: {
-        en: "Sève Racine bottle back label — ingredients and directions",
-        fr: "Etiquette arriere du flacon Sève Racine — ingredients et mode d emploi",
+        en: "Sève Racine bottle back label. Ingredients and directions",
+        fr: "Etiquette arriere du flacon Sève Racine. Ingredients et mode d emploi",
       },
       height: 1536,
       src: "/images/bottle-back-label-v2.png",

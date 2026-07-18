@@ -1,24 +1,21 @@
 type LogContext = Record<string, unknown>;
 
 function write(level: "info" | "warn" | "error", message: string, context?: LogContext) {
-  const payload = {
-    level,
-    message,
-    context,
-    timestamp: new Date().toISOString(),
-  };
+  const line = context
+    ? `[${level}] ${message} ${JSON.stringify(context)}`
+    : `[${level}] ${message}`;
 
   if (level === "error") {
-    console.error(payload);
+    console.error(line);
     return;
   }
 
   if (level === "warn") {
-    console.warn(payload);
+    console.warn(line);
     return;
   }
 
-  console.info(payload);
+  console.info(line);
 }
 
 export const logger = {

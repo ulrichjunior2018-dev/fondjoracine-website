@@ -4,7 +4,6 @@ import { env } from "@/config/env";
 import { elixirContentSchema } from "@/features/elixir/data/content-schema";
 import { defaultElixirContent, type ElixirContent } from "@/features/elixir/data/content";
 import { buildWaLink, config, formatXaf } from "@/lib/config";
-import { AppError } from "@/lib/errors/app-error";
 import { logger } from "@/lib/logger/logger";
 
 type StorefrontContentRow = {
@@ -35,15 +34,29 @@ export async function getElixirContent(): Promise<ElixirContent> {
     return applyRuntimeOverrides(parseElixirContent(defaultElixirContent));
   }
 
-  const { data, error } = await supabase
-    .from("storefront_content")
-    .select("content")
-    .eq("key", STOREFRONT_CONTENT_KEY)
-    .eq("status", "published")
-    .maybeSingle<StorefrontContentRow>();
+  let data: StorefrontContentRow | null = null;
 
-  if (error) {
-    throw new AppError("INTERNAL", "Unable to load storefront content.", { expose: false });
+  try {
+    const result = await supabase
+      .from("storefront_content")
+      .select("content")
+      .eq("key", STOREFRONT_CONTENT_KEY)
+      .eq("status", "published")
+      .maybeSingle<StorefrontContentRow>();
+
+    if (result.error) {
+      // Table missing (migrations not applied) or transient error: the site ships
+      // complete bundled content, so fall back instead of crashing the storefront.
+      logger.warn("Storefront CMS query failed; using bundled default content.", {
+        message: result.error.message,
+      });
+    } else {
+      data = result.data;
+    }
+  } catch (error) {
+    logger.warn("Storefront CMS unreachable; using bundled default content.", {
+      message: error instanceof Error ? error.message : String(error),
+    });
   }
 
   const content = data?.content
@@ -90,12 +103,11 @@ function parseElixirContent(content: ElixirContent): ElixirContent {
     return parsedContent.data;
   }
 
-  logger.error("Invalid Maison Fondjo storefront CMS content. Falling back to bundled content.", {
-    issues: parsedContent.error.issues.map((issue) => ({
-      message: issue.message,
-      path: issue.path.join("."),
-    })),
-  });
+  logger.warn(
+    `Invalid storefront CMS content; using bundled defaults. Issues: ${parsedContent.error.issues
+      .map((issue) => `${issue.path.join(".") || "(root)"}: ${issue.message}`)
+      .join("; ")}`,
+  );
 
   const parsedFallback = elixirContentSchema.parse(defaultElixirContent);
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/config/site";
 import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
@@ -66,10 +67,7 @@ export default async function FrenchHomePage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
-      />
+      <JsonLd data={productJsonLd} id="fr-home-product-jsonld" />
       <PremiumStorefrontPage content={content} locale="fr" />
     </>
   );

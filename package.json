@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 0.0.0.0",
+    "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev --hostname 0.0.0.0",
+    "dev:webpack": "next dev --webpack --hostname 0.0.0.0",
     "diagnose": "node scripts/diagnose.mjs",
-    "prebuild": "npm run diagnose",
+    "smoke": "node scripts/e2e-smoke.mjs",
+    "prebuild": "npm run diagnose && npm run smoke",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -14,7 +17,7 @@
     "db:types:local": "npx --yes supabase gen types typescript --local --schema public > src/lib/database/types.generated.ts",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "verify": "run-s lint typecheck build",
+    "verify": "run-s lint typecheck smoke build",
     "prepare": "husky"
   },
   "dependencies": {
