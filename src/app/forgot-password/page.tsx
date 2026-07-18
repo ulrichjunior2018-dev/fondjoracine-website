@@ -1,28 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { AuthCard } from "@/features/account/components/auth-card";
-import { ForgotPasswordForm } from "@/features/account/components/forgot-password-form";
+import { ForgotPasswordView } from "@/features/account/components/forgot-password-view";
+import { getDictionary } from "@/i18n/dictionaries";
+import { getServerLocale } from "@/lib/locale-server";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  robots: { follow: false, index: false },
-  title: "Reset Password | Maison Fondjo",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    robots: { follow: false, index: false },
+    title: getDictionary(locale).auth.metaForgot,
+  };
+}
 
 export default function ForgotPasswordPage() {
-  return (
-    <AuthCard
-      description="We'll email you a link to reset your password."
-      footer={
-        <Link className="font-semibold text-accent" href="/login">
-          Back to sign in
-        </Link>
-      }
-      title="Reset your password"
-    >
-      <ForgotPasswordForm />
-    </AuthCard>
-  );
+  return <ForgotPasswordView />;
 }

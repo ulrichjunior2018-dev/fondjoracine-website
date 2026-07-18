@@ -12,9 +12,13 @@ import {
   type RequestPasswordResetInput,
 } from "@/domain/customer/schemas";
 import { requestPasswordReset } from "@/features/account/lib/auth-client";
+import { getDictionary } from "@/i18n/dictionaries";
+import { useI18n } from "@/lib/i18n-context";
 
 export function ForgotPasswordForm() {
   const { toast } = useToast();
+  const { locale } = useI18n();
+  const auth = getDictionary(locale).auth;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
@@ -33,8 +37,8 @@ export function ForgotPasswordForm() {
       setIsSent(true);
     } catch (error) {
       toast({
-        title: "Couldn't send the reset link",
-        description: error instanceof Error ? error.message : "Please try again.",
+        title: auth.forgotErrorTitle,
+        description: error instanceof Error ? error.message : auth.tryAgain,
         tone: "danger",
       });
     } finally {
@@ -43,20 +47,16 @@ export function ForgotPasswordForm() {
   }
 
   if (isSent) {
-    return (
-      <p className="text-sm leading-6 text-foreground/78">
-        If an account exists for that email, a reset link is on its way.
-      </p>
-    );
+    return <p className="text-sm leading-6 text-foreground/78">{auth.forgotSuccess}</p>;
   }
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <Field error={errors.email?.message} label="Email" required>
+      <Field error={errors.email?.message} label={auth.email} required>
         <Input autoComplete="email" type="email" {...register("email")} />
       </Field>
       <Button className="mt-2 w-full" isLoading={isSubmitting} type="submit">
-        Send reset link
+        {auth.forgotSubmit}
       </Button>
     </form>
   );

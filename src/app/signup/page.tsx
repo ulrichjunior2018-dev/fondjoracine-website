@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { env } from "@/config/env";
-import { AuthCard } from "@/features/account/components/auth-card";
-import { GoogleAuthButton } from "@/features/account/components/google-auth-button";
-import { SignupForm } from "@/features/account/components/signup-form";
+import { SignupView } from "@/features/account/components/signup-view";
+import { getDictionary } from "@/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/auth/session";
+import { getServerLocale } from "@/lib/locale-server";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  robots: { follow: false, index: false },
-  title: "Create Account | Maison Fondjo",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return {
+    robots: { follow: false, index: false },
+    title: getDictionary(locale).auth.metaSignUp,
+  };
+}
 
 export default async function SignupPage() {
   const user = await getCurrentUser();
@@ -21,23 +22,5 @@ export default async function SignupPage() {
     redirect("/account" as never);
   }
 
-  return (
-    <AuthCard
-      description="Track orders, save addresses, and build your hair care profile with Maison Fondjo."
-      footer={
-        <>
-          Already have an account?{" "}
-          <Link className="font-semibold text-accent" href="/login">
-            Sign in
-          </Link>
-        </>
-      }
-      title="Create your account"
-    >
-      <div className="grid gap-4">
-        <SignupForm />
-        <GoogleAuthButton redirectTo={`${env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/account`} />
-      </div>
-    </AuthCard>
-  );
+  return <SignupView />;
 }

@@ -1,52 +1,18 @@
 "use client";
 
-import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
-import { isGoogleAuthEnabled, signInWithGoogle } from "@/features/account/lib/auth-client";
+import { SocialAuthButtons } from "@/features/account/components/social-auth-buttons";
 
 type GoogleAuthButtonProps = {
-  redirectTo: string;
+  next?: string;
+  showDivider?: boolean;
+  /** @deprecated Ignored — use `next` instead. Kept so old call sites type-check briefly. */
+  redirectTo?: string;
 };
 
 /**
- * Renders nothing unless `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true` (Google OAuth
- * must also be configured in the Supabase dashboard — see `config/env.ts`).
- * Apple sign-in follows the same shape when it's added later.
+ * @deprecated Prefer `SocialAuthButtons`. Kept as a thin alias so any leftover
+ * imports keep working while the identity registry becomes the source of truth.
  */
-export function GoogleAuthButton({ redirectTo }: GoogleAuthButtonProps) {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-
-  if (!isGoogleAuthEnabled()) {
-    return null;
-  }
-
-  async function handleClick() {
-    setIsLoading(true);
-
-    try {
-      await signInWithGoogle(redirectTo);
-    } catch (error) {
-      setIsLoading(false);
-      toast({
-        title: "Google sign-in failed",
-        description: error instanceof Error ? error.message : "Please try again.",
-        tone: "danger",
-      });
-    }
-  }
-
-  return (
-    <Button
-      className="w-full"
-      isLoading={isLoading}
-      onClick={handleClick}
-      type="button"
-      variant="secondary"
-    >
-      Continue with Google
-    </Button>
-  );
+export function GoogleAuthButton({ next = "/account", showDivider = true }: GoogleAuthButtonProps) {
+  return <SocialAuthButtons next={next} providerId="google" showDivider={showDivider} />;
 }

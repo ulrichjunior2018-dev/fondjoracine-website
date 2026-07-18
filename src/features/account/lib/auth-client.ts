@@ -1,19 +1,17 @@
 "use client";
 
-import { env } from "@/config/env";
+import { getIdentityProvider } from "@/lib/identity/registry";
+import type { IdentityProviderId } from "@/lib/identity/types";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 /**
- * Browser-side auth actions for the customer account feature. These call
- * Supabase directly from the client (the standard Next.js + Supabase App
- * Router pattern) so session cookies are set by the Supabase SDK itself;
- * everything else in the app (profile, addresses, orders...) still goes
- * through the versioned `/api/v1` + service layer.
+ * Browser-side auth actions. Password + identity-provider flows talk to
+ * Supabase from the client (standard App Router pattern for session cookies).
+ * Profile/orders/etc. still go through `/api/v1`.
+ *
+ * Social / alternate signup methods are resolved from `src/lib/identity` —
+ * never hardcode a provider name here beyond the registry lookup.
  */
-
-export function isGoogleAuthEnabled(): boolean {
-  return env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
-}
 
 export async function signUpWithPassword(input: {
   email: string;
@@ -44,16 +42,59 @@ export async function signInWithPassword(input: { email: string; password: strin
   }
 }
 
-export async function signInWithGoogle(redirectTo: string) {
+/**
+ * Starts a configured identity provider (Google, Apple, …).
+ * Redirect uses the current browser origin so local / LAN / production work.
+ */
+export async function startIdentityProvider(providerId: IdentityProviderId, nextPath = "/account") {
+  const descriptor = getIdentityProvider(providerId);
+
+  if (!descriptor.isConfigured()) {
+    throw new Error(`${descriptor.label} is not enabled.`);
+  }
+
+  if (descriptor.kind === "password") {
+    throw new Error("Use the email and password form to sign in.");
+  }
+
+  if (descriptor.kind === "otp") {
+    throw new Error(
+      `${descriptor.label} is registered but the OTP UI is not wired yet. Add it without changing other providers.`,
+    );
+  }
+
+  if (descriptor.kind !== "oauth" || !descriptor.oauthSlug) {
+    throw new Error(`Unsupported identity flow for ${descriptor.id}.`);
+  }
+
   const supabase = createSupabaseBrowserClient();
+  const safeNext = nextPath.startsWith("/") ? nextPath : "/account";
+  const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+
   const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: { redirectTo },
+    provider: descriptor.oauthSlug,
+    options: {
+      redirectTo,
+      queryParams: {
+        access_type: "offline",
+        prompt: "select_account",
+      },
+    },
   });
 
   if (error) {
     throw new Error(error.message);
   }
+}
+
+/** @deprecated Prefer `startIdentityProvider("google", next)`. */
+export async function signInWithGoogle(nextPath = "/account") {
+  return startIdentityProvider("google", nextPath);
+}
+
+/** @deprecated Prefer `listSocialIdentityProviders()` from the identity registry. */
+export function isGoogleAuthEnabled(): boolean {
+  return getIdentityProvider("google").isConfigured();
 }
 
 /** Signs out of this device only. Pass `{ everywhere: true }` from Security to end all sessions. */
