@@ -18,8 +18,6 @@ import { useCopy } from "@/lib/i18n-context";
 const cardClass = "border border-[#B8935A]/16 bg-white/[0.025] p-6";
 const goldButtonClass =
   "inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B]";
-const outlineButtonClass =
-  "inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/24 px-7 text-sm font-semibold text-[#F5EFE3]";
 const eyebrowClass = "text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]";
 
 export function LearnRouteSection() {

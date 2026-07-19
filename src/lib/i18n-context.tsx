@@ -78,7 +78,7 @@ export function I18nProvider({
 
     document.documentElement.lang = locale;
     writeLocaleCookie(locale);
-  }, [locale]);
+  }, [locale, initialLocale]);
 
   const value = useMemo(
     () => ({
