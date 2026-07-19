@@ -17,22 +17,6 @@ const FloatingWhatsApp = dynamic(
   { ssr: false },
 );
 
-const LanguageSuggestionBanner = dynamic(
-  () =>
-    import("@/components/ui/LanguageSuggestionBanner").then((mod) => ({
-      default: mod.LanguageSuggestionBanner,
-    })),
-  { ssr: false },
-);
-
-const LanguageBottle = dynamic(
-  () =>
-    import("@/components/ui/LanguageBottle").then((mod) => ({
-      default: mod.LanguageBottle,
-    })),
-  { ssr: false },
-);
-
 type AppProvidersProps = {
   children: ReactNode;
   initialLocale?: Locale;
@@ -44,8 +28,6 @@ export function AppProviders({ children, initialLocale = "en" }: AppProvidersPro
       <I18nProvider initialLocale={initialLocale}>
         <SmoothScrollProvider>
           <FloatingWhatsApp />
-          <LanguageBottle />
-          <LanguageSuggestionBanner />
           <ToastProvider>{children}</ToastProvider>
         </SmoothScrollProvider>
       </I18nProvider>

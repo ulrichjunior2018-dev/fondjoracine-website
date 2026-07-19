@@ -1,3 +1,5 @@
+import { buildMarketingNav, getMarketingShopLabel } from "@/lib/marketing-nav";
+
 import { surfacesEn } from "./surfaces";
 
 export const en = {
@@ -17,7 +19,7 @@ export const en = {
   ],
   closingEyebrow: "Next step",
   closingTitle: "Calm service. Clear decisions.",
-  buy: "Shop",
+  buy: getMarketingShopLabel("en"),
   authAccount: "My account",
   authSignIn: "Sign in",
   contact: "Contact",
@@ -63,15 +65,7 @@ export const en = {
     product: "Sève Racine bottle in a reflective black studio",
   },
   menu: "Menu",
-  nav: [
-    ["Home", "/"],
-    ["Diagnostic", "/diagnostic"],
-    ["Botanicals", "/botanique"],
-    ["Learn", "/learn"],
-    ["Shop", "/shop"],
-    ["Bespoke", "/sur-mesure"],
-    ["Story", "/histoire"],
-  ],
+  nav: buildMarketingNav("en"),
   navigationClose: "Close navigation",
   navigationOpen: "Open navigation",
   nightText: "A measured ritual at the end of the day. Warmth in the hands, patience at the scalp.",

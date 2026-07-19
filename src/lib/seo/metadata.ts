@@ -47,6 +47,9 @@ export const defaultMetadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  other: {
+    google: "notranslate",
+  },
   ...(isProduction
     ? {
         alternates: {

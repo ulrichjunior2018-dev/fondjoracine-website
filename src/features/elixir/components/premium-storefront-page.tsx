@@ -790,13 +790,16 @@ export function StickyMobileCTA({ copy }: { copy: Copy }) {
   );
 }
 
-function PremiumHeader({ copy }: { copy: Copy }) {
+function PremiumHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
   const pathname = usePathname();
   const desktopNav = getMarketingDesktopNav(copy.nav);
   const mobileNav = getMarketingMobileNav(copy.nav);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0B0B0B]/70 text-[#F5EFE3] backdrop-blur-xl">
+    <header
+      className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0B0B0B]/70 text-[#F5EFE3] backdrop-blur-xl"
+      key={locale}
+    >
       <Container className="flex h-16 items-center justify-between gap-4 sm:h-20">
         <Link aria-label="Maison Fondjo home" className="flex items-center gap-3" href="/">
           <span
@@ -810,7 +813,10 @@ function PremiumHeader({ copy }: { copy: Copy }) {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 lg:flex">
+        <nav
+          className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 lg:flex notranslate"
+          translate="no"
+        >
           {desktopNav.map(([label, href]) => {
             const active = isMarketingNavActive(pathname, href);
 
@@ -843,7 +849,8 @@ function PremiumHeader({ copy }: { copy: Copy }) {
 
       <nav
         aria-label="Marketing sections"
-        className="flex gap-5 overflow-x-auto border-t border-white/10 px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 scrollbar-none sm:px-6 lg:hidden"
+        className="flex gap-5 overflow-x-auto border-t border-white/10 px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 scrollbar-none sm:px-6 lg:hidden notranslate"
+        translate="no"
       >
         {mobileNav.map(([label, href]) => {
           const active = isMarketingNavActive(pathname, href);
@@ -876,8 +883,8 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
   const whatsappUrl = getWhatsAppUrl(content, contentLocale);
 
   return (
-    <main className="min-h-screen bg-[#0B0B0B]">
-      <PremiumHeader copy={copy} />
+    <main className="min-h-screen bg-[#0B0B0B] notranslate" translate="no">
+      <PremiumHeader copy={copy} locale={contentLocale} />
       <CinematicHero />
       <ProductShowcase copy={copy} />
       <WhyItWorksSection copy={copy} />

@@ -1,4 +1,48 @@
-/** Shared marketing header nav helpers (homepage + AdvisorShell). */
+export type MarketingLocale = "en" | "fr";
+
+/** Single source of truth for marketing header nav labels (EN + FR). */
+const MARKETING_NAV_LABELS = {
+  en: {
+    home: "Home",
+    diagnostic: "Diagnostic",
+    botanicals: "Botanicals",
+    learn: "Learn",
+    shop: "Shop",
+    bespoke: "Bespoke",
+    story: "Story",
+  },
+  fr: {
+    home: "Accueil",
+    diagnostic: "Diagnostic",
+    botanicals: "Botanique",
+    learn: "Apprendre",
+    shop: "Boutique",
+    bespoke: "Sur-mesure",
+    story: "Histoire",
+  },
+} as const;
+
+export type MarketingNavEntry = readonly [string, string];
+
+/** Full marketing nav tuples in display order (includes Shop — filter for desktop/mobile). */
+export function buildMarketingNav(locale: MarketingLocale): readonly MarketingNavEntry[] {
+  const labels = locale === "fr" ? MARKETING_NAV_LABELS.fr : MARKETING_NAV_LABELS.en;
+
+  return [
+    [labels.home, "/"],
+    [labels.diagnostic, "/diagnostic"],
+    [labels.botanicals, "/botanique"],
+    [labels.learn, "/learn"],
+    [labels.shop, "/shop"],
+    [labels.bespoke, "/sur-mesure"],
+    [labels.story, "/histoire"],
+  ];
+}
+
+/** Gold header CTA — always "Shop" / "Boutique", never "Buy" / "Acheter". */
+export function getMarketingShopLabel(locale: MarketingLocale): string {
+  return locale === "fr" ? MARKETING_NAV_LABELS.fr.shop : MARKETING_NAV_LABELS.en.shop;
+}
 
 /** Shop lives only as the header CTA button — never as a text nav link. */
 const SHOP_NAV_HREFS = new Set(["/shop", "/seve-racine"]);

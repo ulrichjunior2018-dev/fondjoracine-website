@@ -12,8 +12,8 @@ import {
   MotionInView,
   MotionStep,
 } from "@/components/motion/living-motion";
-import { advisorImages, advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
-import { useCopy, useI18n } from "@/lib/i18n-context";
+import { advisorImages, advisorPricing } from "@/lib/advisor-site";
+import { useCopy } from "@/lib/i18n-context";
 
 const cardClass = "border border-[#B8935A]/16 bg-white/[0.025] p-6";
 const goldButtonClass =
@@ -24,13 +24,11 @@ const eyebrowClass = "text-xs font-semibold uppercase tracking-[0.3em] text-[#B8
 
 export function LearnRouteSection() {
   const copy = useCopy();
-  const { locale } = useI18n();
   const home = copy.home;
   const learn = home.learn;
-  const orderUrl = buildWhatsAppUrl("order", "", locale);
 
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
+    <section className="px-4 py-16 sm:px-6 lg:px-8 notranslate" translate="no">
       <div className="mx-auto max-w-7xl">
         <MotionInView>
           <p className={eyebrowClass}>{learn.eyebrow}</p>
@@ -55,11 +53,6 @@ export function LearnRouteSection() {
                   {learn.productCta}
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
-              </MotionButtonShell>
-              <MotionButtonShell>
-                <a className={outlineButtonClass} href={orderUrl} rel="noreferrer" target="_blank">
-                  {home.buy}
-                </a>
               </MotionButtonShell>
             </div>
           </MotionInView>

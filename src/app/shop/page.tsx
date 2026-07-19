@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Shop lands on the product page first. Order / Buy open WhatsApp from there.
+ * Shop lands on the product page first. One order CTA opens WhatsApp from there.
  * When the catalog grows beyond one SKU, restore the grid listing above the PDP.
  */
 export default function ShopPage() {

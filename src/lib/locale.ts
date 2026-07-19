@@ -12,6 +12,37 @@ export function pickLocale<T>(locale: Locale, values: { english: T; french: T })
   return locale.charCodeAt(0) === 102 ? values.french : values.english;
 }
 
+/** Map browser / Accept-Language tags to a supported site locale. */
+export function detectLocaleFromLanguageTags(tags: string): Locale {
+  for (const part of tags.split(",")) {
+    const tag = part.trim().split(";")[0]?.toLowerCase() ?? "";
+
+    if (tag.startsWith("fr")) {
+      return "fr";
+    }
+
+    if (tag.startsWith("en")) {
+      return "en";
+    }
+  }
+
+  return "en";
+}
+
+/** Client-side preference from OS / browser language list. */
+export function detectBrowserLocale(): Locale {
+  if (typeof navigator === "undefined") {
+    return "en";
+  }
+
+  const languages =
+    navigator.languages && navigator.languages.length > 0
+      ? navigator.languages
+      : [navigator.language];
+
+  return detectLocaleFromLanguageTags(languages.join(","));
+}
+
 /** Write locale cookie so server components can resolve public copy. */
 export function writeLocaleCookie(locale: Locale) {
   if (typeof document === "undefined") {

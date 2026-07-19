@@ -1,4 +1,5 @@
 import { config, formatXaf } from "@/lib/config";
+import { buildMarketingNav } from "@/lib/marketing-nav";
 const batchName = config.batch.name.replace(/\s+2026$/, "");
 const consultationPrice = formatXaf(config.pricing.consultation);
 const surMesurePrice = formatXaf(config.pricing.surMesure);
@@ -9,15 +10,7 @@ export const advisorCopy = {
     ["Contact", "/contact"],
     ["Livraison", "/policies/shipping"],
   ],
-  nav: [
-    ["Accueil", "/"],
-    ["Diagnostic", "/diagnostic"],
-    ["Botanique", "/botanique"],
-    ["Comprendre", "/learn"],
-    ["Boutique", "/shop"],
-    ["Sur-mesure", "/sur-mesure"],
-    ["Histoire", "/histoire"],
-  ],
+  nav: buildMarketingNav("fr"),
   botanique: {
     body: "Cette page sert de destination QR : un mélange riche d'huiles et d'herbes botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
     chosenFor: "Choisi pour",
@@ -128,7 +121,6 @@ export const advisorCopy = {
     alt: "Flacon Sève Racine photographié en studio noir réfléchissant",
     batchLine: `Coffret numéroté. ${batchName}, ${config.batch.size} exemplaires`,
     cta: "Commander maintenant",
-    ctaBuy: "Acheter maintenant",
     description: "Sève Racine par Maison Fondjo : coffret numéroté, 15 000 F, livraison Cameroun.",
     intro:
       "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",

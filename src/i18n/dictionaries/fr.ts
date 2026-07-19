@@ -1,3 +1,5 @@
+import { buildMarketingNav, getMarketingShopLabel } from "@/lib/marketing-nav";
+
 import { surfacesFr } from "./surfaces";
 
 export const fr = {
@@ -20,7 +22,7 @@ export const fr = {
   ],
   closingEyebrow: "Prochaine etape",
   closingTitle: "Un service calme. Des decisions claires.",
-  buy: "Acheter",
+  buy: getMarketingShopLabel("fr"),
   authAccount: "Mon compte",
   authSignIn: "Se connecter",
   contact: "Contact",
@@ -73,15 +75,7 @@ export const fr = {
     origin: "Paysage de Buea et du Mont Cameroun pour Maison Fondjo",
     product: "Flacon Sève Racine en studio noir réfléchissant",
   },
-  nav: [
-    ["Accueil", "/"],
-    ["Diagnostic", "/diagnostic"],
-    ["Botanique", "/botanique"],
-    ["Comprendre", "/learn"],
-    ["Boutique", "/shop"],
-    ["Sur-mesure", "/sur-mesure"],
-    ["Histoire", "/histoire"],
-  ],
+  nav: buildMarketingNav("fr"),
   nightText:
     "Un rituel mesuré en fin de journée. Chaleur dans les mains, patience au cuir chevelu.",
   nightTitle: "Soin du soir",

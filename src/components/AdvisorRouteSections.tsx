@@ -122,14 +122,6 @@ export function SeveRacineRouteSection() {
           >
             {seveRacine.cta}
           </a>
-          <a
-            className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/45 px-7 text-sm font-semibold text-[#F5EFE3] transition-colors hover:border-[#B8935A] hover:text-[#B8935A]"
-            href={whatsappUrl}
-            rel="noreferrer"
-            target="_blank"
-          >
-            {seveRacine.ctaBuy}
-          </a>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           {seveRacine.steps.map((step, index) => (

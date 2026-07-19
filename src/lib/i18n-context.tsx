@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -15,15 +14,12 @@ import {
   isLocale,
   localeStorageKey,
   localeSuggestionStorageKey,
-  pickLocale,
   writeLocaleCookie,
 } from "@/lib/locale";
 
 type I18nContextValue = {
   copy: (typeof copy)[Locale];
   locale: Locale;
-  setLocale: (locale: Locale) => void;
-  toggleLocale: () => void;
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -72,26 +68,24 @@ export function I18nProvider({
   );
 
   useEffect(() => {
+    const storedLocale = window.localStorage.getItem(localeStorageKey);
+
+    if (!isLocale(storedLocale)) {
+      // First visit: lock in the locale the server already detected from Accept-Language.
+      persistLocale(initialLocale);
+      return;
+    }
+
     document.documentElement.lang = locale;
     writeLocaleCookie(locale);
   }, [locale]);
-
-  const setLocale = useCallback((nextLocale: Locale) => {
-    persistLocale(nextLocale);
-  }, []);
-
-  const toggleLocale = useCallback(() => {
-    setLocale(pickLocale(locale, { english: "fr", french: "en" }));
-  }, [locale, setLocale]);
 
   const value = useMemo(
     () => ({
       copy: locale === "fr" ? copy.fr : copy.en,
       locale,
-      setLocale,
-      toggleLocale,
     }),
-    [locale, setLocale, toggleLocale],
+    [locale],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

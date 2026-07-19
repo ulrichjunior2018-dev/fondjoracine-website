@@ -1,6 +1,7 @@
 import { config, formatXaf } from "@/lib/config";
 import { en as storefrontEn } from "@/i18n/dictionaries/en";
 import { fr as storefrontFr } from "@/i18n/dictionaries/fr";
+import { buildMarketingNav } from "@/lib/marketing-nav";
 
 import { advisorCopy as advisorFr } from "./advisor-copy";
 
@@ -292,15 +293,7 @@ const advisorEn = {
     ["Contact", "/contact"],
     ["Delivery", "/policies/shipping"],
   ],
-  nav: [
-    ["Home", "/"],
-    ["Diagnostic", "/diagnostic"],
-    ["Botanicals", "/botanique"],
-    ["Learn", "/learn"],
-    ["Shop", "/shop"],
-    ["Bespoke", "/sur-mesure"],
-    ["Story", "/histoire"],
-  ],
+  nav: buildMarketingNav("en"),
   botanique: {
     body: "This QR destination presents a rich blend of botanical oils and herbs, Latin names, plant origin and the reason each belongs in Sève Racine.",
     chosenFor: "Chosen for",
@@ -413,7 +406,6 @@ const advisorEn = {
     alt: "Sève Racine bottle photographed in a reflective black studio",
     batchLine: "Numbered box. Founder Batch, 200 pieces",
     cta: "Order now",
-    ctaBuy: "Buy now",
     description: "Sève Racine by Maison Fondjo: numbered box, 15 000 F, Cameroon delivery.",
     intro:
       "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
