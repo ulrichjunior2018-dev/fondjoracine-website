@@ -12,6 +12,7 @@ import {
   type RequestPasswordResetInput,
 } from "@/domain/customer/schemas";
 import { requestPasswordReset } from "@/features/account/lib/auth-client";
+import { buildAuthCallbackUrl, formatAuthErrorMessage } from "@/features/account/lib/auth-urls";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 
@@ -32,13 +33,16 @@ export function ForgotPasswordForm() {
     setIsSubmitting(true);
 
     try {
-      const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
+      const redirectTo = buildAuthCallbackUrl("/reset-password");
       await requestPasswordReset(values.email, redirectTo);
       setIsSent(true);
     } catch (error) {
       toast({
         title: auth.forgotErrorTitle,
-        description: error instanceof Error ? error.message : auth.tryAgain,
+        description:
+          error instanceof Error
+            ? formatAuthErrorMessage(error.message, auth.emailRateLimit)
+            : auth.tryAgain,
         tone: "danger",
       });
     } finally {

@@ -4,6 +4,8 @@ import { getIdentityProvider } from "@/lib/identity/registry";
 import type { IdentityProviderId } from "@/lib/identity/types";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
+import { buildAuthCallbackUrl } from "./auth-urls";
+
 /**
  * Browser-side auth actions. Password + identity-provider flows talk to
  * Supabase from the client (standard App Router pattern for session cookies).
@@ -25,6 +27,7 @@ export async function signUpWithPassword(input: {
     password: input.password,
     options: {
       data: { first_name: input.firstName, last_name: input.lastName },
+      emailRedirectTo: buildAuthCallbackUrl("/account"),
     },
   });
 
@@ -68,8 +71,7 @@ export async function startIdentityProvider(providerId: IdentityProviderId, next
   }
 
   const supabase = createSupabaseBrowserClient();
-  const safeNext = nextPath.startsWith("/") ? nextPath : "/account";
-  const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+  const redirectTo = buildAuthCallbackUrl(nextPath);
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: descriptor.oauthSlug,

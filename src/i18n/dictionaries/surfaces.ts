@@ -77,6 +77,8 @@ export const surfacesEn = {
     signupHasAccount: "Already have an account?",
     signupSubmit: "Create account",
     signupErrorTitle: "Couldn't create account",
+    emailRateLimit:
+      "Too many sign-in or confirmation emails were sent recently. Please wait a few minutes and try again.",
     firstName: "First name",
     lastName: "Last name",
     forgotTitle: "Forgot password",
@@ -409,6 +411,8 @@ export const surfacesFr = {
     signupHasAccount: "Vous avez déjà un compte ?",
     signupSubmit: "Créer le compte",
     signupErrorTitle: "Création du compte impossible",
+    emailRateLimit:
+      "Trop d'emails de connexion ou de confirmation ont été envoyés récemment. Veuillez patienter quelques minutes et réessayer.",
     firstName: "Prénom",
     lastName: "Nom",
     forgotTitle: "Mot de passe oublié",
