@@ -6,7 +6,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 import { buildAuthCallbackUrl } from "./auth-urls";
 
-function throwAuthError(error: { code?: string; message?: string; status?: number } | null): void {
+function throwAuthError(error: unknown): void {
   if (error) {
     throw error;
   }

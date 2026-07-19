@@ -31,12 +31,21 @@ function readAuthErrorLike(error: unknown): AuthErrorLike {
   }
 
   const record = error as Record<string, unknown>;
+  const result: AuthErrorLike = {};
 
-  return {
-    code: typeof record.code === "string" ? record.code : undefined,
-    message: typeof record.message === "string" ? record.message.trim() : undefined,
-    status: typeof record.status === "number" ? record.status : undefined,
-  };
+  if (typeof record.code === "string") {
+    result.code = record.code;
+  }
+
+  if (typeof record.message === "string") {
+    result.message = record.message.trim();
+  }
+
+  if (typeof record.status === "number") {
+    result.status = record.status;
+  }
+
+  return result;
 }
 
 function isUsableMessage(message: string | undefined): message is string {
