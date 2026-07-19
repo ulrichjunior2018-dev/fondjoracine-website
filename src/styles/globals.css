@@ -245,7 +245,47 @@ img {
   scrollbar-width: thin;
 }
 
-/* Account dashboard panel: blend the scrollbar into its light background,
+/* Account dashboard theme — driven by `data-account-theme` on `.account-root`. */
+.account-root,
+.account-root[data-account-theme="light"] {
+  --accent: rgb(184, 147, 90);
+  --accent-foreground: rgb(20, 20, 20);
+  --accent-muted: rgba(184, 147, 90, 0.18);
+  --background: rgb(229, 231, 235);
+  --border: rgba(20, 20, 20, 0.12);
+  --border-strong: rgba(184, 147, 90, 0.45);
+  --foreground: rgb(20, 20, 20);
+  --ink: rgb(20, 20, 20);
+  --ink-muted: rgba(20, 20, 20, 0.1);
+  --ring: rgb(184, 147, 90);
+  --shadow-soft: 0 4px 24px rgba(20, 20, 20, 0.08);
+  --shadow-lifted: 0 8px 32px rgba(20, 20, 20, 0.1);
+  --surface: rgb(245, 246, 247);
+  --surface-elevated: rgb(255, 255, 255);
+  --surface-muted: rgba(20, 20, 20, 0.06);
+  color-scheme: light;
+}
+
+.account-root[data-account-theme="dark"] {
+  --accent: var(--gold);
+  --accent-foreground: var(--obsidian);
+  --accent-muted: rgba(184, 147, 90, 0.16);
+  --background: var(--obsidian);
+  --border: rgba(184, 147, 90, 0.15);
+  --border-strong: rgba(184, 147, 90, 0.45);
+  --foreground: var(--ivory);
+  --ink: var(--ivory);
+  --ink-muted: rgba(245, 240, 232, 0.14);
+  --ring: var(--gold);
+  --shadow-soft: var(--shadow-elevation-sm);
+  --shadow-lifted: var(--shadow-elevation-md);
+  --surface: var(--obsidian-card);
+  --surface-elevated: var(--obsidian-raised);
+  --surface-muted: #1d1a14;
+  color-scheme: dark;
+}
+
+/* Account dashboard panel: blend the scrollbar into its background,
    overriding the global dark/gold scrollbar above (WebKit ignores
    `scrollbar-color` once `::-webkit-scrollbar` is styled, so we must restyle
    the pseudo-elements here too). */
@@ -272,6 +312,18 @@ img {
 
 .account-scroll::-webkit-scrollbar-thumb:hover {
   background-color: rgba(20, 20, 20, 0.55);
+}
+
+.account-root[data-account-theme="dark"] .account-scroll {
+  scrollbar-color: rgba(245, 239, 227, 0.28) transparent;
+}
+
+.account-root[data-account-theme="dark"] .account-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(245, 239, 227, 0.28);
+}
+
+.account-root[data-account-theme="dark"] .account-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(245, 239, 227, 0.42);
 }
 
 /* Uniform scrollbars for the whole account subtree — every scroll area under
@@ -308,14 +360,58 @@ img {
   background-color: rgba(20, 20, 20, 0.55);
 }
 
-/* Account pages use a light color scheme. On desktop the main content scrolls
-   inside its own `.account-scroll` container; on mobile the page scrolls via the
-   viewport scrollbar, so restyle it here to match the panel scrollbar and
-   override the global dark/gold one. */
-html.account-page {
+.account-root[data-account-theme="dark"],
+.account-root[data-account-theme="dark"] * {
+  scrollbar-color: rgba(245, 239, 227, 0.28) transparent;
+}
+
+.account-root[data-account-theme="dark"]::-webkit-scrollbar-thumb,
+.account-root[data-account-theme="dark"] *::-webkit-scrollbar-thumb {
+  background-color: rgba(245, 239, 227, 0.28);
+}
+
+.account-root[data-account-theme="dark"]::-webkit-scrollbar-thumb:hover,
+.account-root[data-account-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(245, 239, 227, 0.42);
+}
+
+/* Account pages: viewport + body match the active dashboard theme (fixes mobile bleed). */
+html.account-page[data-account-theme="light"] {
   color-scheme: light;
   scrollbar-color: rgba(20, 20, 20, 0.35) transparent;
   scrollbar-width: thin;
+}
+
+html.account-page[data-account-theme="dark"] {
+  color-scheme: dark;
+  scrollbar-color: rgba(245, 239, 227, 0.28) transparent;
+  scrollbar-width: thin;
+}
+
+html.account-page[data-account-theme="light"] body {
+  background: rgb(229, 231, 235);
+  color: rgb(20, 20, 20);
+}
+
+html.account-page[data-account-theme="dark"] body {
+  background: var(--obsidian);
+  color: var(--ivory);
+}
+
+html.account-page[data-account-theme="light"]::-webkit-scrollbar-thumb {
+  background-color: rgba(20, 20, 20, 0.35);
+}
+
+html.account-page[data-account-theme="dark"]::-webkit-scrollbar-thumb {
+  background-color: rgba(245, 239, 227, 0.28);
+}
+
+html.account-page[data-account-theme="light"]::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(20, 20, 20, 0.55);
+}
+
+html.account-page[data-account-theme="dark"]::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(245, 239, 227, 0.42);
 }
 
 html.account-page::-webkit-scrollbar {
@@ -328,14 +424,9 @@ html.account-page::-webkit-scrollbar-track {
 }
 
 html.account-page::-webkit-scrollbar-thumb {
-  background-color: rgba(20, 20, 20, 0.35);
   border: 3px solid transparent;
   background-clip: padding-box;
   border-radius: 999px;
-}
-
-html.account-page::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(20, 20, 20, 0.55);
 }
 
 :focus-visible {

@@ -2,46 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from "react";
+import { useTheme } from "next-themes";
+import {
+  useEffect,
+  useId,
+  useState,
+  useSyncExternalStore,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 import { Icons } from "@/components/icons/icons";
 import { AccountProfileMenu } from "@/features/account/components/account-profile-menu";
+import { resolveAccountTheme, type AccountTheme } from "@/features/account/lib/account-theme";
 import { accountNavGroups, type AccountNavItem } from "@/features/account/lib/nav";
+import { useMounted } from "@/hooks/use-mounted";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 import { cn } from "@/lib/utils/cn";
-
-/** Account shell palette — requested by product for the authenticated mobile dashboard. */
-const accountUi = {
-  accent: "rgb(184, 147, 90)",
-  accentMuted: "rgba(184, 147, 90, 0.18)",
-  bg: "rgb(229, 231, 235)",
-  surface: "rgb(245, 246, 247)",
-  surfaceElevated: "rgb(255, 255, 255)",
-  text: "rgb(20, 20, 20)",
-} as const;
-
-/**
- * Remap design tokens for the account subtree so existing Card/Heading/Button
- * components render correctly on the light account palette.
- */
-const accountThemeVars = {
-  "--accent": accountUi.accent,
-  "--accent-foreground": accountUi.text,
-  "--accent-muted": accountUi.accentMuted,
-  "--background": accountUi.bg,
-  "--border": "rgba(20, 20, 20, 0.12)",
-  "--border-strong": "rgba(184, 147, 90, 0.45)",
-  "--foreground": accountUi.text,
-  "--ink": accountUi.text,
-  "--ink-muted": "rgba(20, 20, 20, 0.1)",
-  "--ring": accountUi.accent,
-  "--shadow-soft": "0 4px 24px rgba(20, 20, 20, 0.08)",
-  "--shadow-lifted": "0 8px 32px rgba(20, 20, 20, 0.1)",
-  "--surface": accountUi.surface,
-  "--surface-elevated": accountUi.surfaceElevated,
-  "--surface-muted": "rgba(20, 20, 20, 0.06)",
-} as CSSProperties;
 
 type AccountShellProps = {
   children: ReactNode;
@@ -89,31 +67,25 @@ function NavItemRow({
 
   const rowClass = cn(
     "flex w-full items-center rounded-xl text-left font-semibold transition-colors duration-200",
-    // Mobile drawer: comfortable touch targets. Desktop sidebar: compact.
     "min-h-12 gap-3 px-3 py-2.5 text-[15px]",
     "lg:min-h-9 lg:gap-2.5 lg:rounded-lg lg:px-2.5 lg:py-1.5 lg:text-[13px] lg:font-medium",
     item.comingSoon && "cursor-not-allowed opacity-55",
-    !item.comingSoon && !active && "hover:bg-[rgba(184,147,90,0.12)]",
+    !item.comingSoon && !active && "hover:bg-accent-muted",
+    active && "bg-accent-muted",
   );
+
+  const iconClass = cn(
+    "h-[18px] w-[18px] shrink-0 lg:h-4 lg:w-4",
+    active ? "text-accent" : "text-foreground",
+  );
+  const labelClass = cn("flex-1 truncate", active ? "text-accent" : "text-foreground");
 
   const content = (
     <>
-      <Icon
-        aria-hidden="true"
-        className="h-[18px] w-[18px] shrink-0 lg:h-4 lg:w-4"
-        style={{ color: active ? accountUi.accent : accountUi.text }}
-      />
-      <span
-        className="flex-1 truncate"
-        style={{ color: active ? accountUi.accent : accountUi.text }}
-      >
-        {label}
-      </span>
+      <Icon aria-hidden="true" className={iconClass} />
+      <span className={labelClass}>{label}</span>
       {item.comingSoon ? (
-        <span
-          className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
-          style={{ backgroundColor: accountUi.accentMuted, color: accountUi.accent }}
-        >
+        <span className="shrink-0 rounded-full bg-accent-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-accent">
           {soonBadge}
         </span>
       ) : null}
@@ -134,7 +106,6 @@ function NavItemRow({
       className={rowClass}
       href={item.href}
       {...(onNavigate ? { onClick: onNavigate } : {})}
-      {...(active ? { style: { backgroundColor: accountUi.accentMuted } } : {})}
     >
       {content}
     </Link>
@@ -171,21 +142,49 @@ function NavGroups({ onNavigate, pathname }: { onNavigate?: () => void; pathname
   );
 }
 
+function useSystemColorPreference() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      media.addEventListener("change", onStoreChange);
+      return () => media.removeEventListener("change", onStoreChange);
+    },
+    () => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"),
+    () => "light" as const,
+  );
+}
+
 /**
  * Mobile-first shell: hamburger on the right opens a slide-down feature menu
  * (light gray + near-black text + gold accents). Desktop keeps a left sidebar.
+ * Appearance (light / dark / system) comes from the profile menu via `next-themes`.
  */
 export function AccountShell({ children, customerName }: AccountShellProps) {
   const pathname = usePathname();
   const { locale } = useI18n();
+  const { theme, setTheme, systemTheme, resolvedTheme } = useTheme();
+  const mounted = useMounted();
+  const systemPreference = useSystemColorPreference();
   const nav = getDictionary(locale).account.nav;
   const menuId = useId();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [menuPathname, setMenuPathname] = useState(pathname);
+  const [appearanceChoice, setAppearanceChoice] = useState<string | null>(null);
   const initials = initialsFromName(customerName);
+  const selectedAppearance = appearanceChoice ?? theme ?? "system";
+  const accountTheme: AccountTheme = mounted
+    ? resolveAccountTheme(selectedAppearance, systemTheme ?? systemPreference, resolvedTheme)
+    : "light";
 
-  // Close drawer/popover when the route changes (React "adjust state when prop changes").
+  const handleAppearanceChange = useCallback(
+    (nextTheme: "light" | "dark" | "system") => {
+      setAppearanceChoice(nextTheme);
+      setTheme(nextTheme);
+    },
+    [setTheme],
+  );
+
   if (pathname !== menuPathname) {
     setMenuPathname(pathname);
     setIsMenuOpen(false);
@@ -227,21 +226,25 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
 
     window.addEventListener("keydown", onKeyDown);
 
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => void window.removeEventListener("keydown", onKeyDown);
   }, [isProfileMenuOpen]);
 
-  // Tag <html> so the document (viewport) scrollbar can match the panel while
-  // on account pages, without affecting the dark storefront.
   useEffect(() => {
-    document.documentElement.classList.add("account-page");
+    const root = document.documentElement;
+    root.classList.add("account-page");
+    root.dataset.accountTheme = accountTheme;
 
-    return () => document.documentElement.classList.remove("account-page");
-  }, []);
+    return () => {
+      root.classList.remove("account-page");
+      delete root.dataset.accountTheme;
+    };
+  }, [accountTheme]);
 
   return (
     <div
-      className="account-root min-h-svh overflow-x-hidden bg-background text-foreground [color-scheme:light] lg:h-svh lg:overflow-hidden"
-      style={accountThemeVars}
+      className="account-root min-h-svh overflow-x-hidden bg-background text-foreground lg:h-svh lg:overflow-hidden"
+      data-account-theme={accountTheme}
+      suppressHydrationWarning
     >
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 border-b border-border bg-background lg:hidden">
@@ -265,7 +268,6 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
           </button>
         </div>
 
-        {/* Slide-down feature menu */}
         <div
           className={cn(
             "grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none",
@@ -275,7 +277,6 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
         >
           <div className="min-h-0 overflow-hidden">
             <div className="account-scroll max-h-[calc(100svh-3.5rem)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-6 pt-4">
-              {/* Profile at the top with a ⋯ menu — same preferences as desktop */}
               <div className="mb-5">
                 <div className="flex items-center gap-3 rounded-xl px-2 py-2">
                   <span
@@ -304,7 +305,12 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
 
                 {isProfileMenuOpen ? (
                   <div className="mt-2 rounded-xl border border-border bg-surface-elevated p-1">
-                    <AccountProfileMenu onClose={() => setIsProfileMenuOpen(false)} />
+                    <AccountProfileMenu
+                      activeAppearance={selectedAppearance}
+                      onAppearanceChange={handleAppearanceChange}
+                      onClose={() => setIsProfileMenuOpen(false)}
+                      resolvedAppearance={accountTheme}
+                    />
                   </div>
                 ) : null}
               </div>
@@ -316,7 +322,6 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
       </header>
 
       <div className="lg:flex lg:h-svh lg:items-stretch">
-        {/* Desktop sidebar — docked flush to the left edge, full height */}
         <aside className="sticky top-0 hidden h-svh w-[280px] shrink-0 flex-col border-r border-border bg-background lg:flex">
           <div className="flex h-14 items-center px-5">
             <Link className="font-serif text-lg tracking-tight text-accent" href="/">
@@ -328,7 +333,6 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
             <NavGroups pathname={pathname} />
           </div>
 
-          {/* Profile pinned at the bottom, with a ⋯ menu that reveals Sign out */}
           <div className="relative p-3">
             {isProfileMenuOpen ? (
               <>
@@ -343,7 +347,12 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
                   className="absolute bottom-full left-3 right-3 z-50 mb-2 max-h-[70svh] overflow-y-auto rounded-xl border border-border bg-surface-elevated p-1 shadow-[var(--shadow-lifted)]"
                   role="menu"
                 >
-                  <AccountProfileMenu onClose={() => setIsProfileMenuOpen(false)} />
+                  <AccountProfileMenu
+                    activeAppearance={selectedAppearance}
+                    onAppearanceChange={handleAppearanceChange}
+                    onClose={() => setIsProfileMenuOpen(false)}
+                    resolvedAppearance={accountTheme}
+                  />
                 </div>
               </>
             ) : null}
@@ -373,7 +382,6 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
           </div>
         </aside>
 
-        {/* Content — fills the remaining width out to the right edge */}
         <main
           className={cn(
             "account-scroll min-w-0 flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:h-svh lg:overflow-y-auto lg:overscroll-contain lg:px-10 lg:py-12",

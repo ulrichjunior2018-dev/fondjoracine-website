@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 import { Icons } from "@/components/icons/icons";
@@ -16,6 +15,9 @@ import { cn } from "@/lib/utils/cn";
 type AccountProfileMenuProps = {
   /** Closes the surrounding popover (called after a navigation/action). */
   onClose: () => void;
+  activeAppearance: string;
+  onAppearanceChange: (theme: "light" | "dark" | "system") => void;
+  resolvedAppearance: "light" | "dark";
 };
 
 const itemClass =
@@ -26,14 +28,18 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-export function AccountProfileMenu({ onClose }: AccountProfileMenuProps) {
+export function AccountProfileMenu({
+  onClose,
+  activeAppearance,
+  onAppearanceChange,
+  resolvedAppearance,
+}: AccountProfileMenuProps) {
   const router = useRouter();
   const { toast } = useToast();
   const { locale } = useI18n();
   const menu = getDictionary(locale).account.menu;
   const nav = getDictionary(locale).account.nav;
   const auth = getDictionary(locale).auth;
-  const { theme, setTheme } = useTheme();
   const [showAppearance, setShowAppearance] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -54,8 +60,11 @@ export function AccountProfileMenu({ onClose }: AccountProfileMenuProps) {
     return () => window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
   }, []);
 
-  const activeTheme = theme ?? "system";
   const helpHref = buildWaLink("support", "", locale);
+
+  function handleThemeChange(nextTheme: "light" | "dark" | "system") {
+    onAppearanceChange(nextTheme);
+  }
 
   async function handleSignOut() {
     setIsSigningOut(true);
@@ -112,7 +121,11 @@ export function AccountProfileMenu({ onClose }: AccountProfileMenuProps) {
         >
           <Icons.palette aria-hidden="true" className="h-4 w-4 shrink-0" />
           <span className="flex-1 truncate">{menu.appearance}</span>
-          <span className="text-[11px] capitalize text-foreground/55">{activeTheme}</span>
+          <span className="text-[11px] capitalize text-foreground/55">
+            {activeAppearance === "system"
+              ? `${activeAppearance} (${resolvedAppearance})`
+              : activeAppearance}
+          </span>
           <Icons.chevronRight
             aria-hidden="true"
             className={cn(
@@ -126,13 +139,25 @@ export function AccountProfileMenu({ onClose }: AccountProfileMenuProps) {
           <div className="ml-3 grid gap-0.5 border-l border-border pl-2">
             {themeOptions.map((option) => {
               const OptionIcon = Icons[option.icon];
-              const selected = activeTheme === option.value;
+              const selected = activeAppearance === option.value;
 
               return (
                 <button
-                  className={itemClass}
+                  aria-pressed={selected}
+                  className={cn(
+                    itemClass,
+                    "touch-manipulation",
+                    selected && "bg-accent-muted text-accent",
+                  )}
                   key={option.value}
-                  onClick={() => setTheme(option.value)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleThemeChange(option.value as "light" | "dark" | "system");
+                  }}
+                  onPointerUp={(event) => {
+                    event.stopPropagation();
+                  }}
                   type="button"
                 >
                   <OptionIcon aria-hidden="true" className="h-4 w-4 shrink-0" />

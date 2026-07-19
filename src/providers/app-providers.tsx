@@ -24,7 +24,13 @@ type AppProvidersProps = {
 
 export function AppProviders({ children, initialLocale = "en" }: AppProvidersProps) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableColorScheme
+      enableSystem
+      storageKey="maison-fondjo-theme"
+    >
       <I18nProvider initialLocale={initialLocale}>
         <SmoothScrollProvider>
           <FloatingWhatsApp />
