@@ -79,6 +79,9 @@ export const surfacesEn = {
     signupErrorTitle: "Couldn't create account",
     emailRateLimit:
       "Too many sign-in or confirmation emails were sent recently. Please wait a few minutes and try again.",
+    emailSendFailed:
+      "We couldn't send the email right now. Please try again in a few minutes or contact us on WhatsApp.",
+    emailInvalid: "Please enter a valid email address.",
     firstName: "First name",
     lastName: "Last name",
     forgotTitle: "Forgot password",
@@ -413,6 +416,9 @@ export const surfacesFr = {
     signupErrorTitle: "Création du compte impossible",
     emailRateLimit:
       "Trop d'emails de connexion ou de confirmation ont été envoyés récemment. Veuillez patienter quelques minutes et réessayer.",
+    emailSendFailed:
+      "Impossible d'envoyer l'email pour le moment. Réessayez dans quelques minutes ou contactez-nous sur WhatsApp.",
+    emailInvalid: "Veuillez entrer une adresse email valide.",
     firstName: "Prénom",
     lastName: "Nom",
     forgotTitle: "Mot de passe oublié",

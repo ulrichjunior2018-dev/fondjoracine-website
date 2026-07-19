@@ -12,7 +12,7 @@ import {
   type RequestPasswordResetInput,
 } from "@/domain/customer/schemas";
 import { requestPasswordReset } from "@/features/account/lib/auth-client";
-import { buildAuthCallbackUrl, formatAuthErrorMessage } from "@/features/account/lib/auth-urls";
+import { buildAuthCallbackUrl, resolveAuthErrorMessage } from "@/features/account/lib/auth-urls";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 
@@ -39,10 +39,12 @@ export function ForgotPasswordForm() {
     } catch (error) {
       toast({
         title: auth.forgotErrorTitle,
-        description:
-          error instanceof Error
-            ? formatAuthErrorMessage(error.message, auth.emailRateLimit)
-            : auth.tryAgain,
+        description: resolveAuthErrorMessage(error, {
+          fallback: auth.tryAgain,
+          invalidEmail: auth.emailInvalid,
+          rateLimit: auth.emailRateLimit,
+          sendFailed: auth.emailSendFailed,
+        }),
         tone: "danger",
       });
     } finally {

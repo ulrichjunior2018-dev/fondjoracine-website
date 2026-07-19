@@ -6,6 +6,12 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 import { buildAuthCallbackUrl } from "./auth-urls";
 
+function throwAuthError(error: { code?: string; message?: string; status?: number } | null): void {
+  if (error) {
+    throw error;
+  }
+}
+
 /**
  * Browser-side auth actions. Password + identity-provider flows talk to
  * Supabase from the client (standard App Router pattern for session cookies).
@@ -32,7 +38,7 @@ export async function signUpWithPassword(input: {
   });
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }
 
@@ -41,7 +47,7 @@ export async function signInWithPassword(input: { email: string; password: strin
   const { error } = await supabase.auth.signInWithPassword(input);
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }
 
@@ -85,7 +91,7 @@ export async function startIdentityProvider(providerId: IdentityProviderId, next
   });
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }
 
@@ -107,7 +113,7 @@ export async function signOut(options?: { everywhere?: boolean }) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }
 
@@ -116,7 +122,7 @@ export async function requestPasswordReset(email: string, redirectTo: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }
 
@@ -125,6 +131,6 @@ export async function updatePassword(password: string) {
   const { error } = await supabase.auth.updateUser({ password });
 
   if (error) {
-    throw new Error(error.message);
+    throwAuthError(error);
   }
 }

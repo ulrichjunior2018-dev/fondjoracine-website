@@ -10,7 +10,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/components/ui/toast";
 import { signUpSchema, type SignUpInput } from "@/domain/customer/schemas";
 import { signUpWithPassword } from "@/features/account/lib/auth-client";
-import { formatAuthErrorMessage } from "@/features/account/lib/auth-urls";
+import { resolveAuthErrorMessage } from "@/features/account/lib/auth-urls";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 
@@ -36,10 +36,12 @@ export function SignupForm() {
     } catch (error) {
       toast({
         title: auth.signupErrorTitle,
-        description:
-          error instanceof Error
-            ? formatAuthErrorMessage(error.message, auth.emailRateLimit)
-            : auth.tryAgain,
+        description: resolveAuthErrorMessage(error, {
+          fallback: auth.tryAgain,
+          invalidEmail: auth.emailInvalid,
+          rateLimit: auth.emailRateLimit,
+          sendFailed: auth.emailSendFailed,
+        }),
         tone: "danger",
       });
     } finally {
