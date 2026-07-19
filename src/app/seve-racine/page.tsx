@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
 import { SeveRacineRouteSection } from "@/components/AdvisorRouteSections";
+import { ShopComingSoonTeaser } from "@/components/ShopComingSoonTeaser";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
 import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
@@ -19,6 +20,7 @@ export default function SeveRacinePage() {
   return (
     <AdvisorShell>
       <SeveRacineRouteSection />
+      <ShopComingSoonTeaser />
     </AdvisorShell>
   );
 }
