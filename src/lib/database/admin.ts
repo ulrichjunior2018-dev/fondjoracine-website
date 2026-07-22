@@ -7,9 +7,10 @@ let adminClient: SupabaseClient | null = null;
 
 export function getSupabaseAdminClient() {
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new AppError("INTERNAL", "Supabase admin environment variables are not configured.", {
-      expose: false,
-    });
+    throw new AppError(
+      "BAD_REQUEST",
+      "Server database key is missing. Set SUPABASE_SERVICE_ROLE_KEY (and NEXT_PUBLIC_SUPABASE_URL) in Vercel Production, then redeploy.",
+    );
   }
 
   adminClient ??= createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
