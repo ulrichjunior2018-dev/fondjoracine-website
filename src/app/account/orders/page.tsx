@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +47,10 @@ export default async function AccountOrdersPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-foreground/68">{o.empty}</p>
-            <Link className="mt-3 inline-block text-sm font-semibold text-accent" href="/#order">
+            <Link
+              className="mt-3 inline-block text-sm font-semibold text-accent"
+              href={"/shop" as Route}
+            >
               {o.firstOrder}
             </Link>
           </CardContent>
@@ -68,8 +71,8 @@ export default async function AccountOrdersPage() {
                           month: "short",
                           day: "numeric",
                         },
-                      )}{" "}
-                      · {order.itemsCount} {order.itemsCount === 1 ? d.itemsOne : d.itemsMany}
+                      )}
+                      , {order.itemsCount} {order.itemsCount === 1 ? d.itemsOne : d.itemsMany}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">

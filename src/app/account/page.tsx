@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +54,7 @@ export default async function AccountHomePage() {
                   </Badge>
                 </div>
                 <p className="text-sm text-foreground/68">
-                  {formatMoney(overview.latestOrder.totalCents, overview.latestOrder.currency)} ·{" "}
+                  {formatMoney(overview.latestOrder.totalCents, overview.latestOrder.currency)},{" "}
                   {overview.latestOrder.itemsCount}{" "}
                   {overview.latestOrder.itemsCount === 1 ? d.itemsOne : d.itemsMany}
                 </p>
@@ -74,7 +74,7 @@ export default async function AccountHomePage() {
             ) : (
               <Link
                 className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
-                href="/#order"
+                href={"/shop" as Route}
               >
                 {d.orderSeve}
               </Link>
@@ -116,7 +116,7 @@ export default async function AccountHomePage() {
         <CardFooter>
           <Link
             className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
-            href="/#order"
+            href={"/shop" as Route}
           >
             {d.orderAgain}
           </Link>

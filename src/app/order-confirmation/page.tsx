@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -33,14 +33,18 @@ type ConfirmationPageProps = {
 };
 
 function formatAmount(amount: number, currency: string) {
-  if (currency === "XAF") {
+  if (!currency || currency === "XAF") {
     return `${amount.toLocaleString("fr-FR")} XAF`;
   }
 
-  return new Intl.NumberFormat("fr-FR", {
-    currency,
-    style: "currency",
-  }).format(amount / 100);
+  try {
+    return new Intl.NumberFormat("fr-FR", {
+      currency,
+      style: "currency",
+    }).format(amount / 100);
+  } catch {
+    return `${amount.toLocaleString("fr-FR")} ${currency}`;
+  }
 }
 
 function readInstructionValue(instructions: unknown, key: string) {
@@ -87,23 +91,66 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
     );
   }
 
-  const supabase = getSupabaseAdminClient();
-  const order = await getOrderByConfirmationToken(supabase, params.token);
-  const instructionLabel = readInstructionValue(order.payment_instructions, "label");
-  const instructionNumber = readInstructionValue(order.payment_instructions, "number");
-  const instructionText = readInstructionValue(order.payment_instructions, "instructions");
+  let order: Awaited<ReturnType<typeof getOrderByConfirmationToken>> | null = null;
+  try {
+    const supabase = getSupabaseAdminClient();
+    order = await getOrderByConfirmationToken(supabase, params.token);
+  } catch {
+    order = null;
+  }
+
+  if (!order) {
+    return (
+      <main className="min-h-screen bg-background py-16">
+        <Container size="sm">
+          <Card variant="elevated">
+            <Kicker>{publicCopy.orderConfirmation.title}</Kicker>
+            <Heading as="h1" className="mt-3" level="h2">
+              {publicCopy.orderConfirmation.missing.title}
+            </Heading>
+            <Text className="mt-4" tone="muted">
+              {publicCopy.orderConfirmation.missing.body}
+            </Text>
+            <Link
+              className="mt-6 inline-flex text-sm font-semibold text-accent"
+              href={"/checkout" as Route}
+            >
+              {publicCopy.orderConfirmation.actions.newOrder}
+            </Link>
+          </Card>
+        </Container>
+      </main>
+    );
+  }
+
+  const status = order.status ?? "pending_payment";
+  const showPaymentInstructions =
+    status === "pending_payment" ||
+    status === "payment_submitted" ||
+    status === "awaiting_confirmation";
+  const instructionLabel = showPaymentInstructions
+    ? readInstructionValue(order.payment_instructions, "label")
+    : "";
+  const instructionNumber = showPaymentInstructions
+    ? readInstructionValue(order.payment_instructions, "number")
+    : "";
+  const instructionText = showPaymentInstructions
+    ? readInstructionValue(order.payment_instructions, "instructions")
+    : "";
+  const currency = order.currency || "XAF";
+  const totalCents = typeof order.total_cents === "number" ? order.total_cents : 0;
 
   return (
     <main className="min-h-screen bg-background py-16">
       <Container size="md">
         <Card variant="elevated">
-          <Badge tone={getStatusTone(order.status)}>{order.status}</Badge>
+          <Badge tone={getStatusTone(status)}>{status}</Badge>
           <Kicker className="mt-6">{publicCopy.orderConfirmation.title}</Kicker>
           <Heading as="h1" className="mt-3" level="h2">
             {order.order_number}
           </Heading>
           <Text className="mt-4" tone="muted">
-            {getStatusMessage(order.status, publicCopy)}
+            {getStatusMessage(status, publicCopy)}
           </Text>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -118,9 +165,7 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                 {publicCopy.orderConfirmation.total}
               </p>
-              <p className="mt-2 font-mono font-semibold">
-                {formatAmount(order.total_cents, order.currency)}
-              </p>
+              <p className="mt-2 font-mono font-semibold">{formatAmount(totalCents, currency)}</p>
               <p className="mt-1 text-sm text-foreground/62">{order.payment_method}</p>
             </div>
             <div className="rounded-md bg-surface-muted p-4 sm:col-span-2">
@@ -150,13 +195,13 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
-              href="/#order"
+              href={"/checkout" as Route}
             >
               {publicCopy.orderConfirmation.actions.newOrder}
             </Link>
             <Link
               className="inline-flex h-11 items-center justify-center rounded-md border border-border px-5 text-sm font-semibold"
-              href="/"
+              href={"/account/orders" as Route}
             >
               {publicCopy.orderConfirmation.actions.backHome}
             </Link>

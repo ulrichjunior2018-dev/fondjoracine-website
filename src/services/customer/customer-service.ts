@@ -447,3 +447,109 @@ export async function getAccountOverview(
     profileCompletionPercent: Math.round((completedCount / completionFields.length) * 100),
   };
 }
+
+function splitFullName(fullName: string): { firstName: string; lastName: string } {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstName: "Customer", lastName: "Guest" };
+  }
+  if (parts.length === 1) {
+    return { firstName: parts[0]!, lastName: parts[0]! };
+  }
+  return {
+    firstName: parts[0]!,
+    lastName: parts.slice(1).join(" "),
+  };
+}
+
+export type CheckoutAccountPrefill = {
+  city: string;
+  deliveryAddress: string;
+  email: string;
+  name: string;
+  phone: string;
+};
+
+/** Prefill checkout from profile + default shipping address when signed in. */
+export async function getCheckoutAccountPrefill(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<CheckoutAccountPrefill | null> {
+  try {
+    const account = await getOrCreateCustomerAccount(supabase, userId);
+    const addresses = await listAddresses(supabase, account.id);
+    const shipping = addresses.find((address) => address.isDefaultShipping) ?? addresses[0] ?? null;
+
+    const nameFromProfile = [account.firstName, account.lastName].filter(Boolean).join(" ").trim();
+    const nameFromAddress = shipping ? `${shipping.firstName} ${shipping.lastName}`.trim() : "";
+
+    return {
+      city: shipping?.city ?? "",
+      deliveryAddress: shipping?.line1 ?? "",
+      email: account.email ?? "",
+      name: nameFromProfile || nameFromAddress,
+      phone: shipping?.phone || account.phone || "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+type CheckoutDeliverySnapshot = {
+  city: string;
+  deliveryAddress: string;
+  name: string;
+  phone: string;
+};
+
+/**
+ * Persist checkout delivery details onto the customer account address book.
+ * Best-effort: never throws to the order caller.
+ */
+export async function saveCheckoutDeliveryAddress(
+  supabase: SupabaseClient,
+  customerId: string,
+  snapshot: CheckoutDeliverySnapshot,
+): Promise<Address | null> {
+  try {
+    const { firstName, lastName } = splitFullName(snapshot.name);
+    const line1 = snapshot.deliveryAddress.trim();
+    const city = snapshot.city.trim();
+    if (!line1 || !city) return null;
+
+    const existing = await listAddresses(supabase, customerId);
+    const match = existing.find(
+      (address) =>
+        address.line1.trim().toLowerCase() === line1.toLowerCase() &&
+        address.city.trim().toLowerCase() === city.toLowerCase(),
+    );
+
+    if (match) {
+      return updateAddress(supabase, customerId, match.id, {
+        firstName,
+        lastName,
+        phone: snapshot.phone,
+        isDefaultShipping: true,
+        isDefaultBilling: true,
+      });
+    }
+
+    const isFirst = existing.length === 0;
+
+    return createAddress(supabase, customerId, {
+      firstName,
+      lastName,
+      line1,
+      city,
+      region: city,
+      postalCode: "00000",
+      countryCode: "CM",
+      phone: snapshot.phone,
+      label: isFirst ? "Home" : "Delivery",
+      isDefaultShipping: true,
+      isDefaultBilling: isFirst || !existing.some((address) => address.isDefaultBilling),
+    });
+  } catch {
+    return null;
+  }
+}
