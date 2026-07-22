@@ -64,7 +64,7 @@ const publicFr = {
   },
   orderConfirmation: {
     actions: {
-      backHome: "Retour à l'accueil",
+      backHome: "Mes commandes",
       newOrder: "Commander à nouveau",
     },
     customer: "Client",
@@ -81,7 +81,7 @@ const publicFr = {
       fallback:
         "Votre commande Maison Fondjo est reçue. Les paiements Mobile Money sont vérifiés avant confirmation.",
       packed: "La commande est préparée et attend la livraison.",
-      payment_submitted: "La référence de paiement est reçue et attend la vérification.",
+      payment_submitted: "Le paiement est en cours de confirmation automatique.",
       pending_payment:
         "La commande est créée. Envoyez le paiement, puis ajoutez votre référence de transaction.",
       refunded: "Cette commande a été remboursée.",
@@ -115,36 +115,229 @@ const publicFr = {
     backHome: "Retour à l'accueil",
     kicker: "Politique",
     privacy: {
-      body: [
-        "Maison Fondjo collecte uniquement les informations nécessaires pour préparer Sève Racine, vérifier le paiement, coordonner la livraison au Cameroun, répondre sur WhatsApp et améliorer le diagnostic capillaire.",
-        "Le paiement par carte, lorsqu'il est activé, est traité par Stripe. Les références MTN Mobile Money et Orange Money sont vérifiées avant confirmation.",
-        "Pour corriger ou supprimer vos informations, contactez l'équipe par WhatsApp. Les dossiers utiles à la livraison, à la sécurité et au suivi client sont conservés avec mesure.",
+      title: "Politique de confidentialité",
+      sections: [
+        {
+          heading: "Ce que nous collectons",
+          paragraphs: [
+            "Lorsque vous passez commande ou réalisez notre diagnostic capillaire, nous pouvons collecter : votre nom, numéro de téléphone, adresse de livraison, les préoccupations capillaires que vous partagez, ainsi que les détails de commande et de paiement.",
+          ],
+        },
+        {
+          heading: "Comment nous l'utilisons",
+          bullets: [
+            "Pour traiter et livrer votre commande",
+            "Pour recommander le produit ou la consultation adaptés à vos besoins",
+            "Pour assurer le suivi de votre commande et prendre des nouvelles de vos résultats",
+            "Pour améliorer nos produits et notre service dans le temps",
+          ],
+        },
+        {
+          heading: "Comment nous le protégeons",
+          paragraphs: [
+            "Vos informations sont stockées de manière sécurisée et ne sont pas vendues à des tiers. L'accès est limité aux membres de l'équipe Maison Fondjo qui en ont besoin pour honorer votre commande.",
+          ],
+        },
+        {
+          heading: "Vos droits",
+          paragraphs: [
+            "Vous pouvez nous demander à tout moment de consulter les informations que nous détenons sur vous, de les corriger ou de les supprimer. Contactez-nous via WhatsApp, ou par email à info@maisonfondjo.com, hello@maisonfondjo.com ou support@maisonfondjo.com.",
+          ],
+        },
+        {
+          heading: "Communication",
+          paragraphs: [
+            "Nous pouvons vous écrire via WhatsApp au sujet de votre commande, ou pour des mises à jour occasionnelles sur de nouveaux produits. Vous pouvez demander à ne plus les recevoir à tout moment.",
+          ],
+        },
       ],
-      title: "Confidentialité",
     },
     returns: {
-      body: [
-        "Sève Racine est un soin personnel : un flacon ouvert ne peut pas être repris pour des raisons d'hygiène.",
-        "Si un coffret arrive endommagé, incorrect ou incomplet, signalez-le à la livraison avec des photos claires. L'équipe étudie alors l'échange ou le remboursement.",
-        "Les annulations sont examinées avant préparation. Après expédition, les conditions de livraison et d'hygiène limitent les options.",
+      title: "Retours et remboursements",
+      sections: [
+        {
+          heading: "Politique de remboursement pour dommages uniquement",
+          paragraphs: [
+            "Parce que Sève Racine est un produit cosmétique appliqué directement sur la peau et le cuir chevelu, nous ne pouvons pas accepter de retours ou d'échanges une fois qu'un flacon a été ouvert ou utilisé, sauf en cas de dommage réel pendant le transport. Nos flacons sont en plastique noir mat, qui peut montrer clairement des rayures ou fissures s'ils sont malmenés en transit. Veuillez inspecter le vôtre soigneusement à la réception.",
+          ],
+        },
+        {
+          heading: "Comment signaler un dommage",
+          bullets: [
+            "Inspectez votre flacon au moment de la livraison, avec le livreur présent si possible",
+            "En cas de dommage, prenez immédiatement une photo claire",
+            "Contactez-nous via WhatsApp ou email dans les 24 heures suivant la livraison avec les détails de votre commande et la photo",
+          ],
+          paragraphs: [
+            "Une fois que nous confirmons que le dommage est survenu pendant le transport, nous envoyons un remplacement sous 2 à 3 jours ouvrés, sans frais supplémentaires pour vous.",
+          ],
+        },
+        {
+          heading: "Ce qui n'est pas couvert",
+          paragraphs: [
+            "Le changement d'avis, un diagnostic personnel incorrect des préoccupations capillaires, ou l'insatisfaction des résultats après une utilisation correcte du produit ne donnent pas droit à un remboursement. Nous sommes heureux de vous aider à tirer le meilleur de votre produit. Écrivez-nous sur WhatsApp pour toute question avant ou pendant l'utilisation.",
+          ],
+        },
       ],
-      title: "Retours et échanges",
     },
     shipping: {
-      body: [
-        "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
-        "Le client fournit la ville, le quartier, le repère et le numéro WhatsApp avant validation.",
+      title: "Politique de livraison",
+      sections: [
+        {
+          heading: "Zone de couverture",
+          paragraphs: [
+            "Nous livrons actuellement dans tout le Cameroun. La livraison internationale arrive bientôt.",
+          ],
+        },
+        {
+          heading: "Frais de livraison",
+          paragraphs: [
+            "Les frais de livraison commencent à 1 000 FCFA et augmentent selon votre distance de Buea. Votre tarif exact sera confirmé par notre équipe lorsque vous passez commande.",
+          ],
+        },
+        {
+          heading: "Délais de livraison",
+          rows: [
+            {
+              label: "Buea, Douala, Yaoundé",
+              value: "24 à 48 heures",
+            },
+            {
+              label: "Autres régions",
+              value:
+                "Confirmé au moment de la commande, selon la distance et la disponibilité du coursier",
+            },
+          ],
+        },
+        {
+          heading: "Paiement avant livraison",
+          paragraphs: [
+            "Le paiement intégral via Mobile Money est requis avant l'expédition de votre commande. Une fois le paiement confirmé, nous préparons et envoyons votre commande rapidement.",
+          ],
+        },
       ],
-      title: "Livraison au Cameroun",
     },
     terms: {
-      body: [
-        "En commandant Sève Racine ou en contactant Maison Fondjo, vous acceptez de fournir des informations exactes pour la livraison et la vérification du paiement.",
-        "Sève Racine est une huile cosmétique à usage externe. Elle ne diagnostique pas, ne traite pas, ne guérit pas et ne remplace pas un dermatologue.",
-        "Maison Fondjo peut refuser, annuler ou rembourser une commande si le paiement ne peut pas être vérifié, si le stock est indisponible ou si la livraison ne peut pas être réalisée.",
+      title: "Conditions générales",
+      sections: [
+        {
+          heading: "À propos de ces conditions",
+          paragraphs: [
+            "Ces Conditions régissent votre utilisation de maisonfondjo.com et tout achat effectué auprès de Maison Fondjo. En passant commande, vous acceptez ces Conditions.",
+          ],
+        },
+        {
+          heading: "Produits et tarifs",
+          paragraphs: [
+            "Tous les prix sont indiqués en francs CFA d'Afrique centrale (XAF) et peuvent être modifiés sans préavis. Nous mettons en œuvre des efforts raisonnables pour garantir l'exactitude des descriptions et des prix.",
+          ],
+        },
+        {
+          heading: "Commandes et paiement",
+          paragraphs: [
+            "Les commandes sont confirmées via WhatsApp. Le paiement doit être effectué via Mobile Money avant l'expédition. Nous nous réservons le droit de refuser ou d'annuler toute commande à notre discrétion, notamment en cas de suspicion de fraude ou de problème de paiement.",
+          ],
+        },
+        {
+          heading: "Propriété intellectuelle",
+          paragraphs: [
+            "Tout le contenu de ce site, textes, images, identité de marque et formule Sève Racine, est la propriété de Maison Fondjo et ne peut être copié, reproduit ou utilisé sans autorisation écrite préalable.",
+          ],
+        },
+        {
+          heading: "Utilisation du produit et avertissement",
+          paragraphs: [
+            "Sève Racine est un produit cosmétique destiné à un usage externe sur le cuir chevelu et les cheveux. Ce n'est pas un traitement médical et il n'est pas destiné à diagnostiquer, traiter ou guérir une condition médicale. Si vous avez une affection du cuir chevelu, une allergie ou une préoccupation de santé, consultez un professionnel de santé avant utilisation.",
+          ],
+        },
+        {
+          heading: "Limitation de responsabilité",
+          paragraphs: [
+            "Dans la mesure permise par la loi, Maison Fondjo n'est pas responsable des dommages indirects ou consécutifs résultant de l'utilisation du produit, de retards de livraison, ou de circonstances hors de notre contrôle raisonnable.",
+          ],
+        },
+        {
+          heading: "Modifications de ces conditions",
+          paragraphs: [
+            "Nous pouvons mettre à jour ces Conditions de temps à autre. L'utilisation continue de notre site ou de nos services après publication des modifications vaut acceptation des Conditions mises à jour.",
+          ],
+        },
+        {
+          heading: "Résoudre les préoccupations ensemble",
+          paragraphs: [
+            "Si quelque chose dans votre commande ou votre expérience ne vous semble pas juste, contactez-nous d'abord. Nous voulons sincèrement avoir la chance de corriger la situation. La plupart des préoccupations se résolvent rapidement et chaleureusement par une conversation directe sur WhatsApp ou par email, avant toute démarche plus formelle.",
+          ],
+        },
+        {
+          heading: "Droit applicable",
+          paragraphs: ["Ces Conditions sont régies par les lois de la République du Cameroun."],
+        },
+        {
+          heading: "Contact",
+          paragraphs: [
+            "Pour toute question sur ces Conditions, joignez-nous via WhatsApp, ou par email à info@maisonfondjo.com, hello@maisonfondjo.com ou support@maisonfondjo.com.",
+          ],
+        },
       ],
-      title: "Conditions d'utilisation",
     },
+  },
+  faqPage: {
+    kicker: "FAQ",
+    title: "Questions fréquentes",
+    intro:
+      "Réponses sur Sève Racine, la livraison au Cameroun, le paiement et l'assistance WhatsApp.",
+    items: [
+      {
+        question: "Quand verrai-je des résultats ?",
+        answer:
+          "Les cheveux répondent à un soin régulier dans le temps, plutôt qu'à un effet immédiat. Avec une utilisation régulière, la plupart des personnes commencent à remarquer une différence de confort du cuir chevelu et de douceur des cheveux en quelques semaines. Pour des changements visibles de solidité et de densité, nous recommandons de s'engager sur au moins un flacon complet d'utilisation régulière.",
+      },
+      {
+        question: "Puis-je l'utiliser avec des tresses ou des perruques ?",
+        answer:
+          "Oui. Sève Racine s'applique directement sur le cuir chevelu, donc elle convient bien avec les tresses, perruques et autres coiffures protectrices. Appliquez entre les sections ou le long de la raie selon les besoins.",
+      },
+      {
+        question: "À quelle fréquence l'appliquer ?",
+        answer:
+          "Nous recommandons d'appliquer une quantité modérée sur le cuir chevelu 2 à 4 fois par semaine, en massant doucement pendant 3 à 5 minutes. Laissez poser plusieurs heures ou toute la nuit pour un conditionnement prolongé.",
+      },
+      {
+        question: "Sève Racine convient-elle à tous les types de cheveux ?",
+        answer:
+          "Oui. La formule est conçue pour soutenir la santé du cuir chevelu et l'état de la fibre capillaire, tous types et textures confondus.",
+      },
+      {
+        question: "Qu'y a-t-il réellement dans la formule ?",
+        answer:
+          "Sève Racine est un mélange riche d'huiles et d'herbes botaniques, pressé à Buea. La liste complète des ingrédients est imprimée sur l'étiquette de chaque flacon.",
+      },
+      {
+        question: "Dois-je faire un test cutané d'abord ?",
+        answer:
+          "Oui, surtout si vous avez la peau sensible ou des allergies végétales connues. Appliquez une petite quantité sur l'intérieur du bras ou derrière l'oreille et attendez 24 heures avant une utilisation complète.",
+      },
+      {
+        question: "Le prix est-il négociable ?",
+        answer:
+          "Notre tarif reflète la qualité de nos ingrédients et le soin apporté à chaque flacon, aussi nous le maintenons fixe et équitable pour tous. Pour économiser sur de futures commandes, demandez-nous nos récompenses de parrainage et de fidélité.",
+      },
+      {
+        question: "Ce produit fonctionne-t-il vraiment ?",
+        answer:
+          "Nous formulons Sève Racine avec des huiles et herbes botaniques choisies pour leur rôle dans la santé du cuir chevelu et de la fibre, et nous en répondons. Les résultats dépendent de la régularité. La plupart des clients remarquent une différence de confort du cuir chevelu et de douceur des cheveux en quelques semaines d'utilisation régulière. Vous pouvez lire de vrais retours clients sur notre page d'accueil.",
+      },
+      {
+        question: "Comment commander ?",
+        answer:
+          "Les commandes se passent directement via WhatsApp. Écrivez-nous pour confirmer votre produit, votre zone de livraison et les détails de paiement.",
+      },
+      {
+        question: "Comment payer ?",
+        answer:
+          "Nous acceptons MTN Mobile Money et Orange Money. Le paiement est requis avant la livraison.",
+      },
+    ],
   },
 } as const;
 
@@ -204,7 +397,7 @@ const publicEn = {
   },
   orderConfirmation: {
     actions: {
-      backHome: "Back home",
+      backHome: "My orders",
       newOrder: "Order again",
     },
     customer: "Customer",
@@ -221,7 +414,7 @@ const publicEn = {
       fallback:
         "Your Maison Fondjo order has been received. Mobile Money payments are verified before confirmation.",
       packed: "The order is packed and awaiting delivery.",
-      payment_submitted: "The payment reference has been received and awaits verification.",
+      payment_submitted: "Payment confirmation is in progress automatically.",
       pending_payment: "The order is created. Send payment, then add your transaction reference.",
       refunded: "This order has been refunded.",
       shipped: "The order is out for delivery.",
@@ -254,36 +447,226 @@ const publicEn = {
     backHome: "Back home",
     kicker: "Policy",
     privacy: {
-      body: [
-        "Maison Fondjo collects only the information needed to prepare Sève Racine, verify payment, coordinate delivery in Cameroon, answer on WhatsApp and improve the hair diagnostic.",
-        "Card payment, when enabled, is processed by Stripe. MTN Mobile Money and Orange Money references are verified before confirmation.",
-        "To correct or delete your information, contact the team by WhatsApp. Records useful for delivery, safety and customer follow-up are kept with restraint.",
+      title: "Privacy Policy",
+      sections: [
+        {
+          heading: "What We Collect",
+          paragraphs: [
+            "When you place an order or complete our hair diagnostic, we may collect: your name, phone number, delivery address, hair concerns you share with us, and order/payment details.",
+          ],
+        },
+        {
+          heading: "How We Use It",
+          bullets: [
+            "To process and deliver your order",
+            "To recommend the right product or consultation for your needs",
+            "To follow up on your order and check in on your results",
+            "To improve our products and service over time",
+          ],
+        },
+        {
+          heading: "How We Protect It",
+          paragraphs: [
+            "Your information is stored securely and is not sold to third parties. Access is limited to the Maison Fondjo team members who need it to fulfill your order.",
+          ],
+        },
+        {
+          heading: "Your Rights",
+          paragraphs: [
+            "You can ask us at any time to see what information we hold about you, correct it, or have it deleted. Contact us via WhatsApp, or by email at info@maisonfondjo.com, hello@maisonfondjo.com, or support@maisonfondjo.com.",
+          ],
+        },
+        {
+          heading: "Communication",
+          paragraphs: [
+            "We may message you via WhatsApp regarding your order, or with occasional updates about new products. You can ask to stop receiving these at any time.",
+          ],
+        },
       ],
-      title: "Privacy",
     },
     returns: {
-      body: [
-        "Sève Racine is a personal care product: an opened bottle cannot be returned for hygiene reasons.",
-        "If a box arrives damaged, incorrect or incomplete, report it at delivery with clear photos. The team then reviews exchange or refund options.",
-        "Cancellations are reviewed before preparation. After dispatch, delivery and hygiene conditions limit available options.",
+      title: "Returns & Refunds Policy",
+      sections: [
+        {
+          heading: "Damage-Only Refund Policy",
+          paragraphs: [
+            "Because Sève Racine is a cosmetic product applied directly to the skin and scalp, we are unable to accept returns or exchanges once a bottle has been opened or used, except in the case of genuine damage during transport. Our bottles are matte black plastic, which can show scuffs or cracks clearly if mishandled in transit. Please inspect yours carefully upon arrival.",
+          ],
+        },
+        {
+          heading: "How to Report Damage",
+          bullets: [
+            "Inspect your bottle at the moment of delivery, with the delivery agent present if possible",
+            "If damaged, take a clear photo immediately",
+            "Contact us via WhatsApp or email within 24 hours of delivery with your order details and photo",
+          ],
+          paragraphs: [
+            "Once we confirm the damage occurred during transport, we will send a replacement within 2 to 3 business days at no additional cost to you.",
+          ],
+        },
+        {
+          heading: "What Isn't Covered",
+          paragraphs: [
+            "Change of mind, incorrect self-diagnosis of hair concerns, or dissatisfaction with results after correct product use are not eligible for refund. We're happy to help you get the most from your product. Message us on WhatsApp with any questions before or during use.",
+          ],
+        },
       ],
-      title: "Returns and exchanges",
     },
     shipping: {
-      body: [
-        "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
-        "The customer provides city, neighborhood, landmark and WhatsApp number before validation.",
+      title: "Shipping Policy",
+      sections: [
+        {
+          heading: "Delivery Coverage",
+          paragraphs: [
+            "We currently deliver nationwide across Cameroon. International shipping is coming soon.",
+          ],
+        },
+        {
+          heading: "Delivery Fees",
+          paragraphs: [
+            "Delivery fees start at 1,000 FCFA and increase depending on your distance from Buea. Your exact fee will be confirmed by our team when you place your order.",
+          ],
+        },
+        {
+          heading: "Delivery Timing",
+          rows: [
+            {
+              label: "Buea, Douala, Yaoundé",
+              value: "24 to 48 hours",
+            },
+            {
+              label: "Other regions",
+              value: "Confirmed at time of order, based on distance and courier availability",
+            },
+          ],
+        },
+        {
+          heading: "Payment Before Delivery",
+          paragraphs: [
+            "Full payment via Mobile Money is required before your order is dispatched. Once payment is confirmed, we prepare and send your order promptly.",
+          ],
+        },
       ],
-      title: "Delivery in Cameroon",
     },
     terms: {
-      body: [
-        "By ordering Sève Racine or contacting Maison Fondjo, you agree to provide accurate information for delivery and payment verification.",
-        "Sève Racine is a cosmetic oil for external use. It does not diagnose, treat, cure or replace a dermatologist.",
-        "Maison Fondjo may refuse, cancel or refund an order if payment cannot be verified, stock is unavailable or delivery cannot be completed.",
+      title: "Terms & Conditions",
+      sections: [
+        {
+          heading: "About These Terms",
+          paragraphs: [
+            "These Terms govern your use of maisonfondjo.com and any purchase made from Maison Fondjo. By placing an order, you agree to these Terms.",
+          ],
+        },
+        {
+          heading: "Products & Pricing",
+          paragraphs: [
+            "All prices are listed in Central African CFA francs (XAF) and are subject to change without prior notice. We make reasonable efforts to ensure product descriptions and pricing are accurate.",
+          ],
+        },
+        {
+          heading: "Orders & Payment",
+          paragraphs: [
+            "Orders are confirmed via WhatsApp. Payment must be completed via Mobile Money before your order is dispatched. We reserve the right to decline or cancel any order at our discretion, including in cases of suspected fraud or payment issues.",
+          ],
+        },
+        {
+          heading: "Intellectual Property",
+          paragraphs: [
+            "All content on this website, including text, images, branding, and the Sève Racine formula, is the property of Maison Fondjo and may not be copied, reproduced, or used without prior written permission.",
+          ],
+        },
+        {
+          heading: "Product Use & Disclaimer",
+          paragraphs: [
+            "Sève Racine is a cosmetic product intended for external use on the scalp and hair. It is not a medical treatment and is not intended to diagnose, treat, or cure any medical condition. If you have a scalp condition, allergy, or health concern, please consult a medical professional before use.",
+          ],
+        },
+        {
+          heading: "Limitation of Liability",
+          paragraphs: [
+            "To the extent permitted by law, Maison Fondjo is not liable for indirect or consequential damages arising from product use, delivery delays, or circumstances beyond our reasonable control.",
+          ],
+        },
+        {
+          heading: "Changes to These Terms",
+          paragraphs: [
+            "We may update these Terms from time to time. Continued use of our website or services after changes are posted constitutes acceptance of the updated Terms.",
+          ],
+        },
+        {
+          heading: "Resolving Concerns Together",
+          paragraphs: [
+            "If anything about your order or experience doesn't feel right, please reach out to us first. We genuinely want the chance to make it right. Most concerns can be resolved quickly and warmly through a direct conversation on WhatsApp or by email, before anything more formal is needed.",
+          ],
+        },
+        {
+          heading: "Governing Law",
+          paragraphs: ["These Terms are governed by the laws of the Republic of Cameroon."],
+        },
+        {
+          heading: "Contact",
+          paragraphs: [
+            "For any questions about these Terms, please reach us via WhatsApp, or by email at info@maisonfondjo.com, hello@maisonfondjo.com, or support@maisonfondjo.com.",
+          ],
+        },
       ],
-      title: "Terms of use",
     },
+  },
+  faqPage: {
+    kicker: "FAQ",
+    title: "Frequently Asked Questions",
+    intro: "Answers about Sève Racine, Cameroon delivery, payment, and WhatsApp assistance.",
+    items: [
+      {
+        question: "How fast will I see results?",
+        answer:
+          "Hair responds to consistent care over time rather than overnight. With regular use, most people begin noticing a difference in scalp comfort and hair softness within a few weeks. For visible changes in strength and fullness, we recommend committing to at least one full bottle of consistent use.",
+      },
+      {
+        question: "Can I use it with braids or wigs?",
+        answer:
+          "Yes. Sève Racine is applied directly to the scalp, so it works well alongside braids, wigs, and other protective styles. Apply between sections or along the scalp part as needed.",
+      },
+      {
+        question: "How often should I apply it?",
+        answer:
+          "We recommend applying a moderate amount to the scalp 2 to 4 times per week, massaging gently for 3 to 5 minutes. Leave it on for several hours or overnight for extended conditioning.",
+      },
+      {
+        question: "Is Sève Racine suitable for all hair types?",
+        answer:
+          "Yes. The formula is designed to support scalp health and hair fibre condition across hair types and textures.",
+      },
+      {
+        question: "What's actually in the formula?",
+        answer:
+          "Sève Racine is a rich blend of botanical oils and herbs, pressed in Buea. The complete ingredient list is printed on every bottle's label.",
+      },
+      {
+        question: "Should I do a patch test first?",
+        answer:
+          "Yes, especially if you have sensitive skin or known plant allergies. Apply a small amount to your inner arm or behind the ear and wait 24 hours before full use.",
+      },
+      {
+        question: "Is the price negotiable?",
+        answer:
+          "Our pricing reflects the quality of our ingredients and the care that goes into every bottle, so we keep it fixed and fair for everyone. If you'd like to save on future orders, ask us about our referral and loyalty rewards.",
+      },
+      {
+        question: "Does this product actually work?",
+        answer:
+          "We formulate Sève Racine with botanical oils and herbs chosen for their role in scalp and hair fibre health, and we stand behind it. Results depend on consistency. Most customers notice a difference in scalp comfort and hair softness within a few weeks of regular use. You can read real customer experiences on our homepage.",
+      },
+      {
+        question: "How do I order?",
+        answer:
+          "Orders are placed directly through WhatsApp. Message us to confirm your product, delivery zone, and payment details.",
+      },
+      {
+        question: "How do I pay?",
+        answer: "We accept MTN Mobile Money and Orange Money. Payment is required before delivery.",
+      },
+    ],
   },
 } as const;
 
@@ -404,9 +787,9 @@ const advisorEn = {
   seveRacine: {
     ...advisorFr.seveRacine,
     alt: "Sève Racine bottle photographed in a reflective black studio",
-    batchLine: "Numbered box. Founder Batch, 200 pieces",
+    batchLine: "Botanical hair oil, 100 ml",
     cta: "Order now",
-    description: "Sève Racine by Maison Fondjo: numbered box, 15 000 F, Cameroon delivery.",
+    description: "Sève Racine by Maison Fondjo: botanical hair oil, 100 ml, 15 000 F.",
     intro:
       "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
     payment: ["MTN Mobile Money", "Orange Money"],
@@ -421,11 +804,11 @@ const advisorEn = {
       },
       {
         label: "Founder Batch",
-        text: "200 numbered boxes.",
+        text: "150 numbered boxes.",
       },
     ],
     steps: ["Warm a few drops", "Massage the roots", "Finish lengths or beard"],
-    title: "Sève Racine, prepared for the ritual.",
+    title: "Sève Racine",
     howToUse: {
       title: "How to use",
       steps: [
@@ -477,28 +860,28 @@ const advisorEn = {
   },
   histoire: {
     description:
-      "The story of Maison Fondjo: a family, Buea, Mount Cameroon and a rich blend of botanical oils and herbs.",
-    eyebrow: "Our story",
-    title: "A family. A territory. A botanical formula.",
+      "Maison Fondjo is a botanical hair care house rooted in Buea, Cameroon, home of Sève Racine and the Fondjo family name.",
+    eyebrow: "About Us",
+    title: "Rooted in nature. Made to last.",
     origin: {
-      label: "The origin",
+      label: "The house",
       heading: "Buea, at the foot of Mount Cameroon.",
-      body: "Maison Fondjo was born in the South West Region, in Buea, a city set on the slopes of an active volcano. This territory. Altitude, tropical humidity, ash-enriched soils. Shapes the botanical sensibility that runs through every bottle.",
+      body: "Maison Fondjo is a botanical hair care house rooted in Buea, Cameroon, at the foot of Mount Cameroon, where volcanic soil, altitude, and tropical rain shape the ingredients we work with.",
     },
     name: {
       label: "The name",
       heading: "Fondjo.",
-      body: "Fondjo is a family name. Not a brand name built to sound a certain way, but a name that was handed down. The one the family carries, and chooses to put on the label. It is a way of being accountable for what goes into the bottle.",
+      body: "Fondjo is a family name, not a brand invented to sound a certain way. It is the name carried on every label, and the standard we hold ourselves to with every bottle we make.",
     },
     product: {
       label: "The product",
       heading: "Sève Racine.",
-      body: "The formula brings together a rich blend of botanical oils and herbs, each selected for a specific role. Not for the label. Each ingredient has a reason to be there.",
+      body: "Our flagship product, Sève Racine, was created from a simple belief: healthy hair starts with a healthy scalp. Rather than offering a quick fix, we formulate botanical oils and herbs to nourish the scalp, support the hair fibre, and help reduce breakage through consistent, patient care.",
     },
     family: {
-      label: "The family",
-      heading: "The Fondjo family.",
-      body: "Maison Fondjo is carried by the Fondjo family. The bottle is developed together, tested within the family, and the names behind the brand are those who take responsibility for it.",
+      label: "The beginning",
+      heading: "Founder Batch, 2026.",
+      body: "Founded in 2026, every bottle is numbered as part of our Founder Batch, pressed and prepared in Buea. This is the beginning of the Maison Fondjo journey. Our vision is to keep building botanical hair care that people can trust, made with restraint and without shortcuts. Enracinée dans la nature. Faite pour durer. Rooted in nature. Made to last.",
     },
     cta: "Order Sève Racine",
     ctaSecondary: "See the botanical formula",
@@ -524,7 +907,7 @@ const homeFr = {
     titleThird: "",
     trustLabel: "Repères du coffret Maison Fondjo",
     trustItems: [
-      ["Coffret numéroté", "Lot Fondateur 2026, 200 exemplaires"],
+      ["Coffret numéroté", "Lot Fondateur 2026, 150 exemplaires"],
       ["Ligne signature", "La famille Fondjo"],
       ["Marques paiement", "MTN Mobile Money + Orange Money"],
     ],
@@ -542,8 +925,7 @@ const homeFr = {
     companyTitle: "Entreprise",
     companyLinks: [
       ["À propos", "/histoire"],
-      ["Notre histoire", "/origin-story"],
-      ["Ingrédients", "/ingredients"],
+      ["Botanique", "/botanique"],
       ["FAQ", "/faq"],
       ["Contact", "/contact"],
     ] as const,
@@ -556,7 +938,7 @@ const homeFr = {
     shopTitle: "Boutique",
     shopLinks: [
       ["Tous les produits", "/shop"],
-      ["Sève Racine", "/seve-racine"],
+      ["Sève Racine", "/products/seve-racine"],
     ] as const,
     shopSoon: [["Suivre une commande", "/account/orders"]] as const,
     socialTitle: "Nous suivre",
@@ -595,7 +977,7 @@ const homeEn = {
     titleThird: "",
     trustLabel: "Maison Fondjo box trust signals",
     trustItems: [
-      ["Numbered box", "Founder Batch 2026, 200 pieces"],
+      ["Numbered box", "Founder Batch 2026, 150 pieces"],
       ["Founder signature", "The Fondjo family"],
       ["Payment marks", "MTN Mobile Money + Orange Money"],
     ],
@@ -613,8 +995,7 @@ const homeEn = {
     companyTitle: "Company",
     companyLinks: [
       ["About Us", "/histoire"],
-      ["Our Story", "/origin-story"],
-      ["Ingredients", "/ingredients"],
+      ["Botanicals", "/botanique"],
       ["FAQs", "/faq"],
       ["Contact", "/contact"],
     ] as const,
@@ -627,7 +1008,7 @@ const homeEn = {
     shopTitle: "Shop",
     shopLinks: [
       ["All Products", "/shop"],
-      ["Sève Racine", "/seve-racine"],
+      ["Sève Racine", "/products/seve-racine"],
     ] as const,
     shopSoon: [["Track Order", "/account/orders"]] as const,
     socialTitle: "Follow Us",

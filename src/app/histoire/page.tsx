@@ -8,7 +8,7 @@ import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 export async function generateMetadata(): Promise<Metadata> {
   const { locale, copy } = await resolveAdvisorCopy();
   return buildAdvisorRouteMetadata({
-    title: locale === "fr" ? "Histoire" : "Story",
+    title: locale === "fr" ? "À propos" : "About Us",
     description: copy.histoire.description,
     locale,
     path: "/histoire",

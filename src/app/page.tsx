@@ -6,16 +6,19 @@ import { PremiumStorefrontPage } from "@/features/elixir/components/premium-stor
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 import { config } from "@/lib/config";
+import { buildShareMetadata } from "@/lib/seo/share-metadata";
 
 const isProduction = config.env === "production";
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getElixirContent();
   const image = getPrimaryElixirImage(content);
+  const title = t(content.seo.title, "en");
+  const description = t(content.seo.description, "en");
 
   return {
-    title: t(content.seo.title, "en"),
-    description: t(content.seo.description, "en"),
+    title,
+    description,
     ...(isProduction
       ? {
           alternates: {
@@ -26,20 +29,18 @@ export async function generateMetadata(): Promise<Metadata> {
           },
         }
       : {}),
-    openGraph: {
-      title: t(content.seo.title, "en"),
-      description: t(content.seo.description, "en"),
+    ...buildShareMetadata({
+      description,
+      image: {
+        alt: t(image.alt, "en"),
+        height: image.height,
+        src: image.src,
+        width: image.width,
+      },
       locale: "en_US",
+      title,
       url: siteConfig.url,
-      images: [
-        {
-          alt: t(image.alt, "en"),
-          height: image.height,
-          url: image.src,
-          width: image.width,
-        },
-      ],
-    },
+    }),
   };
 }
 

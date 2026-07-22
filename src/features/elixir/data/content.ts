@@ -285,32 +285,49 @@ export const defaultElixirContent: ElixirContent = {
     items: [
       {
         answer: {
-          en: "Use it consistently for 60 days. Results vary by hair history, routine, nutrition, and protective styling habits.",
-          fr: "Utilisez-le regulierement pendant 60 jours. Les resultats varient selon l historique, la routine, l alimentation et les coiffures protectrices.",
+          en: "Hair responds to consistent care over time rather than overnight. With regular use, most people begin noticing a difference in scalp comfort and hair softness within a few weeks. For visible changes in strength and fullness, we recommend committing to at least one full bottle of consistent use.",
+          fr: "Les cheveux répondent à un soin régulier dans le temps, plutôt qu'à un effet immédiat. Avec une utilisation régulière, la plupart des personnes commencent à remarquer une différence de confort du cuir chevelu et de douceur des cheveux en quelques semaines. Pour des changements visibles de solidité et de densité, nous recommandons de s'engager sur au moins un flacon complet d'utilisation régulière.",
         },
-        question: localized("How fast will I see results?", "Quand verrai-je des resultats ?"),
+        question: localized("How fast will I see results?", "Quand verrai-je des résultats ?"),
       },
       {
         answer: {
-          en: "Yes. Apply lightly to the scalp and edges, then use a small amount on lengths when needed.",
-          fr: "Oui. Appliquez legerement sur le cuir chevelu et les tempes, puis une petite quantite sur les longueurs si besoin.",
+          en: "Yes. Sève Racine is applied directly to the scalp, so it works well alongside braids, wigs, and other protective styles. Apply between sections or along the scalp part as needed.",
+          fr: "Oui. Sève Racine s'applique directement sur le cuir chevelu, donc elle convient bien avec les tresses, perruques et autres coiffures protectrices. Appliquez entre les sections ou le long de la raie selon les besoins.",
         },
         question: {
           en: "Can I use it with braids or wigs?",
-          fr: "Puis-je l utiliser avec tresses ou perruques ?",
+          fr: "Puis-je l'utiliser avec des tresses ou des perruques ?",
         },
       },
       {
         answer: {
-          en: "Start with 3-4 times per week. For very dry scalp, use a lighter daily amount and avoid over-applying.",
-          fr: "Commencez 3 a 4 fois par semaine. Pour cuir chevelu tres sec, utilisez une petite quantite chaque jour sans surcharger.",
+          en: "We recommend applying a moderate amount to the scalp 2 to 4 times per week, massaging gently for 3 to 5 minutes. Leave it on for several hours or overnight for extended conditioning.",
+          fr: "Nous recommandons d'appliquer une quantité modérée sur le cuir chevelu 2 à 4 fois par semaine, en massant doucement pendant 3 à 5 minutes. Laissez poser plusieurs heures ou toute la nuit pour un conditionnement prolongé.",
         },
-        question: localized("How often should I apply it?", "A quelle frequence l appliquer ?"),
+        question: localized("How often should I apply it?", "À quelle fréquence l'appliquer ?"),
+      },
+      {
+        answer: {
+          en: "Yes. The formula is designed to support scalp health and hair fibre condition across hair types and textures.",
+          fr: "Oui. La formule est conçue pour soutenir la santé du cuir chevelu et l'état de la fibre capillaire, tous types et textures confondus.",
+        },
+        question: localized(
+          "Is Sève Racine suitable for all hair types?",
+          "Sève Racine convient-elle à tous les types de cheveux ?",
+        ),
+      },
+      {
+        answer: {
+          en: "We accept MTN Mobile Money and Orange Money. Payment is required before delivery. Orders can also be placed through WhatsApp.",
+          fr: "Nous acceptons MTN Mobile Money et Orange Money. Le paiement est requis avant la livraison. Les commandes peuvent aussi se passer via WhatsApp.",
+        },
+        question: localized("How do I order and pay?", "Comment commander et payer ?"),
       },
     ],
     title: {
-      en: "Everything customers ask before their first bottle.",
-      fr: "Ce que les clientes demandent avant leur premier flacon.",
+      en: "Questions before you begin.",
+      fr: "Questions avant de commencer.",
     },
   },
   finalCta: {
@@ -456,6 +473,24 @@ export const defaultElixirContent: ElixirContent = {
   },
   id: "fondjo-racine-seve",
   images: [
+    {
+      alt: {
+        en: "Sève Racine bottle in a reflective black studio",
+        fr: "Flacon Sève Racine en studio noir réfléchissant",
+      },
+      height: 1448,
+      src: "/images/studio.png",
+      width: 1086,
+    },
+    {
+      alt: {
+        en: "Sève Racine bottle and pipette macro detail",
+        fr: "Macro du flacon Sève Racine et pipette",
+      },
+      height: 1448,
+      src: "/images/product-macro-pipette.png",
+      width: 1086,
+    },
     {
       alt: {
         en: "Sève Racine bottle front label",
@@ -626,7 +661,7 @@ export const defaultElixirContent: ElixirContent = {
     },
     title: {
       en: "Sève Racine Hair Treatment Oil | Maison Fondjo",
-      fr: "Huile capillaire camerounaise garantie 60 jours",
+      fr: "Huile capillaire Sève Racine | Maison Fondjo",
     },
   },
   shipping: {

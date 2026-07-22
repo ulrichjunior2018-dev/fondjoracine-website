@@ -1,6 +1,6 @@
 import { config, formatXaf } from "@/lib/config";
 import { buildMarketingNav } from "@/lib/marketing-nav";
-const batchName = config.batch.name.replace(/\s+2026$/, "");
+
 const consultationPrice = formatXaf(config.pricing.consultation);
 const surMesurePrice = formatXaf(config.pricing.surMesure);
 
@@ -119,9 +119,9 @@ export const advisorCopy = {
   },
   seveRacine: {
     alt: "Flacon Sève Racine photographié en studio noir réfléchissant",
-    batchLine: `Coffret numéroté. ${batchName}, ${config.batch.size} exemplaires`,
+    batchLine: "Huile capillaire botanique, 100 ml",
     cta: "Commander maintenant",
-    description: "Sève Racine par Maison Fondjo : coffret numéroté, 15 000 F, livraison Cameroun.",
+    description: "Sève Racine par Maison Fondjo : huile capillaire botanique, 100 ml, 15 000 F.",
     intro:
       "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",
     payment: ["MTN Mobile Money", "Orange Money"],
@@ -140,7 +140,7 @@ export const advisorCopy = {
       },
     ],
     steps: ["Chauffer quelques gouttes", "Masser la racine", "Finir longueurs ou barbe"],
-    title: "Sève Racine, préparée pour le rituel.",
+    title: "Sève Racine",
     howToUse: {
       title: "Mode d'emploi",
       steps: [
@@ -192,28 +192,28 @@ export const advisorCopy = {
   },
   histoire: {
     description:
-      "L'histoire de Maison Fondjo : une famille, Buea, le Mont Cameroun et un mélange riche d'huiles et d'herbes botaniques.",
-    eyebrow: "Notre histoire",
-    title: "Une famille. Un territoire. Une formule botanique.",
+      "Maison Fondjo est une maison de soins capillaires botaniques enracinée à Buea, Cameroun, foyer de Sève Racine et du nom de famille Fondjo.",
+    eyebrow: "À propos",
+    title: "Enracinée dans la nature. Faite pour durer.",
     origin: {
-      label: "L'origine",
+      label: "La maison",
       heading: "Buea, au pied du Mont Cameroun.",
-      body: "Maison Fondjo naît dans la région du Sud-Ouest, à Buea, ville posée au flanc d'un volcan actif. Ce territoire. Altitude, humidité tropicale, sols enrichis de cendres. Façonne la sensibilité botanique qui traverse chaque flacon.",
+      body: "Maison Fondjo est une maison de soins capillaires botaniques enracinée à Buea, Cameroun, au pied du Mont Cameroun, où le sol volcanique, l'altitude et la pluie tropicale façonnent les ingrédients avec lesquels nous travaillons.",
     },
     name: {
       label: "Le nom",
       heading: "Fondjo.",
-      body: "Fondjo est le nom de famille. Pas un nom de marque construit pour sonner, mais un nom transmis. Celui que la famille porte, et qu'elle choisit d'inscrire sur l'étiquette. C'est une manière de répondre de ce qu'on met dans le flacon.",
+      body: "Fondjo est un nom de famille, pas une marque inventée pour sonner d'une certaine façon. C'est le nom porté sur chaque étiquette, et l'exigence à laquelle nous nous tenons avec chaque flacon que nous fabriquons.",
     },
     product: {
       label: "Le produit",
       heading: "Sève Racine.",
-      body: "La formule réunit un mélange riche d'huiles et d'herbes botaniques, sélectionnés pour leur rôle précis. Pas pour l'étiquette. Chaque ingrédient a une raison d'être.",
+      body: "Notre produit phare, Sève Racine, est né d'une conviction simple : des cheveux sains commencent par un cuir chevelu sain. Plutôt qu'une solution rapide, nous formulons des huiles et herbes botaniques pour nourrir le cuir chevelu, soutenir la fibre capillaire et aider à réduire la casse par un soin régulier et patient.",
     },
     family: {
-      label: "La famille",
-      heading: "La famille Fondjo.",
-      body: "Maison Fondjo est portée par la famille Fondjo. Le flacon est développé ensemble, testé en famille, et les noms qui apparaissent derrière la marque sont ceux qui en assument la responsabilité.",
+      label: "Le début",
+      heading: "Lot Fondateur, 2026.",
+      body: "Fondée en 2026, chaque flacon est numéroté dans le cadre de notre Lot Fondateur, pressé et préparé à Buea. C'est le début du parcours Maison Fondjo. Notre vision est de continuer à bâtir des soins capillaires botaniques auxquels on peut faire confiance, faits avec retenue et sans raccourcis. Enracinée dans la nature. Faite pour durer.",
     },
     cta: "Commander Sève Racine",
     ctaSecondary: "Voir la formule botanique",

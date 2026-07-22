@@ -114,9 +114,29 @@ function parseElixirContent(content: ElixirContent): ElixirContent {
   return applyRuntimeOverrides(parsedFallback);
 }
 
+function usesLegacyStorefrontBranding(content: ElixirContent): boolean {
+  const seoTitle = `${content.seo.title.en} ${content.seo.title.fr}`;
+  const hasLegacyTitle = /FONDJO Hair Elixir/i.test(seoTitle);
+  const hasStockImage = content.images.some((image) => /unsplash\.com/i.test(image.src));
+
+  return hasLegacyTitle || hasStockImage || content.brand === "FONDJO";
+}
+
 function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
   const runtimeContent = {
-    ...content,
+    ...(usesLegacyStorefrontBranding(content)
+      ? {
+          ...content,
+          brand: defaultElixirContent.brand,
+          hero: {
+            ...content.hero,
+            eyebrow: defaultElixirContent.hero.eyebrow,
+          },
+          images: defaultElixirContent.images,
+          seo: defaultElixirContent.seo,
+          title: defaultElixirContent.title,
+        }
+      : content),
     manualPayments: {
       ...content.manualPayments,
       methods: content.manualPayments.methods.map((method) => {

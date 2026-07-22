@@ -2,7 +2,7 @@ export type WhatsAppMessageKey = "consultation" | "diagnostic" | "order" | "supp
 export type WhatsAppLocale = "en" | "fr";
 
 export const config = {
-  batch: { name: "Lot Fondateur 2026", size: 200 },
+  batch: { name: "Lot Fondateur 2026", size: 150 },
   contact_secondary: "",
   delivery: {
     min: 1_000,
