@@ -63,6 +63,9 @@ const nextConfig: NextConfig = {
   async headers() {
     // Pragmatic CSP baseline (PRD-production-security). Tighten in Phase 1
     // after verifying Stripe Checkout, Supabase Auth, and Cloudinary images.
+    // Never send upgrade-insecure-requests in local/LAN HTTP previews — the
+    // browser upgrades CSS/JS to HTTPS and the page renders as raw HTML.
+    const isProd = process.env.NODE_ENV === "production";
     const contentSecurityPolicy = [
       "default-src 'self'",
       "base-uri 'self'",
@@ -75,7 +78,7 @@ const nextConfig: NextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com",
-      "upgrade-insecure-requests",
+      ...(isProd ? ["upgrade-insecure-requests"] : []),
     ].join("; ");
 
     return [
@@ -89,10 +92,14 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
+          ...(isProd
+            ? [
+                {
+                  key: "Strict-Transport-Security",
+                  value: "max-age=63072000; includeSubDomains; preload",
+                },
+              ]
+            : []),
           { key: "Content-Security-Policy", value: contentSecurityPolicy },
         ],
       },
