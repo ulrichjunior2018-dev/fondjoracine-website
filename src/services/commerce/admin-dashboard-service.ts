@@ -78,25 +78,25 @@ async function writeStorefrontContent(supabase: SupabaseClient, content: ElixirC
 
 export async function getAdminDashboardData(supabase: SupabaseClient) {
   const [
-    content,
+    contentResult,
     { data: orders, error: ordersError },
-    { data: innerCircle, error: innerCircleError },
-    { data: newsletter, error: newsletterError },
-    { data: consultations, error: consultationsError },
-    { count: orderCount, error: orderCountError },
-    { count: customerCount, error: customerCountError },
-    { count: pendingOrderCount, error: pendingOrderCountError },
-    { count: consultationCount, error: consultationCountError },
-    { count: highRiskConsultationCount, error: highRiskConsultationCountError },
+    { data: innerCircle },
+    { data: newsletter },
+    { data: consultations },
+    { count: orderCount },
+    { count: customerCount },
+    { count: pendingOrderCount },
+    { count: consultationCount },
+    { count: highRiskConsultationCount },
   ] = await Promise.all([
-    readStorefrontContent(supabase),
+    readStorefrontContent(supabase).catch(() => null),
     supabase
       .from("orders")
       .select(
         "id, order_number, status, currency, total_cents, customer_name, customer_phone, delivery_city, payment_method, manual_payment_reference, created_at, admin_payment_verified_at",
       )
       .order("created_at", { ascending: false })
-      .limit(25),
+      .limit(50),
     supabase
       .from("inner_circle_members")
       .select("id, full_name, phone, email, city, status, started_at, notes")
@@ -127,19 +127,21 @@ export async function getAdminDashboardData(supabase: SupabaseClient) {
       .eq("risk_level", "high"),
   ]);
 
-  if (
-    ordersError ||
-    innerCircleError ||
-    newsletterError ||
-    consultationsError ||
-    orderCountError ||
-    customerCountError ||
-    pendingOrderCountError ||
-    consultationCountError ||
-    highRiskConsultationCountError
-  ) {
-    throw new AppError("INTERNAL", "Unable to load admin dashboard.", { expose: false });
+  if (ordersError) {
+    throw new AppError("INTERNAL", "Unable to load orders for the admin dashboard.", {
+      expose: false,
+    });
   }
+
+  const content =
+    contentResult ??
+    ({
+      content: defaultElixirContent,
+      id: "fallback",
+      published_at: null,
+      status: "draft",
+      updated_at: new Date().toISOString(),
+    } as Awaited<ReturnType<typeof readStorefrontContent>>);
 
   return {
     analytics: {

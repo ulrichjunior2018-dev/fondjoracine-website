@@ -51,6 +51,17 @@ type AdminDashboardProps = {
     source: string | null;
   }>;
   orders: ComponentProps<typeof AdminOrdersTable>["orders"];
+  /** Which tab opens first — defaults to orders when the store has activity. */
+  defaultTab?:
+    | "content"
+    | "media"
+    | "orders"
+    | "consultations"
+    | "testimonials"
+    | "stock"
+    | "inner-circle"
+    | "customers"
+    | "analytics";
 };
 
 type ApiResponse<T> = {
@@ -68,6 +79,7 @@ export function AdminDashboard({
   analytics,
   consultations,
   content,
+  defaultTab = "orders",
   innerCircle,
   newsletter,
   orders,
@@ -238,11 +250,11 @@ export function AdminDashboard({
         </p>
       ) : null}
 
-      <Tabs defaultValue="content">
+      <Tabs defaultValue={defaultTab}>
         <TabsList className="flex w-full flex-wrap justify-start">
+          <TabsTrigger value="orders">{admin.ordersTab}</TabsTrigger>
           <TabsTrigger value="content">{admin.contentTab}</TabsTrigger>
           <TabsTrigger value="media">{admin.mediaTab}</TabsTrigger>
-          <TabsTrigger value="orders">{admin.ordersTab}</TabsTrigger>
           <TabsTrigger value="consultations">{admin.consultationsTab}</TabsTrigger>
           <TabsTrigger value="testimonials">{admin.testimonialsTab}</TabsTrigger>
           <TabsTrigger value="stock">{admin.stockTab}</TabsTrigger>
@@ -544,7 +556,7 @@ export function AdminDashboard({
                 <div className="rounded-md border border-border p-3" key={signup.email}>
                   <p className="font-medium">{signup.email}</p>
                   <p className="mt-1 text-xs text-foreground/56">
-                    {signup.source ?? "newsletter"} · {new Date(signup.created_at).toLocaleString()}
+                    {signup.source ?? "newsletter"}, {new Date(signup.created_at).toLocaleString()}
                   </p>
                 </div>
               ))}

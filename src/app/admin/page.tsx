@@ -23,7 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AdminPage() {
   const locale = await getServerLocale();
   const admin = getDictionary(locale).admin;
-  const access = await requireAdminPermission(adminPermissions.analyticsRead).catch(() => null);
+  const access =
+    (await requireAdminPermission(adminPermissions.ordersRead).catch(() => null)) ??
+    (await requireAdminPermission(adminPermissions.analyticsRead).catch(() => null));
 
   if (!access) {
     return <AdminLockedState />;
@@ -46,6 +48,11 @@ export default async function AdminPage() {
             analytics={dashboard.analytics}
             consultations={dashboard.consultations}
             content={dashboard.content.content}
+            defaultTab={
+              dashboard.analytics.paymentPendingCount > 0 || dashboard.orders.length > 0
+                ? "orders"
+                : "content"
+            }
             innerCircle={dashboard.innerCircle}
             newsletter={dashboard.newsletter}
             orders={dashboard.orders}

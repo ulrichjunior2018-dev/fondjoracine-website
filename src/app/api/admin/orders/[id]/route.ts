@@ -3,6 +3,7 @@ import { parseJsonBody } from "@/lib/api/request";
 import { fail, ok } from "@/lib/api/responses";
 import { requireAdminPermission } from "@/lib/auth/rbac";
 import { adminPermissions } from "@/lib/database/schema";
+import { assertSameOriginRequest } from "@/lib/security/request-origin";
 import { updateAdminOrderStatus } from "@/services/commerce/one-product-order-service";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ type RouteContext = {
 
 export async function PATCH(request: Request, context: RouteContext) {
   try {
+    assertSameOriginRequest(request);
     const input = await parseJsonBody(request, adminOrderStatusUpdateSchema);
     const { id } = await context.params;
     const { supabase, user } = await requireAdminPermission(adminPermissions.ordersWrite);
