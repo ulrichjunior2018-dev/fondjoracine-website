@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 
 import { copy, getPublicCopy } from "@/content/copy";
+import { siteConfig } from "@/config/site";
 import { openGraphLocale } from "@/lib/locale";
 import { getServerLocale } from "@/lib/locale-server";
+import { buildShareMetadata } from "@/lib/seo/share-metadata";
 
 export async function resolvePublicCopy() {
   const locale = await getServerLocale();
@@ -23,10 +25,11 @@ export async function buildPublicMetadata(
   return {
     title,
     description,
-    openGraph: {
+    ...buildShareMetadata({
       description,
       locale: openGraphLocale(locale),
       title,
-    },
+      url: siteConfig.url,
+    }),
   };
 }

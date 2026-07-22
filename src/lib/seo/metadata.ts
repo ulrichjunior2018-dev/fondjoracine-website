@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
 import { config } from "@/lib/config";
+import { defaultSocialImage, resolveShareImage } from "@/lib/seo/social-images";
 
 const isProduction = config.env === "production";
+const shareImage = resolveShareImage();
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -22,10 +24,10 @@ export const defaultMetadata: Metadata = {
     locale: siteConfig.locale,
     images: [
       {
-        url: `${siteConfig.url}/images/wordmark-lockup.png`,
-        width: 1254,
-        height: 1254,
-        alt: "Maison Fondjo wordmark lockup on black",
+        url: shareImage.url,
+        width: shareImage.width,
+        height: shareImage.height,
+        alt: defaultSocialImage.alt,
       },
     ],
   },
@@ -34,7 +36,7 @@ export const defaultMetadata: Metadata = {
     site: siteConfig.twitterHandle,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/images/studio.png`],
+    images: [shareImage.url],
   },
   robots: {
     index: isProduction,

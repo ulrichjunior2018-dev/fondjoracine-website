@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import type { Locale } from "@/content/copy";
 import { siteConfig } from "@/config/site";
 import { openGraphLocale } from "@/lib/locale";
+import { buildShareMetadata } from "@/lib/seo/share-metadata";
 
 type AdvisorRouteMetadataInput = {
   description: string;
@@ -18,19 +19,16 @@ export function buildAdvisorRouteMetadata({
   title,
 }: AdvisorRouteMetadataInput): Metadata {
   const url = `${siteConfig.url}${path}`;
+  const pageTitle = `${title} | ${siteConfig.name}`;
 
   return {
-    title,
+    title: pageTitle,
     description,
-    openGraph: {
-      title: `${title} | ${siteConfig.name}`,
+    ...buildShareMetadata({
       description,
       locale: openGraphLocale(locale),
+      title: pageTitle,
       url,
-    },
-    twitter: {
-      title: `${title} | ${siteConfig.name}`,
-      description,
-    },
+    }),
   };
 }
