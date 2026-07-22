@@ -7,7 +7,10 @@ let stripe: Stripe | null = null;
 
 export function getStripeClient() {
   if (!env.STRIPE_SECRET_KEY) {
-    throw new AppError("INTERNAL", "Stripe secret key is not configured.", { expose: false });
+    throw new AppError(
+      "BAD_REQUEST",
+      "Card payment is not configured. Set STRIPE_SECRET_KEY in Vercel Production and redeploy.",
+    );
   }
 
   stripe ??= new Stripe(env.STRIPE_SECRET_KEY, {

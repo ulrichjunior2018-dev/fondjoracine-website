@@ -13,6 +13,7 @@ import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
 import { buildWaLink } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
+import { logger } from "@/lib/logger/logger";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import { getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
@@ -85,6 +86,26 @@ function getAssetUrl(path: string, baseUrl = getConfiguredSiteUrl()) {
   return `${baseUrl.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+/**
+ * Card checkout currency for Stripe. Storefront displays XAF, but many Stripe
+ * accounts reject ad-hoc XAF `price_data`. Prefer a Dashboard Price ID; otherwise
+ * settle in EUR using the CFA franc peg (655.957 XAF = 1 EUR).
+ */
+function resolveStripeInlinePrice(content: ElixirContent) {
+  const storeCurrency = content.currency.toUpperCase();
+  if (storeCurrency === "XAF") {
+    return {
+      currency: "eur",
+      unit_amount: Math.max(50, Math.round((content.priceCents / 655.957) * 100)),
+    };
+  }
+
+  return {
+    currency: storeCurrency.toLowerCase(),
+    unit_amount: content.priceCents,
+  };
+}
+
 function getPaymentInstructions(
   content: ElixirContent,
   locale: Locale,
@@ -150,24 +171,31 @@ async function createStripeCheckoutSession(
   };
 
   if (image) {
-    productData.images = [getAssetUrl(image.src, returnBaseUrl)];
+    const imageUrl = getAssetUrl(image.src, returnBaseUrl);
+    // Stripe only accepts publicly reachable HTTPS product images.
+    if (imageUrl.startsWith("https://")) {
+      productData.images = [imageUrl];
+    }
   }
+
+  const inlinePrice = resolveStripeInlinePrice(content);
+  const priceId = env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
 
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     allow_promotion_codes: true,
     billing_address_collection: "auto",
     cancel_url: cancelUrl,
     line_items: [
-      env.STRIPE_HAIR_ELIXIR_PRICE_ID
+      priceId
         ? {
-            price: env.STRIPE_HAIR_ELIXIR_PRICE_ID,
+            price: priceId,
             quantity: input.quantity,
           }
         : {
             price_data: {
-              currency: content.currency.toLowerCase(),
+              currency: inlinePrice.currency,
               product_data: productData,
-              unit_amount: content.priceCents,
+              unit_amount: inlinePrice.unit_amount,
             },
             quantity: input.quantity,
           },
@@ -177,6 +205,8 @@ async function createStripeCheckoutSession(
       order_id: order.id,
       order_number: order.order_number,
       product: content.id,
+      storefront_currency: content.currency,
+      storefront_total_xaf: String(content.priceCents * input.quantity),
     },
     mode: "payment",
     phone_number_collection: {
@@ -192,13 +222,40 @@ async function createStripeCheckoutSession(
     sessionParams.customer_email = input.email;
   }
 
-  const session = await stripe.checkout.sessions.create(sessionParams);
+  try {
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
-  if (!session.url) {
-    throw new AppError("INTERNAL", "Stripe did not return a checkout URL.", { expose: false });
+    if (!session.url) {
+      throw new AppError(
+        "BAD_REQUEST",
+        "Stripe did not return a checkout URL. Check STRIPE_SECRET_KEY and price settings in Vercel.",
+      );
+    }
+
+    return session;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Unable to start card checkout with Stripe.";
+
+    logger.error("Stripe Checkout Session create failed.", {
+      message,
+      orderId: order.id,
+      orderNumber: order.order_number,
+      priceId: priceId || null,
+      returnBaseUrl,
+    });
+
+    throw new AppError(
+      "BAD_REQUEST",
+      message.includes("Invalid API Key")
+        ? "Stripe secret key is invalid. Update STRIPE_SECRET_KEY in Vercel and redeploy."
+        : message,
+    );
   }
-
-  return session;
 }
 
 async function createProviderCheckout(
