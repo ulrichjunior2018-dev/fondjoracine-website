@@ -134,7 +134,7 @@ export function CartView({ initialCart }: CartViewProps) {
         </div>
         <Button className="mt-6 w-full">Continue to checkout</Button>
         <p className="mt-3 text-xs leading-5 text-foreground/58">
-          Shipping, taxes, subscriptions, and payment are finalized in secure checkout.
+          Shipping, taxes, and payment are finalized in secure checkout.
         </p>
       </aside>
     </div>

@@ -41,5 +41,28 @@ export function listAvailablePaymentMethods(): PaymentMethodOption[] {
       kind: provider.kind,
       label: provider.defaultLabel,
       requiresTransactionReference: provider.requiresTransactionReference,
+      configured: true,
     }));
+}
+
+const checkoutPreviewMethods: PaymentMethod[] = ["stripe", "mtn_momo", "orange_money"];
+
+/**
+ * Checkout UI methods — always returns Card + MTN + Orange so the page is
+ * viewable before env keys are set. MTN/Orange stay `configured: false`
+ * (Soon) until a Mobile Money adapter sets `isConfigured` to true.
+ */
+export function listCheckoutPaymentMethods(): PaymentMethodOption[] {
+  return checkoutPreviewMethods.map((method) => {
+    const provider = getPaymentProvider(method);
+    const configured = provider.isConfigured();
+
+    return {
+      method: provider.method,
+      kind: provider.kind,
+      label: provider.defaultLabel,
+      requiresTransactionReference: provider.requiresTransactionReference,
+      configured,
+    };
+  });
 }

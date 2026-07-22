@@ -24,4 +24,9 @@ web-safe, and inside `public/images`.
 
 Archived reference-only assets live in `_archive/` and are not imported by the site.
 
+Payment method logos (checkout tabs) live in `payments/`:
+- `payments/card-visa-mastercard.jpg`
+- `payments/mtn-momo.jpg`
+- `payments/orange-money.jpg`
+
 Next.js serves optimized image variants from these originals at runtime.

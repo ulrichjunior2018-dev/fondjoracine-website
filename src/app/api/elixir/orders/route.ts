@@ -5,10 +5,15 @@ import { fail, ok } from "@/lib/api/responses";
 import { parseJsonBody } from "@/lib/api/request";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getSupabaseAdminClient } from "@/lib/database/admin";
+import { resolveAppBaseUrl } from "@/lib/http/app-base-url";
 import { assertRateLimit } from "@/lib/security/rate-limit";
+import { assertSameOriginRequest } from "@/lib/security/request-origin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createOneProductOrder } from "@/services/commerce/one-product-order-service";
-import { getOrCreateCustomerAccount } from "@/services/customer/customer-service";
+import {
+  getOrCreateCustomerAccount,
+  saveCheckoutDeliveryAddress,
+} from "@/services/customer/customer-service";
 
 export const dynamic = "force-dynamic";
 
@@ -22,10 +27,12 @@ function getClientKey(headersList: Headers) {
 
 /**
  * Storefront checkout. Guests can order; signed-in users get `customer_id`
- * so the order appears under Account → Orders.
+ * so the order appears under Account → Orders, and delivery details are saved
+ * to Account → Addresses.
  */
 export async function POST(request: Request) {
   try {
+    assertSameOriginRequest(request);
     const headersList = await headers();
     assertRateLimit(`one-product-order:${getClientKey(headersList)}`, {
       limit: 8,
@@ -49,7 +56,17 @@ export async function POST(request: Request) {
     }
 
     const supabase = getSupabaseAdminClient();
-    const result = await createOneProductOrder(supabase, input, { customerId });
+    const returnBaseUrl = resolveAppBaseUrl(headersList, request.url);
+    const result = await createOneProductOrder(supabase, input, { customerId, returnBaseUrl });
+
+    if (customerId) {
+      await saveCheckoutDeliveryAddress(supabase, customerId, {
+        city: input.city,
+        deliveryAddress: input.delivery_address,
+        name: input.name,
+        phone: input.phone,
+      });
+    }
 
     return ok(result, { status: 201 });
   } catch (error) {

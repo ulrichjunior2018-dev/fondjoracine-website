@@ -15,6 +15,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional().or(z.literal("")),
+  /** Legacy display numbers — MoMo checkout is reserved for a future provider. */
   MTN_MOMO_NUMBER: z.string().optional().or(z.literal("")),
   ORANGE_MONEY_NUMBER: z.string().optional().or(z.literal("")),
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),

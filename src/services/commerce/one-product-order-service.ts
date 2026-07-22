@@ -12,8 +12,11 @@ import { t } from "@/features/elixir/data/content";
 import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
 import { buildWaLink } from "@/lib/config";
 import { AppError } from "@/lib/errors/app-error";
+import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import { getStripeClient } from "@/lib/payments/stripe";
+import type { PaymentProviderDescriptor } from "@/lib/payments/types";
+import { writeAuditLog } from "@/lib/security/audit-log";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -23,6 +26,12 @@ type CreatedOrderRow = {
   order_number: string;
   status: string;
   total_cents: number;
+};
+
+type CreateOrderOptions = {
+  customerId?: string | null;
+  /** Browser/deploy origin for Stripe return URLs. Falls back to NEXT_PUBLIC_SITE_URL. */
+  returnBaseUrl?: string;
 };
 
 function createOrderNumber() {
@@ -63,8 +72,17 @@ function getManualPaymentMethod(content: ElixirContent, method: OneProductPaymen
   return paymentMethod;
 }
 
-function getConfirmationUrl(token: string) {
-  return `${env.NEXT_PUBLIC_SITE_URL}/order-confirmation?token=${token}`;
+function getConfirmationUrl(token: string, baseUrl = getConfiguredSiteUrl()) {
+  return `${baseUrl.replace(/\/$/, "")}/order-confirmation?token=${token}`;
+}
+
+function getCheckoutCancelUrl(token: string, baseUrl = getConfiguredSiteUrl()) {
+  return `${baseUrl.replace(/\/$/, "")}/checkout?status=cancelled&token=${token}`;
+}
+
+function getAssetUrl(path: string, baseUrl = getConfiguredSiteUrl()) {
+  if (path.startsWith("http")) return path;
+  return `${baseUrl.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 function getPaymentInstructions(
@@ -84,11 +102,22 @@ function getPaymentInstructions(
   }
 
   if (provider.kind === "redirect") {
+    if (provider.redirectProcessor === "mobile_money") {
+      return {
+        heading: locale.startsWith("fr") ? "Paiement Mobile Money" : "Mobile Money payment",
+        instructions: locale.startsWith("fr")
+          ? "Le paiement Mobile Money sera bientôt disponible."
+          : "Mobile Money payment is coming soon.",
+        label: provider.defaultLabel,
+        number: "",
+      };
+    }
+
     return {
-      heading: "Stripe Checkout",
+      heading: locale.startsWith("fr") ? "Paiement par carte" : "Card payment",
       instructions: locale.startsWith("fr")
-        ? "Vous serez redirige vers Stripe pour finaliser le paiement par carte."
-        : "You will be redirected to Stripe to complete card payment.",
+        ? "Vous serez redirigé vers une page sécurisée pour finaliser le paiement par carte."
+        : "You will be redirected to a secure page to complete card payment.",
       label: provider.defaultLabel,
       number: "",
     };
@@ -108,11 +137,12 @@ function getPaymentInstructions(
 async function createStripeCheckoutSession(
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
+  returnBaseUrl: string,
 ) {
   const content = await getElixirContent();
   const stripe = getStripeClient();
-  const successUrl = `${getConfirmationUrl(order.confirmation_token)}&session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = `${getConfirmationUrl(order.confirmation_token)}&checkout=cancelled`;
+  const successUrl = `${getConfirmationUrl(order.confirmation_token, returnBaseUrl)}&session_id={CHECKOUT_SESSION_ID}`;
+  const cancelUrl = getCheckoutCancelUrl(order.confirmation_token, returnBaseUrl);
   const image = content.images.at(0);
   const productData: Stripe.Checkout.SessionCreateParams.LineItem.PriceData.ProductData = {
     description: t(content.product.description, input.locale),
@@ -120,7 +150,7 @@ async function createStripeCheckoutSession(
   };
 
   if (image) {
-    productData.images = [image.src];
+    productData.images = [getAssetUrl(image.src, returnBaseUrl)];
   }
 
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
@@ -171,6 +201,29 @@ async function createStripeCheckoutSession(
   return session;
 }
 
+async function createProviderCheckout(
+  supabase: SupabaseClient,
+  order: CreatedOrderRow,
+  input: CreateOneProductOrderInput,
+  provider: PaymentProviderDescriptor,
+  _content: ElixirContent,
+  returnBaseUrl: string,
+) {
+  if (provider.redirectProcessor === "stripe") {
+    const session = await createStripeCheckoutSession(order, input, returnBaseUrl);
+    await supabase
+      .from("orders")
+      .update({ stripe_checkout_session_id: session.id })
+      .eq("id", order.id);
+    return session.url;
+  }
+
+  // Future: handle provider.redirectProcessor === "mobile_money" here.
+  throw new AppError("INTERNAL", "Payment redirect is not configured for this method.", {
+    expose: false,
+  });
+}
+
 async function recordPayment(
   supabase: SupabaseClient,
   order: CreatedOrderRow,
@@ -217,7 +270,7 @@ async function recordPayment(
 export async function createOneProductOrder(
   supabase: SupabaseClient,
   input: CreateOneProductOrderInput,
-  options?: { customerId?: string | null },
+  options?: CreateOrderOptions,
 ) {
   const content = await getElixirContent();
   const locale = input.locale;
@@ -226,15 +279,21 @@ export async function createOneProductOrder(
   const isManualPayment = provider.kind === "manual_reference";
   const settlementCurrency = provider.resolveSettlementCurrency(content.currency);
   const customerId = options?.customerId ?? null;
+  const returnBaseUrl = options?.returnBaseUrl ?? getConfiguredSiteUrl();
 
-  if (provider.kind === "redirect") {
+  if (!provider.isConfigured()) {
+    throw new AppError(
+      "BAD_REQUEST",
+      `${provider.defaultLabel} is not available yet. Please pay by card or contact Maison Fondjo on WhatsApp.`,
+    );
+  }
+
+  if (provider.redirectProcessor === "stripe") {
     getStripeClient();
   }
 
-  const subtotalCents =
-    provider.kind === "redirect"
-      ? content.priceCents * input.quantity
-      : parseXafAmount(content.product.priceXaf) * input.quantity;
+  const unitCents = parseXafAmount(content.product.priceXaf);
+  const subtotalCents = unitCents * input.quantity;
 
   const { data: order, error } = await supabase
     .from("orders")
@@ -257,7 +316,7 @@ export async function createOneProductOrder(
       manual_payment_reference: isManualPayment ? input.transaction_reference : null,
       metadata: {
         locale,
-        notification_hooks: ["admin_email", "admin_whatsapp"],
+        notification_hooks: ["admin_email", "customer_email"],
         order_channel: "one_product_storefront",
         product_id: content.id,
         product_name: t(content.product.name, locale),
@@ -305,29 +364,50 @@ export async function createOneProductOrder(
 
   await recordPayment(supabase, order, input, content);
 
-  const confirmationUrl = getConfirmationUrl(order.confirmation_token);
+  await writeAuditLog(supabase, {
+    action: "order.placed",
+    afterData: {
+      customer_id: customerId,
+      payment_method: input.payment_method,
+      quantity: input.quantity,
+      status: order.status,
+      total_cents: order.total_cents,
+    },
+    entityId: order.id,
+    entityTable: "orders",
+  });
+
+  const confirmationUrl = getConfirmationUrl(order.confirmation_token, returnBaseUrl);
   const totalLabel = `${parseXafAmount(content.product.priceXaf) * input.quantity} XAF`;
 
   await queueOrderNotifications({
     city: input.city,
     confirmationUrl,
     customerName: input.name,
+    kind: "placed",
+    locale,
     orderNumber: order.order_number,
     paymentMethod: instructions.label,
     phone: normalizePhone(input.phone),
+    productName: t(content.product.name, locale),
     totalLabel,
+    ...(input.email ? { customerEmail: input.email } : {}),
+    ...(customerId ? { customerId } : {}),
     ...(input.transaction_reference ? { transactionReference: input.transaction_reference } : {}),
   });
 
   if (provider.kind === "redirect") {
-    const session = await createStripeCheckoutSession(order, input);
-    await supabase
-      .from("orders")
-      .update({ stripe_checkout_session_id: session.id })
-      .eq("id", order.id);
+    const checkoutUrl = await createProviderCheckout(
+      supabase,
+      order,
+      input,
+      provider,
+      content,
+      returnBaseUrl,
+    );
 
     return {
-      checkoutUrl: session.url,
+      checkoutUrl,
       confirmationUrl,
       order,
       paymentInstructions: instructions,
@@ -359,89 +439,19 @@ export async function getOrderByConfirmationToken(supabase: SupabaseClient, toke
   return data;
 }
 
+/**
+ * Legacy endpoint — MoMo does not collect customer transaction references.
+ * When a Mobile Money provider is wired, confirmation will be webhook-driven.
+ */
 export async function submitOrderPaymentReference(
-  supabase: SupabaseClient,
-  token: string,
-  input: SubmitPaymentReferenceInput,
-) {
-  const { data: order, error } = await supabase
-    .from("orders")
-    .select(
-      "id, order_number, status, total_cents, customer_name, customer_phone, delivery_city, payment_method, confirmation_token",
-    )
-    .eq("confirmation_token", token)
-    .single<
-      CreatedOrderRow & {
-        customer_name: string | null;
-        customer_phone: string | null;
-        delivery_city: string | null;
-        payment_method: OneProductPaymentMethod | null;
-      }
-    >();
-
-  if (error || !order) {
-    throw new AppError("NOT_FOUND", "Order confirmation was not found.");
-  }
-
-  if (!order.payment_method) {
-    throw new AppError("BAD_REQUEST", "This order has no payment method.");
-  }
-
-  const provider = getPaymentProvider(order.payment_method);
-  if (!provider.requiresTransactionReference) {
-    throw new AppError("BAD_REQUEST", "This order does not use manual reference payment.");
-  }
-
-  if (order.status === "confirmed" || order.status === "cancelled" || order.status === "refunded") {
-    throw new AppError("BAD_REQUEST", "This order can no longer accept a payment reference.");
-  }
-
-  const { data: updatedOrder, error: updateError } = await supabase
-    .from("orders")
-    .update({
-      manual_payment_reference: input.transaction_reference,
-      status: "payment_submitted",
-    })
-    .eq("id", order.id)
-    .select("id, order_number, status, admin_payment_verified_at")
-    .single();
-
-  if (updateError) {
-    throw new AppError("BAD_REQUEST", updateError.message);
-  }
-
-  const { error: paymentError } = await supabase.from("payments").insert({
-    amount_cents: order.total_cents,
-    currency: "XAF",
-    metadata: {
-      manual_reference: input.transaction_reference,
-      payment_method: order.payment_method,
-    },
-    order_id: order.id,
-    provider: order.payment_method,
-    provider_payment_id: provider.buildProviderPaymentId({
-      orderId: order.id,
-      transactionReference: input.transaction_reference,
-    }),
-    status: "processing",
-  });
-
-  if (paymentError) {
-    throw new AppError("BAD_REQUEST", paymentError.message);
-  }
-
-  await queueOrderNotifications({
-    city: order.delivery_city ?? "Unknown",
-    confirmationUrl: getConfirmationUrl(order.confirmation_token),
-    customerName: order.customer_name ?? "Customer",
-    orderNumber: order.order_number,
-    paymentMethod: provider.defaultLabel,
-    phone: order.customer_phone ?? "Unknown",
-    totalLabel: `${order.total_cents.toLocaleString("en-US")} XAF`,
-    transactionReference: input.transaction_reference,
-  });
-
-  return updatedOrder;
+  _supabase: SupabaseClient,
+  _token: string,
+  _input: SubmitPaymentReferenceInput,
+): Promise<never> {
+  throw new AppError(
+    "BAD_REQUEST",
+    "Mobile money payment is not available yet. Please pay by card or contact Maison Fondjo on WhatsApp.",
+  );
 }
 
 export async function listAdminOrders(supabase: SupabaseClient) {
@@ -466,6 +476,12 @@ export async function updateAdminOrderStatus(
   orderId: string,
   input: AdminOrderStatusUpdateInput,
 ) {
+  const { data: before } = await supabase
+    .from("orders")
+    .select("id, order_number, status")
+    .eq("id", orderId)
+    .maybeSingle();
+
   const update: Record<string, unknown> = { status: input.status };
 
   if (input.status === "confirmed") {
@@ -496,9 +512,77 @@ export async function updateAdminOrderStatus(
     if (paymentError) {
       throw new AppError("BAD_REQUEST", paymentError.message);
     }
+
+    await notifyOrderConfirmed(supabase, orderId);
   }
 
+  await writeAuditLog(supabase, {
+    action: input.status === "confirmed" ? "payment.confirmed.admin" : "order.status_updated.admin",
+    actorProfileId: adminProfileId,
+    afterData: {
+      order_number: data.order_number,
+      status: data.status,
+    },
+    beforeData: before
+      ? {
+          order_number: before.order_number,
+          status: before.status,
+        }
+      : null,
+    entityId: orderId,
+    entityTable: "orders",
+  });
+
   return data;
+}
+
+export async function notifyOrderConfirmed(supabase: SupabaseClient, orderId: string) {
+  const { data: order } = await supabase
+    .from("orders")
+    .select(
+      "order_number, total_cents, customer_name, customer_phone, delivery_city, payment_method, confirmation_token, email, customer_id, metadata",
+    )
+    .eq("id", orderId)
+    .maybeSingle<{
+      confirmation_token: string;
+      customer_id: string | null;
+      customer_name: string | null;
+      customer_phone: string | null;
+      delivery_city: string | null;
+      email: string | null;
+      metadata: { locale?: string; product_name?: string } | null;
+      order_number: string;
+      payment_method: string | null;
+      total_cents: number;
+    }>();
+
+  if (!order) return;
+
+  let paymentLabel = order.payment_method ?? "Payment";
+  try {
+    if (order.payment_method) {
+      paymentLabel = getPaymentProvider(
+        order.payment_method as OneProductPaymentMethod,
+      ).defaultLabel;
+    }
+  } catch {
+    // Keep raw payment_method if provider lookup fails.
+  }
+
+  await queueOrderNotifications({
+    city: order.delivery_city ?? "Unknown",
+    confirmationUrl: getConfirmationUrl(order.confirmation_token),
+    customerName: order.customer_name ?? "Customer",
+    kind: "confirmed",
+    locale: order.metadata?.locale === "fr" ? "fr" : "en",
+    orderNumber: order.order_number,
+    paymentMethod: paymentLabel,
+    phone: order.customer_phone ?? "Unknown",
+    totalLabel: `${order.total_cents.toLocaleString("en-US")} XAF`,
+    ...(order.email ? { customerEmail: order.email } : {}),
+    ...(order.customer_id ? { customerId: order.customer_id } : {}),
+    ...(order.metadata?.product_name ? { productName: order.metadata.product_name } : {}),
+  });
 }
 
 export async function fulfillStripeOrder(
@@ -511,11 +595,49 @@ export async function fulfillStripeOrder(
     throw new AppError("BAD_REQUEST", "Stripe session is missing order metadata.");
   }
 
+  if (session.payment_status !== "paid") {
+    throw new AppError("BAD_REQUEST", "Stripe session is not paid.");
+  }
+
+  const { data: order, error: loadError } = await supabase
+    .from("orders")
+    .select("id, order_number, status, currency, total_cents")
+    .eq("id", orderId)
+    .maybeSingle<{
+      currency: string;
+      id: string;
+      order_number: string;
+      status: string;
+      total_cents: number;
+    }>();
+
+  if (loadError || !order) {
+    throw new AppError("BAD_REQUEST", loadError?.message ?? "Order not found for Stripe session.");
+  }
+
+  // When currencies align, reject overcharges. Discounts may lower amount_total.
+  if (
+    session.amount_total != null &&
+    session.currency &&
+    session.currency.toLowerCase() === order.currency.toLowerCase() &&
+    session.amount_total > order.total_cents
+  ) {
+    throw new AppError(
+      "BAD_REQUEST",
+      `Stripe amount ${session.amount_total} exceeds order total ${order.total_cents}.`,
+    );
+  }
+
+  if (order.status === "confirmed") {
+    return;
+  }
+
   const { error: orderError } = await supabase
     .from("orders")
     .update({
       status: "confirmed",
       stripe_checkout_session_id: session.id,
+      ...(session.customer_details?.email ? { email: session.customer_details.email } : {}),
     })
     .eq("id", orderId);
 
@@ -532,4 +654,20 @@ export async function fulfillStripeOrder(
     })
     .eq("order_id", orderId)
     .eq("provider", "stripe");
+
+  await writeAuditLog(supabase, {
+    action: "payment.confirmed.stripe",
+    afterData: {
+      amount_total: session.amount_total,
+      currency: session.currency,
+      order_number: order.order_number,
+      payment_status: session.payment_status,
+      stripe_session_id: session.id,
+    },
+    beforeData: { status: order.status },
+    entityId: orderId,
+    entityTable: "orders",
+  });
+
+  await notifyOrderConfirmed(supabase, orderId);
 }

@@ -67,15 +67,15 @@ const paymentKindCopy: Record<
   },
   manual_reference: {
     description: localized(
-      "Pay by mobile money, then submit your transaction reference.",
-      "Payez par mobile money, puis envoyez votre reference de transaction.",
+      "Pay by mobile money on a secure page. Confirmation is automatic.",
+      "Payez par mobile money sur une page securisee. La confirmation est automatique.",
     ),
     icon: "mobile",
   },
   redirect: {
     description: localized(
-      "Pay by card through a secure checkout when available.",
-      "Payez par carte via un paiement securise si disponible.",
+      "Pay securely online. Card or mobile money confirmation is automatic.",
+      "Payez en ligne en securite. La confirmation carte ou mobile money est automatique.",
     ),
     icon: "stripe",
   },
@@ -104,9 +104,6 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
   const [checkoutStep, setCheckoutStep] = useState<1 | 2>(1);
   const [serverError, setServerError] = useState<string | null>(null);
   const [createdOrder, setCreatedOrder] = useState<ApiOrderResponse["data"] | null>(null);
-  const [paymentReference, setPaymentReference] = useState("");
-  const [referenceMessage, setReferenceMessage] = useState<string | null>(null);
-  const [isSubmittingReference, setIsSubmittingReference] = useState(false);
   const defaultMethod = paymentMethods[0]?.method ?? "whatsapp";
   const form = useForm<OrderFormValues>({
     defaultValues: {
@@ -132,7 +129,6 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
     () => getManualMethod(content, paymentMethod),
     [content, paymentMethod],
   );
-  const isManualPayment = Boolean(selectedOption?.requiresTransactionReference);
   const displayedPrix = fondjoProductPricing.preorderDisplay;
   const o = getDictionary(locale).orderFlow;
 
@@ -162,55 +158,6 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
     }
 
     setCreatedOrder(payload.data);
-  }
-
-  async function submitReference() {
-    if (!createdOrder || paymentReference.trim().length < 4) {
-      setServerError(o.errorValidReference);
-      return;
-    }
-
-    setServerError(null);
-    setReferenceMessage(null);
-    setIsSubmittingReference(true);
-
-    const token = new URL(createdOrder.confirmationUrl).searchParams.get("token");
-
-    if (!token) {
-      setServerError(o.errorInvalidLink);
-      setIsSubmittingReference(false);
-      return;
-    }
-
-    const response = await fetch(`/api/elixir/orders/${token}/payment-reference`, {
-      body: JSON.stringify({ transaction_reference: paymentReference.trim() }),
-      headers: { "Content-Type": "application/json" },
-      method: "PATCH",
-    });
-    const payload = (await response.json()) as {
-      data?: { order: { status: string } };
-      error?: { message: string };
-    };
-
-    setIsSubmittingReference(false);
-
-    if (!response.ok || !payload.data) {
-      setServerError(payload.error?.message ?? o.errorSaveReference);
-      return;
-    }
-
-    setCreatedOrder((current) =>
-      current
-        ? {
-            ...current,
-            order: {
-              ...current.order,
-              status: payload.data?.order.status ?? current.order.status,
-            },
-          }
-        : current,
-    );
-    setReferenceMessage(o.referenceReceived);
   }
 
   return (
@@ -364,7 +311,8 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
                   );
                 })}
               </div>
-              {isManualPayment ? (
+              {selectedOption?.method === "mtn_momo" ||
+              selectedOption?.method === "orange_money" ? (
                 <p className="rounded-md bg-[#E4D2B4] p-3 text-xs leading-5 text-[#0B0B0B]/70">
                   {o.manualPayTip}
                 </p>
@@ -400,7 +348,7 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
         )}
       </form>
 
-      {selectedManualMethod ? (
+      {selectedOption?.kind === "manual_reference" && selectedManualMethod ? (
         <div className="rounded-md border border-[#7b622d]/18 bg-[#fff8e4] p-5">
           <p className="text-sm font-semibold text-[#1C1C1C]">Mobile Money</p>
           <p className="mt-3 text-sm leading-6 text-[#1C1C1C]/80">{o.mobileMoneyNumber}</p>
@@ -424,34 +372,7 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
               <p className="font-semibold">
                 {o.orderCreated} {createdOrder.order.order_number}
               </p>
-              <p className="mt-2 text-sm leading-6">
-                {createdOrder.order.status === "payment_submitted"
-                  ? o.orderReferenceSubmitted
-                  : o.orderPendingPayment}
-              </p>
-              {isManualPayment && createdOrder.order.status !== "payment_submitted" ? (
-                <div className="mt-4 grid gap-3 rounded-md border border-success/30 bg-background/10 p-4">
-                  <Field className="text-success" label={o.transactionReference} required>
-                    <Input
-                      className="border-success/30 bg-background/20 text-success"
-                      value={paymentReference}
-                      onChange={(event) => setPaymentReference(event.target.value)}
-                    />
-                  </Field>
-                  <Button
-                    className="bg-success text-white hover:bg-success/90"
-                    isLoading={isSubmittingReference}
-                    onClick={() => void submitReference()}
-                  >
-                    {o.submitReference}
-                  </Button>
-                </div>
-              ) : null}
-              {referenceMessage ? (
-                <p className="mt-3 rounded-md border border-success/30 bg-background/10 p-3 text-sm">
-                  {referenceMessage}
-                </p>
-              ) : null}
+              <p className="mt-2 text-sm leading-6">{o.orderPendingPayment}</p>
               <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <a
                   className="inline-flex h-10 items-center justify-center rounded-md bg-success px-4 text-sm font-semibold text-white"

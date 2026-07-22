@@ -1,17 +1,21 @@
-import { env } from "@/config/env";
-
 import type { PaymentProviderDescriptor } from "../types";
 
-/** Manual MTN Mobile Money: customer pays then submits a transaction reference. */
+/**
+ * MTN Mobile Money — reserved for a future hosted-checkout provider.
+ * Shown as “Soon” on checkout until `isConfigured` returns true and a
+ * `redirectProcessor: "mobile_money"` adapter is wired in the order service.
+ */
 export const mtnMomoProvider: PaymentProviderDescriptor = {
   method: "mtn_momo",
-  kind: "manual_reference",
+  kind: "redirect",
   defaultLabel: "MTN MoMo",
   recordsPaymentOnCreate: true,
-  requiresTransactionReference: true,
-  initialPaymentStatus: "processing",
+  requiresTransactionReference: false,
+  initialPaymentStatus: "requires_confirmation",
   resolveSettlementCurrency: () => "XAF",
-  buildProviderPaymentId: ({ transactionReference }) => `mtn_momo:${transactionReference ?? ""}`,
-  isConfigured: () => Boolean(env.MTN_MOMO_NUMBER),
+  buildProviderPaymentId: ({ orderId }) => `momo_mtn:${orderId}`,
+  isConfigured: () => false,
   cmsLabelMatch: "mtn",
+  redirectProcessor: "mobile_money",
+  momoNetwork: "MTN",
 };

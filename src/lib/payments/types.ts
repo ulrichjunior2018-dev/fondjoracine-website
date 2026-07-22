@@ -15,8 +15,8 @@ export type PaymentMethod = OneProductPaymentMethod;
 
 export type PaymentKind =
   | "external_handoff" // customer completes payment off-platform (e.g. WhatsApp)
-  | "manual_reference" // customer pays then submits a transaction reference (MoMo)
-  | "redirect"; // customer is redirected to a hosted checkout (Stripe)
+  | "manual_reference" // legacy; MoMo now uses redirect + webhook confirmation
+  | "redirect"; // customer is redirected to hosted checkout (card / MoMo)
 
 /**
  * Status a `payments` row is created with. Derived from the DB `payment_status`
@@ -41,6 +41,9 @@ export type BuildProviderPaymentIdArgs = {
   transactionReference?: string | null | undefined;
 };
 
+/** Who hosts the redirect checkout when `kind === "redirect"`. */
+export type RedirectProcessor = "stripe" | "mobile_money";
+
 export interface PaymentProviderDescriptor {
   method: PaymentMethod;
   kind: PaymentKind;
@@ -63,6 +66,10 @@ export interface PaymentProviderDescriptor {
    * (e.g. `"mtn"`). Used only for `manual_reference` providers.
    */
   cmsLabelMatch?: string;
+  /** Set when `kind === "redirect"` so order code never hardcodes provider names. */
+  redirectProcessor?: RedirectProcessor;
+  /** Mobile-money network when `redirectProcessor === "mobile_money"`. */
+  momoNetwork?: "MTN" | "ORANGE";
 }
 
 /** Lightweight, client-safe view of an available payment method. */
@@ -71,4 +78,6 @@ export type PaymentMethodOption = {
   kind: PaymentKind;
   label: string;
   requiresTransactionReference: boolean;
+  /** False when env keys are missing — UI can still preview the tab. */
+  configured?: boolean;
 };

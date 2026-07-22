@@ -1,13 +1,20 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { buildWaLink } from "@/lib/config";
 import { useI18n } from "@/lib/i18n-context";
 
 export function FloatingWhatsApp() {
   const { locale } = useI18n();
+  const pathname = usePathname();
   const href = buildWaLink("support", "", locale);
+
+  // Checkout has its own sticky pay + WhatsApp fallback — floating button covers mobile UI.
+  if (pathname?.includes("/checkout")) {
+    return null;
+  }
 
   return (
     <a
