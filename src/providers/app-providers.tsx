@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 
+import { NavigationProgress } from "@/components/navigation-progress";
 import { ToastProvider } from "@/components/ui/toast";
 import type { Locale } from "@/content/copy";
 import { I18nProvider } from "@/lib/i18n-context";
@@ -33,6 +34,7 @@ export function AppProviders({ children, initialLocale = "en" }: AppProvidersPro
     >
       <I18nProvider initialLocale={initialLocale}>
         <SmoothScrollProvider>
+          <NavigationProgress />
           <FloatingWhatsApp />
           <ToastProvider>{children}</ToastProvider>
         </SmoothScrollProvider>

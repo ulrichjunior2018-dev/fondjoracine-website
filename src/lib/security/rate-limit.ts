@@ -17,7 +17,7 @@ export function assertRateLimit(key: string, options: { limit: number; windowMs:
   }
 
   if (existing.count >= options.limit) {
-    throw new AppError("RATE_LIMITED", "Too many consultation attempts. Please try again soon.");
+    throw new AppError("RATE_LIMITED", "Too many requests. Please try again soon.");
   }
 
   existing.count += 1;

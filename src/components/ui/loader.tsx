@@ -19,9 +19,9 @@ function getLoaderSizeClassName(size: LoaderSize) {
   }
 }
 
-export function Loader({ className, label = "Chargement", size = "md" }: LoaderProps) {
+export function Loader({ className, label = "Loading", size = "md" }: LoaderProps) {
   return (
-    <span className={cn("inline-flex items-center gap-3 text-sm text-foreground/68", className)}>
+    <span className={cn("inline-flex items-center gap-3 text-sm text-current", className)}>
       <span
         aria-hidden="true"
         className={cn(
