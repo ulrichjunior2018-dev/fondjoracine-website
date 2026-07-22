@@ -84,7 +84,7 @@ export const fr = {
   originEyebrow: "À propos de Maison Fondjo",
   originTitle: "Qui nous sommes. Pourquoi nous existons.",
   packingText:
-    "Coffret numerote, Lot Fondateur 2026, 200 exemplaires : le soin se poursuit apres le depart du produit.",
+    "Coffret numerote, Lot Fondateur 2026, 150 exemplaires : le soin se poursuit apres le depart du produit.",
   packingTitle: "Préparé à Buea",
   productEyebrow: "Signature Disponible maintenant",
   productPrice: "15 000 F",
@@ -184,7 +184,7 @@ export const fr = {
         "Mode d'emploi",
         "Quelques gouttes, de la racine aux pointes, 2 à 4 fois par semaine. Un geste mesuré, jamais lourd.",
         "Voir le mode d'emploi",
-        "/seve-racine",
+        "/how-to-use",
       ],
       [
         "Notre histoire",

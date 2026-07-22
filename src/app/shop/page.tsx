@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
 import { AdvisorShell } from "@/components/AdvisorShell";
-import { SeveRacineRouteSection } from "@/components/AdvisorRouteSections";
-import { ShopComingSoonTeaser } from "@/components/ShopComingSoonTeaser";
+import { ShopRouteSection } from "@/components/ShopRouteSection";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
 import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
 
@@ -17,14 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Shop lands on the product page first. One order CTA opens WhatsApp from there.
- * The coming-soon teaser below keeps the collection visible while new SKUs ship.
+ * Catalog from `src/content/products.ts` — one viewport: intro + available products + soon.
  */
 export default function ShopPage() {
   return (
     <AdvisorShell>
-      <SeveRacineRouteSection />
-      <ShopComingSoonTeaser />
+      <ShopRouteSection />
     </AdvisorShell>
   );
 }

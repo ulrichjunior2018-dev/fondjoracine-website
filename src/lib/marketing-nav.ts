@@ -45,7 +45,7 @@ export function getMarketingShopLabel(locale: MarketingLocale): string {
 }
 
 /** Shop lives only as the header CTA button — never as a text nav link. */
-const SHOP_NAV_HREFS = new Set(["/shop", "/seve-racine"]);
+const SHOP_NAV_HREFS = new Set(["/shop", "/seve-racine", "/products"]);
 
 /** Mobile under-header strip (Home included; Shop excluded — use the Shop button). */
 export const MARKETING_MOBILE_NAV_HREFS = new Set([
@@ -65,7 +65,7 @@ export function isMarketingNavActive(pathname: string, href: string) {
 }
 
 function isShopNavHref(href: string) {
-  return SHOP_NAV_HREFS.has(href);
+  return SHOP_NAV_HREFS.has(href) || href.startsWith("/products/");
 }
 
 /** Desktop center links: full marketing nav without Shop (Shop is the gold button). */

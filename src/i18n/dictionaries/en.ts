@@ -75,7 +75,7 @@ export const en = {
   originEyebrow: "About Maison Fondjo",
   originTitle: "Who we are. Why we exist.",
   packingText:
-    "Numbered box, Founder Batch 2026, 200 pieces: care continues after the product leaves.",
+    "Numbered box, Founder Batch 2026, 150 pieces: care continues after the product leaves.",
   packingTitle: "Prepared in Buea",
   productEyebrow: "Flagship Available now",
   productPrice: "15 000 F",
@@ -175,7 +175,7 @@ export const en = {
         "How to use it",
         "A few drops, root to ends, 2 to 4 times a week. A measured gesture, never heavy.",
         "See how to use",
-        "/seve-racine",
+        "/how-to-use",
       ],
       [
         "Our story",

@@ -49,17 +49,35 @@ const nextConfig: NextConfig = {
       { destination: "/shop", permanent: true, source: "/boutique" },
       { destination: "/shop", permanent: true, source: "/fr/shop" },
       { destination: "/learn", permanent: true, source: "/fr/learn" },
-      { destination: "/seve-racine", permanent: true, source: "/cart" },
-      { destination: "/seve-racine", permanent: true, source: "/collections" },
-      { destination: "/seve-racine", permanent: true, source: "/collections/:slug*" },
-      { destination: "/seve-racine", permanent: true, source: "/pre-order" },
-      { destination: "/seve-racine", permanent: true, source: "/product" },
-      { destination: "/seve-racine", permanent: true, source: "/products/:slug*" },
-      { destination: "/seve-racine", permanent: true, source: "/search" },
-      { destination: "/seve-racine", permanent: true, source: "/wishlist" },
+      { destination: "/checkout", permanent: true, source: "/cart" },
+      // Legacy product URLs → canonical catalog routes
+      { destination: "/products/seve-racine", permanent: true, source: "/seve-racine" },
+      { destination: "/shop", permanent: true, source: "/collections" },
+      { destination: "/shop", permanent: true, source: "/collections/:slug*" },
+      { destination: "/shop", permanent: true, source: "/pre-order" },
+      { destination: "/products/seve-racine", permanent: true, source: "/product" },
+      { destination: "/shop", permanent: true, source: "/search" },
+      { destination: "/shop", permanent: true, source: "/wishlist" },
     ];
   },
   async headers() {
+    // Pragmatic CSP baseline (PRD-production-security). Tighten in Phase 1
+    // after verifying Stripe Checkout, Supabase Auth, and Cloudinary images.
+    const contentSecurityPolicy = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self' https://checkout.stripe.com",
+      "img-src 'self' data: blob: https://res.cloudinary.com https://*.stripe.com",
+      "font-src 'self' data:",
+      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
     return [
       {
         source: "/:path*",
@@ -71,7 +89,11 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
-          { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
         ],
       },
     ];

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BadgeCheck, CreditCard, PackageCheck, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -114,71 +114,20 @@ export function SeveRacineRouteSection() {
         <p className="mt-6 text-lg leading-8 text-[#F5EFE3]/68">{seveRacine.intro}</p>
         <p className="mt-7 font-mono text-2xl text-[#B8935A]">{advisorPricing.productXaf}</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a
+          <Link
             className="inline-flex min-h-13 items-center justify-center rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+            href={"/checkout" as never}
+          >
+            {seveRacine.cta}
+          </Link>
+          <a
+            className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/35 px-7 text-sm font-semibold text-[#F5EFE3] transition hover:border-[#B8935A]"
             href={whatsappUrl}
             rel="noreferrer"
             target="_blank"
           >
-            {seveRacine.cta}
+            WhatsApp
           </a>
-        </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {seveRacine.steps.map((step, index) => (
-            <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={step}>
-              <p className="font-mono text-xs text-[#B8935A]">0{index + 1}</p>
-              <p className="mt-3 text-sm leading-6 text-[#F5EFE3]/68">{step}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {seveRacine.shippingCards.map((item, index) => (
-            <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={item.label}>
-              <div className="flex items-center gap-2 text-[#B8935A]">
-                {index === 0 ? (
-                  <Truck className="size-4" aria-hidden="true" />
-                ) : index === 1 ? (
-                  <ShieldCheck className="size-4" aria-hidden="true" />
-                ) : (
-                  <PackageCheck className="size-4" aria-hidden="true" />
-                )}
-                <p className="text-xs font-semibold uppercase tracking-[0.18em]">{item.label}</p>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-[#F5EFE3]/68">{item.text}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {seveRacine.payment.map((label, index) => (
-            <div
-              className="flex min-h-12 items-center gap-3 border border-[#B8935A]/14 bg-[#B8935A]/[0.055] px-4 text-sm font-semibold text-[#F5EFE3]"
-              key={label}
-            >
-              <span className="text-[#B8935A]">
-                {index === 0 ? (
-                  <BadgeCheck className="size-4" aria-hidden="true" />
-                ) : (
-                  <CreditCard className="size-4" aria-hidden="true" />
-                )}
-              </span>
-              {label}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 border-t border-[#B8935A]/14 pt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]">
-            {seveRacine.howToUse.title}
-          </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {seveRacine.howToUse.steps.map((step) => (
-              <div className="border border-[#B8935A]/14 bg-white/[0.025] p-4" key={step.num}>
-                <p className="font-mono text-xs text-[#B8935A]">{step.num}</p>
-                <p className="mt-2 text-sm font-semibold text-[#F5EFE3]">{step.title}</p>
-                <p className="mt-2 text-sm leading-6 text-[#F5EFE3]/68">{step.text}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>
