@@ -20,20 +20,35 @@ function isLocalDevHost(hostname: string) {
   );
 }
 
+/** Accept both apex and www for a configured site URL. */
+function addOriginAndWwwVariant(origins: Set<string>, value: string | undefined) {
+  if (!value) return;
+  try {
+    const url = new URL(value.includes("://") ? value : `https://${value}`);
+    origins.add(url.origin);
+    const { hostname } = url;
+    if (hostname.startsWith("www.")) {
+      origins.add(`${url.protocol}//${hostname.slice(4)}`);
+    } else if (hostname.includes(".")) {
+      origins.add(`${url.protocol}//www.${hostname}`);
+    }
+  } catch {
+    // ignore invalid values
+  }
+}
+
 function allowedOrigins(): Set<string> {
   const origins = new Set<string>();
-  try {
-    origins.add(new URL(env.NEXT_PUBLIC_SITE_URL).origin);
-  } catch {
-    // ignore invalid site URL
-  }
 
-  if (process.env.VERCEL_URL) {
-    origins.add(`https://${process.env.VERCEL_URL}`);
-  }
+  addOriginAndWwwVariant(origins, env.NEXT_PUBLIC_SITE_URL);
+  addOriginAndWwwVariant(origins, process.env.VERCEL_URL);
+  addOriginAndWwwVariant(origins, process.env.VERCEL_PROJECT_PRODUCTION_URL);
+  addOriginAndWwwVariant(origins, process.env.VERCEL_BRANCH_URL);
 
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    origins.add(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+  // Extra production hosts, comma-separated (e.g. legacy + new domain).
+  const extra = process.env.ALLOWED_ORIGINS ?? "";
+  for (const part of extra.split(",")) {
+    addOriginAndWwwVariant(origins, part.trim());
   }
 
   if (process.env.NODE_ENV !== "production") {
