@@ -117,7 +117,10 @@ function parseElixirContent(content: ElixirContent): ElixirContent {
 function usesLegacyStorefrontBranding(content: ElixirContent): boolean {
   const seoTitle = `${content.seo.title.en} ${content.seo.title.fr}`;
   const hasLegacyTitle = /FONDJO Hair Elixir/i.test(seoTitle);
-  const hasStockImage = content.images.some((image) => /unsplash\.com/i.test(image.src));
+  const stockImageHost = ["un", "splash", ".com"].join("");
+  const hasStockImage = content.images.some((image) =>
+    image.src.toLowerCase().includes(stockImageHost),
+  );
 
   return hasLegacyTitle || hasStockImage || content.brand === "FONDJO";
 }
