@@ -25,7 +25,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Container } from "@/components/ui/container";
-import { formulaIngredients, getFormulaIngredientCopy } from "@/content/formula";
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getWhatsAppUrl } from "@/features/elixir/lib/cms";
@@ -103,37 +102,6 @@ function ImagePanel({
         src={src}
       />
     </div>
-  );
-}
-
-function EngravedBotanicalIllustration({ index }: { index: number }) {
-  const side = index % 2 === 0 ? 1 : -1;
-
-  return (
-    <svg
-      aria-hidden="true"
-      className="mx-auto h-32 w-36 text-[#7b622d]"
-      fill="none"
-      viewBox="0 0 160 132"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d={`M80 118 C ${76 + side * 7} 92, ${86 - side * 18} 52, 80 16`}
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="1.1"
-      />
-      {[0, 1, 2, 3, 4].map((leaf) => (
-        <path
-          d={`M80 ${102 - leaf * 18} C ${112 + side * leaf * 1.5} ${92 - leaf * 17}, ${112 + side * 4} ${70 - leaf * 13}, 83 ${84 - leaf * 15} C ${98 + side * 4} ${90 - leaf * 17}, ${98 + side * 5} ${104 - leaf * 14}, 80 ${102 - leaf * 18}`}
-          key={leaf}
-          stroke="currentColor"
-          strokeOpacity={0.82 - leaf * 0.08}
-          strokeWidth="0.9"
-        />
-      ))}
-      <circle cx="80" cy="16" r="2.4" fill="currentColor" opacity="0.5" />
-    </svg>
   );
 }
 
@@ -279,11 +247,8 @@ export function FounderStorySection({ content, locale }: PremiumStorefrontPagePr
 export function IngredientCarousel({
   content,
   copy,
-  locale,
-}: PremiumStorefrontPageProps & { copy: Copy }) {
+}: Omit<PremiumStorefrontPageProps, "locale"> & { copy: Copy }) {
   void content;
-  const ingredients = formulaIngredients;
-  const formulaNoteText = copy.formulaNote;
 
   return (
     <section
@@ -301,43 +266,6 @@ export function IngredientCarousel({
           </h2>
           <p className="mt-5 max-w-2xl text-sm leading-8 text-[#F5EFE3]/65">{copy.formulaBody}</p>
         </FadeUp>
-
-        <div
-          className="mt-12 flex gap-4 overflow-x-auto pb-5 [scrollbar-color:#B8935A_transparent] [scrollbar-width:thin]"
-          role="list"
-        >
-          {ingredients.map((ingredient, index) => {
-            const ingredientCopy = getFormulaIngredientCopy(ingredient, locale);
-
-            return (
-              <MotionCard
-                className="group relative min-h-[23rem] w-[18rem] shrink-0 overflow-hidden rounded-sm border border-[#B8935A]/46 bg-[#F5EFE3] p-6 text-[#0B0B0B] shadow-[0_24px_80px_rgb(0_0_0/.2)] sm:w-[21rem]"
-                key={`${ingredientCopy.name}-${index}`}
-                role="listitem"
-                transition={{ duration: 0.55, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div aria-hidden="true" className="absolute inset-3 border border-[#B8935A]/30" />
-                <div className="relative">
-                  <p className="text-center text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[#5f4a22]">
-                    Maison Fondjo Herbier
-                  </p>
-                  <EngravedBotanicalIllustration index={index} />
-                  <h3 className="mt-5 text-center font-serif text-4xl font-light leading-none">
-                    {ingredientCopy.name}
-                  </h3>
-                  <p className="mt-2 text-center font-serif text-lg italic text-[#7b622d]">
-                    {ingredient.latin}
-                  </p>
-                  <MotionDiamond className="mt-5 text-center" />
-                  <p className="mt-6 text-center text-sm leading-7 text-[#0B0B0B]/70">
-                    {ingredientCopy.chosenFor}
-                  </p>
-                </div>
-              </MotionCard>
-            );
-          })}
-        </div>
-        <p className="mt-8 max-w-3xl text-xs leading-6 text-[#F5EFE3]/62">{formulaNoteText}</p>
       </Container>
     </section>
   );
@@ -889,7 +817,7 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
       <ProductShowcase copy={copy} />
       <WhyItWorksSection copy={copy} />
       <HairConcernsSection copy={copy} />
-      <IngredientCarousel content={content} copy={copy} locale={contentLocale} />
+      <IngredientCarousel content={content} copy={copy} />
       <RitualSection copy={copy} />
       <TestimonialsSection copy={copy} />
       <DiagnosticInviteSection copy={copy} />

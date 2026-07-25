@@ -285,15 +285,15 @@ export const defaultElixirContent: ElixirContent = {
     items: [
       {
         answer: {
-          en: "Hair responds to consistent care over time rather than overnight. With regular use, most people begin noticing a difference in scalp comfort and hair softness within a few weeks. For visible changes in strength and fullness, we recommend committing to at least one full bottle of consistent use.",
-          fr: "Les cheveux répondent à un soin régulier dans le temps, plutôt qu'à un effet immédiat. Avec une utilisation régulière, la plupart des personnes commencent à remarquer une différence de confort du cuir chevelu et de douceur des cheveux en quelques semaines. Pour des changements visibles de solidité et de densité, nous recommandons de s'engager sur au moins un flacon complet d'utilisation régulière.",
+          en: "Hair responds to consistent use over time. Most people notice a difference in scalp comfort and hair softness within a few weeks of regular use.",
+          fr: "Les cheveux répondent à une utilisation régulière dans le temps. La plupart des personnes remarquent une différence de confort du cuir chevelu et de douceur des cheveux en quelques semaines d'utilisation régulière.",
         },
         question: localized("How fast will I see results?", "Quand verrai-je des résultats ?"),
       },
       {
         answer: {
-          en: "Yes. Sève Racine is applied directly to the scalp, so it works well alongside braids, wigs, and other protective styles. Apply between sections or along the scalp part as needed.",
-          fr: "Oui. Sève Racine s'applique directement sur le cuir chevelu, donc elle convient bien avec les tresses, perruques et autres coiffures protectrices. Appliquez entre les sections ou le long de la raie selon les besoins.",
+          en: "Yes. Sève Racine is applied directly to the scalp, so it works well alongside braids, wigs, and other protective styles.",
+          fr: "Oui. Sève Racine s'applique directement sur le cuir chevelu, donc elle convient bien avec les tresses, perruques et autres coiffures protectrices.",
         },
         question: {
           en: "Can I use it with braids or wigs?",
@@ -302,15 +302,15 @@ export const defaultElixirContent: ElixirContent = {
       },
       {
         answer: {
-          en: "We recommend applying a moderate amount to the scalp 2 to 4 times per week, massaging gently for 3 to 5 minutes. Leave it on for several hours or overnight for extended conditioning.",
-          fr: "Nous recommandons d'appliquer une quantité modérée sur le cuir chevelu 2 à 4 fois par semaine, en massant doucement pendant 3 à 5 minutes. Laissez poser plusieurs heures ou toute la nuit pour un conditionnement prolongé.",
+          en: "2 to 4 times per week, massaging gently for 3 to 5 minutes, left on for several hours or overnight.",
+          fr: "2 à 4 fois par semaine, en massant doucement pendant 3 à 5 minutes, laissé en place plusieurs heures ou toute la nuit.",
         },
         question: localized("How often should I apply it?", "À quelle fréquence l'appliquer ?"),
       },
       {
         answer: {
-          en: "Yes. The formula is designed to support scalp health and hair fibre condition across hair types and textures.",
-          fr: "Oui. La formule est conçue pour soutenir la santé du cuir chevelu et l'état de la fibre capillaire, tous types et textures confondus.",
+          en: "Yes, designed to support scalp health and hair fibre condition across hair types and textures.",
+          fr: "Oui, conçue pour soutenir la santé du cuir chevelu et l'état de la fibre capillaire, tous types et textures confondus.",
         },
         question: localized(
           "Is Sève Racine suitable for all hair types?",
@@ -319,8 +319,8 @@ export const defaultElixirContent: ElixirContent = {
       },
       {
         answer: {
-          en: "We accept MTN Mobile Money and Orange Money. Payment is required before delivery. Orders can also be placed through WhatsApp.",
-          fr: "Nous acceptons MTN Mobile Money et Orange Money. Le paiement est requis avant la livraison. Les commandes peuvent aussi se passer via WhatsApp.",
+          en: "Orders are placed directly through WhatsApp. We accept MTN Mobile Money and Orange Money, payment required before delivery.",
+          fr: "Les commandes se passent directement via WhatsApp. Nous acceptons MTN Mobile Money et Orange Money, paiement requis avant livraison.",
         },
         question: localized("How do I order and pay?", "Comment commander et payer ?"),
       },
@@ -349,8 +349,8 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: localized("Founder story", "Histoire fondatrice"),
     image: {
       alt: {
-        en: "Mount Cameroon from Buea. The landscape where Maison Fondjo botanicals are sourced",
-        fr: "Le Mont Cameroun depuis Buea. Paysage d origine des botaniques Maison Fondjo",
+        en: "A mother and child — the family care that guides Maison Fondjo",
+        fr: "Une mère et son enfant — l'attention familiale qui guide Maison Fondjo",
       },
       height: 1448,
       src: "/images/hero.png",

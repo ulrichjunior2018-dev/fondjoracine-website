@@ -135,9 +135,6 @@ export const formulaIngredients: FormulaIngredient[] = [
   },
 ];
 
-export const formulaNote =
-  "La liste n'est pas présentée comme un ordre de concentration ; l'ordre exact de l'étiquette attend confirmation du formulateur.";
-
 export function getFormulaIngredientCopy(ingredient: FormulaIngredient, locale: Locale) {
   return {
     chosenFor: pickLocale(locale, {

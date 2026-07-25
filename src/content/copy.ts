@@ -890,8 +890,6 @@ const advisorEn = {
 
 const homeFr = {
   ...storefrontFr,
-  formulaNote:
-    "La liste n'est pas présentée comme un ordre de concentration ; l'ordre exact de l'étiquette attend confirmation du formulateur.",
   hero: {
     backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
     bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
@@ -960,8 +958,6 @@ const homeFr = {
 
 const homeEn = {
   ...storefrontEn,
-  formulaNote:
-    "This list is not presented as concentration order; the exact label order awaits formulator confirmation.",
   hero: {
     backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
     bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
