@@ -77,6 +77,9 @@ export const surfacesEn = {
     previewNotice:
       "Online payment will open soon. For now, place your order on WhatsApp and our team will guide you.",
     methodNotReady: "This payment option is coming soon. Please pay by card.",
+    subscribeToggleLabel: "Subscribe & save — ships monthly",
+    subscribeToggleHint: "Card billed monthly by Stripe. Manage or cancel anytime from My Account.",
+    subscribeSignInRequired: "Sign in to your account to subscribe.",
   },
   errors: {
     title: "Something went wrong",
@@ -456,6 +459,10 @@ export const surfacesFr = {
     previewNotice:
       "Le paiement en ligne ouvrira bientôt. Pour l'instant, commandez sur WhatsApp. Notre équipe vous guide.",
     methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez payer par carte.",
+    subscribeToggleLabel: "Abonnez-vous et économisez — expédié chaque mois",
+    subscribeToggleHint:
+      "Carte débitée chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
+    subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
   },
   errors: {
     title: "Un incident est survenu",

@@ -36,6 +36,10 @@ type CheckoutShellProps = {
     name: string;
     phone: string;
   } | null;
+  /** Subscriptions require an account so they can be managed/cancelled later. */
+  isSignedIn: boolean;
+  /** True once STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID is set — hides the toggle otherwise. */
+  subscriptionAvailable: boolean;
 };
 
 type OrderFormValues = z.input<typeof createOneProductOrderSchema>;
@@ -115,6 +119,8 @@ export function CheckoutShell({
   productImageSrc,
   productImageAlt,
   accountPrefill = null,
+  isSignedIn,
+  subscriptionAvailable,
 }: CheckoutShellProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -150,6 +156,7 @@ export function CheckoutShell({
       payment_method: defaultMethod,
       phone: accountPrefill?.phone ?? "",
       quantity: 1,
+      subscribe: false,
       transaction_reference: "",
     },
     resolver: zodResolver(createOneProductOrderSchema),
@@ -157,6 +164,8 @@ export function CheckoutShell({
 
   const quantity = useWatch({ control: form.control, name: "quantity" }) || 1;
   const paymentMethod = useWatch({ control: form.control, name: "payment_method" });
+  const subscribe = useWatch({ control: form.control, name: "subscribe" });
+  const canOfferSubscription = subscriptionAvailable && paymentMethod === "stripe";
   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
   const subtotal = productPriceXaf * quantity;
   const whatsappUrl = buildWaLink("order", "", locale);
@@ -345,12 +354,15 @@ export function CheckoutShell({
                         soon && "opacity-50",
                       )}
                       key={method.method}
-                      onClick={() =>
+                      onClick={() => {
                         form.setValue("payment_method", method.method, {
                           shouldDirty: true,
                           shouldValidate: true,
-                        })
-                      }
+                        });
+                        if (method.method !== "stripe") {
+                          form.setValue("subscribe", false, { shouldValidate: true });
+                        }
+                      }}
                       role="tab"
                       type="button"
                     >
@@ -379,6 +391,28 @@ export function CheckoutShell({
 
               {!anyConfigured ? (
                 <p className="mt-2 text-xs leading-5 text-[#0B0B0B]/55">{copy.previewNotice}</p>
+              ) : null}
+
+              {canOfferSubscription ? (
+                <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
+                  <input
+                    checked={subscribe}
+                    className="mt-0.5 size-4 accent-[#B8935A]"
+                    disabled={!isSignedIn}
+                    onChange={(event) =>
+                      form.setValue("subscribe", event.target.checked, { shouldValidate: true })
+                    }
+                    type="checkbox"
+                  />
+                  <span>
+                    <span className="block text-sm font-semibold text-[#0B0B0B]">
+                      {copy.subscribeToggleLabel}
+                    </span>
+                    <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
+                      {isSignedIn ? copy.subscribeToggleHint : copy.subscribeSignInRequired}
+                    </span>
+                  </span>
+                </label>
               ) : null}
             </div>
 
