@@ -11,6 +11,8 @@ const envSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional().or(z.literal("")),
   STRIPE_SECRET_KEY: z.string().optional().or(z.literal("")),
   STRIPE_HAIR_ELIXIR_PRICE_ID: z.string().optional().or(z.literal("")),
+  /** Recurring monthly "subscribe & save" Price ID (mode: "subscription"). Optional — subscribe option is hidden until set. */
+  STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID: z.string().optional().or(z.literal("")),
   STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),

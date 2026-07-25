@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { config } from "@/lib/config";
 import { getServerLocale } from "@/lib/locale-server";
 import { listCheckoutPaymentMethods } from "@/lib/payments/registry";
+import { isElixirSubscriptionConfigured } from "@/lib/payments/stripe";
 import { buildShareMetadata } from "@/lib/seo/share-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCheckoutAccountPrefill } from "@/services/customer/customer-service";
@@ -39,6 +40,7 @@ export default async function CheckoutPage() {
 
   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
   const user = await getCurrentUser();
+  const subscriptionAvailable = isElixirSubscriptionConfigured();
   if (user) {
     try {
       const supabase = await createSupabaseServerClient();
@@ -59,12 +61,14 @@ export default async function CheckoutPage() {
     >
       <CheckoutShell
         accountPrefill={accountPrefill}
+        isSignedIn={Boolean(user)}
         locale={locale}
         paymentMethods={paymentMethods}
         productImageAlt={t(image.alt, locale)}
         productImageSrc={image.src.startsWith("/images/") ? image.src : "/images/studio.png"}
         productName={t(content.product.name, locale)}
         productPriceXaf={priceXaf}
+        subscriptionAvailable={subscriptionAvailable}
       />
     </Suspense>
   );

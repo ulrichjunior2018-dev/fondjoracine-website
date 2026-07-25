@@ -11,15 +11,18 @@ import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
 import { buildWaLink } from "@/lib/config";
+import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
 import { getPaymentProvider } from "@/lib/payments/registry";
-import { getStripeClient } from "@/lib/payments/stripe";
+import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
 import { writeAuditLog } from "@/lib/security/audit-log";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+type SubscriptionStatus = Enums<"subscription_status">;
 
 type CreatedOrderRow = {
   confirmation_token: string;
@@ -180,43 +183,94 @@ async function createStripeCheckoutSession(
 
   const inlinePrice = resolveStripeInlinePrice(content);
   const priceId = env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
+  const subscriptionPriceId = env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
+  const isSubscription = input.subscribe === true;
 
-  const sessionParams: Stripe.Checkout.SessionCreateParams = {
-    allow_promotion_codes: true,
-    billing_address_collection: "auto",
-    cancel_url: cancelUrl,
-    line_items: [
-      priceId
-        ? {
-            price: priceId,
-            quantity: input.quantity,
-          }
-        : {
-            price_data: {
-              currency: inlinePrice.currency,
-              product_data: productData,
-              unit_amount: inlinePrice.unit_amount,
-            },
-            quantity: input.quantity,
-          },
-    ],
-    locale: input.locale.startsWith("fr") ? "fr" : "en",
-    metadata: {
-      order_id: order.id,
-      order_number: order.order_number,
-      product: content.id,
-      storefront_currency: content.currency,
-      storefront_total_xaf: String(content.priceCents * input.quantity),
-    },
-    mode: "payment",
-    phone_number_collection: {
-      enabled: true,
-    },
-    shipping_address_collection: {
-      allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
-    },
-    success_url: successUrl,
+  if (priceId) {
+    assertStripePriceId(priceId, "STRIPE_HAIR_ELIXIR_PRICE_ID");
+  }
+
+  const sharedMetadata = {
+    order_id: order.id,
+    order_number: order.order_number,
+    product: content.id,
+    storefront_currency: content.currency,
+    storefront_total_xaf: String(content.priceCents * input.quantity),
   };
+
+  let sessionParams: Stripe.Checkout.SessionCreateParams;
+
+  if (isSubscription) {
+    // Subscriptions require a real Stripe Dashboard Price (recurring price_data
+    // is not offered here — keeps this path simple and matches the one price
+    // Maison Fondjo actually sells today).
+    if (!subscriptionPriceId) {
+      throw new AppError(
+        "BAD_REQUEST",
+        "Subscriptions are not configured yet. Set STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID in Vercel and redeploy.",
+      );
+    }
+
+    assertStripePriceId(subscriptionPriceId, "STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID");
+
+    sessionParams = {
+      allow_promotion_codes: true,
+      billing_address_collection: "auto",
+      cancel_url: cancelUrl,
+      line_items: [
+        {
+          price: subscriptionPriceId,
+          quantity: input.quantity,
+        },
+      ],
+      locale: input.locale.startsWith("fr") ? "fr" : "en",
+      metadata: sharedMetadata,
+      mode: "subscription",
+      // Session-level metadata does not carry onto the Subscription object —
+      // set it again here so webhook handlers can look up the order by id.
+      subscription_data: {
+        metadata: sharedMetadata,
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
+      shipping_address_collection: {
+        allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
+      },
+      success_url: successUrl,
+    };
+  } else {
+    sessionParams = {
+      allow_promotion_codes: true,
+      billing_address_collection: "auto",
+      cancel_url: cancelUrl,
+      line_items: [
+        priceId
+          ? {
+              price: priceId,
+              quantity: input.quantity,
+            }
+          : {
+              price_data: {
+                currency: inlinePrice.currency,
+                product_data: productData,
+                unit_amount: inlinePrice.unit_amount,
+              },
+              quantity: input.quantity,
+            },
+      ],
+      locale: input.locale.startsWith("fr") ? "fr" : "en",
+      metadata: sharedMetadata,
+      mode: "payment",
+      phone_number_collection: {
+        enabled: true,
+      },
+      shipping_address_collection: {
+        allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
+      },
+      success_url: successUrl,
+    };
+  }
 
   if (input.email) {
     sessionParams.customer_email = input.email;
@@ -345,6 +399,22 @@ export async function createOneProductOrder(
     );
   }
 
+  if (input.subscribe) {
+    if (provider.redirectProcessor !== "stripe") {
+      throw new AppError(
+        "BAD_REQUEST",
+        "Subscriptions are only available with card payment. Choose Card to subscribe.",
+      );
+    }
+
+    if (!customerId) {
+      throw new AppError(
+        "UNAUTHORIZED",
+        "Sign in to your Maison Fondjo account to start a subscription.",
+      );
+    }
+  }
+
   if (provider.redirectProcessor === "stripe") {
     getStripeClient();
   }
@@ -378,6 +448,7 @@ export async function createOneProductOrder(
         product_id: content.id,
         product_name: t(content.product.name, locale),
         quantity: input.quantity,
+        ...(input.subscribe ? { is_subscription: true } : {}),
         ...(customerId ? { linked_customer_id: customerId } : {}),
       },
       order_number: createOrderNumber(),
@@ -658,10 +729,11 @@ export async function fulfillStripeOrder(
 
   const { data: order, error: loadError } = await supabase
     .from("orders")
-    .select("id, order_number, status, currency, total_cents")
+    .select("id, order_number, status, currency, total_cents, customer_id")
     .eq("id", orderId)
     .maybeSingle<{
       currency: string;
+      customer_id: string | null;
       id: string;
       order_number: string;
       status: string;
@@ -727,4 +799,308 @@ export async function fulfillStripeOrder(
   });
 
   await notifyOrderConfirmed(supabase, orderId);
+
+  if (session.mode === "subscription" && typeof session.subscription === "string") {
+    await syncSubscriptionFromStripe(supabase, session.subscription, {
+      customerId: order.customer_id,
+      orderId,
+    });
+  }
+}
+
+/**
+ * Maps Stripe's subscription lifecycle onto the narrower DB enum
+ * (`active | paused | cancelled | past_due`). This checkout flow never
+ * configures a trial, so in practice we only ever persist "active" here —
+ * `incomplete`/`unpaid` fold into "past_due" (needs attention) rather than a
+ * silent default, and `customer.subscription.updated` keeps status current
+ * afterwards.
+ */
+function mapStripeSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
+  switch (status) {
+    case "active":
+    case "trialing":
+      return "active";
+    case "paused":
+      return "paused";
+    case "canceled":
+      return "cancelled";
+    case "past_due":
+    case "incomplete":
+    case "incomplete_expired":
+    case "unpaid":
+    default:
+      return "past_due";
+  }
+}
+
+/**
+ * Upserts the local `subscriptions` row from the source-of-truth Stripe
+ * object. Called right after `checkout.session.completed` (first billing
+ * cycle) and again from `customer.subscription.updated` /
+ * `customer.subscription.deleted` webhooks.
+ */
+async function syncSubscriptionFromStripe(
+  supabase: SupabaseClient,
+  stripeSubscriptionId: string,
+  context: { customerId: string | null; orderId: string },
+) {
+  if (!context.customerId) {
+    // `subscriptions.customer_id` is NOT NULL — a subscription must belong to
+    // a signed-in account. createOneProductOrder() already rejects
+    // subscribe=true for guests, so reaching this means something upstream
+    // changed; log loudly instead of failing the webhook (order is still valid).
+    logger.error("Stripe subscription confirmed without a linked customer_id — cannot persist.", {
+      orderId: context.orderId,
+      stripeSubscriptionId,
+    });
+    return;
+  }
+
+  const stripe = getStripeClient();
+  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+  const item = subscription.items.data[0];
+  const interval = item?.price.recurring?.interval;
+
+  const { error } = await supabase.from("subscriptions").upsert(
+    {
+      amount_cents: item?.price.unit_amount ?? null,
+      billing_interval: interval === "year" ? "year" : interval === "week" ? "month" : "month",
+      cancelled_at: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000).toISOString()
+        : null,
+      currency: subscription.currency.toUpperCase(),
+      current_period_end: item?.current_period_end
+        ? new Date(item.current_period_end * 1000).toISOString()
+        : null,
+      customer_id: context.customerId,
+      metadata: subscription.metadata ?? {},
+      order_id: context.orderId,
+      price_id: item?.price.id ?? null,
+      quantity: item?.quantity ?? 1,
+      status: mapStripeSubscriptionStatus(subscription.status),
+      stripe_customer_id:
+        typeof subscription.customer === "string"
+          ? subscription.customer
+          : subscription.customer.id,
+      stripe_subscription_id: subscription.id,
+    },
+    { onConflict: "stripe_subscription_id" },
+  );
+
+  if (error) {
+    throw new AppError("BAD_REQUEST", error.message);
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.synced",
+    afterData: { status: subscription.status, stripe_subscription_id: subscription.id },
+    entityId: context.orderId,
+    entityTable: "subscriptions",
+  });
+}
+
+/**
+ * Handles `customer.subscription.updated` / `customer.subscription.deleted`.
+ * The order this subscription originated from may not be known to this event
+ * (Stripe does not echo session-level metadata onto later subscription
+ * events), so this updates by `stripe_subscription_id` alone and is a no-op
+ * if we have never seen this subscription (keeps webhook idempotent/safe).
+ */
+export async function syncSubscriptionStatus(
+  supabase: SupabaseClient,
+  subscription: Stripe.Subscription,
+) {
+  const item = subscription.items.data[0];
+
+  const { data: existing, error: lookupError } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("stripe_subscription_id", subscription.id)
+    .maybeSingle<{ id: string }>();
+
+  if (lookupError) {
+    throw new AppError("BAD_REQUEST", lookupError.message);
+  }
+
+  if (!existing) {
+    // Nothing local to update yet (e.g. event arrived before checkout.session.completed
+    // finished processing) — safe to ignore, syncSubscriptionFromStripe will catch up.
+    return;
+  }
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({
+      cancelled_at: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000).toISOString()
+        : null,
+      current_period_end: item?.current_period_end
+        ? new Date(item.current_period_end * 1000).toISOString()
+        : null,
+      paused_at: subscription.status === "paused" ? new Date().toISOString() : null,
+      status: mapStripeSubscriptionStatus(subscription.status),
+    })
+    .eq("stripe_subscription_id", subscription.id);
+
+  if (error) {
+    throw new AppError("BAD_REQUEST", error.message);
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.status_updated",
+    afterData: { status: subscription.status, stripe_subscription_id: subscription.id },
+    entityId: existing.id,
+    entityTable: "subscriptions",
+  });
+}
+
+/**
+ * Handles `invoice.paid` for `billing_reason === "subscription_cycle"`
+ * (renewals only — the first cycle is already fulfilled by
+ * `checkout.session.completed`). Creates a new order/payment pair from the
+ * subscription's originating order so each shipment shows in Account →
+ * Orders and triggers the same admin/customer notification pipeline.
+ */
+export async function createSubscriptionRenewalOrder(
+  supabase: SupabaseClient,
+  invoice: Stripe.Invoice,
+) {
+  const subscriptionRef = invoice.parent?.subscription_details?.subscription;
+  const stripeSubscriptionId =
+    typeof subscriptionRef === "string" ? subscriptionRef : subscriptionRef?.id;
+
+  if (!stripeSubscriptionId) {
+    return;
+  }
+
+  const { data: subscriptionRow, error: subError } = await supabase
+    .from("subscriptions")
+    .select("order_id")
+    .eq("stripe_subscription_id", stripeSubscriptionId)
+    .maybeSingle<{ order_id: string | null }>();
+
+  if (subError) {
+    throw new AppError("BAD_REQUEST", subError.message);
+  }
+
+  if (!subscriptionRow?.order_id) {
+    logger.error("Subscription renewal invoice has no matching local subscription/order.", {
+      stripeSubscriptionId,
+    });
+    return;
+  }
+
+  const { data: sourceOrder, error: orderError } = await supabase
+    .from("orders")
+    .select(
+      "billing_address, currency, customer_id, customer_name, customer_phone, delivery_address, delivery_city, email, metadata, shipping_address",
+    )
+    .eq("id", subscriptionRow.order_id)
+    .maybeSingle();
+
+  if (orderError) {
+    throw new AppError("BAD_REQUEST", orderError.message);
+  }
+
+  if (!sourceOrder) {
+    logger.error("Source order for subscription renewal no longer exists.", {
+      orderId: subscriptionRow.order_id,
+      stripeSubscriptionId,
+    });
+    return;
+  }
+
+  const sourceMetadata: Record<string, unknown> =
+    sourceOrder.metadata && typeof sourceOrder.metadata === "object"
+      ? (sourceOrder.metadata as Record<string, unknown>)
+      : {};
+  const amountCents = invoice.amount_paid ?? 0;
+  const quantity = Number(sourceMetadata.quantity) || 1;
+  const productName =
+    typeof sourceMetadata.product_name === "string" ? sourceMetadata.product_name : "Sève Racine";
+
+  const { data: newOrder, error: insertError } = await supabase
+    .from("orders")
+    .insert({
+      billing_address: sourceOrder.billing_address,
+      currency: sourceOrder.currency,
+      customer_id: sourceOrder.customer_id,
+      customer_name: sourceOrder.customer_name,
+      customer_phone: sourceOrder.customer_phone,
+      delivery_address: sourceOrder.delivery_address,
+      delivery_city: sourceOrder.delivery_city,
+      email: sourceOrder.email,
+      metadata: {
+        ...sourceMetadata,
+        order_channel: "subscription_renewal",
+        stripe_invoice_id: invoice.id,
+        stripe_subscription_id: stripeSubscriptionId,
+      },
+      order_number: createOrderNumber(),
+      payment_method: "stripe",
+      placed_at: new Date().toISOString(),
+      shipping_address: sourceOrder.shipping_address,
+      status: "confirmed",
+      subtotal_cents: amountCents,
+      total_cents: amountCents,
+    })
+    .select("id, order_number, total_cents, confirmation_token")
+    .single<CreatedOrderRow>();
+
+  if (insertError || !newOrder) {
+    throw new AppError(
+      "BAD_REQUEST",
+      insertError?.message ?? "Failed to record subscription renewal order.",
+    );
+  }
+
+  const { error: itemError } = await supabase.from("order_items").insert({
+    metadata: { source: "subscription_renewal" },
+    order_id: newOrder.id,
+    quantity,
+    title: productName,
+    total_cents: amountCents,
+    unit_price_cents: Math.round(amountCents / quantity),
+    variant_title: "100ml",
+  });
+
+  if (itemError) {
+    throw new AppError("BAD_REQUEST", itemError.message);
+  }
+
+  const { error: paymentError } = await supabase.from("payments").insert({
+    amount_cents: amountCents,
+    captured_at: new Date().toISOString(),
+    currency: (invoice.currency ?? sourceOrder.currency).toUpperCase(),
+    metadata: { stripe_invoice_id: invoice.id },
+    order_id: newOrder.id,
+    provider: "stripe",
+    provider_payment_id: invoice.id ?? `invoice_${stripeSubscriptionId}_${invoice.period_end}`,
+    status: "succeeded",
+  });
+
+  if (paymentError) {
+    throw new AppError("BAD_REQUEST", paymentError.message);
+  }
+
+  await supabase
+    .from("subscriptions")
+    .update({
+      current_period_end: invoice.period_end
+        ? new Date(invoice.period_end * 1000).toISOString()
+        : null,
+      order_id: newOrder.id,
+      status: "active",
+    })
+    .eq("stripe_subscription_id", stripeSubscriptionId);
+
+  await writeAuditLog(supabase, {
+    action: "subscription.renewed",
+    afterData: { amount_cents: amountCents, order_number: newOrder.order_number },
+    entityId: newOrder.id,
+    entityTable: "orders",
+  });
+
+  await notifyOrderConfirmed(supabase, newOrder.id);
 }

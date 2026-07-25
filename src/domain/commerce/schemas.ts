@@ -75,6 +75,13 @@ export const createOneProductOrderSchema = z.object({
   payment_method: oneProductPaymentMethodSchema,
   phone: z.string().min(8).max(24),
   quantity: z.number().int().min(1).max(6).default(1),
+  /**
+   * Recurring "subscribe & save" purchase. Card-only (Stripe Billing) — MoMo
+   * and WhatsApp cannot auto-charge, so the API rejects subscribe=true unless
+   * payment_method is "stripe". Also requires a signed-in customer, since a
+   * subscription must be tied to an account for later management/cancellation.
+   */
+  subscribe: z.boolean().default(false),
   transaction_reference: z.string().min(4).max(120).optional().or(z.literal("")),
 });
 
