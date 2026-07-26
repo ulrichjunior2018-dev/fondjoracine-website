@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { AccountShell } from "@/features/account/components/account-shell";
+import { getCurrentUserIsAdmin } from "@/lib/auth/rbac";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getOrCreateCustomerAccount } from "@/services/customer/customer-service";
@@ -25,6 +26,11 @@ export default async function AccountLayout({ children }: { children: ReactNode 
   const account = await getOrCreateCustomerAccount(supabase, user.id);
   const customerName =
     [account.firstName, account.lastName].filter(Boolean).join(" ") || account.email;
+  const isAdmin = await getCurrentUserIsAdmin();
 
-  return <AccountShell customerName={customerName}>{children}</AccountShell>;
+  return (
+    <AccountShell customerName={customerName} isAdmin={isAdmin}>
+      {children}
+    </AccountShell>
+  );
 }

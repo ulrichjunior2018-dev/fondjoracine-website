@@ -31,9 +31,14 @@ type OrderStatus =
   | "pending_payment"
   | "payment_submitted"
   | "confirmed"
+  | "order_received"
+  | "preparing"
   | "packed"
   | "shipped"
-  | "delivered";
+  | "out_for_delivery"
+  | "delivered"
+  | "failed"
+  | "returned";
 type PaymentStatus =
   | "requires_payment_method"
   | "requires_confirmation"
@@ -414,6 +419,10 @@ export type Database = {
           confirmation_token: string | null;
           admin_payment_verified_at: string | null;
           admin_payment_verified_by: string | null;
+          admin_notes: string | null;
+          estimated_delivery_start: string | null;
+          estimated_delivery_end: string | null;
+          status_updated_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -448,6 +457,10 @@ export type Database = {
           confirmation_token?: string | null;
           admin_payment_verified_at?: string | null;
           admin_payment_verified_by?: string | null;
+          admin_notes?: string | null;
+          estimated_delivery_start?: string | null;
+          estimated_delivery_end?: string | null;
+          status_updated_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -482,8 +495,42 @@ export type Database = {
           confirmation_token?: string | null;
           admin_payment_verified_at?: string | null;
           admin_payment_verified_by?: string | null;
+          admin_notes?: string | null;
+          estimated_delivery_start?: string | null;
+          estimated_delivery_end?: string | null;
+          status_updated_at?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      order_status_events: {
+        Row: {
+          id: string;
+          order_id: string;
+          from_status: string | null;
+          to_status: string;
+          actor_profile_id: string | null;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          from_status?: string | null;
+          to_status: string;
+          actor_profile_id?: string | null;
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          from_status?: string | null;
+          to_status?: string;
+          actor_profile_id?: string | null;
+          note?: string | null;
+          created_at?: string;
         };
         Relationships: [];
       };
@@ -589,6 +636,42 @@ export type Database = {
           is_default_billing?: boolean;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          profile_id: string;
+          channel: NotificationChannel;
+          subject: string;
+          body: string;
+          data: Json;
+          read_at: string | null;
+          sent_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          profile_id: string;
+          channel: NotificationChannel;
+          subject: string;
+          body: string;
+          data?: Json;
+          read_at?: string | null;
+          sent_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          profile_id?: string;
+          channel?: NotificationChannel;
+          subject?: string;
+          body?: string;
+          data?: Json;
+          read_at?: string | null;
+          sent_at?: string | null;
+          created_at?: string;
         };
         Relationships: [];
       };

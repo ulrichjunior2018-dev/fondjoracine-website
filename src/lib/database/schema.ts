@@ -35,6 +35,7 @@ export type CommerceTable =
   | "newsletter_signups"
   | "notifications"
   | "order_items"
+  | "order_status_events"
   | "orders"
   | "payments"
   | "product_categories"
