@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
+import { MarketingMobileMenu } from "@/components/marketing-mobile-menu";
 import { NavAuthButton } from "@/components/nav-auth-button";
 import {
   MotionButtonShell,
@@ -755,10 +756,10 @@ function PremiumHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0B0B0B]/70 text-[#F5EFE3] backdrop-blur-xl"
+      className="fixed inset-x-0 top-0 z-50 text-[#F5EFE3] max-lg:bg-[linear-gradient(180deg,rgb(11_11_11/.58)_0%,rgb(11_11_11/.28)_55%,transparent_100%)] max-lg:pb-5 max-lg:backdrop-blur-[2px] lg:border-b lg:border-white/10 lg:bg-[#0B0B0B]/70 lg:backdrop-blur-xl"
       key={locale}
     >
-      <Container className="flex h-16 items-center justify-between gap-4 sm:h-20">
+      <Container className="relative flex h-16 items-center justify-between gap-4 sm:h-20">
         <Link aria-label="Maison Fondjo home" className="flex items-center gap-3" href="/">
           <span
             aria-hidden="true"
@@ -802,34 +803,13 @@ function PremiumHeader({ copy, locale }: { copy: Copy; locale: Locale }) {
             {copy.buy}
           </Link>
           <NavAuthButton />
+          <MarketingMobileMenu
+            closeLabel={copy.navigationClose}
+            links={mobileNav}
+            openLabel={copy.navigationOpen}
+          />
         </div>
       </Container>
-
-      <nav
-        aria-label="Marketing sections"
-        className="flex gap-5 overflow-x-auto border-t border-white/10 px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 scrollbar-none sm:px-6 lg:hidden notranslate"
-        translate="no"
-      >
-        {mobileNav.map(([label, href]) => {
-          const active = isMarketingNavActive(pathname, href);
-
-          return (
-            <Link
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "shrink-0 border-b-2 pb-1 transition-colors",
-                active
-                  ? "border-[#B8935A] text-[#F5EFE3]"
-                  : "border-transparent hover:text-[#B8935A]",
-              )}
-              href={href as Route}
-              key={href}
-            >
-              {label}
-            </Link>
-          );
-        })}
-      </nav>
     </header>
   );
 }
@@ -847,7 +827,8 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
       <ProductShowcase copy={copy} />
       <WhyItWorksSection copy={copy} />
       <HairConcernsSection copy={copy} />
-      <IngredientCarousel copy={copy} />      <RitualSection copy={copy} />
+      <IngredientCarousel copy={copy} />
+      <RitualSection copy={copy} />
       <TestimonialsSection copy={copy} />
       <DiagnosticInviteSection copy={copy} />
       <OriginSection copy={copy} />

@@ -278,8 +278,8 @@ export function AccountShell({ children, customerName, isAdmin = false }: Accoun
       data-account-theme={accountTheme}
       suppressHydrationWarning
     >
-      {/* Mobile top bar: back ← | brand | menu */}
-      <header className="sticky top-0 z-40 border-b border-border bg-background lg:hidden">
+      {/* Mobile top bar: back ← | brand | menu — soft fade into the page */}
+      <header className="sticky top-0 z-40 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--background)_78%,transparent)_0%,color-mix(in_srgb,var(--background)_38%,transparent)_58%,transparent_100%)] pb-4 backdrop-blur-[2px] lg:hidden">
         <div className="flex h-14 items-center gap-1 px-2 sm:px-3">
           <Link
             aria-label={nav.backToWebsite}
@@ -318,7 +318,7 @@ export function AccountShell({ children, customerName, isAdmin = false }: Accoun
           id={menuId}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="account-scroll max-h-[calc(100svh-3.5rem)] overflow-y-auto overscroll-contain border-t border-border bg-background px-3 pb-6 pt-4">
+            <div className="account-scroll max-h-[calc(100svh-3.5rem)] overflow-y-auto overscroll-contain bg-[linear-gradient(180deg,color-mix(in_srgb,var(--background)_88%,transparent)_0%,color-mix(in_srgb,var(--background)_70%,transparent)_75%,transparent_100%)] px-3 pb-8 pt-4 backdrop-blur-[2px]">
               <div className="mb-5">
                 <div className="flex items-center gap-3 rounded-xl px-2 py-2">
                   <span
