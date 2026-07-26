@@ -183,7 +183,7 @@ function OptionButton({
   onClick,
 }: {
   label: string;
-  icon?: LucideIcon;
+  icon?: LucideIcon | undefined;
   onClick: () => void;
 }) {
   return (

@@ -108,7 +108,7 @@ export default async function AccountOrderDetailPage({ params }: OrderDetailPage
           {showReceipt ? (
             <Link
               className="inline-flex h-10 items-center justify-center rounded-md border border-border bg-surface px-4 text-sm font-semibold text-foreground"
-              href={`/account/orders/${order.id}/receipt`}
+              href={`/account/orders/${order.id}/receipt` as Route}
             >
               {o.viewReceipt}
             </Link>

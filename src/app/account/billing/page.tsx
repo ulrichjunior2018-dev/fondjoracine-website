@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -73,7 +73,7 @@ export default async function AccountBillingPage() {
                   </p>
                   <Link
                     className="text-sm font-semibold text-accent"
-                    href={`/account/orders/${order.id}/receipt`}
+                    href={`/account/orders/${order.id}/receipt` as Route}
                   >
                     {b.receipt} →
                   </Link>

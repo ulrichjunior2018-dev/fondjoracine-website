@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -72,7 +72,7 @@ export default async function AccountSettingsPage() {
           <p className="text-sm text-foreground/68">{s.deleteAccountBody}</p>
           <Link
             className="mt-3 inline-block text-sm font-semibold text-accent"
-            href="/account/support"
+            href={"/account/support" as Route}
           >
             {s.deleteAccountCta}
           </Link>
