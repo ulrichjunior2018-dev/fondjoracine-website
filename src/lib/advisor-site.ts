@@ -54,6 +54,10 @@ export function getHerbariumIngredientCopy(
       english: ingredient.commonNameEn,
       french: ingredient.commonName,
     }),
+    properties: pickLocale(locale, {
+      english: ingredient.propertiesEn,
+      french: ingredient.properties,
+    }),
     region: pickLocale(locale, {
       english: ingredient.regionEn,
       french: ingredient.region,

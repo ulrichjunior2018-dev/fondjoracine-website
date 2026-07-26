@@ -50,8 +50,7 @@ export const fr = {
   footerPolicy: "Politiques",
   footerTerms: "Conditions",
   formula: "Ingrédients botaniques",
-  formulaBody:
-    "Un mélange riche d'huiles et d'herbes botaniques, chaque ingrédient choisi pour un rôle précis dans le soin du cuir chevelu et de la fibre. La philosophie de chaque formule Maison Fondjo.",
+  formulaBody: "Un mélange riche d'huiles et d'herbes botaniques.",
   formulaTitle: "Sélectionnés avec soin. Présentés avec clarté.",
   gallery: "Galerie",
   heroEyebrow: "Maison Fondjo Huile rituel capillaire",
@@ -72,7 +71,7 @@ export const fr = {
     backLabel: "Étiquette arrière du flacon Sève Racine",
     frontLabel: "Étiquette avant du flacon Sève Racine",
     scalpRitual: "Sève Racine appliquée directement sur le cuir chevelu à Buea",
-    origin: "Paysage de Buea et du Mont Cameroun pour Maison Fondjo",
+    origin: "Sève Racine avec botaniques recoltées dans un champ a Buea, Mont Cameroun au loin",
     product: "Flacon Sève Racine en studio noir réfléchissant",
   },
   nav: buildMarketingNav("fr"),

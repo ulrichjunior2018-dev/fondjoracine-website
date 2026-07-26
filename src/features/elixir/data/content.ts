@@ -349,11 +349,11 @@ export const defaultElixirContent: ElixirContent = {
     eyebrow: localized("Founder story", "Histoire fondatrice"),
     image: {
       alt: {
-        en: "A mother and child — the family care that guides Maison Fondjo",
-        fr: "Une mère et son enfant — l'attention familiale qui guide Maison Fondjo",
+        en: "Mother applying Sève Racine to her child's scalp during a quiet botanical care ritual",
+        fr: "Mere appliquant Sève Racine sur le cuir chevelu de son enfant lors d'un rituel de soin botanique",
       },
       height: 1448,
-      src: "/images/hero.png",
+      src: siteImages.lifestyleMotherChild,
       width: 1086,
     },
     intro: {
@@ -475,21 +475,21 @@ export const defaultElixirContent: ElixirContent = {
   images: [
     {
       alt: {
-        en: "Sève Racine bottle in a reflective black studio",
-        fr: "Flacon Sève Racine en studio noir réfléchissant",
+        en: "Maison Fondjo Sève Racine bottle on stone in natural light",
+        fr: "Flacon Maison Fondjo Sève Racine sur pierre en lumière naturelle",
       },
-      height: 1448,
-      src: "/images/studio.png",
-      width: 1086,
+      height: 1280,
+      src: siteImages.studioBottle,
+      width: 963,
     },
     {
       alt: {
-        en: "Sève Racine bottle and pipette macro detail",
-        fr: "Macro du flacon Sève Racine et pipette",
+        en: "Maison Fondjo Sève Racine botanical hair oil outdoor product shot",
+        fr: "Huile botanique Maison Fondjo Sève Racine en prise de vue exterieure",
       },
-      height: 1448,
-      src: "/images/product-macro-pipette.png",
-      width: 1086,
+      height: 1280,
+      src: siteImages.productOutdoorAlt,
+      width: 1024,
     },
     {
       alt: {

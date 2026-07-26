@@ -125,24 +125,43 @@ function usesLegacyStorefrontBranding(content: ElixirContent): boolean {
   return hasLegacyTitle || hasStockImage || content.brand === "FONDJO";
 }
 
+function usesLegacyProductImagery(content: ElixirContent): boolean {
+  const legacyPaths = [
+    "/images/studio.png",
+    "/images/volcanic-bottle.png",
+    "/images/product-macro-pipette.png",
+    "/images/studio-reflection.png",
+  ];
+
+  return content.images.some((image) =>
+    legacyPaths.some((legacy) => image.src.toLowerCase().includes(legacy)),
+  );
+}
+
 function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
+  const withBrand = usesLegacyStorefrontBranding(content)
+    ? {
+        ...content,
+        brand: defaultElixirContent.brand,
+        hero: {
+          ...content.hero,
+          eyebrow: defaultElixirContent.hero.eyebrow,
+        },
+        images: defaultElixirContent.images,
+        seo: defaultElixirContent.seo,
+        title: defaultElixirContent.title,
+      }
+    : content;
+
+  const withImages = usesLegacyProductImagery(withBrand)
+    ? { ...withBrand, images: defaultElixirContent.images }
+    : withBrand;
+
   const runtimeContent = {
-    ...(usesLegacyStorefrontBranding(content)
-      ? {
-          ...content,
-          brand: defaultElixirContent.brand,
-          hero: {
-            ...content.hero,
-            eyebrow: defaultElixirContent.hero.eyebrow,
-          },
-          images: defaultElixirContent.images,
-          seo: defaultElixirContent.seo,
-          title: defaultElixirContent.title,
-        }
-      : content),
+    ...withImages,
     manualPayments: {
-      ...content.manualPayments,
-      methods: content.manualPayments.methods.map((method) => {
+      ...withImages.manualPayments,
+      methods: withImages.manualPayments.methods.map((method) => {
         const lowerLabel = method.label.toLowerCase();
         const envNumber = lowerLabel.includes("mtn")
           ? env.MTN_MOMO_NUMBER
@@ -154,19 +173,19 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
       }),
     },
     innerCircle: {
-      ...content.innerCircle,
+      ...withImages.innerCircle,
       priceXaf: `${formatXaf(config.pricing.seveRacine)} local equivalent`,
     },
     currency: "XAF",
     priceCents: config.pricing.seveRacine,
     priceXaf: formatXaf(config.pricing.seveRacine),
     product: {
-      ...content.product,
+      ...withImages.product,
       priceXaf: formatXaf(config.pricing.seveRacine),
     },
     whatsapp: {
-      ...content.whatsapp,
-      phone: env.NEXT_PUBLIC_WHATSAPP_NUMBER || content.whatsapp.phone,
+      ...withImages.whatsapp,
+      phone: env.NEXT_PUBLIC_WHATSAPP_NUMBER || withImages.whatsapp.phone,
     },
   };
 

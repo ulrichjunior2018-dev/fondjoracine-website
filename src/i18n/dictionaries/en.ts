@@ -44,8 +44,7 @@ export const en = {
   footerPolicy: "Policies",
   footerTerms: "Terms",
   formula: "Botanical ingredients",
-  formulaBody:
-    "A rich blend of botanical oils and herbs, each chosen for a precise role in scalp and hair-fibre care. The philosophy behind every Maison Fondjo formula.",
+  formulaBody: "A rich blend of botanical oils and herbs.",
   formulaTitle: "Selected with care. Presented with clarity.",
   gallery: "Gallery",
   heroEyebrow: "Maison Fondjo Hair ritual oil",
@@ -61,7 +60,7 @@ export const en = {
     backLabel: "Back label of the Sève Racine bottle",
     frontLabel: "Front label of the Sève Racine bottle",
     scalpRitual: "Sève Racine applied directly to the scalp in Buea",
-    origin: "Buea and Mount Cameroon landscape for Maison Fondjo",
+    origin: "Sève Racine with harvested botanicals in a Buea field, Mount Cameroon in the distance",
     product: "Sève Racine bottle in a reflective black studio",
   },
   menu: "Menu",

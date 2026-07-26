@@ -4,6 +4,7 @@ import {
   AlertCircle,
   AlertOctagon,
   AlertTriangle,
+  ArrowLeft,
   ArrowRight,
   Check,
   ChevronRight,
@@ -23,10 +24,11 @@ import {
   Wind,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { advisorPricing, buildWhatsAppUrl } from "@/lib/advisor-site";
 import { useCopy, useI18n } from "@/lib/i18n-context";
+import { cn } from "@/lib/utils/cn";
 
 type Question = {
   summaryLabel: string;
@@ -80,27 +82,22 @@ function getMainProblem(
 }
 
 const OPTION_ICONS: Record<string, LucideIcon> = {
-  // objectif
   casse: Scissors,
   secheresse: Droplet,
   cuir_chevelu: AlertCircle,
   chute_soudaine: Wind,
   autre: MessageCircle,
-  // texture
   naturels_4c: Sparkles,
   boucles: Repeat,
   ondules: Waves,
   fins_lisses: Minus,
-  // routine
   protective_styles: Layers,
   wash_day: Droplets,
   grooming: Scissors,
   irreguliere: Shuffle,
-  // sensibilite
   non: Check,
   demangeaisons: AlertTriangle,
   douleur_irritation: AlertOctagon,
-  // duree
   moins_1_mois: Clock3,
   "6_mois": Clock9,
   plus_1_an: History,
@@ -118,6 +115,103 @@ function getRecommendationBotanicals(answers: Record<string, string>) {
   }
 
   return ["ricin", "nigelle"] as const;
+}
+
+function StepFrame({
+  eyebrow,
+  stepLabel,
+  progress,
+  title,
+  children,
+  onBack,
+  backLabel,
+}: {
+  eyebrow: string;
+  stepLabel: string;
+  progress: number;
+  title: string;
+  children: ReactNode;
+  onBack?: () => void;
+  backLabel?: string;
+}) {
+  return (
+    <div className="animate-[fondjoFadeUp_.45s_ease-out_both]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
+          {eyebrow}
+        </p>
+        <p className="font-mono text-[0.7rem] tracking-[0.12em] text-[#F5EFE3]/45">{stepLabel}</p>
+      </div>
+
+      <div className="mt-4 h-[2px] overflow-hidden bg-[#F5EFE3]/10">
+        <div
+          className="h-full bg-[#B8935A] transition-all duration-500 ease-out"
+          style={{ width: `${Math.min(Math.max(progress, 0.08), 1) * 100}%` }}
+        />
+      </div>
+
+      {onBack && backLabel ? (
+        <button
+          className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#F5EFE3]/65 transition hover:text-[#B8935A]"
+          onClick={onBack}
+          type="button"
+        >
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          {backLabel}
+        </button>
+      ) : null}
+
+      <div
+        className={cn(
+          "border-l border-[#B8935A]/35 pl-4 sm:pl-6",
+          onBack ? "mt-5 sm:mt-6" : "mt-8 sm:mt-10",
+        )}
+      >
+        <h1 className="max-w-2xl font-serif text-[1.85rem] font-light leading-[1.15] tracking-tight text-[#F5EFE3] sm:text-4xl lg:text-[2.75rem]">
+          {title}
+        </h1>
+      </div>
+
+      <div className="mt-8 sm:mt-10">{children}</div>
+    </div>
+  );
+}
+
+function OptionButton({
+  label,
+  icon: OptionIcon,
+  onClick,
+}: {
+  label: string;
+  icon?: LucideIcon;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className={cn(
+        "group flex w-full min-h-[3.5rem] items-center gap-3 border border-[#B8935A]/16 bg-[#F5EFE3]/[0.03] px-4 py-3.5 text-left transition",
+        "hover:border-[#B8935A]/45 hover:bg-[#B8935A]/[0.07]",
+        "active:scale-[0.99] sm:min-h-[3.75rem] sm:gap-4 sm:px-5",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B8935A]",
+      )}
+      onClick={onClick}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="grid size-10 shrink-0 place-items-center rounded-full border border-[#B8935A]/28 bg-[#0B0B0B] text-[#B8935A] transition group-hover:border-[#B8935A]/55 group-hover:bg-[#B8935A]/10 sm:size-11"
+      >
+        {OptionIcon ? <OptionIcon className="size-4 sm:size-[1.05rem]" /> : null}
+      </span>
+      <span className="min-w-0 flex-1 text-[0.95rem] font-medium leading-snug text-[#F5EFE3]/88 sm:text-base">
+        {label}
+      </span>
+      <ChevronRight
+        aria-hidden="true"
+        className="size-4 shrink-0 text-[#B8935A]/50 transition group-hover:translate-x-0.5 group-hover:text-[#B8935A]"
+      />
+    </button>
+  );
 }
 
 export function DiagnosticQuiz() {
@@ -191,7 +285,21 @@ export function DiagnosticQuiz() {
     : buildWhatsAppUrl("diagnostic", standardRecommendation, locale);
 
   function choose(questionId: string, value: string) {
-    setAnswers((current) => ({ ...current, [questionId]: value }));
+    setAnswers((current) => {
+      const questionIndex = questions.findIndex((item) => item.id === questionId);
+      const next: Record<string, string> = {};
+
+      for (let index = 0; index < questionIndex; index += 1) {
+        const id = questions[index]?.id;
+        if (id && current[id] !== undefined) {
+          next[id] = current[id]!;
+        }
+      }
+
+      next[questionId] = value;
+      return next;
+    });
+    setNotesShown(false);
   }
 
   function handleOptionClick(questionId: string, value: string) {
@@ -207,6 +315,47 @@ export function DiagnosticQuiz() {
     setPendingAutre(false);
   }
 
+  function goBack() {
+    if (pendingAutre) {
+      setPendingAutre(false);
+      return;
+    }
+
+    if (isComplete && notesShown) {
+      setNotesShown(false);
+      return;
+    }
+
+    if (isComplete && !notesShown) {
+      setAnswers((current) => {
+        const keys = Object.keys(current);
+        const lastKey = keys[keys.length - 1];
+        if (!lastKey) {
+          return current;
+        }
+        const next = { ...current };
+        delete next[lastKey];
+        return next;
+      });
+      return;
+    }
+
+    if (Object.keys(answers).length === 0) {
+      return;
+    }
+
+    setAnswers((current) => {
+      const keys = Object.keys(current);
+      const lastKey = keys[keys.length - 1];
+      if (!lastKey) {
+        return current;
+      }
+      const next = { ...current };
+      delete next[lastKey];
+      return next;
+    });
+  }
+
   function reset() {
     setAnswers({});
     setPendingAutre(false);
@@ -215,156 +364,168 @@ export function DiagnosticQuiz() {
     setNotesShown(false);
   }
 
-  const progressSteps = pendingAutre
+  const answeredCount = Object.keys(answers).length;
+  const canGoBack = pendingAutre || notesShown || isComplete || answeredCount > 0;
+  const displayStep = pendingAutre
     ? 1
     : isComplete
       ? questions.length
-      : Object.keys(answers).length || 1;
+      : Math.max(answeredCount + 1, 1);
+  const progress = pendingAutre
+    ? 1 / questions.length
+    : isComplete && notesShown
+      ? 1
+      : isComplete
+        ? 0.92
+        : displayStep / questions.length;
+  const stepLabel = `${String(displayStep).padStart(2, "0")} / ${String(questions.length).padStart(2, "0")}`;
+  const backProps = canGoBack ? { onBack: goBack, backLabel: diagnostic.back } : {};
+
+  const fieldClass =
+    "mt-2 w-full resize-none border border-[#B8935A]/18 bg-[#0B0B0B] px-4 py-3.5 text-base text-[#F5EFE3]/88 placeholder:text-[#F5EFE3]/28 outline-none transition focus:border-[#B8935A]/50 sm:px-5";
+  const primaryBtnClass =
+    "inline-flex min-h-12 w-full items-center justify-center gap-2 bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition active:scale-[0.98] disabled:opacity-40 sm:min-h-13 sm:w-auto";
+  const secondaryBtnClass =
+    "inline-flex min-h-12 w-full items-center justify-center gap-2 border border-[#F5EFE3]/18 px-6 text-sm font-semibold text-[#F5EFE3] transition hover:border-[#B8935A]/45 active:scale-[0.98] sm:min-h-13 sm:w-auto";
 
   return (
-    <section className="mx-auto grid min-h-[calc(100svh-5rem)] w-full max-w-5xl content-center px-4 py-14 sm:px-6 lg:px-8">
-      <div className="mb-8 h-px overflow-hidden bg-[#F5EFE3]/12">
-        <div
-          className="h-full bg-[#B8935A] transition-all duration-500"
-          style={{ width: `${(progressSteps / questions.length) * 100}%` }}
-        />
-      </div>
+    <section className="relative px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(ellipse_at_top,rgba(184_147_90/.12),transparent_65%)]"
+      />
 
-      {pendingAutre ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
-            {diagnostic.eyebrow}
-          </p>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-6xl">
-            {diagnostic.autrePrompt}
-          </h1>
-          <textarea
-            autoFocus
-            className="mt-9 w-full resize-none rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 py-4 text-base text-[#F5EFE3]/82 placeholder-[#F5EFE3]/30 outline-none focus:border-[#B8935A]/45"
-            onChange={(e) => setAutreText(e.target.value)}
-            placeholder={diagnostic.notesPlaceholder}
-            rows={4}
-            value={autreText}
-          />
-          <div className="mt-4 flex gap-3">
-            <button
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#F5EFE3]/16 px-6 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 active:scale-[0.98]"
-              onClick={() => setPendingAutre(false)}
-              type="button"
+      <div className="relative mx-auto w-full max-w-2xl lg:max-w-3xl">
+        <div className="border border-[#B8935A]/14 bg-[#0B0B0B]/80 p-5 shadow-[0_24px_80px_rgb(0_0_0/.35)] backdrop-blur-sm sm:p-8 lg:p-10">
+          {pendingAutre ? (
+            <StepFrame
+              eyebrow={diagnostic.eyebrow}
+              progress={progress}
+              stepLabel={stepLabel}
+              title={diagnostic.autrePrompt}
+              {...backProps}
             >
-              {diagnostic.autreBack}
-            </button>
-            <button
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98] disabled:opacity-40"
-              disabled={!autreText.trim()}
-              onClick={confirmAutre}
-              type="button"
-            >
-              {diagnostic.notesContinue}
-              <ChevronRight className="size-4" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      ) : !isComplete && currentQuestion ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
-            {diagnostic.eyebrow}
-          </p>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-6xl">
-            {currentQuestion.prompt}
-          </h1>
-          <div className="mt-9 grid gap-3 sm:grid-cols-2">
-            {currentQuestion.options.map((option) => {
-              const OptionIcon = OPTION_ICONS[option.value];
-              return (
+              <label className="block">
+                <span className="sr-only">{diagnostic.autrePrompt}</span>
+                <textarea
+                  autoFocus
+                  className={fieldClass}
+                  onChange={(e) => setAutreText(e.target.value)}
+                  placeholder={diagnostic.notesPlaceholder}
+                  rows={4}
+                  value={autreText}
+                />
+              </label>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <button
-                  className="flex min-h-20 items-center justify-between rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 text-left text-base text-[#F5EFE3]/82 transition duration-100 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/8 active:scale-[0.98]"
-                  key={option.value}
-                  onClick={() => handleOptionClick(currentQuestion.id, option.value)}
+                  className={secondaryBtnClass}
+                  onClick={() => setPendingAutre(false)}
                   type="button"
                 >
-                  <span className="flex items-center gap-3">
-                    {OptionIcon && (
-                      <OptionIcon aria-hidden className="shrink-0 text-[#B8935A]/70" size={18} />
-                    )}
-                    {option.label}
-                  </span>
-                  <ChevronRight
-                    className="ml-3 size-5 shrink-0 text-[#B8935A]/60"
-                    aria-hidden="true"
-                  />
+                  {diagnostic.autreBack}
                 </button>
-              );
-            })}
-          </div>
-        </div>
-      ) : isComplete && !notesShown ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
-            {diagnostic.eyebrow}
-          </p>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
-            {diagnostic.notesPrompt}
-          </h1>
-          <textarea
-            autoFocus
-            className="mt-9 w-full resize-none rounded-2xl border border-[#B8935A]/18 bg-[#13281E]/40 px-5 py-4 text-base text-[#F5EFE3]/82 placeholder-[#F5EFE3]/30 outline-none focus:border-[#B8935A]/45"
-            onChange={(e) => setAdditionalNotes(e.target.value)}
-            placeholder={diagnostic.notesPlaceholder}
-            rows={4}
-            value={additionalNotes}
-          />
-          <div className="mt-4">
-            <button
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
-              onClick={() => setNotesShown(true)}
-              type="button"
+                <button
+                  className={primaryBtnClass}
+                  disabled={!autreText.trim()}
+                  onClick={confirmAutre}
+                  type="button"
+                >
+                  {diagnostic.notesContinue}
+                  <ChevronRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </StepFrame>
+          ) : !isComplete && currentQuestion ? (
+            <StepFrame
+              eyebrow={diagnostic.eyebrow}
+              progress={progress}
+              stepLabel={stepLabel}
+              title={currentQuestion.prompt}
+              {...backProps}
             >
-              {diagnostic.notesContinue}
-              <ChevronRight className="size-4" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#B8935A]/18 bg-[#0B0B0B]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
-            {diagnostic.nextStep}
-          </p>
-          <h1 className="mt-5 font-serif text-4xl font-light leading-tight sm:text-6xl">
-            {hasSeriousSignal ? diagnostic.privateTitle : diagnostic.standardTitle}
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#F5EFE3]/68">
-            {hasSeriousSignal
-              ? diagnostic.privateBody.replace("{price}", advisorPricing.consultationCreditXaf)
-              : diagnostic.standardBody
-                  .replace("{problem}", concernText)
-                  .replace("{botanicalOne}", botanicalOne)
-                  .replace("{botanicalTwo}", botanicalTwo)}
-          </p>
-          <div className="mt-6 rounded-sm border border-[#B8935A]/14 bg-white/[0.025] p-4 text-sm leading-7 text-[#F5EFE3]/68">
-            {serializedAnswers}
-          </div>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-6 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.98]"
-              href={resultUrl}
-              rel="noreferrer"
-              target="_blank"
+              <div className="grid gap-2.5 sm:gap-3">
+                {currentQuestion.options.map((option) => (
+                  <OptionButton
+                    icon={OPTION_ICONS[option.value]}
+                    key={option.value}
+                    label={option.label}
+                    onClick={() => handleOptionClick(currentQuestion.id, option.value)}
+                  />
+                ))}
+              </div>
+            </StepFrame>
+          ) : isComplete && !notesShown ? (
+            <StepFrame
+              eyebrow={diagnostic.eyebrow}
+              progress={progress}
+              stepLabel={stepLabel}
+              title={diagnostic.notesPrompt}
+              {...backProps}
             >
-              {diagnostic.whatsapp}
-              <MessageCircle className="size-4" aria-hidden="true" />
-            </a>
-            <button
-              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm border border-[#F5EFE3]/16 px-6 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 active:scale-[0.98]"
-              onClick={reset}
-              type="button"
-            >
-              {diagnostic.redo}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </button>
-          </div>
+              <label className="block">
+                <span className="sr-only">{diagnostic.notesPrompt}</span>
+                <textarea
+                  autoFocus
+                  className={fieldClass}
+                  onChange={(e) => setAdditionalNotes(e.target.value)}
+                  placeholder={diagnostic.notesPlaceholder}
+                  rows={4}
+                  value={additionalNotes}
+                />
+              </label>
+              <div className="mt-5">
+                <button
+                  className={primaryBtnClass}
+                  onClick={() => setNotesShown(true)}
+                  type="button"
+                >
+                  {diagnostic.notesContinue}
+                  <ChevronRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </StepFrame>
+          ) : (
+            <div className="animate-[fondjoFadeUp_.45s_ease-out_both]">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
+                {diagnostic.nextStep}
+              </p>
+              <div className="mt-4 h-[2px] bg-[#B8935A]/80" />
+              <button
+                className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#F5EFE3]/65 transition hover:text-[#B8935A]"
+                onClick={goBack}
+                type="button"
+              >
+                <ArrowLeft className="size-4" aria-hidden="true" />
+                {diagnostic.back}
+              </button>
+              <h1 className="mt-5 font-serif text-[1.85rem] font-light leading-[1.15] text-[#F5EFE3] sm:text-4xl lg:text-[2.75rem]">
+                {hasSeriousSignal ? diagnostic.privateTitle : diagnostic.standardTitle}
+              </h1>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
+                {hasSeriousSignal
+                  ? diagnostic.privateBody.replace("{price}", advisorPricing.consultationCreditXaf)
+                  : diagnostic.standardBody
+                      .replace("{problem}", concernText)
+                      .replace("{botanicalOne}", botanicalOne)
+                      .replace("{botanicalTwo}", botanicalTwo)}
+              </p>
+              <div className="mt-6 border border-[#B8935A]/16 bg-[#F5EFE3]/[0.03] p-4 text-sm leading-7 text-[#F5EFE3]/68 sm:p-5">
+                {serializedAnswers}
+              </div>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a className={primaryBtnClass} href={resultUrl} rel="noreferrer" target="_blank">
+                  {diagnostic.whatsapp}
+                  <MessageCircle className="size-4" aria-hidden="true" />
+                </a>
+                <button className={secondaryBtnClass} onClick={reset} type="button">
+                  {diagnostic.redo}
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </section>
   );
 }

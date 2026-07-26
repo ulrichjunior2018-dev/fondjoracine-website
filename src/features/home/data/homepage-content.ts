@@ -21,7 +21,7 @@ export const featuredProducts = [
     name: "Botanical Density Oil",
     description: "A featherweight oil blend for pre-wash massage and high-shine finishing.",
     price: "$72",
-    image: "/images/studio.png",
+    image: "/images/maison-fondjo-seve-racine.jpg",
   },
   {
     name: "Silk Repair Hair Masque",

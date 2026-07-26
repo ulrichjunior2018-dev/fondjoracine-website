@@ -40,27 +40,42 @@ function ProductCatalogCard({
 
   const body = (
     <>
-      <div className="relative aspect-[4/5] overflow-hidden bg-black">
+      <div
+        className={cn(
+          "relative overflow-hidden bg-black",
+          available ? "aspect-[4/5]" : "mx-auto mt-5 aspect-[4/5] w-[min(100%,14rem)] sm:w-[16rem]",
+        )}
+      >
         <Image
           alt={imageAlt}
           className={cn(
             "object-cover",
             available && "md:transition-transform md:duration-500 md:group-hover:scale-[1.03]",
-            !available && "opacity-80",
+            !available && "scale-105 blur-md brightness-[0.75] saturate-75",
           )}
           fill
           priority={index < 3}
-          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+          sizes={
+            available
+              ? "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+              : "(min-width: 640px) 16rem, 14rem"
+          }
           src={product.image}
         />
         {!available ? (
-          <span className={`absolute left-4 top-4 ${soonBadgeClass} bg-[#0B0B0B]/70`}>
-            {soonLabel}
-          </span>
+          <>
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-[#0B0B0B]/35 via-transparent to-transparent"
+            />
+            <span className={`absolute left-3 top-3 ${soonBadgeClass} bg-[#0B0B0B]/70`}>
+              {soonLabel}
+            </span>
+          </>
         ) : null}
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h2 className="font-serif text-2xl font-light leading-snug">{name}</h2>
+        <h2 className="font-serif text-2xl font-light leading-snug text-[#F5EFE3]">{name}</h2>
         <p className="mt-3 line-clamp-3 text-sm leading-7 text-[#F5EFE3]/66">{tagline}</p>
         <div className="mt-auto flex items-center justify-between gap-3 pt-6">
           {product.priceXaf ? (
@@ -68,15 +83,13 @@ function ProductCatalogCard({
           ) : (
             <span className={soonBadgeClass}>{soonLabel}</span>
           )}
-          {available ? (
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B8935A]">
-              {viewLabel}
-              <ArrowRight
-                className="size-4 transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
-            </span>
-          ) : null}
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B8935A]">
+            {viewLabel}
+            <ArrowRight
+              className="size-4 transition-transform duration-200 group-hover:translate-x-1"
+              aria-hidden="true"
+            />
+          </span>
         </div>
       </div>
     </>
@@ -84,18 +97,17 @@ function ProductCatalogCard({
 
   return (
     <MotionInView delay={Math.min(index, 8) * 0.04}>
-      {available ? (
-        <Link
-          className="group flex h-full flex-col border border-[#B8935A]/16 bg-white/[0.025] transition duration-300 hover:border-[#B8935A]/45 hover:bg-[#B8935A]/[0.045]"
-          href={product.href as Route}
-        >
-          {body}
-        </Link>
-      ) : (
-        <div className="flex h-full flex-col border border-[#B8935A]/16 bg-white/[0.02]">
-          {body}
-        </div>
-      )}
+      <Link
+        className={cn(
+          "group flex h-full flex-col border border-[#B8935A]/16 transition duration-300",
+          available
+            ? "bg-white/[0.025] hover:border-[#B8935A]/45 hover:bg-[#B8935A]/[0.045]"
+            : "bg-white/[0.02] hover:border-[#B8935A]/35",
+        )}
+        href={product.href as Route}
+      >
+        {body}
+      </Link>
     </MotionInView>
   );
 }

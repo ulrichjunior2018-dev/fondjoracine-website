@@ -244,27 +244,57 @@ export function FounderStorySection({ content, locale }: PremiumStorefrontPagePr
   );
 }
 
-export function IngredientCarousel({
-  content,
-  copy,
-}: Omit<PremiumStorefrontPageProps, "locale"> & { copy: Copy }) {
-  void content;
-
+export function IngredientCarousel({ copy }: { copy: Copy }) {
   return (
     <section
-      className="overflow-hidden bg-[#0B0B0B] py-20 text-[#F5EFE3] sm:py-28"
+      className="relative isolate min-h-[34rem] overflow-hidden bg-[#0B0B0B] text-[#F5EFE3] sm:min-h-[40rem] lg:min-h-[44rem]"
       data-mobile-cta-section="formula"
       id="formula"
     >
-      <Container>
-        <FadeUp className="max-w-4xl">
+      {/* Mobile: full-bleed. Desktop: image anchored left, soft fade into the right. */}
+      <div className="absolute inset-0 md:inset-y-0 md:left-0 md:right-auto md:w-[68%]">
+        <Image
+          alt=""
+          className="object-cover object-[42%_22%] sm:object-[40%_20%] md:object-[38%_24%]"
+          fill
+          sizes="(min-width: 768px) 68vw, 100vw"
+          src="/images/formular.jpg"
+        />
+      </div>
+
+      {/* Mobile: bottom-weighted veil for readable copy */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgb(11_11_11/.42)_0%,rgb(11_11_11/.5)_38%,rgb(11_11_11/.88)_100%)] md:hidden"
+      />
+
+      {/* Desktop: slow left→right dissolve into solid brand black */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden md:block bg-[linear-gradient(90deg,transparent_0%,transparent_28%,rgb(11_11_11/.28)_48%,rgb(11_11_11/.72)_68%,#0B0B0B_86%,#0B0B0B_100%)]"
+      />
+
+      <Container className="relative flex min-h-[34rem] items-end py-16 sm:min-h-[40rem] sm:py-20 md:items-center md:justify-end lg:min-h-[44rem] lg:py-28">
+        <FadeUp className="w-full max-w-xl rounded-sm border border-[#B8935A]/18 bg-[#0B0B0B]/55 p-5 backdrop-blur-[2px] sm:max-w-2xl sm:p-8 md:max-w-md md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none lg:max-w-lg">
           <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#B8935A]">
             {copy.formula}
           </p>
-          <h2 className="mt-4 max-w-3xl font-serif text-5xl font-light leading-[0.9] sm:text-6xl lg:text-7xl">
+          <h2 className="mt-4 max-w-xl font-serif text-[clamp(2.4rem,7vw,4.8rem)] font-light leading-[0.92] text-[#F5EFE3] drop-shadow-[0_2px_18px_rgb(0_0_0/.45)]">
             {copy.formulaTitle}
           </h2>
-          <p className="mt-5 max-w-2xl text-sm leading-8 text-[#F5EFE3]/65">{copy.formulaBody}</p>
+          <MotionDiamond className="mt-7" />
+          <p className="mt-6 max-w-lg text-base leading-8 text-[#F5EFE3]/88 sm:text-lg">
+            {copy.formulaBody}
+          </p>
+          <MotionButtonShell className="mt-9">
+            <Link
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition hover:brightness-105"
+              href={"/botanique" as Route}
+            >
+              {copy.learn.cards[0]?.[2] ?? "Explore ingredients"}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </MotionButtonShell>
         </FadeUp>
       </Container>
     </section>
@@ -817,8 +847,7 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
       <ProductShowcase copy={copy} />
       <WhyItWorksSection copy={copy} />
       <HairConcernsSection copy={copy} />
-      <IngredientCarousel content={content} copy={copy} />
-      <RitualSection copy={copy} />
+      <IngredientCarousel copy={copy} />      <RitualSection copy={copy} />
       <TestimonialsSection copy={copy} />
       <DiagnosticInviteSection copy={copy} />
       <OriginSection copy={copy} />

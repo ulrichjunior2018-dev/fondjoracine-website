@@ -4,21 +4,93 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  MotionButtonShell,
-  MotionCard,
-  MotionDiamond,
-  MotionInView,
-  MotionStep,
-} from "@/components/motion/living-motion";
+import { MotionButtonShell, MotionDiamond, MotionInView } from "@/components/motion/living-motion";
 import { advisorImages, advisorPricing } from "@/lib/advisor-site";
 import { useCopy } from "@/lib/i18n-context";
+import { cn } from "@/lib/utils/cn";
 
-const cardClass = "border border-[#B8935A]/16 bg-white/[0.025] p-6";
 const goldButtonClass =
   "inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B]";
-const eyebrowClass = "text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]";
+const eyebrowClass = "text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#B8935A]";
+
+/**
+ * Learn hero video: muted, looped, playsInline for mobile.
+ * Drop an MP4 at /public/videos/learn-hero.mp4 (or set NEXT_PUBLIC_LEARN_HERO_VIDEO).
+ * Poster uses the product still until the video is ready.
+ */
+function LearnHeroMedia({ alt }: { alt: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [canPlayVideo, setCanPlayVideo] = useState(false);
+  const videoSrc = process.env.NEXT_PUBLIC_LEARN_HERO_VIDEO?.trim() || "/videos/learn-hero.mp4";
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (media.matches) {
+      return;
+    }
+
+    let cancelled = false;
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    const tryPlay = async () => {
+      try {
+        await video.play();
+        if (!cancelled) {
+          setCanPlayVideo(true);
+        }
+      } catch {
+        if (!cancelled) {
+          setCanPlayVideo(false);
+        }
+      }
+    };
+
+    void tryPlay();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [videoSrc]);
+
+  return (
+    <div className="relative aspect-[4/5] overflow-hidden border border-[#B8935A]/16 bg-black sm:aspect-[5/6]">
+      <Image
+        alt={alt}
+        className={cn(
+          "object-cover transition-opacity duration-700",
+          canPlayVideo ? "opacity-0" : "opacity-100",
+        )}
+        fill
+        priority
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        src={advisorImages.product}
+      />
+      <video
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+          canPlayVideo ? "opacity-100" : "opacity-0",
+        )}
+        loop
+        muted
+        playsInline
+        poster={advisorImages.product}
+        preload="metadata"
+        ref={videoRef}
+        src={videoSrc}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-[#0B0B0B]/55 via-transparent to-[#0B0B0B]/25"
+      />
+    </div>
+  );
+}
 
 export function LearnRouteSection() {
   const copy = useCopy();
@@ -26,26 +98,30 @@ export function LearnRouteSection() {
   const learn = home.learn;
 
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8 notranslate" translate="no">
-      <div className="mx-auto max-w-7xl">
+    <section className="px-4 py-10 sm:px-6 sm:py-14 lg:px-8 notranslate" translate="no">
+      <div className="mx-auto max-w-6xl">
         <MotionInView>
           <p className={eyebrowClass}>{learn.eyebrow}</p>
-          <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-tight sm:text-7xl">
+          <div className="mt-4 h-[2px] max-w-24 bg-[#B8935A]/80" />
+          <h1 className="mt-8 max-w-3xl font-serif text-[1.85rem] font-light leading-[1.15] text-[#F5EFE3] sm:text-5xl lg:text-[3.25rem]">
             {learn.title}
           </h1>
-          <MotionDiamond className="mt-6" />
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#F5EFE3]/68">{learn.intro}</p>
+          <p className="mt-6 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
+            {learn.intro}
+          </p>
         </MotionInView>
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="mt-12 grid gap-10 border-t border-[#B8935A]/14 pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
           <MotionInView>
             <p className={eyebrowClass}>{learn.productEyebrow}</p>
-            <h2 className="mt-5 font-serif text-4xl font-light leading-tight sm:text-5xl">
+            <h2 className="mt-5 font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-4xl">
               {learn.productTitle}
             </h2>
-            <p className="mt-5 text-base leading-8 text-[#F5EFE3]/68">{learn.productBody}</p>
+            <p className="mt-5 text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
+              {learn.productBody}
+            </p>
             <p className="mt-6 font-mono text-2xl text-[#B8935A]">{advisorPricing.productXaf}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6">
               <MotionButtonShell>
                 <Link className={goldButtonClass} href={"/shop" as Route} prefetch>
                   {learn.productCta}
@@ -54,118 +130,128 @@ export function LearnRouteSection() {
               </MotionButtonShell>
             </div>
           </MotionInView>
-          <div className="mx-auto w-full max-w-md">
-            <div className="relative aspect-[4/5] overflow-hidden border border-[#B8935A]/16 bg-black">
-              <Image
-                alt={copy.seveRacine.alt}
-                className="object-cover"
-                fill
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                src={advisorImages.product}
-              />
-            </div>
+          <div className="mx-auto w-full max-w-md lg:max-w-none">
+            <LearnHeroMedia alt={copy.seveRacine.alt} />
           </div>
         </div>
 
-        <div className="mt-16 border-t border-[#B8935A]/14 pt-12">
+        <div className="mt-16 border-t border-[#B8935A]/14 pt-12 sm:mt-20 sm:pt-14">
           <MotionInView>
             <p className={eyebrowClass}>{home.whyEyebrow}</p>
-            <h2 className="mt-6 max-w-3xl font-serif text-4xl font-light leading-tight sm:text-5xl">
+            <h2 className="mt-5 max-w-3xl font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
               {home.whyTitle}
             </h2>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[#F5EFE3]/68">{home.whyBody}</p>
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
+              {home.whyBody}
+            </p>
           </MotionInView>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+          <ol className="mt-10 divide-y divide-[#B8935A]/14 border-y border-[#B8935A]/14">
             {home.whySteps.map(([label, text], index) => (
-              <MotionCard className={cardClass} key={label}>
-                <p className="font-mono text-xs text-[#B8935A]">0{index + 1}</p>
-                <p className="mt-3 text-sm font-semibold text-[#F5EFE3]">{label}</p>
-                <p className="mt-2 text-sm leading-6 text-[#F5EFE3]/66">{text}</p>
-              </MotionCard>
+              <li
+                className="grid gap-3 py-6 sm:grid-cols-[4.5rem_minmax(0,12rem)_minmax(0,1fr)] sm:items-baseline sm:gap-8 sm:py-7"
+                key={label}
+              >
+                <span className="font-mono text-xs tracking-[0.14em] text-[#B8935A]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-serif text-2xl font-light text-[#F5EFE3]">{label}</h3>
+                <p className="text-sm leading-7 text-[#F5EFE3]/66 sm:max-w-xl">{text}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
 
-        <div className="mt-16 border-t border-[#B8935A]/14 pt-12">
+        <div className="mt-16 border-t border-[#B8935A]/14 pt-12 sm:mt-20 sm:pt-14">
           <MotionInView>
             <p className={eyebrowClass}>{home.ritual}</p>
-            <h2 className="mt-6 max-w-3xl font-serif text-4xl font-light leading-tight sm:text-5xl">
+            <h2 className="mt-5 max-w-3xl font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
               {home.ritualTitle}
             </h2>
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
+              {home.ritualBody}
+            </p>
           </MotionInView>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+
+          <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {home.ritualSteps.map((step, index) => (
-              <MotionStep className={cardClass} delay={index * 0.06} key={step}>
-                <p className="font-mono text-xs text-[#B8935A]">0{index + 1}</p>
-                <p className="mt-3 text-sm leading-6 text-[#F5EFE3]/68">{step}</p>
-              </MotionStep>
+              <li className="border-t border-[#B8935A]/20 pt-5" key={step}>
+                <p className="font-mono text-xs tracking-[0.14em] text-[#B8935A]">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <p className="mt-4 font-serif text-xl font-light leading-snug text-[#F5EFE3] sm:text-2xl">
+                  {step}
+                </p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
 
-        <div className="mt-16 border-t border-[#B8935A]/14 pt-12">
+        <div className="mt-16 border-t border-[#B8935A]/14 pt-12 sm:mt-20 sm:pt-14">
           <MotionInView>
             <p className={eyebrowClass}>{learn.exploreEyebrow}</p>
-            <h2 className="mt-6 max-w-3xl font-serif text-4xl font-light leading-tight sm:text-5xl">
+            <h2 className="mt-5 max-w-3xl font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
               {learn.exploreTitle}
             </h2>
           </MotionInView>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+          <ul className="mt-10 divide-y divide-[#B8935A]/14 border-y border-[#B8935A]/14">
             {learn.cards.map(([title, body, cta, href]) => (
-              <MotionCard
-                className="group flex min-h-[15rem] flex-col justify-between border border-[#B8935A]/16 bg-white/[0.025] p-6"
-                key={href + title}
-              >
+              <li key={href + title}>
                 <Link
-                  className="flex h-full flex-col justify-between"
+                  className="group grid gap-3 py-7 transition sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_auto] sm:items-center sm:gap-8"
                   href={href as Route}
                   prefetch
                 >
-                  <div>
-                    <h3 className="font-serif text-2xl font-light leading-snug">{title}</h3>
-                    <p className="mt-4 text-sm leading-7 text-[#F5EFE3]/66">{body}</p>
-                  </div>
-                  <span className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B8935A]">
+                  <h3 className="font-serif text-2xl font-light text-[#F5EFE3] group-hover:text-[#B8935A]">
+                    {title}
+                  </h3>
+                  <p className="text-sm leading-7 text-[#F5EFE3]/66">{body}</p>
+                  <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B8935A]">
                     {cta}
                     <ArrowRight
-                      className="size-4 transition-transform duration-200 group-hover:translate-x-1"
                       aria-hidden="true"
+                      className="size-4 transition-transform duration-200 group-hover:translate-x-1"
                     />
                   </span>
                 </Link>
-              </MotionCard>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
-        <div className="mt-16 border-t border-[#B8935A]/14 pt-12">
+        <div className="mt-16 border-t border-[#B8935A]/14 pt-12 sm:mt-20 sm:pt-14">
           <MotionInView>
             <p className={eyebrowClass}>{home.testimonials.eyebrow}</p>
-            <h2 className="mt-6 max-w-3xl font-serif text-4xl font-light leading-tight sm:text-5xl">
+            <h2 className="mt-5 max-w-3xl font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
               {home.testimonials.title}
             </h2>
           </MotionInView>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+
+          <div className="mt-10 divide-y divide-[#B8935A]/14 border-y border-[#B8935A]/14">
             {home.testimonials.items.map((item) => (
-              <MotionCard className={cardClass} key={item.name}>
-                <blockquote className="text-sm leading-7 text-[#F5EFE3]/72">
-                  “{item.quote}”
-                </blockquote>
-                <figcaption className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#B8935A]">
+              <figure
+                className="grid gap-4 py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-10"
+                key={item.name}
+              >
+                <figcaption className="text-xs font-semibold uppercase tracking-[0.18em] text-[#B8935A]">
                   {item.name}
                 </figcaption>
-              </MotionCard>
+                <blockquote className="font-serif text-xl font-light leading-relaxed text-[#F5EFE3]/82 sm:text-2xl">
+                  “{item.quote}”
+                </blockquote>
+              </figure>
             ))}
           </div>
         </div>
 
-        <MotionInView className="mt-16 border border-[#B8935A]/16 bg-[#B8935A]/[0.045] p-8 sm:p-10">
+        <MotionInView className="mt-16 border-t border-[#B8935A]/14 pt-12 sm:mt-20 sm:pt-14">
           <p className={eyebrowClass}>{learn.diagnosticEyebrow}</p>
-          <h2 className="mt-5 max-w-2xl font-serif text-4xl font-light leading-tight sm:text-5xl">
+          <h2 className="mt-5 max-w-2xl font-serif text-3xl font-light leading-tight text-[#F5EFE3] sm:text-5xl">
             {learn.diagnosticTitle}
           </h2>
           <MotionDiamond className="mt-5" />
-          <p className="mt-5 max-w-xl text-base leading-8 text-[#F5EFE3]/68">
+          <p className="mt-5 max-w-xl text-sm leading-7 text-[#F5EFE3]/68 sm:text-base sm:leading-8">
             {learn.diagnosticBody}
           </p>
           <MotionButtonShell className="mt-7">

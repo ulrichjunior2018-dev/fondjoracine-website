@@ -3,7 +3,9 @@
 These filenames are the canonical website image slots. Keep replacements lowercase,
 web-safe, and inside `public/images`.
 
-- `volcanic-bottle.png` - hero bottle on volcanic stone
+- `maison-fondjo-seve-racine.jpg` - primary storefront / product hero (outdoor stone shot)
+- `maison-fondjo-seve-racine-alt.jpg` - secondary product gallery outdoor shot
+- `volcanic-bottle.png` - archived hero bottle on volcanic stone (replaced)
 - `hero-origin.png` - Mount Cameroon / Buea origin bottle
 - `studio-reflection.png` - reflective black studio product shot
 - `hair-texture-lifestyle.png` - hair texture and lifestyle visual
@@ -17,7 +19,7 @@ web-safe, and inside `public/images`.
 - `origin-buea-harvest.png` - Buea / Mount Cameroon harvest scene
 - `lifestyle-diaspora-travel.png` - diaspora travel product scene
 - `lifestyle-father-child.png` - family scalp ritual scene
-- `product-macro-pipette.png` - bottle and pipette macro
+- `product-macro-pipette.png` - bottle and pipette macro (legacy)
 - `lifestyle-barbershop.png` - barbershop application scene
 - `flatlay-formula-tools.png` - formula tools and botanicals flatlay
 - `lifestyle-mother-child.png` - mother and child scalp ritual

@@ -683,12 +683,14 @@ const advisorEn = {
     description:
       "Maison Fondjo herbarium: Sève Racine ingredients, Latin names and botanical role.",
     eyebrow: "Digital herbarium",
+    indexLabel: "Index",
     title: "A botanical blend. One precise language.",
   },
   diagnostic: {
     ...advisorFr.diagnostic,
     autreBack: "← Back",
     autrePrompt: "Describe what you're experiencing",
+    back: "Previous question",
     notesContinue: "Continue",
     notesPlaceholder: "Optional",
     notesPrompt: "Anything else you'd like us to know?",
