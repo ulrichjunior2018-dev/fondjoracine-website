@@ -41,8 +41,8 @@ export function CustomCursor() {
       const y = e.clientY;
       rafRef.current = requestAnimationFrame(() => {
         if (!dot) return;
-        const scale = isHoverRef.current ? 1.7 : 1;
-        dot.style.transform = `translate3d(${x - 3.5}px,${y - 3.5}px,0) scale(${scale})`;
+        // Position via individual `translate` property — leaves `scale` free for CSS transition.
+        dot.style.translate = `${x - 3.5}px ${y - 3.5}px`;
         dot.style.opacity = "1";
       });
     }
@@ -56,7 +56,11 @@ export function CustomCursor() {
     }
 
     function onOver(e: MouseEvent) {
-      isHoverRef.current = Boolean((e.target as Element).closest(INTERACTIVE));
+      const hovering = Boolean((e.target as Element).closest(INTERACTIVE));
+      if (hovering === isHoverRef.current) return;
+      isHoverRef.current = hovering;
+      // Toggle scale via class — CSS transition eases the change independently of rAF position.
+      dot!.classList.toggle("cursor-expanded", hovering);
     }
 
     window.addEventListener("mousemove", onMove);
@@ -79,9 +83,14 @@ export function CustomCursor() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]">
       <div
-        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#B8935A] opacity-0 shadow-[0_0_14px_rgb(184_147_90/.28)] transition-opacity duration-150"
+        className="absolute left-0 top-0 size-[7px] rounded-full bg-[#B8935A] opacity-0 shadow-[0_0_14px_rgb(184_147_90/.28)]"
         ref={dotRef}
-        style={{ transform: "translate3d(-100px,-100px,0)", willChange: "transform" }}
+        style={{
+          translate: "-100px -100px",
+          scale: "1",
+          transition: "opacity 150ms, scale 150ms cubic-bezier(0.23,1,0.32,1)",
+          willChange: "translate",
+        }}
       />
     </div>
   );

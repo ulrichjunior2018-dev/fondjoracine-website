@@ -225,13 +225,13 @@ export function DiagnosticQuiz() {
     <section className="mx-auto grid min-h-[calc(100svh-5rem)] w-full max-w-5xl content-center px-4 py-14 sm:px-6 lg:px-8">
       <div className="mb-8 h-px overflow-hidden bg-[#F5EFE3]/12">
         <div
-          className="h-full bg-[#B8935A] transition-all duration-500"
+          className="h-full bg-[#B8935A] transition-[width] duration-300 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]"
           style={{ width: `${(progressSteps / questions.length) * 100}%` }}
         />
       </div>
 
       {pendingAutre ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
+        <div className="animate-[fondjoFadeUp_.2s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.eyebrow}
           </p>
@@ -266,7 +266,7 @@ export function DiagnosticQuiz() {
           </div>
         </div>
       ) : !isComplete && currentQuestion ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
+        <div className="animate-[fondjoFadeUp_.2s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.eyebrow}
           </p>
@@ -299,7 +299,7 @@ export function DiagnosticQuiz() {
           </div>
         </div>
       ) : isComplete && !notesShown ? (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both]">
+        <div className="animate-[fondjoFadeUp_.2s_ease-out_both]">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.eyebrow}
           </p>
@@ -326,7 +326,7 @@ export function DiagnosticQuiz() {
           </div>
         </div>
       ) : (
-        <div className="animate-[fondjoFadeUp_.5s_ease-out_both] border border-[#B8935A]/18 bg-[#0B0B0B]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
+        <div className="animate-[fondjoFadeUp_.2s_ease-out_both] border border-[#B8935A]/18 bg-[#0B0B0B]/62 p-6 shadow-[0_24px_90px_rgb(0_0_0/.28)] sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
             {diagnostic.nextStep}
           </p>

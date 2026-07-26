@@ -168,7 +168,7 @@
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --animate-enter: enter var(--duration-base) var(--ease-luxury);
-  --animate-exit: exit var(--duration-fast) ease-in;
+  --animate-exit: exit var(--duration-fast) cubic-bezier(0.23, 1, 0.32, 1);
   --animate-slide-up: slide-up var(--duration-base) var(--ease-luxury);
   --animate-shimmer: shimmer 1.8s linear infinite;
 }
@@ -206,6 +206,10 @@ body {
 .custom-cursor-active,
 .custom-cursor-active * {
   cursor: none !important;
+}
+
+.cursor-expanded {
+  scale: 1.7;
 }
 
 img,
@@ -442,7 +446,7 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"] {
   transition:
-    transform 100ms ease,
+    transform 100ms cubic-bezier(0.23, 1, 0.32, 1),
     background-color var(--duration-fast) ease,
     border-color var(--duration-fast) ease,
     color var(--duration-fast) ease,
@@ -456,12 +460,12 @@ a[class*="rounded"]:active,
 input[type="button"]:active:not(:disabled),
 input[type="submit"]:active:not(:disabled),
 input[type="reset"]:active:not(:disabled) {
-  transform: scale(0.98) !important;
+  transform: scale(0.97) !important;
 }
 
 .is-pressing {
-  transform: scale(0.98) !important;
-  transition: transform 100ms ease !important;
+  transform: scale(0.97) !important;
+  transition: transform 100ms cubic-bezier(0.23, 1, 0.32, 1) !important;
 }
 
 a:not([class*="inline-flex"]):not([class*="flex"]):not([class*="rounded"]):not([class*="bg-"]):not(

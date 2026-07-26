@@ -95,7 +95,7 @@ function ImagePanel({
     <div className={cn("group relative overflow-hidden", className)}>
       <Image
         alt={alt}
-        className="object-cover md:transition-transform md:duration-700 md:ease-out md:group-hover:scale-[1.035]"
+        className="object-cover md:transition-transform md:duration-300 md:[transition-timing-function:cubic-bezier(0.23,1,0.32,1)] md:group-hover:scale-[1.035]"
         fill
         {...(priority ? { priority: true } : { loading: "lazy" as const })}
         sizes={sizes}
