@@ -12,6 +12,10 @@ type AdminLockedStateProps = {
   message?: string;
 };
 
+/**
+ * Shown when a non-admin visits /admin.
+ * Admins use the same email/password login as customers — then open Admin from My Account.
+ */
 export function AdminLockedState({ message }: AdminLockedStateProps) {
   const { locale } = useI18n();
   const admin = getDictionary(locale).admin;
@@ -27,12 +31,26 @@ export function AdminLockedState({ message }: AdminLockedStateProps) {
           <Text className="mt-4" tone="muted">
             {message ?? admin.lockedBody}
           </Text>
-          <Link
-            className="mt-6 inline-flex h-11 items-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
-            href="/"
-          >
-            {admin.returnStorefront}
-          </Link>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              className="inline-flex h-11 items-center rounded-md bg-foreground px-5 text-sm font-semibold text-background"
+              href="/login?redirect=/admin"
+            >
+              {admin.signInAdmin}
+            </Link>
+            <Link
+              className="inline-flex h-11 items-center rounded-md border border-border bg-surface px-5 text-sm font-semibold text-foreground"
+              href="/account"
+            >
+              {admin.goToAccount}
+            </Link>
+            <Link
+              className="inline-flex h-11 items-center rounded-md px-5 text-sm font-semibold text-accent"
+              href="/"
+            >
+              {admin.returnStorefront}
+            </Link>
+          </div>
         </Card>
       </Container>
     </main>

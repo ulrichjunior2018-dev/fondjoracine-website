@@ -19,6 +19,7 @@ import { getPaymentProvider } from "@/lib/payments/registry";
 import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
 import { writeAuditLog } from "@/lib/security/audit-log";
+import { defaultEstimatedDeliveryWindow, getOrderStatusLabel } from "@/lib/order-status/registry";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -505,8 +506,15 @@ export async function createOneProductOrder(
     entityTable: "orders",
   });
 
+  await supabase.from("order_status_events").insert({
+    from_status: null,
+    order_id: order.id,
+    to_status: order.status,
+  });
+
   const confirmationUrl = getConfirmationUrl(order.confirmation_token, returnBaseUrl);
   const totalLabel = `${parseXafAmount(content.product.priceXaf) * input.quantity} XAF`;
+  const profileId = await resolveProfileIdForCustomer(supabase, customerId);
 
   await queueOrderNotifications({
     city: input.city,
@@ -518,9 +526,12 @@ export async function createOneProductOrder(
     paymentMethod: instructions.label,
     phone: normalizePhone(input.phone),
     productName: t(content.product.name, locale),
+    statusId: order.status,
+    statusLabel: getOrderStatusLabel(order.status, locale),
     totalLabel,
     ...(input.email ? { customerEmail: input.email } : {}),
     ...(customerId ? { customerId } : {}),
+    ...(profileId ? { profileId } : {}),
     ...(input.transaction_reference ? { transactionReference: input.transaction_reference } : {}),
   });
 
@@ -586,7 +597,7 @@ export async function listAdminOrders(supabase: SupabaseClient) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "id, order_number, status, fulfillment_status, currency, total_cents, customer_name, customer_phone, delivery_city, payment_method, manual_payment_reference, created_at, admin_payment_verified_at",
+      "id, order_number, status, fulfillment_status, currency, total_cents, customer_name, customer_phone, delivery_city, delivery_address, payment_method, manual_payment_reference, created_at, admin_payment_verified_at, admin_notes, estimated_delivery_start, estimated_delivery_end, email, metadata",
     )
     .order("created_at", { ascending: false })
     .limit(100);
@@ -606,33 +617,68 @@ export async function updateAdminOrderStatus(
 ) {
   const { data: before } = await supabase
     .from("orders")
-    .select("id, order_number, status")
+    .select("id, order_number, status, admin_notes")
     .eq("id", orderId)
-    .maybeSingle();
+    .maybeSingle<{
+      admin_notes: string | null;
+      id: string;
+      order_number: string;
+      status: string;
+    }>();
 
-  const update: Record<string, unknown> = { status: input.status };
+  const now = new Date().toISOString();
+  const update: Record<string, unknown> = {
+    status: input.status,
+    status_updated_at: now,
+  };
 
   if (input.status === "confirmed") {
-    update.admin_payment_verified_at = new Date().toISOString();
+    update.admin_payment_verified_at = now;
     update.admin_payment_verified_by = adminProfileId;
+    const window = defaultEstimatedDeliveryWindow();
+    update.estimated_delivery_start = input.estimated_delivery_start ?? window.start;
+    update.estimated_delivery_end = input.estimated_delivery_end ?? window.end;
+  } else {
+    if (input.estimated_delivery_start !== undefined) {
+      update.estimated_delivery_start = input.estimated_delivery_start;
+    }
+    if (input.estimated_delivery_end !== undefined) {
+      update.estimated_delivery_end = input.estimated_delivery_end;
+    }
+  }
+
+  if (input.note?.trim()) {
+    const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
+    const line = `[${stamp}] ${input.note.trim()}`;
+    update.admin_notes = before?.admin_notes ? `${before.admin_notes}\n${line}` : line;
   }
 
   const { data, error } = await supabase
     .from("orders")
     .update(update)
     .eq("id", orderId)
-    .select("id, order_number, status, admin_payment_verified_at")
+    .select(
+      "id, order_number, status, admin_payment_verified_at, admin_notes, estimated_delivery_start, estimated_delivery_end",
+    )
     .single();
 
   if (error) {
     throw new AppError("BAD_REQUEST", error.message);
   }
 
+  await supabase.from("order_status_events").insert({
+    actor_profile_id: adminProfileId,
+    from_status: before?.status ?? null,
+    note: input.note?.trim() || null,
+    order_id: orderId,
+    to_status: input.status,
+  });
+
   if (input.status === "confirmed") {
     const { error: paymentError } = await supabase
       .from("payments")
       .update({
-        captured_at: new Date().toISOString(),
+        captured_at: now,
         status: "succeeded",
       })
       .eq("order_id", orderId);
@@ -642,12 +688,15 @@ export async function updateAdminOrderStatus(
     }
 
     await notifyOrderConfirmed(supabase, orderId);
+  } else if (before?.status !== input.status) {
+    await notifyOrderStatusUpdated(supabase, orderId, input.status);
   }
 
   await writeAuditLog(supabase, {
     action: input.status === "confirmed" ? "payment.confirmed.admin" : "order.status_updated.admin",
     actorProfileId: adminProfileId,
     afterData: {
+      admin_notes: data.admin_notes,
       order_number: data.order_number,
       status: data.status,
     },
@@ -662,6 +711,19 @@ export async function updateAdminOrderStatus(
   });
 
   return data;
+}
+
+async function resolveProfileIdForCustomer(
+  supabase: SupabaseClient,
+  customerId: string | null,
+): Promise<string | null> {
+  if (!customerId) return null;
+  const { data } = await supabase
+    .from("customers")
+    .select("profile_id")
+    .eq("id", customerId)
+    .maybeSingle<{ profile_id: string }>();
+  return data?.profile_id ?? null;
 }
 
 export async function notifyOrderConfirmed(supabase: SupabaseClient, orderId: string) {
@@ -697,18 +759,84 @@ export async function notifyOrderConfirmed(supabase: SupabaseClient, orderId: st
     // Keep raw payment_method if provider lookup fails.
   }
 
+  const locale = order.metadata?.locale === "fr" ? "fr" : "en";
+  const profileId = await resolveProfileIdForCustomer(supabase, order.customer_id);
+
   await queueOrderNotifications({
     city: order.delivery_city ?? "Unknown",
     confirmationUrl: getConfirmationUrl(order.confirmation_token),
     customerName: order.customer_name ?? "Customer",
     kind: "confirmed",
-    locale: order.metadata?.locale === "fr" ? "fr" : "en",
+    locale,
     orderNumber: order.order_number,
     paymentMethod: paymentLabel,
     phone: order.customer_phone ?? "Unknown",
+    statusId: "confirmed",
+    statusLabel: getOrderStatusLabel("confirmed", locale),
     totalLabel: `${order.total_cents.toLocaleString("en-US")} XAF`,
     ...(order.email ? { customerEmail: order.email } : {}),
     ...(order.customer_id ? { customerId: order.customer_id } : {}),
+    ...(profileId ? { profileId } : {}),
+    ...(order.metadata?.product_name ? { productName: order.metadata.product_name } : {}),
+  });
+}
+
+export async function notifyOrderStatusUpdated(
+  supabase: SupabaseClient,
+  orderId: string,
+  statusId: string,
+) {
+  const { data: order } = await supabase
+    .from("orders")
+    .select(
+      "order_number, total_cents, customer_name, customer_phone, delivery_city, payment_method, confirmation_token, email, customer_id, metadata",
+    )
+    .eq("id", orderId)
+    .maybeSingle<{
+      confirmation_token: string;
+      customer_id: string | null;
+      customer_name: string | null;
+      customer_phone: string | null;
+      delivery_city: string | null;
+      email: string | null;
+      metadata: { locale?: string; product_name?: string } | null;
+      order_number: string;
+      payment_method: string | null;
+      total_cents: number;
+    }>();
+
+  if (!order) return;
+
+  const locale = order.metadata?.locale === "fr" ? "fr" : "en";
+  const statusLabel = getOrderStatusLabel(statusId, locale);
+  const profileId = await resolveProfileIdForCustomer(supabase, order.customer_id);
+
+  let paymentLabel = order.payment_method ?? "Payment";
+  try {
+    if (order.payment_method) {
+      paymentLabel = getPaymentProvider(
+        order.payment_method as OneProductPaymentMethod,
+      ).defaultLabel;
+    }
+  } catch {
+    // keep raw
+  }
+
+  await queueOrderNotifications({
+    city: order.delivery_city ?? "Unknown",
+    confirmationUrl: getConfirmationUrl(order.confirmation_token),
+    customerName: order.customer_name ?? "Customer",
+    kind: "status_updated",
+    locale,
+    orderNumber: order.order_number,
+    paymentMethod: paymentLabel,
+    phone: order.customer_phone ?? "Unknown",
+    statusId,
+    statusLabel,
+    totalLabel: `${order.total_cents.toLocaleString("en-US")} XAF`,
+    ...(order.email ? { customerEmail: order.email } : {}),
+    ...(order.customer_id ? { customerId: order.customer_id } : {}),
+    ...(profileId ? { profileId } : {}),
     ...(order.metadata?.product_name ? { productName: order.metadata.product_name } : {}),
   });
 }
@@ -757,14 +885,25 @@ export async function fulfillStripeOrder(
     );
   }
 
-  if (order.status === "confirmed") {
+  if (
+    order.status === "confirmed" ||
+    order.status === "delivered" ||
+    order.status === "shipped" ||
+    order.status === "out_for_delivery"
+  ) {
     return;
   }
+
+  const deliveryWindow = defaultEstimatedDeliveryWindow();
+  const now = new Date().toISOString();
 
   const { error: orderError } = await supabase
     .from("orders")
     .update({
       status: "confirmed",
+      status_updated_at: now,
+      estimated_delivery_start: deliveryWindow.start,
+      estimated_delivery_end: deliveryWindow.end,
       stripe_checkout_session_id: session.id,
       ...(session.customer_details?.email ? { email: session.customer_details.email } : {}),
     })
@@ -774,10 +913,16 @@ export async function fulfillStripeOrder(
     throw new AppError("BAD_REQUEST", orderError.message);
   }
 
+  await supabase.from("order_status_events").insert({
+    from_status: order.status,
+    order_id: orderId,
+    to_status: "confirmed",
+  });
+
   await supabase
     .from("payments")
     .update({
-      captured_at: new Date().toISOString(),
+      captured_at: now,
       provider_payment_id: session.payment_intent?.toString() ?? session.id,
       status: "succeeded",
     })

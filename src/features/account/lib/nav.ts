@@ -26,17 +26,22 @@ function futureRoute(path: string): Route {
 }
 
 /**
- * Single source of truth for the account mobile drawer + desktop sidebar.
- * Labels resolve via `account.nav.*` translation keys.
+ * Primary account navigation (PRD): focused on what customers use today.
+ * Future features stay visible under “More” / rewards / hair care — not removed.
  */
 export const accountNavGroups: AccountNavGroup[] = [
   {
     id: "core",
     items: [
       { href: "/account", icon: "home", labelKey: "dashboard" },
-      { href: "/", icon: "shoppingBag", labelKey: "backToWebsite" },
       { href: "/account/orders", icon: "package", labelKey: "myOrders" },
       { href: "/account/profile", icon: "user", labelKey: "myProfile" },
+      { href: "/account/addresses", icon: "mapPin", labelKey: "addresses" },
+      { href: "/account/notifications", icon: "bell", labelKey: "notifications" },
+      { href: "/account/security", icon: "lock", labelKey: "security" },
+      { href: "/account/support", icon: "lifeBuoy", labelKey: "support" },
+      { href: "/account/billing", icon: "creditCard", labelKey: "billing" },
+      { href: "/account/settings", icon: "settings", labelKey: "settings" },
     ],
   },
   {
@@ -76,31 +81,15 @@ export const accountNavGroups: AccountNavGroup[] = [
     ],
   },
   {
-    id: "account",
-    labelKey: "account",
+    id: "more",
+    labelKey: "more",
     items: [
-      { href: "/account/addresses", icon: "mapPin", labelKey: "addresses" },
-      { href: "/account/security", icon: "lock", labelKey: "security" },
-      { href: "/account/notifications", icon: "bell", labelKey: "notifications" },
-      {
-        comingSoon: true,
-        href: futureRoute("/account/billing"),
-        icon: "creditCard",
-        labelKey: "billing",
-      },
       {
         comingSoon: true,
         href: futureRoute("/account/payment-methods"),
         icon: "wallet",
         labelKey: "paymentMethods",
       },
-      {
-        comingSoon: true,
-        href: futureRoute("/account/support"),
-        icon: "lifeBuoy",
-        labelKey: "support",
-      },
-      { href: "/account/settings", icon: "settings", labelKey: "settings" },
     ],
   },
   {

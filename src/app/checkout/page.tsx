@@ -65,7 +65,9 @@ export default async function CheckoutPage() {
         locale={locale}
         paymentMethods={paymentMethods}
         productImageAlt={t(image.alt, locale)}
-        productImageSrc={image.src.startsWith("/images/") ? image.src : "/images/studio.png"}
+        productImageSrc={
+          image.src.startsWith("/images/") ? image.src : "/images/maison-fondjo-seve-racine.jpg"
+        }
         productName={t(content.product.name, locale)}
         productPriceXaf={priceXaf}
         subscriptionAvailable={subscriptionAvailable}

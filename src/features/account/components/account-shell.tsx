@@ -24,12 +24,11 @@ import { cn } from "@/lib/utils/cn";
 type AccountShellProps = {
   children: ReactNode;
   customerName: string;
+  /** Same email/password login as customers; only admins see staff tools. */
+  isAdmin?: boolean;
 };
 
 function isActive(pathname: string, href: string) {
-  if (href === "/") {
-    return pathname === "/";
-  }
   return href === "/account" ? pathname === href : pathname.startsWith(href);
 }
 
@@ -112,12 +111,45 @@ function NavItemRow({
   );
 }
 
-function NavGroups({ onNavigate, pathname }: { onNavigate?: () => void; pathname: string }) {
+function NavGroups({
+  onNavigate,
+  pathname,
+  isAdmin,
+}: {
+  onNavigate?: () => void;
+  pathname: string;
+  isAdmin?: boolean;
+}) {
   const { locale } = useI18n();
   const nav = getDictionary(locale).account.nav;
 
   return (
     <nav aria-label={nav.account} className="grid gap-6 lg:gap-4">
+      {isAdmin ? (
+        <div className="grid gap-1 lg:gap-0.5">
+          <Link
+            className={cn(
+              "flex w-full items-center rounded-xl text-left font-semibold transition-colors duration-200",
+              "min-h-12 gap-3 px-3 py-2.5 text-[15px]",
+              "lg:min-h-9 lg:gap-2.5 lg:rounded-lg lg:px-2.5 lg:py-1.5 lg:text-[13px] lg:font-medium",
+              pathname.startsWith("/admin")
+                ? "bg-accent-muted text-accent"
+                : "hover:bg-accent-muted",
+            )}
+            href="/admin"
+            {...(onNavigate ? { onClick: onNavigate } : {})}
+          >
+            <Icons.grid
+              aria-hidden="true"
+              className={cn(
+                "h-[18px] w-[18px] shrink-0 lg:h-4 lg:w-4",
+                pathname.startsWith("/admin") ? "text-accent" : "text-foreground",
+              )}
+            />
+            <span className="flex-1 truncate">{nav.adminDashboard}</span>
+          </Link>
+        </div>
+      ) : null}
       {accountNavGroups.map((group) => (
         <div className="grid gap-1 lg:gap-0.5" key={group.id}>
           {group.labelKey ? (
@@ -159,7 +191,7 @@ function useSystemColorPreference() {
  * (light gray + near-black text + gold accents). Desktop keeps a left sidebar.
  * Appearance (light / dark / system) comes from the profile menu via `next-themes`.
  */
-export function AccountShell({ children, customerName }: AccountShellProps) {
+export function AccountShell({ children, customerName, isAdmin = false }: AccountShellProps) {
   const pathname = usePathname();
   const { locale } = useI18n();
   const { theme, setTheme, systemTheme, resolvedTheme } = useTheme();
@@ -246,17 +278,27 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
       data-account-theme={accountTheme}
       suppressHydrationWarning
     >
-      {/* Mobile top bar */}
+      {/* Mobile top bar: back ← | brand | menu */}
       <header className="sticky top-0 z-40 border-b border-border bg-background lg:hidden">
-        <div className="flex h-14 items-center justify-between gap-3 px-4">
-          <Link className="font-serif text-lg tracking-tight text-accent" href="/">
+        <div className="flex h-14 items-center gap-1 px-2 sm:px-3">
+          <Link
+            aria-label={nav.backToWebsite}
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-accent-muted hover:text-accent"
+            href="/"
+          >
+            <Icons.arrowLeft aria-hidden="true" className="h-5 w-5" />
+          </Link>
+          <Link
+            className="min-w-0 flex-1 truncate px-1 font-serif text-lg tracking-tight text-accent"
+            href="/account"
+          >
             Maison Fondjo
           </Link>
           <button
             aria-controls={menuId}
             aria-expanded={isMenuOpen}
             aria-label={isMenuOpen ? nav.closeMenu : nav.openMenu}
-            className="inline-flex size-11 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-accent-muted"
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-accent-muted"
             onClick={() => setIsMenuOpen((open) => !open)}
             type="button"
           >
@@ -307,6 +349,7 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
                   <div className="mt-2 rounded-xl border border-border bg-surface-elevated p-1">
                     <AccountProfileMenu
                       activeAppearance={selectedAppearance}
+                      isAdmin={isAdmin}
                       onAppearanceChange={handleAppearanceChange}
                       onClose={() => setIsProfileMenuOpen(false)}
                       resolvedAppearance={accountTheme}
@@ -315,7 +358,11 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
                 ) : null}
               </div>
 
-              <NavGroups onNavigate={() => setIsMenuOpen(false)} pathname={pathname} />
+              <NavGroups
+                isAdmin={isAdmin}
+                onNavigate={() => setIsMenuOpen(false)}
+                pathname={pathname}
+              />
             </div>
           </div>
         </div>
@@ -323,14 +370,25 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
 
       <div className="lg:flex lg:h-svh lg:items-stretch">
         <aside className="sticky top-0 hidden h-svh w-[280px] shrink-0 flex-col border-r border-border bg-background lg:flex">
-          <div className="flex h-14 items-center px-5">
-            <Link className="font-serif text-lg tracking-tight text-accent" href="/">
+          <div className="flex h-14 items-center gap-1 border-b border-border px-3">
+            <Link
+              aria-label={nav.backToWebsite}
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-foreground/75 transition-colors hover:bg-accent-muted hover:text-accent"
+              href="/"
+              title={nav.backToWebsite}
+            >
+              <Icons.arrowLeft aria-hidden="true" className="h-4 w-4" />
+            </Link>
+            <Link
+              className="min-w-0 flex-1 truncate px-1 font-serif text-lg tracking-tight text-accent"
+              href="/account"
+            >
               Maison Fondjo
             </Link>
           </div>
 
           <div className="account-scroll min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-3 py-4">
-            <NavGroups pathname={pathname} />
+            <NavGroups isAdmin={isAdmin} pathname={pathname} />
           </div>
 
           <div className="relative p-3">
@@ -349,6 +407,7 @@ export function AccountShell({ children, customerName }: AccountShellProps) {
                 >
                   <AccountProfileMenu
                     activeAppearance={selectedAppearance}
+                    isAdmin={isAdmin}
                     onAppearanceChange={handleAppearanceChange}
                     onClose={() => setIsProfileMenuOpen(false)}
                     resolvedAppearance={accountTheme}

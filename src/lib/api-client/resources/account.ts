@@ -74,7 +74,15 @@ export function getAccountOrder(client: ApiClient, orderId: string): Promise<Acc
 export function getAccountNotificationPreferences(
   client: ApiClient,
 ): Promise<NotificationPreferences> {
-  return client.get<NotificationPreferences>("/account/notifications");
+  return client
+    .get<{ preferences: NotificationPreferences } | NotificationPreferences>(
+      "/account/notifications",
+    )
+    .then((payload) =>
+      payload && typeof payload === "object" && "preferences" in payload
+        ? payload.preferences
+        : (payload as NotificationPreferences),
+    );
 }
 
 export function updateAccountNotificationPreferences(

@@ -7,7 +7,7 @@
  * change to the order flow.
  */
 
-export type OrderNotificationKind = "placed" | "payment_submitted" | "confirmed";
+export type OrderNotificationKind = "placed" | "payment_submitted" | "confirmed" | "status_updated";
 
 /** Payload for order lifecycle notification events. Framework-free. */
 export type OrderPlacedNotification = {
@@ -23,10 +23,15 @@ export type OrderPlacedNotification = {
   customerEmail?: string;
   /** When set, customer channel respects Account → Notifications prefs. */
   customerId?: string | null;
+  /** Auth profile id for in-app `notifications` rows. */
+  profileId?: string | null;
   locale?: "en" | "fr";
   /** Defaults to "placed". */
   kind?: OrderNotificationKind;
   productName?: string;
+  /** Human label for the new status when kind is status_updated. */
+  statusLabel?: string;
+  statusId?: string;
 };
 
 export interface NotificationChannel {

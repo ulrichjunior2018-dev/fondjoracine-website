@@ -90,16 +90,23 @@ export const submitPaymentReferenceSchema = z.object({
 });
 
 export const adminOrderStatusUpdateSchema = z.object({
-  note: z.string().max(1000).optional(),
+  note: z.string().max(2000).optional(),
+  estimated_delivery_start: z.string().date().optional().nullable(),
+  estimated_delivery_end: z.string().date().optional().nullable(),
   status: z.enum([
     "pending_payment",
     "payment_submitted",
     "confirmed",
+    "order_received",
+    "preparing",
     "packed",
     "shipped",
+    "out_for_delivery",
     "delivered",
     "cancelled",
     "refunded",
+    "failed",
+    "returned",
   ]),
 });
 

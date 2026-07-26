@@ -15,7 +15,15 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
-function adminCopy(kind: OrderNotificationKind) {
+function adminCopy(kind: OrderNotificationKind, statusLabel?: string) {
+  if (kind === "status_updated") {
+    return {
+      headline: "Order status updated",
+      intro: `Order moved to: ${statusLabel || "updated"}.`,
+      subject: (orderNumber: string) => `Order ${orderNumber} → ${statusLabel || "updated"}`,
+      cta: "Open admin dashboard →",
+    };
+  }
   if (kind === "confirmed") {
     return {
       headline: "Payment confirmed",
@@ -45,7 +53,7 @@ function buildAdminNotificationHtml(
   kind: OrderNotificationKind,
 ): string {
   const adminUrl = `${env.NEXT_PUBLIC_SITE_URL}/admin`;
-  const text = adminCopy(kind);
+  const text = adminCopy(kind, payload.statusLabel);
   const safePayload = {
     city: escapeHtml(payload.city),
     confirmationUrl: escapeHtml(payload.confirmationUrl),
@@ -160,9 +168,15 @@ export const adminEmailChannel: NotificationChannel = {
     }
 
     const kind: OrderNotificationKind = event.kind ?? "placed";
+
+    // Status updates are initiated by admins — only notify the customer.
+    if (kind === "status_updated") {
+      return;
+    }
+
     const fromEmail = env.RESEND_FROM_EMAIL || "care@maisonfondjo.com";
     const adminEmail = env.ADMIN_EMAIL || DEFAULT_ADMIN_NOTIFICATION_EMAIL;
-    const text = adminCopy(kind);
+    const text = adminCopy(kind, event.statusLabel);
 
     try {
       const resend = getResendClient();

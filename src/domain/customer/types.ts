@@ -49,19 +49,34 @@ export type AccountOrderSummary = {
   id: string;
   orderNumber: string;
   status: string;
+  statusLabel: string;
+  paymentStatus: "pending" | "paid" | "refunded" | "cancelled";
+  paymentStatusLabel: string;
   fulfillmentStatus: string;
   currency: string;
   totalCents: number;
   paymentMethod: string | null;
   itemsCount: number;
   createdAt: string;
+  estimatedDeliveryStart: string | null;
+  estimatedDeliveryEnd: string | null;
+};
+
+export type AccountOrderTimelineStep = {
+  id: string;
+  label: string;
+  tone: string;
+  state: "complete" | "current" | "upcoming";
 };
 
 export type AccountOrderDetail = AccountOrderSummary & {
   deliveryCity: string | null;
   deliveryAddress: string | null;
   manualPaymentReference: string | null;
+  email: string | null;
+  customerName: string | null;
   trackingUrl: string | null;
+  timeline: AccountOrderTimelineStep[];
   items: Array<{
     id: string;
     title: string;
@@ -72,13 +87,24 @@ export type AccountOrderDetail = AccountOrderSummary & {
   }>;
 };
 
+export type AccountInboxNotification = {
+  id: string;
+  subject: string;
+  body: string;
+  createdAt: string;
+  readAt: string | null;
+  data: Record<string, unknown> | null;
+};
+
 /** Dashboard "Home" summary — kept intentionally small; expand per-widget as needed. */
 export type AccountOverview = {
   account: CustomerAccount;
   latestOrder: AccountOrderSummary | null;
+  activeOrdersCount: number;
   ordersCount: number;
   hasAddress: boolean;
   profileCompletionPercent: number;
+  recentNotifications: AccountInboxNotification[];
 };
 
 // Reserved for future account sections (see supabase/migrations/000010 for the

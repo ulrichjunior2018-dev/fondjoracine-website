@@ -7,6 +7,7 @@ import type {
   UpdateProfileInput,
 } from "@/domain/customer/schemas";
 import type {
+  AccountInboxNotification,
   AccountOrderDetail,
   AccountOrderSummary,
   AccountOverview,
@@ -16,6 +17,12 @@ import type {
 } from "@/domain/customer/types";
 import { AppError } from "@/lib/errors/app-error";
 import type { Tables } from "@/lib/database/schema";
+import {
+  getAccountPaymentStatus,
+  getAccountPaymentStatusLabel,
+  isActiveAccountOrder,
+} from "@/lib/order-status/account-facets";
+import { buildOrderTimeline, getOrderStatusLabel } from "@/lib/order-status/registry";
 
 /**
  * Business logic for the customer account surface (signed-in "My Account").
@@ -71,17 +78,22 @@ function toAddress(row: AddressRow): Address {
   };
 }
 
-function toOrderSummary(row: OrderRow, itemsCount: number): AccountOrderSummary {
+function toOrderSummary(row: OrderRow, itemsCount: number, locale = "en"): AccountOrderSummary {
   return {
     id: row.id,
     orderNumber: row.order_number,
     status: row.status,
+    statusLabel: getOrderStatusLabel(row.status, locale),
+    paymentStatus: getAccountPaymentStatus(row.status),
+    paymentStatusLabel: getAccountPaymentStatusLabel(row.status, locale),
     fulfillmentStatus: row.fulfillment_status,
     currency: row.currency,
     totalCents: row.total_cents,
     paymentMethod: row.payment_method,
     itemsCount,
     createdAt: row.created_at,
+    estimatedDeliveryStart: row.estimated_delivery_start ?? null,
+    estimatedDeliveryEnd: row.estimated_delivery_end ?? null,
   };
 }
 
@@ -289,6 +301,7 @@ async function countItemsByOrderId(supabase: SupabaseClient, orderIds: string[])
 export async function listOrdersForCustomer(
   supabase: SupabaseClient,
   customerId: string,
+  locale = "en",
 ): Promise<AccountOrderSummary[]> {
   const { data, error } = await supabase
     .from("orders")
@@ -306,13 +319,14 @@ export async function listOrdersForCustomer(
     data.map((order) => order.id),
   );
 
-  return data.map((order) => toOrderSummary(order, counts.get(order.id) ?? 0));
+  return data.map((order) => toOrderSummary(order, counts.get(order.id) ?? 0, locale));
 }
 
 export async function getOrderForCustomer(
   supabase: SupabaseClient,
   customerId: string,
   orderId: string,
+  locale = "en",
 ): Promise<AccountOrderDetail> {
   const { data: order, error } = await supabase
     .from("orders")
@@ -339,14 +353,20 @@ export async function getOrderForCustomer(
     throw new AppError("INTERNAL", "Unable to load order items.", { expose: false });
   }
 
+  const includePaymentSubmitted =
+    order.status === "payment_submitted" || Boolean(order.manual_payment_reference);
+
   return {
-    ...toOrderSummary(order, items.length),
+    ...toOrderSummary(order, items.length, locale),
     deliveryCity: order.delivery_city,
     deliveryAddress: order.delivery_address,
     manualPaymentReference: order.manual_payment_reference,
+    email: order.email,
+    customerName: order.customer_name,
     // Populated once fulfillment creates `shipments` rows for this order flow;
     // wire a join here when shipment tracking is implemented (see 000002 schema).
     trackingUrl: null,
+    timeline: buildOrderTimeline(order.status, locale, { includePaymentSubmitted }),
     items: items.map((item) => ({
       id: item.id,
       title: item.title,
@@ -423,13 +443,69 @@ export async function updateNotificationPreferences(
   };
 }
 
+export async function listInboxNotifications(
+  supabase: SupabaseClient,
+  profileId: string,
+  limit = 20,
+): Promise<AccountInboxNotification[]> {
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("id, subject, body, data, read_at, created_at")
+    .eq("profile_id", profileId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    // Table may be empty or temporarily unavailable — never break the account shell.
+    return [];
+  }
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    subject: row.subject,
+    body: row.body,
+    createdAt: row.created_at,
+    readAt: row.read_at ?? null,
+    data: (row.data as Record<string, unknown> | null) ?? null,
+  }));
+}
+
+export async function markInboxNotificationRead(
+  supabase: SupabaseClient,
+  profileId: string,
+  notificationId: string,
+): Promise<AccountInboxNotification | null> {
+  const { data, error } = await supabase
+    .from("notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("id", notificationId)
+    .eq("profile_id", profileId)
+    .select("id, subject, body, data, read_at, created_at")
+    .maybeSingle();
+
+  if (error || !data) {
+    throw new AppError("NOT_FOUND", "Notification not found.");
+  }
+
+  return {
+    id: data.id,
+    subject: data.subject,
+    body: data.body,
+    createdAt: data.created_at,
+    readAt: data.read_at ?? null,
+    data: (data.data as Record<string, unknown> | null) ?? null,
+  };
+}
+
 export async function getAccountOverview(
   supabase: SupabaseClient,
   userId: string,
+  locale = "en",
 ): Promise<AccountOverview> {
   const account = await getOrCreateCustomerAccount(supabase, userId);
-  const orders = await listOrdersForCustomer(supabase, account.id);
+  const orders = await listOrdersForCustomer(supabase, account.id, locale);
   const addresses = await listAddresses(supabase, account.id);
+  const recentNotifications = await listInboxNotifications(supabase, account.profileId, 5);
 
   const completionFields = [
     account.firstName,
@@ -442,9 +518,11 @@ export async function getAccountOverview(
   return {
     account,
     latestOrder: orders[0] ?? null,
+    activeOrdersCount: orders.filter((order) => isActiveAccountOrder(order.status)).length,
     ordersCount: orders.length,
     hasAddress: addresses.length > 0,
     profileCompletionPercent: Math.round((completedCount / completionFields.length) * 100),
+    recentNotifications,
   };
 }
 

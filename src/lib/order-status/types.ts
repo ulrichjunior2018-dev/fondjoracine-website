@@ -5,13 +5,20 @@
 
 export type OrderStatusId =
   | "pending_payment"
+  | "payment_submitted"
   | "awaiting_confirmation"
   | "confirmed"
+  | "order_received"
+  | "preparing"
   | "processing"
+  | "packed"
   | "shipped"
+  | "out_for_delivery"
   | "delivered"
   | "cancelled"
-  | "refunded";
+  | "refunded"
+  | "failed"
+  | "returned";
 
 export type OrderStatusTone = "neutral" | "accent" | "sage" | "warning" | "danger";
 
@@ -28,5 +35,16 @@ export interface OrderStatusDescriptor {
   labelEn: string;
   labelFr: string;
   tone: OrderStatusTone;
+  /** Whether this status appears in the progressive customer timeline. */
+  isLifecycleStep: boolean;
+  /** Whether admins can select this status in the dropdown. */
+  isAdminSelectable: boolean;
   isConfigured: () => boolean;
 }
+
+export type OrderTimelineStep = {
+  id: string;
+  label: string;
+  tone: OrderStatusTone;
+  state: "complete" | "current" | "upcoming";
+};
