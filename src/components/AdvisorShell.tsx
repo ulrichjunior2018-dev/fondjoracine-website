@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
 
+import { MarketingMobileMenu } from "@/components/marketing-mobile-menu";
 import { NavAuthButton } from "@/components/nav-auth-button";
 import { SiteFooter } from "@/components/site-footer";
 import { useCopy, useI18n } from "@/lib/i18n-context";
@@ -32,7 +33,7 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
         className="sticky top-0 z-50 border-b border-[#B8935A]/14 bg-[#0B0B0B]/88 backdrop-blur-xl"
         key={locale}
       >
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
           <Link className="flex items-center gap-3" href="/" aria-label={shell.homeLabel}>
             <span
               aria-hidden="true"
@@ -50,7 +51,7 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
             </span>
           </Link>
           <nav
-            className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 md:flex notranslate"
+            className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 lg:flex notranslate"
             translate="no"
           >
             {desktopNav.map(([label, href]) => {
@@ -79,33 +80,13 @@ export function AdvisorShell({ children }: AdvisorShellProps) {
               {copy.home.buy}
             </Link>
             <NavAuthButton />
+            <MarketingMobileMenu
+              closeLabel={copy.home.navigationClose}
+              links={mobileNav}
+              openLabel={copy.home.navigationOpen}
+            />
           </div>
         </div>
-        <nav
-          aria-label="Marketing sections"
-          className="flex gap-5 overflow-x-auto border-t border-[#B8935A]/10 px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/62 md:hidden notranslate"
-          translate="no"
-        >
-          {mobileNav.map(([label, href]) => {
-            const active = isMarketingNavActive(pathname, href);
-
-            return (
-              <Link
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "shrink-0 border-b-2 pb-1 transition-colors",
-                  active
-                    ? "border-[#B8935A] text-[#F5EFE3]"
-                    : "border-transparent hover:text-[#B8935A]",
-                )}
-                href={href as Route}
-                key={href}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
       </header>
       {children}
       <SiteFooter />
