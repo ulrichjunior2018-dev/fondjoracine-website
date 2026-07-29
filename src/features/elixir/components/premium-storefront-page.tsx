@@ -11,6 +11,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { MarketingMobileMenu } from "@/components/marketing-mobile-menu";
 import { NavAuthButton } from "@/components/nav-auth-button";
+import { MarketingMobileMenu } from "@/components/marketing-mobile-menu";
 import {
   MotionButtonShell,
   MotionCard,

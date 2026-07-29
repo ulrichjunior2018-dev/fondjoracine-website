@@ -31,6 +31,9 @@ export function MarketingMobileMenu({ closeLabel, links, openLabel }: MarketingM
       return;
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
@@ -38,7 +41,10 @@ export function MarketingMobileMenu({ closeLabel, links, openLabel }: MarketingM
     }
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [isOpen]);
 
   return (
@@ -58,10 +64,20 @@ export function MarketingMobileMenu({ closeLabel, links, openLabel }: MarketingM
         )}
       </button>
 
+      <button
+        aria-label={closeLabel}
+        className={cn(
+          "fixed inset-0 z-[60] bg-[#0B0B0B]/72 transition-opacity duration-200",
+          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={() => setIsOpen(false)}
+        tabIndex={isOpen ? 0 : -1}
+        type="button"
+      />
+
       <div
         className={cn(
-          "absolute inset-x-0 top-full origin-top transition-[opacity,transform] duration-200",
-          "bg-[linear-gradient(180deg,rgb(11_11_11/.72)_0%,rgb(11_11_11/.42)_70%,transparent_100%)] pb-4 backdrop-blur-[2px]",
+          "fixed inset-x-0 top-16 z-[70] origin-top border-b border-white/10 bg-[#0B0B0B] shadow-[0_18px_40px_rgb(0_0_0/.45)] transition-[opacity,transform] duration-200 sm:top-20",
           isOpen
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-1 opacity-0",
@@ -70,7 +86,7 @@ export function MarketingMobileMenu({ closeLabel, links, openLabel }: MarketingM
       >
         <nav
           aria-label="Marketing sections"
-          className="mx-auto grid max-w-7xl gap-1 px-4 py-3 sm:px-6"
+          className="mx-auto grid max-w-7xl gap-1 px-4 py-4 sm:px-6"
         >
           {links.map(([label, href]) => {
             const active = isMarketingNavActive(pathname, href);
@@ -82,7 +98,7 @@ export function MarketingMobileMenu({ closeLabel, links, openLabel }: MarketingM
                   "rounded-sm px-3 py-3 text-sm font-semibold uppercase tracking-[0.16em] transition",
                   active
                     ? "bg-[#B8935A]/12 text-[#B8935A]"
-                    : "text-[#F5EFE3]/72 hover:bg-white/5 hover:text-[#F5EFE3]",
+                    : "text-[#F5EFE3]/82 hover:bg-white/5 hover:text-[#F5EFE3]",
                 )}
                 href={href as Route}
                 key={href}
