@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { Route } from "next";
 
 import { MotionCard, MotionDiamond, MotionInView } from "@/components/motion/living-motion";
+import { InternalExploreSection } from "@/components/internal-explore-section";
 import { catalogProducts, type CatalogProduct } from "@/content/products";
 import { useCopy, useI18n } from "@/lib/i18n-context";
 import { pickLocale } from "@/lib/locale";
@@ -121,42 +122,45 @@ export function ShopRouteSection() {
   const shop = copy.home.shop;
 
   return (
-    <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <MotionInView className="max-w-3xl">
-          <p className={eyebrowClass}>{shop.eyebrow}</p>
-          <h1 className="mt-5 font-serif text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-            {shop.title}
-          </h1>
-          <MotionDiamond className="mt-5" />
-          <p className="mt-5 max-w-2xl text-base leading-7 text-[#F5EFE3]/68 sm:text-lg sm:leading-8">
-            {shop.intro}
-          </p>
-        </MotionInView>
+    <>
+      <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <MotionInView className="max-w-3xl">
+            <p className={eyebrowClass}>{shop.eyebrow}</p>
+            <h1 className="mt-5 font-serif text-4xl font-light leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              {shop.title}
+            </h1>
+            <MotionDiamond className="mt-5" />
+            <p className="mt-5 max-w-2xl text-base leading-7 text-[#F5EFE3]/68 sm:text-lg sm:leading-8">
+              {shop.intro}
+            </p>
+          </MotionInView>
 
-        <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
-          {catalogProducts.map((product, index) => (
-            <ProductCatalogCard
-              index={index}
-              key={product.slug}
-              product={product}
-              soonLabel={shop.soon}
-              viewLabel={shop.viewProduct}
-            />
-          ))}
+          <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
+            {catalogProducts.map((product, index) => (
+              <ProductCatalogCard
+                index={index}
+                key={product.slug}
+                product={product}
+                soonLabel={shop.soon}
+                viewLabel={shop.viewProduct}
+              />
+            ))}
 
-          <MotionCard
-            className="flex min-h-[18rem] flex-col justify-center border border-dashed border-[#B8935A]/22 bg-white/[0.012] p-6 sm:min-h-0"
-            lift
-          >
-            <span className={soonBadgeClass}>{shop.soon}</span>
-            <h2 className="mt-5 font-serif text-2xl font-light leading-snug text-[#F5EFE3]/80">
-              {shop.comingSoonTitle}
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-[#F5EFE3]/56">{shop.comingSoonBody}</p>
-          </MotionCard>
+            <MotionCard
+              className="flex min-h-[18rem] flex-col justify-center border border-dashed border-[#B8935A]/22 bg-white/[0.012] p-6 sm:min-h-0"
+              lift
+            >
+              <span className={soonBadgeClass}>{shop.soon}</span>
+              <h2 className="mt-5 font-serif text-2xl font-light leading-snug text-[#F5EFE3]/80">
+                {shop.comingSoonTitle}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-[#F5EFE3]/56">{shop.comingSoonBody}</p>
+            </MotionCard>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <InternalExploreSection exclude="/shop" intent="commerce" />
+    </>
   );
 }

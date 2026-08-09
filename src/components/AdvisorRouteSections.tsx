@@ -11,6 +11,7 @@ import {
   getHerbariumIngredientCopy,
   herbariumIngredients,
 } from "@/lib/advisor-site";
+import { InternalExploreSection } from "@/components/internal-explore-section";
 import { useCopy, useI18n } from "@/lib/i18n-context";
 
 function ingredientAnchor(latinName: string) {
@@ -30,140 +31,143 @@ export function BotaniqueRouteSection() {
       : `${herbariumIngredients.length} botanicals`;
 
   return (
-    <section className="relative px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_top,rgb(184_147_90/.12),transparent_65%)]"
-      />
+    <>
+      <section className="relative px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_top,rgb(184_147_90/.12),transparent_65%)]"
+        />
 
-      <div className="relative mx-auto max-w-6xl">
-        <header className="border border-[#B8935A]/14 bg-[#0B0B0B]/80 p-5 shadow-[0_24px_80px_rgb(0_0_0/.28)] backdrop-blur-sm sm:p-8 lg:p-10">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
-              {botanique.eyebrow}
-            </p>
-            <p className="font-mono text-[0.7rem] tracking-[0.12em] text-[#F5EFE3]/45">
-              {countLabel}
-            </p>
-          </div>
-          <div className="mt-4 h-[2px] overflow-hidden bg-[#F5EFE3]/10">
-            <div className="h-full w-1/3 bg-[#B8935A]" />
-          </div>
-          <div className="mt-8 border-l border-[#B8935A]/35 pl-4 sm:mt-10 sm:pl-6">
-            <h1 className="max-w-3xl font-serif text-[1.85rem] font-light leading-[1.15] tracking-tight text-[#F5EFE3] sm:text-4xl lg:text-[2.85rem]">
-              {botanique.title}
-            </h1>
-          </div>
-          <p className="mt-6 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:mt-7 sm:text-base sm:leading-8">
-            {botanique.body}
-          </p>
-        </header>
-
-        <nav
-          aria-label={botanique.indexLabel}
-          className="mt-6 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:mt-8"
-        >
-          {herbariumIngredients.map((ingredient, index) => {
-            const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
-            const href = `#${ingredientAnchor(ingredient.latinName)}`;
-
-            return (
-              <a
-                className="shrink-0 border border-[#B8935A]/18 bg-[#F5EFE3]/[0.03] px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#F5EFE3]/70 transition hover:border-[#B8935A]/45 hover:text-[#B8935A]"
-                href={href}
-                key={ingredient.latinName}
-              >
-                <span className="mr-2 font-mono text-[#B8935A]/80">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {ingredientCopy.commonName}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="mt-8 grid gap-4 lg:mt-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8">
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 border border-[#B8935A]/14 bg-[#0B0B0B]/70 p-4">
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
-                {botanique.indexLabel}
+        <div className="relative mx-auto max-w-6xl">
+          <header className="border border-[#B8935A]/14 bg-[#0B0B0B]/80 p-5 shadow-[0_24px_80px_rgb(0_0_0/.28)] backdrop-blur-sm sm:p-8 lg:p-10">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-[#B8935A]">
+                {botanique.eyebrow}
               </p>
-              <ul className="mt-4 grid gap-1.5">
-                {herbariumIngredients.map((ingredient, index) => {
-                  const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
-
-                  return (
-                    <li key={ingredient.latinName}>
-                      <a
-                        className="flex items-baseline gap-2 py-1 text-sm text-[#F5EFE3]/62 transition hover:text-[#B8935A]"
-                        href={`#${ingredientAnchor(ingredient.latinName)}`}
-                      >
-                        <span className="font-mono text-[0.65rem] text-[#B8935A]/70">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span>{ingredientCopy.commonName}</span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              <p className="font-mono text-[0.7rem] tracking-[0.12em] text-[#F5EFE3]/45">
+                {countLabel}
+              </p>
             </div>
-          </aside>
+            <div className="mt-4 h-[2px] overflow-hidden bg-[#F5EFE3]/10">
+              <div className="h-full w-1/3 bg-[#B8935A]" />
+            </div>
+            <div className="mt-8 border-l border-[#B8935A]/35 pl-4 sm:mt-10 sm:pl-6">
+              <h1 className="max-w-3xl font-serif text-[1.85rem] font-light leading-[1.15] tracking-tight text-[#F5EFE3] sm:text-4xl lg:text-[2.85rem]">
+                {botanique.title}
+              </h1>
+            </div>
+            <p className="mt-6 max-w-2xl text-sm leading-7 text-[#F5EFE3]/68 sm:mt-7 sm:text-base sm:leading-8">
+              {botanique.body}
+            </p>
+          </header>
 
-          <div className="grid gap-4 sm:gap-5">
+          <nav
+            aria-label={botanique.indexLabel}
+            className="mt-6 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:mt-8"
+          >
             {herbariumIngredients.map((ingredient, index) => {
               const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
-              const anchor = ingredientAnchor(ingredient.latinName);
+              const href = `#${ingredientAnchor(ingredient.latinName)}`;
 
               return (
-                <article
-                  className="scroll-mt-28 border border-[#B8935A]/14 bg-[#0B0B0B]/55 p-5 sm:p-7"
-                  id={anchor}
+                <a
+                  className="shrink-0 border border-[#B8935A]/18 bg-[#F5EFE3]/[0.03] px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[#F5EFE3]/70 transition hover:border-[#B8935A]/45 hover:text-[#B8935A]"
+                  href={href}
                   key={ingredient.latinName}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-mono text-[0.7rem] tracking-[0.16em] text-[#B8935A]">
-                        {String(index + 1).padStart(2, "0")}
-                      </p>
-                      <h2 className="mt-2 font-serif text-2xl font-light leading-tight text-[#F5EFE3] sm:text-3xl">
-                        {ingredientCopy.commonName}
-                      </h2>
-                      <p className="mt-2 font-serif text-sm italic tracking-wide text-[#B8935A]/90 sm:text-base">
-                        {ingredient.latinName}
-                      </p>
-                    </div>
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#F5EFE3]/42">
-                      {ingredientCopy.region}
-                    </p>
-                  </div>
-
-                  <ul className="mt-5 flex flex-wrap gap-2">
-                    {ingredientCopy.properties.map((property) => (
-                      <li
-                        className="border border-[#B8935A]/22 bg-[#B8935A]/[0.06] px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-[#B8935A]"
-                        key={property}
-                      >
-                        {property}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-6 border-t border-[#B8935A]/12 pt-5">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#B8935A]">
-                      {botanique.chosenFor}
-                    </p>
-                    <p className="mt-3 text-sm leading-7 text-[#F5EFE3]/68 sm:text-[0.95rem] sm:leading-8">
-                      {ingredientCopy.chosenFor}
-                    </p>
-                  </div>
-                </article>
+                  <span className="mr-2 font-mono text-[#B8935A]/80">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {ingredientCopy.commonName}
+                </a>
               );
             })}
+          </nav>
+
+          <div className="mt-8 grid gap-4 lg:mt-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8">
+            <aside className="hidden lg:block">
+              <div className="sticky top-28 border border-[#B8935A]/14 bg-[#0B0B0B]/70 p-4">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+                  {botanique.indexLabel}
+                </p>
+                <ul className="mt-4 grid gap-1.5">
+                  {herbariumIngredients.map((ingredient, index) => {
+                    const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
+
+                    return (
+                      <li key={ingredient.latinName}>
+                        <a
+                          className="flex items-baseline gap-2 py-1 text-sm text-[#F5EFE3]/62 transition hover:text-[#B8935A]"
+                          href={`#${ingredientAnchor(ingredient.latinName)}`}
+                        >
+                          <span className="font-mono text-[0.65rem] text-[#B8935A]/70">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span>{ingredientCopy.commonName}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </aside>
+
+            <div className="grid gap-4 sm:gap-5">
+              {herbariumIngredients.map((ingredient, index) => {
+                const ingredientCopy = getHerbariumIngredientCopy(ingredient, locale);
+                const anchor = ingredientAnchor(ingredient.latinName);
+
+                return (
+                  <article
+                    className="scroll-mt-28 border border-[#B8935A]/14 bg-[#0B0B0B]/55 p-5 sm:p-7"
+                    id={anchor}
+                    key={ingredient.latinName}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-mono text-[0.7rem] tracking-[0.16em] text-[#B8935A]">
+                          {String(index + 1).padStart(2, "0")}
+                        </p>
+                        <h2 className="mt-2 font-serif text-2xl font-light leading-tight text-[#F5EFE3] sm:text-3xl">
+                          {ingredientCopy.commonName}
+                        </h2>
+                        <p className="mt-2 font-serif text-sm italic tracking-wide text-[#B8935A]/90 sm:text-base">
+                          {ingredient.latinName}
+                        </p>
+                      </div>
+                      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#F5EFE3]/42">
+                        {ingredientCopy.region}
+                      </p>
+                    </div>
+
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {ingredientCopy.properties.map((property) => (
+                        <li
+                          className="border border-[#B8935A]/22 bg-[#B8935A]/[0.06] px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-[#B8935A]"
+                          key={property}
+                        >
+                          {property}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-6 border-t border-[#B8935A]/12 pt-5">
+                      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#B8935A]">
+                        {botanique.chosenFor}
+                      </p>
+                      <p className="mt-3 text-sm leading-7 text-[#F5EFE3]/68 sm:text-[0.95rem] sm:leading-8">
+                        {ingredientCopy.chosenFor}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <InternalExploreSection exclude="/botanique" intent="education" />
+    </>
   );
 }
 
@@ -302,48 +306,51 @@ export function HistoireRouteSection() {
   const chapters = [histoire.origin, histoire.name, histoire.product, histoire.family] as const;
 
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]">
-          {histoire.eyebrow}
-        </p>
-        <h1 className="mt-6 font-serif text-5xl font-light leading-tight sm:text-7xl">
-          {histoire.title}
-        </h1>
+    <>
+      <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#B8935A]">
+            {histoire.eyebrow}
+          </p>
+          <h1 className="mt-6 font-serif text-5xl font-light leading-tight sm:text-7xl">
+            {histoire.title}
+          </h1>
 
-        <div className="mt-14 grid gap-px border border-[#B8935A]/14">
-          {chapters.map((chapter) => (
-            <article
-              className="grid gap-6 border-b border-[#B8935A]/14 bg-white/[0.018] p-8 last:border-b-0 sm:grid-cols-[10rem_1fr]"
-              key={chapter.label}
+          <div className="mt-14 grid gap-px border border-[#B8935A]/14">
+            {chapters.map((chapter) => (
+              <article
+                className="grid gap-6 border-b border-[#B8935A]/14 bg-white/[0.018] p-8 last:border-b-0 sm:grid-cols-[10rem_1fr]"
+                key={chapter.label}
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#B8935A]">
+                  {chapter.label}
+                </p>
+                <div>
+                  <h2 className="font-serif text-2xl font-light leading-snug">{chapter.heading}</h2>
+                  <p className="mt-4 text-sm leading-7 text-[#F5EFE3]/68">{chapter.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+              href="/shop"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#B8935A]">
-                {chapter.label}
-              </p>
-              <div>
-                <h2 className="font-serif text-2xl font-light leading-snug">{chapter.heading}</h2>
-                <p className="mt-4 text-sm leading-7 text-[#F5EFE3]/68">{chapter.body}</p>
-              </div>
-            </article>
-          ))}
+              {histoire.cta}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link
+              className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/24 px-7 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
+              href="/botanique"
+            >
+              {histoire.ctaSecondary}
+            </Link>
+          </div>
         </div>
-
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link
-            className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
-            href="/shop"
-          >
-            {histoire.cta}
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-          <Link
-            className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/24 px-7 text-sm font-semibold text-[#F5EFE3] transition-transform duration-100 hover:-translate-y-0.5 active:scale-[0.98]"
-            href="/botanique"
-          >
-            {histoire.ctaSecondary}
-          </Link>
-        </div>
-      </div>
-    </section>
+      </section>
+      <InternalExploreSection exclude="/histoire" intent="story" />
+    </>
   );
 }

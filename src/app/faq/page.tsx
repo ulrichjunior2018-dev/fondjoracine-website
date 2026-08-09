@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { Route } from "next";
 
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
+import { InternalExploreSection } from "@/components/internal-explore-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
@@ -11,8 +13,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FaqPage() {
-  const { publicCopy } = await resolvePublicCopy();
+  const { publicCopy, locale } = await resolvePublicCopy();
   const faq = publicCopy.faqPage;
+  const shopLabel = locale === "fr" ? "Boutique" : "Shop";
+  const shippingLabel = locale === "fr" ? "Livraison" : "Shipping";
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -58,10 +62,22 @@ export default async function FaqPage() {
           ))}
         </div>
 
-        <Link className="mt-10 inline-flex text-sm font-semibold text-accent" href="/">
-          {publicCopy.policies.backHome}
-        </Link>
+        <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold">
+          <Link className="text-accent" href="/">
+            {publicCopy.policies.backHome}
+          </Link>
+          <Link className="text-accent" href={"/shop" as Route}>
+            {shopLabel}
+          </Link>
+          <Link className="text-accent" href={"/products/seve-racine" as Route}>
+            Sève Racine
+          </Link>
+          <Link className="text-accent" href={"/policies/shipping" as Route}>
+            {shippingLabel}
+          </Link>
+        </div>
       </Container>
+      <InternalExploreSection exclude="/faq" intent="support" tone="light" />
     </main>
   );
 }

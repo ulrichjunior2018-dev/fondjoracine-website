@@ -19,6 +19,7 @@ import {
 } from "@/components/motion/living-motion";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { InternalExploreSection } from "@/components/internal-explore-section";
 import {
   Accordion,
   AccordionContent,
@@ -836,6 +837,7 @@ export function PremiumStorefrontPage({ content }: PremiumStorefrontPageProps) {
       <LifestyleGallery copy={copy} />
       <FaqSection content={content} copy={copy} locale={contentLocale} />
       <ClosingChapter copy={copy} whatsappUrl={whatsappUrl} />
+      <InternalExploreSection exclude={["/", "/fr"]} intent="commerce" />
       <SiteFooter />
     </main>
   );
