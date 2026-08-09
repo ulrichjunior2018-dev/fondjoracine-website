@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/toast";
 import { signUpSchema, type SignUpInput } from "@/domain/customer/schemas";
 import { signUpWithPassword } from "@/features/account/lib/auth-client";
 import { resolveAuthErrorMessage } from "@/features/account/lib/auth-urls";
+import { trackSignUp } from "@/lib/analytics/events";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 
@@ -32,6 +33,7 @@ export function SignupForm() {
 
     try {
       await signUpWithPassword(values);
+      trackSignUp("password");
       setIsDone(true);
     } catch (error) {
       toast({

@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { trackNewsletterSubscribe } from "@/lib/analytics/events";
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 
@@ -40,6 +41,7 @@ export function NewsletterForm({
 
     setEmail("");
     setState("success");
+    trackNewsletterSubscribe(source);
   }
 
   return (

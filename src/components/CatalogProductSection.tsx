@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
 
+import { ViewItemTracker } from "@/components/analytics/conversion-trackers";
 import { catalogProducts, type CatalogProduct } from "@/content/products";
 import { buildWhatsAppUrl } from "@/lib/advisor-site";
+import { trackWhatsAppClick } from "@/lib/analytics/events";
 import { useCopy, useI18n } from "@/lib/i18n-context";
 import { pickLocale } from "@/lib/locale";
 
@@ -42,9 +44,15 @@ export function CatalogProductSection({ product }: CatalogProductSectionProps) {
   const comingSoonOthers = catalogProducts.filter(
     (item) => item.status === "coming-soon" && item.slug !== product.slug,
   );
+  const priceAmount = Number.parseInt(product.priceXaf.replace(/[^\d]/g, ""), 10);
 
   return (
     <section className="px-4 py-14 sm:px-6 lg:px-8">
+      <ViewItemTracker
+        itemId={product.slug}
+        itemName={name}
+        {...(Number.isFinite(priceAmount) ? { price: priceAmount, currency: "XAF" } : {})}
+      />
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div
           className={
@@ -109,6 +117,7 @@ export function CatalogProductSection({ product }: CatalogProductSectionProps) {
             <a
               className="inline-flex min-h-13 items-center justify-center rounded-sm border border-[#B8935A]/35 px-7 text-sm font-semibold text-[#F5EFE3] transition hover:border-[#B8935A]"
               href={whatsappUrl}
+              onClick={() => trackWhatsAppClick(`product:${product.slug}`)}
               rel="noreferrer"
               target="_blank"
             >

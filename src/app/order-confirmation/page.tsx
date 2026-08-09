@@ -1,6 +1,7 @@
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 
+import { PurchaseTracker } from "@/components/analytics/conversion-trackers";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
@@ -142,6 +143,12 @@ export default async function OrderConfirmationPage({ searchParams }: Confirmati
 
   return (
     <main className="min-h-screen bg-background py-16">
+      <PurchaseTracker
+        currency={currency}
+        items="seve-racine"
+        transactionId={order.order_number || String(order.id)}
+        value={currency === "XAF" ? totalCents : totalCents / 100}
+      />
       <Container size="md">
         <Card variant="elevated">
           <Badge tone={getStatusTone(status)}>{status}</Badge>

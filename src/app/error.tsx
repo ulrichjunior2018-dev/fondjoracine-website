@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { reportException } from "@/lib/analytics/sentry-report";
 import { useI18n } from "@/lib/i18n-context";
 import { getDictionary } from "@/i18n/dictionaries";
 
@@ -17,6 +18,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
   useEffect(() => {
     console.error(error);
+    void reportException(error, { digest: error.digest, source: "app/error" });
   }, [error]);
 
   return (

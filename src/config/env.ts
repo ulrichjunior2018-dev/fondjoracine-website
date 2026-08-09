@@ -32,6 +32,12 @@ const envSchema = z.object({
   NEXT_PUBLIC_AUTH_APPLE_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_AUTH_FACEBOOK_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_AUTH_PHONE_ENABLED: z.string().optional().or(z.literal("")),
+  /** Analytics / observability — optional; empty = disabled. */
+  NEXT_PUBLIC_GTM_ID: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_SENTRY_DSN: z.string().optional().or(z.literal("")),
+  SENTRY_DSN: z.string().optional().or(z.literal("")),
+  NEXT_PUBLIC_ANALYTICS_DEBUG: z.string().optional().or(z.literal("")),
 });
 
 export const env = envSchema.parse(process.env);

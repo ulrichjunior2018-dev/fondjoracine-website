@@ -72,12 +72,14 @@ const nextConfig: NextConfig = {
       "object-src 'none'",
       "frame-ancestors 'none'",
       "form-action 'self' https://checkout.stripe.com",
-      "img-src 'self' data: blob: https://res.cloudinary.com https://*.stripe.com",
+      // Marketing pixels (GTM / Meta / TikTok) may load images from their CDNs.
+      "img-src 'self' data: blob: https://res.cloudinary.com https://*.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.g.doubleclick.net https://*.facebook.com https://*.facebook.net https://*.tiktok.com https://*.ttwstatic.com",
       "font-src 'self' data:",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com",
+      // GTM + gtag + Stripe. Meta/TikTok scripts load via GTM when configured there.
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://tagmanager.google.com https://connect.facebook.net https://*.tiktok.com https://analytics.tiktok.com https://va.vercel-scripts.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.googletagmanager.com https://td.doubleclick.net",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.sentry.io https://*.ingest.sentry.io https://*.ingest.de.sentry.io https://vitals.vercel-insights.com https://*.facebook.com https://*.facebook.net https://analytics.tiktok.com https://*.tiktok.com https://va.vercel-scripts.com",
       ...(isProd ? ["upgrade-insecure-requests"] : []),
     ].join("; ");
 

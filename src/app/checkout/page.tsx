@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { BeginCheckoutTracker } from "@/components/analytics/conversion-trackers";
 import { PageLoader } from "@/components/ui/page-loader";
 import { CheckoutShell } from "@/features/commerce/components/checkout-shell";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
@@ -72,6 +73,7 @@ export default async function CheckoutPage() {
         productPriceXaf={priceXaf}
         subscriptionAvailable={subscriptionAvailable}
       />
+      <BeginCheckoutTracker currency="XAF" value={priceXaf} />
     </Suspense>
   );
 }
