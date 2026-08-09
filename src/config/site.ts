@@ -16,6 +16,6 @@ export const siteConfig = {
   social: {
     instagram: "https://www.instagram.com/maison.fondjo",
     facebook: "https://www.facebook.com/maisonfondjo",
-    tiktok: "https://www.tiktok.com/@maisonfondjo",
+    tiktok: "https://www.tiktok.com/@maison.fondjo",
   },
 } as const;
