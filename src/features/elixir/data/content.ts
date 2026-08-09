@@ -656,12 +656,12 @@ export const defaultElixirContent: ElixirContent = {
   },
   seo: {
     description: {
-      en: "Sève Racine is a 100ml hair treatment oil by Maison Fondjo, founded and made in Buea, Cameroon.",
-      fr: "Sève Racine est une huile capillaire 100ml par Maison Fondjo, fondee et fabriquee a Buea, Cameroun.",
+      en: "Maison Fondjo: botanical hair care from Buea, Cameroon. Explore Sève Racine and the growing collection for scalp and lengths, with Cameroon delivery.",
+      fr: "Maison Fondjo : soins capillaires botaniques de Buea, Cameroun. Découvrez Sève Racine et la collection pour le cuir chevelu et les longueurs, avec livraison au Cameroun.",
     },
     title: {
-      en: "Sève Racine Hair Treatment Oil | Maison Fondjo",
-      fr: "Huile capillaire Sève Racine | Maison Fondjo",
+      en: "Botanical Hair Care from Buea | Maison Fondjo",
+      fr: "Soins capillaires botaniques de Buea | Maison Fondjo",
     },
   },
   shipping: {

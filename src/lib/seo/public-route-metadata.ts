@@ -21,14 +21,15 @@ export async function buildPublicMetadata(
 ): Promise<Metadata> {
   const { locale, publicCopy } = await resolvePublicCopy();
   const { title, description } = pick(publicCopy);
+  const absoluteTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
 
   return {
-    title,
+    title: { absolute: absoluteTitle },
     description,
     ...buildShareMetadata({
       description,
       locale: openGraphLocale(locale),
-      title,
+      title: absoluteTitle,
       url: siteConfig.url,
     }),
   };

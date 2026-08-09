@@ -1,44 +1,46 @@
 import type { MetadataRoute } from "next";
 
-import { listAvailableCatalogProducts } from "@/content/products";
+import { catalogProducts } from "@/content/products";
 import { siteConfig } from "@/config/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const productRoutes = listAvailableCatalogProducts().map(
-    (product) => `/products/${product.slug}`,
-  );
+  const productEntries = catalogProducts.map((product) => ({
+    url: `${siteConfig.url}/products/${product.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: product.status === "available" ? 0.9 : 0.55,
+  }));
 
-  const publicRoutes = [
-    "",
-    "/fr",
-    "/diagnostic",
-    "/botanique",
-    "/shop",
-    ...productRoutes,
-    "/sur-mesure",
-    "/grossistes",
-    "/how-to-use",
-    "/origin-story",
-    "/faq",
-    "/contact",
-    "/policies/privacy",
-    "/policies/terms",
-    "/policies/returns",
-    "/policies/shipping",
+  const publicRoutes: Array<{
+    route: string;
+    changeFrequency: "weekly" | "monthly";
+    priority: number;
+  }> = [
+    { route: "", changeFrequency: "weekly", priority: 1 },
+    { route: "/fr", changeFrequency: "weekly", priority: 0.95 },
+    { route: "/shop", changeFrequency: "weekly", priority: 0.92 },
+    { route: "/diagnostic", changeFrequency: "monthly", priority: 0.88 },
+    { route: "/learn", changeFrequency: "monthly", priority: 0.8 },
+    { route: "/botanique", changeFrequency: "monthly", priority: 0.75 },
+    { route: "/how-to-use", changeFrequency: "monthly", priority: 0.75 },
+    { route: "/origin-story", changeFrequency: "monthly", priority: 0.7 },
+    { route: "/histoire", changeFrequency: "monthly", priority: 0.7 },
+    { route: "/faq", changeFrequency: "monthly", priority: 0.78 },
+    { route: "/sur-mesure", changeFrequency: "monthly", priority: 0.65 },
+    { route: "/grossistes", changeFrequency: "monthly", priority: 0.65 },
+    { route: "/contact", changeFrequency: "monthly", priority: 0.7 },
+    { route: "/seve-racine", changeFrequency: "weekly", priority: 0.75 },
+    { route: "/policies/privacy", changeFrequency: "monthly", priority: 0.3 },
+    { route: "/policies/terms", changeFrequency: "monthly", priority: 0.3 },
+    { route: "/policies/returns", changeFrequency: "monthly", priority: 0.3 },
+    { route: "/policies/shipping", changeFrequency: "monthly", priority: 0.4 },
   ];
 
-  return publicRoutes.map((route) => ({
+  const staticEntries = publicRoutes.map(({ route, changeFrequency, priority }) => ({
     url: `${siteConfig.url}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "weekly" : "monthly",
-    priority:
-      route === ""
-        ? 1
-        : route === "/diagnostic"
-          ? 0.95
-          : route === "/shop" || route.startsWith("/products/")
-            ? 0.86
-            : 0.7,
+    changeFrequency,
+    priority,
     ...(route === "" || route === "/fr"
       ? {
           alternates: {
@@ -50,4 +52,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }
       : {}),
   }));
+
+  return [...staticEntries, ...productEntries];
 }

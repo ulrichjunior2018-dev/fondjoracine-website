@@ -54,6 +54,9 @@ function FooterLinkList({
   );
 }
 
+const socialLinkClassName =
+  "inline-flex size-10 items-center justify-center rounded-full border border-[#B8935A]/28 text-[#F5EFE3]/78 transition-colors hover:border-[#B8935A]/50 hover:text-[#B8935A]";
+
 function InstagramIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -74,20 +77,69 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.3a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.77a8.2 8.2 0 0 0 4.76 1.52V6.84a4.85 4.85 0 0 1-1-.15z" />
+    </svg>
+  );
+}
+
 function SocialLinks({ label }: { label: string }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <a
         aria-label="Instagram"
-        className="inline-flex size-10 items-center justify-center rounded-full border border-[#B8935A]/28 text-[#F5EFE3]/78 transition-colors hover:border-[#B8935A]/50 hover:text-[#B8935A]"
+        className={socialLinkClassName}
         href={siteConfig.social.instagram}
         rel="noreferrer"
         target="_blank"
       >
         <InstagramIcon className="size-4" />
       </a>
+      <a
+        aria-label="Facebook"
+        className={socialLinkClassName}
+        href={siteConfig.social.facebook}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <FacebookIcon className="size-4" />
+      </a>
+      <a
+        aria-label="TikTok"
+        className={socialLinkClassName}
+        href={siteConfig.social.tiktok}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <TikTokIcon className="size-4" />
+      </a>
       <span className="sr-only">{label}</span>
-      {/* Future: Facebook, TikTok, YouTube, LinkedIn — add only when accounts are active. */}
     </div>
   );
 }

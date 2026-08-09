@@ -1,2 +1,40 @@
-#!/bin/sh
-npx lint-staged
+#!/usr/bin/env bash
+# Pre-commit without lint-staged.
+# lint-staged freezes on this Windows setup (prettier spin / "Applying modifications").
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+PRETTIER_FILES=()
+ESLINT_FILES=()
+
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  [ -f "$f" ] || continue
+  case "$f" in
+    *.ts|*.tsx|*.mts|*.js|*.mjs|*.cjs)
+      PRETTIER_FILES+=("$f")
+      ESLINT_FILES+=("$f")
+      ;;
+    *.json|*.css|*.md)
+      PRETTIER_FILES+=("$f")
+      ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+if [ ${#PRETTIER_FILES[@]} -eq 0 ] && [ ${#ESLINT_FILES[@]} -eq 0 ]; then
+  exit 0
+fi
+
+if [ ${#PRETTIER_FILES[@]} -gt 0 ]; then
+  echo "pre-commit: prettier (${#PRETTIER_FILES[@]} files)..."
+  npx prettier --write -- "${PRETTIER_FILES[@]}"
+  git add -- "${PRETTIER_FILES[@]}"
+fi
+
+if [ ${#ESLINT_FILES[@]} -gt 0 ]; then
+  echo "pre-commit: eslint (${#ESLINT_FILES[@]} files)..."
+  npx eslint --fix -- "${ESLINT_FILES[@]}"
+  git add -- "${ESLINT_FILES[@]}"
+fi
+
+echo "pre-commit: ok"

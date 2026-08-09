@@ -10,6 +10,7 @@ import { siteImages } from "@/lib/site-images";
  * 2. Prefer `href: "/products/<slug>"` so the shared product template picks it up.
  * 3. Put images under `public/images/` (or reuse an existing asset).
  * 4. When ready to sell online, set `status: "available"` and optionally `orderHref`.
+ * 5. Fill `seoTitle` + `description` for unique PDP metadata (EN/FR).
  *
  * Multi-SKU cart is scaffolded in `cart-service` / DB. wire when checkout outgrows one SKU.
  */
@@ -30,7 +31,12 @@ export type CatalogProduct = {
   readonly eyebrow: CatalogLocalized;
   /** Longer product intro on the detail page. */
   readonly intro: CatalogLocalized;
-  /** SEO / meta description. */
+  /**
+   * SEO title segment (no brand suffix — layout template adds "| Maison Fondjo").
+   * Target one primary intent per product URL.
+   */
+  readonly seoTitle: CatalogLocalized;
+  /** SEO / meta description (~140–160 chars). */
   readonly description: CatalogLocalized;
   /** Preformatted price (e.g. "15 000 F"). Empty for coming-soon items. */
   readonly priceXaf: string;
@@ -58,9 +64,13 @@ export const catalogProducts: readonly CatalogProduct[] = [
       en: "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
       fr: "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",
     },
+    seoTitle: {
+      en: "Sève Racine Botanical Hair Oil",
+      fr: "Huile capillaire botanique Sève Racine",
+    },
     description: {
-      en: "Sève Racine by Maison Fondjo: botanical hair oil, 100 ml.",
-      fr: "Sève Racine par Maison Fondjo : huile capillaire botanique, 100 ml.",
+      en: "Sève Racine is Maison Fondjo's 100 ml botanical hair oil for scalp comfort and soft lengths. Pressed in Buea, Cameroon, with free delivery guidance nationwide.",
+      fr: "Sève Racine est l'huile capillaire botanique 100 ml de Maison Fondjo pour le confort du cuir chevelu et des longueurs souples. Pressee a Buea, Cameroun.",
     },
     priceXaf: formatXaf(config.pricing.seveRacine),
     image: advisorImages.product,
@@ -87,9 +97,13 @@ export const catalogProducts: readonly CatalogProduct[] = [
       en: "The Maison Fondjo shampoo is in development. The name is here. The bottle will be revealed when the formula is ready.",
       fr: "Le shampoing Maison Fondjo est en préparation. Le nom est là. Le flacon sera dévoilé quand la formule sera prête.",
     },
+    seoTitle: {
+      en: "Botanical Hair Shampoo (Coming Soon)",
+      fr: "Shampoing capillaire botanique (bientôt)",
+    },
     description: {
-      en: "Maison Fondjo shampoo, botanical cleanse, coming soon.",
-      fr: "Shampoing Maison Fondjo, nettoyage botanique, bientôt.",
+      en: "Upcoming Maison Fondjo botanical shampoo for a clean scalp. Join the newsletter for the bottle reveal and Cameroon launch timing.",
+      fr: "Prochain shampoing botanique Maison Fondjo pour un cuir chevelu propre. Inscrivez-vous pour le dévoilement du flacon et le lancement au Cameroun.",
     },
     priceXaf: "",
     image: siteImages.studioBottle,
@@ -115,9 +129,13 @@ export const catalogProducts: readonly CatalogProduct[] = [
       en: "The Maison Fondjo conditioner is in development. Stay curious. The bottle arrives with the finished formula.",
       fr: "L'après-shampoing Maison Fondjo est en préparation. Restez curieux. Le flacon arrivera avec la formule terminée.",
     },
+    seoTitle: {
+      en: "Botanical Hair Conditioner (Coming Soon)",
+      fr: "Après-shampoing botanique (bientôt)",
+    },
     description: {
-      en: "Maison Fondjo conditioner, softness for the lengths, coming soon.",
-      fr: "Après-shampoing Maison Fondjo, douceur pour les longueurs, bientôt.",
+      en: "Upcoming Maison Fondjo conditioner for soft, manageable lengths. Botanical line expanding — subscribe for the reveal.",
+      fr: "Prochain après-shampoing Maison Fondjo pour des longueurs souples et faciles à coiffer. Abonnez-vous pour le dévoilement.",
     },
     priceXaf: "",
     image: siteImages.productOutdoorAlt,

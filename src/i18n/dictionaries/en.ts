@@ -152,15 +152,15 @@ export const en = {
     eyebrow: "Learn",
     title: "Understand your hair, then choose with confidence.",
     intro:
-      "Everything worth knowing about Sève Racine. What it is, why the botanical blend works, how to use it, and the family behind every bottle.",
-    metaTitle: "Learn",
+      "Everything worth knowing about Maison Fondjo hair care. What botanical rituals do, how to use them, ingredients, and the family behind every bottle.",
+    metaTitle: "Learn Botanical Hair Care",
     metaDescription:
-      "Learn about Sève Racine by Maison Fondjo: what it is, the botanical formula, how to use it, real results and the Fondjo family story.",
-    productEyebrow: "The product",
-    productTitle: "Sève Racine. A botanical hair ritual oil.",
+      "Learn Maison Fondjo botanical hair care from Buea: formulas, how to use, ingredients, results, and the Fondjo family story behind the collection.",
+    productEyebrow: "The collection",
+    productTitle: "Botanical care for scalp and lengths.",
     productBody:
-      "A nutrient-rich blend of botanical oils and herbs for the scalp and lengths: controlled shine, softer ends, and support for protective styles.",
-    productCta: "View the product",
+      "Start with Sève Racine oil for scalp comfort and soft lengths. New cleansers and care formulas join the line as they are ready.",
+    productCta: "View the shop",
     exploreEyebrow: "Keep exploring",
     exploreTitle: "Go deeper, at your own pace.",
     cards: [
@@ -199,10 +199,10 @@ export const en = {
     eyebrow: "Shop",
     title: "The Maison Fondjo collection.",
     intro:
-      "Maison Fondjo is building a collection of premium botanical hair care. Sève Racine is our first flagship treatment, available now.",
-    metaTitle: "Shop",
+      "Maison Fondjo is building a botanical hair care collection. Sève Racine is available now; shampoo and conditioner are on the way.",
+    metaTitle: "Shop Botanical Hair Care",
     metaDescription:
-      "Shop Maison Fondjo. Sève Racine, a botanical hair ritual oil crafted in Buea, Cameroon.",
+      "Shop Maison Fondjo botanical hair care from Buea, Cameroon. Buy Sève Racine hair oil now, explore upcoming shampoo and conditioner, Cameroon delivery.",
     viewProduct: "View product",
     soon: "Soon",
     comingSoonTitle: "More to come",

@@ -1,6 +1,6 @@
 # Maison Fondjo Website
 
-Production website for [fondjoracine.com](https://fondjoracine.com), the one-product Maison Fondjo storefront for Sève Racine hair treatment oil.
+Production website for [maisonfondjo.com](https://maisonfondjo.com), the one-product Maison Fondjo storefront for Sève Racine hair treatment oil. `fondjoracine.com` is a secondary domain that redirects to the main one.
 
 ## Stack
 
@@ -42,7 +42,7 @@ npm run build
 3. Set the Vercel framework preset to Next.js.
 4. Add the environment variables from `.env.example`.
 5. Deploy.
-6. Point `fondjoracine.com` to the Vercel project.
+6. Point `maisonfondjo.com` to the Vercel project as the primary domain, and add `fondjoracine.com` as a redirect to it.
 
 Vercel build command:
 

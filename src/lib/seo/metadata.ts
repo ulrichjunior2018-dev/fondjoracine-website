@@ -62,10 +62,18 @@ export const defaultMetadata: Metadata = {
 };
 
 export function buildOrganizationJsonLd(siteUrl: string) {
+  const sameAs = Object.values(siteConfig.social).filter(Boolean);
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: siteConfig.name,
     url: siteUrl,
+    description: siteConfig.description,
+    brand: {
+      "@type": "Brand",
+      name: siteConfig.name,
+    },
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }

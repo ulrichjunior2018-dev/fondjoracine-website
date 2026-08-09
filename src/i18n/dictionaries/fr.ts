@@ -161,15 +161,15 @@ export const fr = {
     eyebrow: "Comprendre",
     title: "Comprenez vos cheveux, puis choisissez en confiance.",
     intro:
-      "Tout ce qu'il faut savoir sur Sève Racine. Ce que c'est, pourquoi le mélange botanique fonctionne, comment l'utiliser, et la famille derrière chaque flacon.",
-    metaTitle: "Comprendre",
+      "Tout ce qu'il faut savoir sur les soins capillaires Maison Fondjo. Ce que les rituels botaniques font, comment les utiliser, les ingrédients, et la famille derrière chaque flacon.",
+    metaTitle: "Comprendre les soins botaniques",
     metaDescription:
-      "Comprendre Sève Racine de Maison Fondjo : ce que c'est, la formule botanique, le mode d'emploi, les résultats réels et l'histoire de la famille Fondjo.",
-    productEyebrow: "Le produit",
-    productTitle: "Sève Racine. Une huile rituel capillaire botanique.",
+      "Comprendre les soins capillaires botaniques Maison Fondjo à Buea : formules, mode d'emploi, ingrédients, résultats et l'histoire de la famille Fondjo.",
+    productEyebrow: "La collection",
+    productTitle: "Soins botaniques pour le cuir chevelu et les longueurs.",
     productBody:
-      "Un mélange riche d'huiles et d'herbes botaniques pour le cuir chevelu et les longueurs : brillance maîtrisée, pointes adoucies et soutien des coiffures protectrices.",
-    productCta: "Voir le produit",
+      "Commencez avec l'huile Sève Racine pour le confort du cuir chevelu et des longueurs souples. De nouveaux nettoyants et soins rejoignent la gamme au fur et à mesure.",
+    productCta: "Voir la boutique",
     exploreEyebrow: "Continuer à explorer",
     exploreTitle: "Allez plus loin, à votre rythme.",
     cards: [
@@ -208,10 +208,10 @@ export const fr = {
     eyebrow: "Boutique",
     title: "La collection Maison Fondjo.",
     intro:
-      "Maison Fondjo construit une collection de soins capillaires botaniques premium. Sève Racine est notre premier traitement signature, disponible maintenant.",
-    metaTitle: "Boutique",
+      "Maison Fondjo construit une collection de soins capillaires botaniques. Sève Racine est disponible ; le shampoing et l'après-shampoing arrivent.",
+    metaTitle: "Boutique soins capillaires botaniques",
     metaDescription:
-      "Boutique Maison Fondjo. Sève Racine, une huile rituel capillaire botanique conçue à Buea, Cameroun.",
+      "Boutique Maison Fondjo : soins capillaires botaniques de Buea, Cameroun. Achetez Sève Racine, découvrez le shampoing et l'après-shampoing à venir.",
     viewProduct: "Voir le produit",
     soon: "Bientôt",
     comingSoonTitle: "À venir",

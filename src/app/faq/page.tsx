@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
+import { JsonLd } from "@/components/seo/json-ld";
 import { buildPublicMetadata, resolvePublicCopy } from "@/lib/seo/public-route-metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,8 +14,22 @@ export default async function FaqPage() {
   const { publicCopy } = await resolvePublicCopy();
   const faq = publicCopy.faqPage;
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <main className="bg-background py-16">
+      <JsonLd data={faqJsonLd} id="faq-page-jsonld" />
       <Container size="lg">
         <Kicker>{faq.kicker}</Kicker>
         <Heading as="h1" className="mt-3" level="h2">
