@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   },
   // Slow/corrupt FS cache on Windows can crash dev (missing .meta files). Opt out.
   experimental: {
+    viewTransition: true,
     turbopackFileSystemCacheForDev: false,
     optimizePackageImports: [
       "lucide-react",
@@ -75,9 +76,9 @@ const nextConfig: NextConfig = {
       "img-src 'self' data: blob: https://res.cloudinary.com https://*.stripe.com",
       "font-src 'self' data:",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.googletagmanager.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://res.cloudinary.com https://www.google-analytics.com https://region1.google-analytics.com https://*.sentry.io",
       ...(isProd ? ["upgrade-insecure-requests"] : []),
     ].join("; ");
 
