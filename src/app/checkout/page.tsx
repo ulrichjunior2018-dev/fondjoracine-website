@@ -7,7 +7,7 @@ import { CheckoutShell } from "@/features/commerce/components/checkout-shell";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 import { getCurrentUser } from "@/lib/auth/session";
-import { config } from "@/lib/config";
+import { config, SEVE_RACINE_SIZES, type SeveRacineSize } from "@/lib/config";
 import { getServerLocale } from "@/lib/locale-server";
 import { listCheckoutPaymentMethods } from "@/lib/payments/registry";
 import { isElixirSubscriptionConfigured } from "@/lib/payments/stripe";
@@ -30,18 +30,32 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function CheckoutPage() {
+type CheckoutPageProps = {
+  searchParams: Promise<{ size?: string }>;
+};
+
+function resolveSize(raw: string | undefined): SeveRacineSize {
+  return (SEVE_RACINE_SIZES as readonly string[]).includes(raw ?? "")
+    ? (raw as SeveRacineSize)
+    : "100ml";
+}
+
+export default async function CheckoutPage({ searchParams }: CheckoutPageProps) {
+  const { size: rawSize } = await searchParams;
+  const size = resolveSize(rawSize);
   const locale = await getServerLocale();
-  const content = await getElixirContent();
+  const content = await getElixirContent(size);
   const image = getPrimaryElixirImage(content);
   const paymentMethods = listCheckoutPaymentMethods();
   const priceXaf =
     Number.parseInt(content.product.priceXaf.replace(/[^\d]/g, ""), 10) ||
-    config.pricing.seveRacine;
+    config.pricing.seveRacineSizes[size];
+  const sizeLabel = t(content.product.size, locale);
 
   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
   const user = await getCurrentUser();
-  const subscriptionAvailable = isElixirSubscriptionConfigured();
+  // Subscribe & save only exists for the 100ml Stripe Price today.
+  const subscriptionAvailable = isElixirSubscriptionConfigured() && size === "100ml";
   if (user) {
     try {
       const supabase = await createSupabaseServerClient();
@@ -71,6 +85,8 @@ export default async function CheckoutPage() {
         }
         productName={t(content.product.name, locale)}
         productPriceXaf={priceXaf}
+        size={size}
+        sizeLabel={sizeLabel}
         subscriptionAvailable={subscriptionAvailable}
       />
       <BeginCheckoutTracker currency="XAF" value={priceXaf} />

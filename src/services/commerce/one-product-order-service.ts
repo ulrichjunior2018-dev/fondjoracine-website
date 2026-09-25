@@ -164,7 +164,7 @@ async function createStripeCheckoutSession(
   input: CreateOneProductOrderInput,
   returnBaseUrl: string,
 ) {
-  const content = await getElixirContent();
+  const content = await getElixirContent(input.size);
   const stripe = getStripeClient();
   const successUrl = `${getConfirmationUrl(order.confirmation_token, returnBaseUrl)}&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = getCheckoutCancelUrl(order.confirmation_token, returnBaseUrl);
@@ -183,7 +183,12 @@ async function createStripeCheckoutSession(
   }
 
   const inlinePrice = resolveStripeInlinePrice(content);
-  const priceId = env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
+  // STRIPE_HAIR_ELIXIR_PRICE_ID is a fixed Dashboard Price configured for the
+  // 100ml bottle. Only use it for that size — any other size always prices
+  // itself from `inlinePrice` (computed from `content`, which is already
+  // resolved for `input.size`) so a 50ml order can never be charged the
+  // 100ml Dashboard price.
+  const priceId = input.size === "100ml" ? env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim() : undefined;
   const subscriptionPriceId = env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
   const isSubscription = input.subscribe === true;
 
@@ -384,7 +389,7 @@ export async function createOneProductOrder(
   input: CreateOneProductOrderInput,
   options?: CreateOrderOptions,
 ) {
-  const content = await getElixirContent();
+  const content = await getElixirContent(input.size);
   const locale = input.locale;
   const instructions = getPaymentInstructions(content, locale, input.payment_method);
   const provider = getPaymentProvider(input.payment_method);
@@ -401,6 +406,13 @@ export async function createOneProductOrder(
   }
 
   if (input.subscribe) {
+    if (input.size !== "100ml") {
+      throw new AppError(
+        "BAD_REQUEST",
+        "Subscribe & save is only available on the 100ml size right now.",
+      );
+    }
+
     if (provider.redirectProcessor !== "stripe") {
       throw new AppError(
         "BAD_REQUEST",

@@ -3,7 +3,13 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "@/config/env";
 import { elixirContentSchema } from "@/features/elixir/data/content-schema";
 import { defaultElixirContent, type ElixirContent } from "@/features/elixir/data/content";
-import { buildWaLink, config, formatXaf } from "@/lib/config";
+import {
+  buildWaLink,
+  config,
+  formatXaf,
+  getSeveRacinePriceXaf,
+  type SeveRacineSize,
+} from "@/lib/config";
 import { logger } from "@/lib/logger/logger";
 
 type StorefrontContentRow = {
@@ -27,11 +33,11 @@ function getPublicSupabaseClient() {
   return publicClient;
 }
 
-export async function getElixirContent(): Promise<ElixirContent> {
+export async function getElixirContent(size: SeveRacineSize = "100ml"): Promise<ElixirContent> {
   const supabase = getPublicSupabaseClient();
 
   if (!supabase) {
-    return applyRuntimeOverrides(parseElixirContent(defaultElixirContent));
+    return applyRuntimeOverrides(parseElixirContent(defaultElixirContent), size);
   }
 
   let data: StorefrontContentRow | null = null;
@@ -63,7 +69,7 @@ export async function getElixirContent(): Promise<ElixirContent> {
     ? mergeContent(defaultElixirContent, data.content)
     : defaultElixirContent;
 
-  return applyRuntimeOverrides(parseElixirContent(content));
+  return applyRuntimeOverrides(parseElixirContent(content), size);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -138,7 +144,15 @@ function usesLegacyProductImagery(content: ElixirContent): boolean {
   );
 }
 
-function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
+function applyRuntimeOverrides(
+  content: ElixirContent,
+  size: SeveRacineSize = "100ml",
+): ElixirContent {
+  const priceXaf = getSeveRacinePriceXaf(size);
+  const sizeLabel =
+    size === "50ml"
+      ? { en: "50ml / 1.69 fl oz", fr: "50ml / 1,69 fl oz" }
+      : { en: "100ml / 3.38 fl oz", fr: "100ml / 3,38 fl oz" };
   const withBrand = usesLegacyStorefrontBranding(content)
     ? {
         ...content,
@@ -177,11 +191,12 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
       priceXaf: `${formatXaf(config.pricing.seveRacine)} local equivalent`,
     },
     currency: "XAF",
-    priceCents: config.pricing.seveRacine,
-    priceXaf: formatXaf(config.pricing.seveRacine),
+    priceCents: priceXaf,
+    priceXaf: formatXaf(priceXaf),
     product: {
       ...withImages.product,
-      priceXaf: formatXaf(config.pricing.seveRacine),
+      priceXaf: formatXaf(priceXaf),
+      size: sizeLabel,
     },
     whatsapp: {
       ...withImages.whatsapp,
@@ -193,7 +208,5 @@ function applyRuntimeOverrides(content: ElixirContent): ElixirContent {
 }
 
 export function getWhatsAppUrl(content: ElixirContent, locale: "en" | "fr") {
-  void content;
-
-  return buildWaLink("order", "", locale);
+  return buildWaLink("order", content.product.priceXaf, locale);
 }

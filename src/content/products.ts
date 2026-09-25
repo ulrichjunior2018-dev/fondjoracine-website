@@ -79,7 +79,40 @@ export const catalogProducts: readonly CatalogProduct[] = [
       fr: "Flacon Maison Fondjo Sève Racine sur pierre en lumière naturelle",
     },
     status: "available",
-    orderHref: "/checkout",
+    orderHref: "/checkout?size=100ml",
+  },
+  {
+    slug: "seve-racine-50ml",
+    href: "/products/seve-racine-50ml",
+    name: { en: "Sève Racine — 50 ml", fr: "Sève Racine — 50 ml" },
+    tagline: {
+      en: "The travel size. Same botanical hair ritual oil, smaller bottle.",
+      fr: "Le format voyage. La même huile rituel capillaire botanique, en plus petit flacon.",
+    },
+    eyebrow: {
+      en: "Botanical hair oil, 50 ml",
+      fr: "Huile capillaire botanique, 50 ml",
+    },
+    intro: {
+      en: "The same Sève Racine formula in a 50 ml bottle — a lighter way to start the ritual or top up on the go.",
+      fr: "La même formule Sève Racine dans un flacon de 50 ml — une façon plus légère de commencer le rituel ou de faire l'appoint en déplacement.",
+    },
+    seoTitle: {
+      en: "Sève Racine Botanical Hair Oil, 50 ml",
+      fr: "Huile capillaire botanique Sève Racine, 50 ml",
+    },
+    description: {
+      en: "Sève Racine in a 50 ml bottle — Maison Fondjo's botanical hair oil for scalp comfort and soft lengths. Pressed in Buea, Cameroon.",
+      fr: "Sève Racine en flacon de 50 ml — l'huile capillaire botanique de Maison Fondjo pour le confort du cuir chevelu et des longueurs souples. Pressee a Buea, Cameroun.",
+    },
+    priceXaf: formatXaf(config.pricing.seveRacineSizes["50ml"]),
+    image: advisorImages.product,
+    imageAlt: {
+      en: "Maison Fondjo Sève Racine 50ml bottle on stone in natural light",
+      fr: "Flacon Maison Fondjo Sève Racine 50 ml sur pierre en lumière naturelle",
+    },
+    status: "available",
+    orderHref: "/checkout?size=50ml",
   },
   {
     slug: "shampoo",
