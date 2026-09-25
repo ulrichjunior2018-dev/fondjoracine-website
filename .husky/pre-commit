@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # Pre-commit without lint-staged.
 # lint-staged freezes on this Windows setup (prettier spin / "Applying modifications").
+#
+# Husky's runner always invokes this file as `sh -e <file>` (see .husky/_/h),
+# ignoring the shebang above — so on any system where /bin/sh isn't bash
+# (Debian/Ubuntu dash, most Linux dev boxes and CI images) the bash-only
+# syntax below (arrays, process substitution) fails immediately with a
+# syntax error and the hook never runs. Re-exec into real bash once, then
+# continue as bash for the rest of this script.
+if [ -z "${BASH_VERSION:-}" ]; then
+  exec bash "$0" "$@"
+fi
 set -e
 cd "$(git rev-parse --show-toplevel)"
 
