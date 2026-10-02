@@ -17,9 +17,32 @@ const envSchema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional().or(z.literal("")),
-  /** Legacy display numbers — MoMo checkout is reserved for a future provider. */
+  /** Legacy display numbers — shown in manual-payment instructions copy. */
   MTN_MOMO_NUMBER: z.string().optional().or(z.literal("")),
   ORANGE_MONEY_NUMBER: z.string().optional().or(z.literal("")),
+  /**
+   * MTN MoMo Collection API (push "Request to Pay"). From the MTN MoMo
+   * Developer Portal (momodeveloper.mtn.com): Subscription Key is the
+   * Collection product's Ocp-Apim-Subscription-Key; API User / API Key are
+   * created once against that subscription key (see src/lib/payments/README.md).
+   */
+  MTN_MOMO_SUBSCRIPTION_KEY: z.string().optional().or(z.literal("")),
+  MTN_MOMO_API_USER: z.string().optional().or(z.literal("")),
+  MTN_MOMO_API_KEY: z.string().optional().or(z.literal("")),
+  /** "sandbox" in test, the MTN-assigned production target (e.g. "mtncameroon") once live. */
+  MTN_MOMO_TARGET_ENVIRONMENT: z.string().optional().or(z.literal("")),
+  /** Defaults to the sandbox host in the client if unset. */
+  MTN_MOMO_BASE_URL: z.string().url().optional().or(z.literal("")),
+  /**
+   * Orange Money Web Payment API. From the Orange Developer Center
+   * (developer.orange.com): OAuth client credentials + the merchant key
+   * issued for the Orange Money merchant account.
+   */
+  ORANGE_MONEY_CLIENT_ID: z.string().optional().or(z.literal("")),
+  ORANGE_MONEY_CLIENT_SECRET: z.string().optional().or(z.literal("")),
+  ORANGE_MONEY_MERCHANT_KEY: z.string().optional().or(z.literal("")),
+  /** Defaults to https://api.orange.com in the client if unset. */
+  ORANGE_MONEY_API_BASE_URL: z.string().url().optional().or(z.literal("")),
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),

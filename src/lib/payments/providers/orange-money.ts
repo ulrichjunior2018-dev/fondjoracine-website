@@ -1,9 +1,10 @@
+import { isOrangeMoneyConfigured } from "../orange-money-client";
 import type { PaymentProviderDescriptor } from "../types";
 
 /**
- * Orange Money — reserved for a future hosted-checkout provider.
- * Shown as “Soon” on checkout until `isConfigured` returns true and a
- * `redirectProcessor: "mobile_money"` adapter is wired in the order service.
+ * Orange Money — Web Payment API hosted redirect. Unlike MTN, Orange returns
+ * a real `payment_url`; `createProviderCheckout` sends the customer there
+ * directly. See `src/lib/payments/orange-money-client.ts`.
  */
 export const orangeMoneyProvider: PaymentProviderDescriptor = {
   method: "orange_money",
@@ -14,7 +15,7 @@ export const orangeMoneyProvider: PaymentProviderDescriptor = {
   initialPaymentStatus: "requires_confirmation",
   resolveSettlementCurrency: () => "XAF",
   buildProviderPaymentId: ({ orderId }) => `momo_orange:${orderId}`,
-  isConfigured: () => false,
+  isConfigured: isOrangeMoneyConfigured,
   cmsLabelMatch: "orange",
   redirectProcessor: "mobile_money",
   momoNetwork: "ORANGE",

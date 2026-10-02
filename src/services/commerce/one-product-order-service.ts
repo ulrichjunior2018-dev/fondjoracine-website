@@ -15,6 +15,8 @@ import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
+import { mtnRequestToPay } from "@/lib/payments/mtn-momo-client";
+import { createOrangeWebPayment } from "@/lib/payments/orange-money-client";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
@@ -318,12 +320,92 @@ async function createStripeCheckoutSession(
   }
 }
 
+/**
+ * MTN's sandbox target only accepts EUR (a fixed MTN testing constraint, not
+ * a Maison Fondjo choice). Production (`MTN_MOMO_TARGET_ENVIRONMENT` set to
+ * MTN's assigned Cameroon target) bills the real XAF amount. Same CFA franc
+ * peg as `resolveStripeInlinePrice` so sandbox totals stay consistent.
+ */
+function resolveMtnAmount(xafTotal: number): { amount: string; currency: string } {
+  if (getMtnTargetEnvironment() === "sandbox") {
+    const eur = Math.max(1, Math.round((xafTotal / 655.957) * 100) / 100);
+    return { amount: eur.toFixed(2), currency: "EUR" };
+  }
+  return { amount: String(xafTotal), currency: "XAF" };
+}
+
+function getMtnTargetEnvironment(): string {
+  return env.MTN_MOMO_TARGET_ENVIRONMENT || "sandbox";
+}
+
+async function createMobileMoneyCheckout(
+  supabase: SupabaseClient,
+  order: CreatedOrderRow,
+  input: CreateOneProductOrderInput,
+  provider: PaymentProviderDescriptor,
+  content: ElixirContent,
+  returnBaseUrl: string,
+): Promise<string> {
+  const xafTotal = content.priceCents * input.quantity;
+  const payerPhone = normalizePhone(input.phone).replace(/^\+/, "");
+
+  if (provider.momoNetwork === "MTN") {
+    const referenceId = crypto.randomUUID();
+    const { amount, currency } = resolveMtnAmount(xafTotal);
+
+    await mtnRequestToPay({
+      amount,
+      callbackUrl: `${returnBaseUrl.replace(/\/$/, "")}/api/webhooks/mtn-momo`,
+      currency,
+      externalId: order.order_number,
+      payeeNote: `Maison Fondjo order ${order.order_number}`,
+      payerMessage: `Maison Fondjo - ${order.order_number}`,
+      payerPhone,
+      referenceId,
+    });
+
+    const { error } = await supabase
+      .from("orders")
+      .update({ mobile_money_reference: referenceId })
+      .eq("id", order.id);
+    if (error) throw new AppError("BAD_REQUEST", error.message);
+
+    // No hosted page exists for MTN — send the browser to our own pending/polling
+    // screen, which shows "approve on your phone" and resolves once the push
+    // payment is confirmed (by status poll and/or the webhook above).
+    return `${returnBaseUrl.replace(/\/$/, "")}/checkout/momo-pending?token=${order.confirmation_token}&ref=${referenceId}`;
+  }
+
+  if (provider.momoNetwork === "ORANGE") {
+    const base = returnBaseUrl.replace(/\/$/, "");
+    const { paymentUrl, payToken } = await createOrangeWebPayment({
+      amount: xafTotal,
+      cancelUrl: getCheckoutCancelUrl(order.confirmation_token, returnBaseUrl),
+      currency: "XAF",
+      notifUrl: `${base}/api/webhooks/orange-money`,
+      orderId: order.id,
+      reference: order.order_number,
+      returnUrl: `${getConfirmationUrl(order.confirmation_token, returnBaseUrl)}&provider=orange_money`,
+    });
+
+    const { error } = await supabase
+      .from("orders")
+      .update({ mobile_money_reference: payToken })
+      .eq("id", order.id);
+    if (error) throw new AppError("BAD_REQUEST", error.message);
+
+    return paymentUrl;
+  }
+
+  throw new AppError("INTERNAL", "Unknown mobile money network.", { expose: false });
+}
+
 async function createProviderCheckout(
   supabase: SupabaseClient,
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
   provider: PaymentProviderDescriptor,
-  _content: ElixirContent,
+  content: ElixirContent,
   returnBaseUrl: string,
 ) {
   if (provider.redirectProcessor === "stripe") {
@@ -335,7 +417,10 @@ async function createProviderCheckout(
     return session.url;
   }
 
-  // Future: handle provider.redirectProcessor === "mobile_money" here.
+  if (provider.redirectProcessor === "mobile_money") {
+    return createMobileMoneyCheckout(supabase, order, input, provider, content, returnBaseUrl);
+  }
+
   throw new AppError("INTERNAL", "Payment redirect is not configured for this method.", {
     expose: false,
   });
@@ -963,6 +1048,123 @@ export async function fulfillStripeOrder(
       orderId,
     });
   }
+}
+
+/**
+ * Confirms an MTN MoMo / Orange Money order once the provider reports a
+ * successful payment. Called from both the provider webhook (fast path,
+ * best-effort delivery) and the status-polling endpoint (reliable fallback —
+ * sandbox callback delivery in particular cannot be relied on). Idempotent:
+ * safe to call more than once for the same order.
+ */
+export async function fulfillMobileMoneyOrder(
+  supabase: SupabaseClient,
+  args: { mobileMoneyReference: string; providerPaymentId: string; provider: "mtn_momo" | "orange_money" },
+) {
+  const { data: order, error: loadError } = await supabase
+    .from("orders")
+    .select("id, order_number, status, customer_id")
+    .eq("mobile_money_reference", args.mobileMoneyReference)
+    .maybeSingle<{
+      customer_id: string | null;
+      id: string;
+      order_number: string;
+      status: string;
+    }>();
+
+  if (loadError || !order) {
+    throw new AppError(
+      "BAD_REQUEST",
+      loadError?.message ?? `No order found for mobile money reference ${args.mobileMoneyReference}.`,
+    );
+  }
+
+  if (
+    order.status === "confirmed" ||
+    order.status === "delivered" ||
+    order.status === "shipped" ||
+    order.status === "out_for_delivery"
+  ) {
+    return;
+  }
+
+  const deliveryWindow = defaultEstimatedDeliveryWindow();
+  const now = new Date().toISOString();
+
+  const { error: orderError } = await supabase
+    .from("orders")
+    .update({
+      estimated_delivery_end: deliveryWindow.end,
+      estimated_delivery_start: deliveryWindow.start,
+      status: "confirmed",
+      status_updated_at: now,
+    })
+    .eq("id", order.id);
+
+  if (orderError) {
+    throw new AppError("BAD_REQUEST", orderError.message);
+  }
+
+  await supabase.from("order_status_events").insert({
+    from_status: order.status,
+    order_id: order.id,
+    to_status: "confirmed",
+  });
+
+  await supabase
+    .from("payments")
+    .update({
+      captured_at: now,
+      provider_payment_id: args.providerPaymentId,
+      status: "succeeded",
+    })
+    .eq("order_id", order.id)
+    .eq("provider", args.provider);
+
+  await writeAuditLog(supabase, {
+    action: `payment.confirmed.${args.provider}`,
+    afterData: {
+      mobile_money_reference: args.mobileMoneyReference,
+      order_number: order.order_number,
+      provider_payment_id: args.providerPaymentId,
+    },
+    beforeData: { status: order.status },
+    entityId: order.id,
+    entityTable: "orders",
+  });
+
+  await notifyOrderConfirmed(supabase, order.id);
+}
+
+/**
+ * Marks an MTN MoMo / Orange Money order as failed (customer declined,
+ * timed out, or insufficient funds). Idempotent.
+ */
+export async function failMobileMoneyOrder(
+  supabase: SupabaseClient,
+  args: { mobileMoneyReference: string; reason?: string; provider: "mtn_momo" | "orange_money" },
+) {
+  const { data: order } = await supabase
+    .from("orders")
+    .select("id, status")
+    .eq("mobile_money_reference", args.mobileMoneyReference)
+    .maybeSingle<{ id: string; status: string }>();
+
+  if (!order || order.status === "confirmed") return;
+
+  await supabase
+    .from("payments")
+    .update({ status: "failed" })
+    .eq("order_id", order.id)
+    .eq("provider", args.provider);
+
+  await writeAuditLog(supabase, {
+    action: `payment.failed.${args.provider}`,
+    afterData: { mobile_money_reference: args.mobileMoneyReference, reason: args.reason ?? null },
+    beforeData: { status: order.status },
+    entityId: order.id,
+    entityTable: "orders",
+  });
 }
 
 /**

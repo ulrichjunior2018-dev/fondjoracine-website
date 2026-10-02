@@ -406,6 +406,7 @@ export type Database = {
           billing_address: Json;
           coupon_id: string | null;
           stripe_checkout_session_id: string | null;
+          mobile_money_reference: string | null;
           metadata: Json;
           placed_at: string | null;
           customer_name: string | null;
@@ -444,6 +445,7 @@ export type Database = {
           billing_address: Json;
           coupon_id?: string | null;
           stripe_checkout_session_id?: string | null;
+          mobile_money_reference?: string | null;
           metadata?: Json;
           placed_at?: string | null;
           customer_name?: string | null;
@@ -482,6 +484,7 @@ export type Database = {
           billing_address?: Json;
           coupon_id?: string | null;
           stripe_checkout_session_id?: string | null;
+          mobile_money_reference?: string | null;
           metadata?: Json;
           placed_at?: string | null;
           customer_name?: string | null;
