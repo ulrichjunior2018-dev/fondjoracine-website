@@ -21,9 +21,21 @@ const envSchema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional().or(z.literal("")),
-  /** Legacy display numbers — MoMo checkout is reserved for a future provider. */
+  /** Legacy display numbers — shown in manual-payment instructions copy. */
   MTN_MOMO_NUMBER: z.string().optional().or(z.literal("")),
   ORANGE_MONEY_NUMBER: z.string().optional().or(z.literal("")),
+  /**
+   * Fapshi (fapshi.com) — Cameroon payment aggregator fronting both MTN MoMo
+   * and Orange Money behind one API + one hosted checkout link. From your
+   * Fapshi dashboard: apiuser / apikey — check whether your dashboard issues
+   * one pair shared across sandbox/live or a separate pair per environment,
+   * and set FAPSHI_API_USER/KEY to the one matching FAPSHI_ENV below.
+   */
+  FAPSHI_API_USER: z.string().optional().or(z.literal("")),
+  FAPSHI_API_KEY: z.string().optional().or(z.literal("")),
+  FAPSHI_ENV: z.string().optional().or(z.literal("")),
+  /** Defaults to the sandbox/live host (by FAPSHI_ENV) in the client if unset. */
+  FAPSHI_BASE_URL: z.string().url().optional().or(z.literal("")),
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),

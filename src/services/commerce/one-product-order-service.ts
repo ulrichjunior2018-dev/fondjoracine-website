@@ -15,6 +15,7 @@ import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
+import { initiatePay } from "@/lib/payments/fapshi-client";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
@@ -164,7 +165,7 @@ async function createStripeCheckoutSession(
   input: CreateOneProductOrderInput,
   returnBaseUrl: string,
 ) {
-  const content = await getElixirContent();
+  const content = await getElixirContent(input.size);
   const stripe = getStripeClient();
   const successUrl = `${getConfirmationUrl(order.confirmation_token, returnBaseUrl)}&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = getCheckoutCancelUrl(order.confirmation_token, returnBaseUrl);
@@ -183,7 +184,12 @@ async function createStripeCheckoutSession(
   }
 
   const inlinePrice = resolveStripeInlinePrice(content);
-  const priceId = env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
+  // STRIPE_HAIR_ELIXIR_PRICE_ID is a fixed Dashboard Price configured for the
+  // 100ml bottle. Only use it for that size — any other size always prices
+  // itself from `inlinePrice` (computed from `content`, which is already
+  // resolved for `input.size`) so a 50ml order can never be charged the
+  // 100ml Dashboard price.
+  const priceId = input.size === "100ml" ? env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim() : undefined;
   const subscriptionPriceId = env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
   const isSubscription = input.subscribe === true;
 
@@ -313,12 +319,45 @@ async function createStripeCheckoutSession(
   }
 }
 
+/**
+ * Both `mtn_momo` and `orange_money` checkout buttons resolve here. Fapshi
+ * fronts both networks behind one hosted payment link — the customer picks
+ * MTN or Orange on Fapshi's own page, so there is nothing network-specific
+ * left to branch on at this layer (unlike the direct MTN/Orange APIs, which
+ * needed separate push-payment vs. hosted-redirect handling).
+ */
+async function createMobileMoneyCheckout(
+  supabase: SupabaseClient,
+  order: CreatedOrderRow,
+  input: CreateOneProductOrderInput,
+  content: ElixirContent,
+  returnBaseUrl: string,
+): Promise<string> {
+  const xafTotal = content.priceCents * input.quantity;
+
+  const { link, transId } = await initiatePay({
+    amount: xafTotal,
+    externalId: order.order_number,
+    message: `Maison Fondjo order ${order.order_number}`,
+    redirectUrl: getConfirmationUrl(order.confirmation_token, returnBaseUrl),
+    ...(input.email ? { email: input.email } : {}),
+  });
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ mobile_money_reference: transId })
+    .eq("id", order.id);
+  if (error) throw new AppError("BAD_REQUEST", error.message);
+
+  return link;
+}
+
 async function createProviderCheckout(
   supabase: SupabaseClient,
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
   provider: PaymentProviderDescriptor,
-  _content: ElixirContent,
+  content: ElixirContent,
   returnBaseUrl: string,
 ) {
   if (provider.redirectProcessor === "stripe") {
@@ -330,7 +369,10 @@ async function createProviderCheckout(
     return session.url;
   }
 
-  // Future: handle provider.redirectProcessor === "mobile_money" here.
+  if (provider.redirectProcessor === "mobile_money") {
+    return createMobileMoneyCheckout(supabase, order, input, content, returnBaseUrl);
+  }
+
   throw new AppError("INTERNAL", "Payment redirect is not configured for this method.", {
     expose: false,
   });
@@ -384,7 +426,7 @@ export async function createOneProductOrder(
   input: CreateOneProductOrderInput,
   options?: CreateOrderOptions,
 ) {
-  const content = await getElixirContent();
+  const content = await getElixirContent(input.size);
   const locale = input.locale;
   const instructions = getPaymentInstructions(content, locale, input.payment_method);
   const provider = getPaymentProvider(input.payment_method);
@@ -401,6 +443,13 @@ export async function createOneProductOrder(
   }
 
   if (input.subscribe) {
+    if (input.size !== "100ml") {
+      throw new AppError(
+        "BAD_REQUEST",
+        "Subscribe & save is only available on the 100ml size right now.",
+      );
+    }
+
     if (provider.redirectProcessor !== "stripe") {
       throw new AppError(
         "BAD_REQUEST",
@@ -951,6 +1000,133 @@ export async function fulfillStripeOrder(
       orderId,
     });
   }
+}
+
+/**
+ * Confirms a Mobile Money (Fapshi) order once the provider reports a
+ * successful payment. Called from both the webhook (fast path, best-effort
+ * delivery) and a status re-check (reliable fallback). Idempotent: safe to
+ * call more than once for the same order.
+ *
+ * `payment_method` (mtn_momo vs. orange_money) is read back off the order
+ * row rather than passed in — the webhook only knows the Fapshi `transId`,
+ * never which button the customer originally clicked, so the order itself
+ * is the only source of truth for which `payments` row to update.
+ */
+export async function fulfillMobileMoneyOrder(
+  supabase: SupabaseClient,
+  args: { mobileMoneyReference: string; providerPaymentId: string },
+) {
+  const { data: order, error: loadError } = await supabase
+    .from("orders")
+    .select("id, order_number, status, customer_id, payment_method")
+    .eq("mobile_money_reference", args.mobileMoneyReference)
+    .maybeSingle<{
+      customer_id: string | null;
+      id: string;
+      order_number: string;
+      payment_method: string | null;
+      status: string;
+    }>();
+
+  if (loadError || !order) {
+    throw new AppError(
+      "BAD_REQUEST",
+      loadError?.message ?? `No order found for mobile money reference ${args.mobileMoneyReference}.`,
+    );
+  }
+
+  const provider = order.payment_method ?? "mtn_momo";
+
+  if (
+    order.status === "confirmed" ||
+    order.status === "delivered" ||
+    order.status === "shipped" ||
+    order.status === "out_for_delivery"
+  ) {
+    return;
+  }
+
+  const deliveryWindow = defaultEstimatedDeliveryWindow();
+  const now = new Date().toISOString();
+
+  const { error: orderError } = await supabase
+    .from("orders")
+    .update({
+      estimated_delivery_end: deliveryWindow.end,
+      estimated_delivery_start: deliveryWindow.start,
+      status: "confirmed",
+      status_updated_at: now,
+    })
+    .eq("id", order.id);
+
+  if (orderError) {
+    throw new AppError("BAD_REQUEST", orderError.message);
+  }
+
+  await supabase.from("order_status_events").insert({
+    from_status: order.status,
+    order_id: order.id,
+    to_status: "confirmed",
+  });
+
+  await supabase
+    .from("payments")
+    .update({
+      captured_at: now,
+      provider_payment_id: args.providerPaymentId,
+      status: "succeeded",
+    })
+    .eq("order_id", order.id)
+    .eq("provider", provider);
+
+  await writeAuditLog(supabase, {
+    action: `payment.confirmed.${provider}`,
+    afterData: {
+      mobile_money_reference: args.mobileMoneyReference,
+      order_number: order.order_number,
+      provider_payment_id: args.providerPaymentId,
+    },
+    beforeData: { status: order.status },
+    entityId: order.id,
+    entityTable: "orders",
+  });
+
+  await notifyOrderConfirmed(supabase, order.id);
+}
+
+/**
+ * Marks a Mobile Money (Fapshi) order as failed (customer declined, timed
+ * out, or insufficient funds). Idempotent. See `fulfillMobileMoneyOrder` for
+ * why `payment_method` is read off the order instead of passed in.
+ */
+export async function failMobileMoneyOrder(
+  supabase: SupabaseClient,
+  args: { mobileMoneyReference: string; reason?: string },
+) {
+  const { data: order } = await supabase
+    .from("orders")
+    .select("id, status, payment_method")
+    .eq("mobile_money_reference", args.mobileMoneyReference)
+    .maybeSingle<{ id: string; status: string; payment_method: string | null }>();
+
+  if (!order || order.status === "confirmed") return;
+
+  const provider = order.payment_method ?? "mtn_momo";
+
+  await supabase
+    .from("payments")
+    .update({ status: "failed" })
+    .eq("order_id", order.id)
+    .eq("provider", provider);
+
+  await writeAuditLog(supabase, {
+    action: `payment.failed.${provider}`,
+    afterData: { mobile_money_reference: args.mobileMoneyReference, reason: args.reason ?? null },
+    beforeData: { status: order.status },
+    entityId: order.id,
+    entityTable: "orders",
+  });
 }
 
 /**

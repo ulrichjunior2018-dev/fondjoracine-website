@@ -14,15 +14,46 @@ A single, extensible home for "how do we take money." Checkout/order code resolv
 - **`registry.ts`** — `getPaymentProvider(method)`, `listPaymentProviders()`, `listAvailablePaymentMethods()` (env-gated availability), `listCheckoutPaymentMethods()` (Card + MTN + Orange preview).
 - **`providers/`** — one descriptor per method: `whatsapp.ts`, `mtn-momo.ts`, `orange-money.ts`, `stripe-provider.ts`.
 - **`stripe.ts`** — Stripe client factory (`getStripeClient`).
-- Checkout UI at `/checkout` lists Card / MTN / Orange via `listCheckoutPaymentMethods()`.
-  - **Card (Stripe)** — live when Stripe env keys are set.
-  - **MTN MoMo / Orange Money** — reserved stubs (`isConfigured: () => false`, `redirectProcessor: "mobile_money"`). Shown as “Soon” until a future MoMo adapter is wired.
+- **`fapshi-client.ts`** — Fapshi aggregator client (`initiatePay`, `getPaymentStatus`) covering both MTN MoMo and Orange Money.
+- Checkout UI at `/checkout` lists Card / MTN / Orange via `listCheckoutPaymentMethods()`. Each shows "Soon" until its env keys are set — `isConfigured()` is the single source of truth, there is no separate feature flag.
 
-## How to add a Mobile Money provider (e.g. CinetPay, Flutterwave)
+## Mobile Money: MTN and Orange both go through Fapshi
 
-1. Add a client module (like `stripe.ts`) reading keys from `@/config/env`.
-2. Flip `isConfigured` on `mtn-momo.ts` / `orange-money.ts` to check those keys (keep `momoNetwork`).
-3. Implement `redirectProcessor === "mobile_money"` in `createProviderCheckout` in the order service (session create + webhook confirm).
+Maison Fondjo integrates MTN MoMo and Orange Money via **Fapshi**
+(fapshi.com), a Cameroon payment aggregator, rather than going direct to each
+network's own API. Both `mtn-momo.ts` and `orange-money.ts` descriptors use
+`kind: "redirect"` / `redirectProcessor: "mobile_money"` and both resolve to
+the exact same `createMobileMoneyCheckout` branch in
+`one-product-order-service.ts` — there is nothing network-specific left to
+branch on, because Fapshi's `initiate-pay` returns one hosted payment link
+regardless of method, and the customer picks MTN or Orange on Fapshi's own
+page. The two descriptors exist mainly so checkout can show separate
+MTN/Orange buttons and CMS copy; functionally they're identical.
+
+Fulfillment goes through `fulfillMobileMoneyOrder` / `failMobileMoneyOrder`
+in the order service (mirrors `fulfillStripeOrder`, keyed by
+`orders.mobile_money_reference` — Fapshi's `transId` — instead of a Stripe
+session id). The Fapshi webhook (`/api/webhooks/fapshi`) is not trusted
+blindly: it re-verifies via `getPaymentStatus` (the source of truth) before
+marking an order paid, since Fapshi's webhook payload isn't signed. Because
+the webhook only knows `transId`, not which button the customer originally
+clicked, `fulfillMobileMoneyOrder`/`failMobileMoneyOrder` read the correct
+`mtn_momo` vs `orange_money` value back off the order row itself rather than
+trusting a caller-supplied value — don't reintroduce a `provider` param on
+those without re-deriving it that way.
+
+**If Maison Fondjo ever moves off Fapshi to direct MTN/Orange APIs**, note
+MTN's direct Collection API has no hosted checkout page (push payment to the
+phone + poll/webhook for status) while Orange's direct Web Payment API does
+(a real hosted redirect) — that asymmetry is why going direct needs more
+code than the current Fapshi integration, which the git history around this
+file documents if useful as a reference.
+
+## How to add another Mobile Money provider/aggregator (e.g. CinetPay)
+
+1. Add a client module (like `fapshi-client.ts`) reading keys from `@/config/env`.
+2. Add a descriptor in `providers/` with `isConfigured` wired to that client.
+3. Extend `createMobileMoneyCheckout` in the order service for the new case.
 4. Add a webhook route under `src/app/api/webhooks/<provider>/`.
 
 ## How to add a new payment method (e.g. PayPal)

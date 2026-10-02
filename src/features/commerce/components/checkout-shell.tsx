@@ -16,7 +16,7 @@ import {
 } from "@/domain/commerce/schemas";
 import type { Locale } from "@/features/elixir/data/content";
 import { getDictionary } from "@/i18n/dictionaries";
-import { buildWaLink, formatXaf } from "@/lib/config";
+import { buildWaLink, formatXaf, type SeveRacineSize as OneProductSize } from "@/lib/config";
 import type { PaymentMethodOption } from "@/lib/payments/types";
 import { siteImages } from "@/lib/site-images";
 import { cn } from "@/lib/utils/cn";
@@ -28,6 +28,10 @@ type CheckoutShellProps = {
   productPriceXaf: number;
   productImageSrc: string;
   productImageAlt: string;
+  /** Sève Racine bottle size for this checkout ("100ml" | "50ml"). */
+  size: OneProductSize;
+  /** Localized size line shown under the product name (e.g. "100ml / 3.38 fl oz"). */
+  sizeLabel: string;
   /** Prefill from Account → Addresses / profile when signed in. */
   accountPrefill?: {
     city: string;
@@ -118,6 +122,8 @@ export function CheckoutShell({
   productPriceXaf,
   productImageSrc,
   productImageAlt,
+  size,
+  sizeLabel,
   accountPrefill = null,
   isSignedIn,
   subscriptionAvailable,
@@ -156,6 +162,7 @@ export function CheckoutShell({
       payment_method: defaultMethod,
       phone: accountPrefill?.phone ?? "",
       quantity: 1,
+      size,
       subscribe: false,
       transaction_reference: "",
     },
@@ -168,7 +175,7 @@ export function CheckoutShell({
   const canOfferSubscription = subscriptionAvailable && paymentMethod === "stripe";
   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
   const subtotal = productPriceXaf * quantity;
-  const whatsappUrl = buildWaLink("order", "", locale);
+  const whatsappUrl = buildWaLink("order", formatXaf(productPriceXaf), locale);
   const anyConfigured = available.some((method) => method.configured);
   const submitLabel =
     selected?.kind === "redirect" && selected.configured ? copy.continueToPay : copy.submitPayment;
@@ -261,7 +268,7 @@ export function CheckoutShell({
                 <p className="text-[0.95rem] font-semibold leading-snug text-[#F5EFE3] sm:text-base">
                   {productName}
                 </p>
-                <p className="mt-1 text-xs text-[#F5EFE3]/70 sm:text-sm">{copy.productSize}</p>
+                <p className="mt-1 text-xs text-[#F5EFE3]/70 sm:text-sm">{sizeLabel}</p>
               </div>
               <p className="shrink-0 font-mono text-sm text-[#B8935A] sm:text-base">
                 {formatXaf(productPriceXaf)}

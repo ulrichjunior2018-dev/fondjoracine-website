@@ -22,7 +22,14 @@ export const config = {
   env: process.env.NEXT_PUBLIC_ENV ?? "staging",
   pricing: {
     consultation: 5_000,
-    seveRacine: 15_000,
+    // Sève Racine ships in two sizes. `seveRacine` is kept as the 100ml
+    // price for existing call sites that only need one number; anything
+    // size-aware should use `seveRacineSizes` / `getSeveRacinePriceXaf`.
+    seveRacine: 12_500,
+    seveRacineSizes: {
+      "100ml": 12_500,
+      "50ml": 10_000,
+    },
     surMesure: 25_000,
     wholesale: 9_000,
   },
@@ -32,7 +39,7 @@ export const config = {
         consultation: "Hello, I would like to book a Private Consultation.",
         diagnostic: (answers: string) =>
           `Hello 🌿 Here is my hair diagnostic:\n${answers}\nWhat do you recommend?`,
-        order: "Hello, I would like to order Sève Racine (15 000 FCFA).",
+        order: (priceLabel: string) => `Hello, I would like to order Sève Racine (${priceLabel}).`,
         support: "Hello, I need help with my Maison Fondjo order or account.",
         wholesale: "Hello, I am interested in the wholesale offer (MOQ 20).",
       },
@@ -40,7 +47,8 @@ export const config = {
         consultation: "Bonjour, je souhaite réserver une Consultation Privée.",
         diagnostic: (answers: string) =>
           `Bonjour 🌿 Voici mon diagnostic capillaire:\n${answers}\nQue me conseillez-vous?`,
-        order: "Bonjour, je souhaite commander Sève Racine (15 000 FCFA).",
+        order: (priceLabel: string) =>
+          `Bonjour, je souhaite commander Sève Racine (${priceLabel}).`,
         support: "Bonjour, j’ai besoin d’aide pour ma commande ou mon compte Maison Fondjo.",
         wholesale: "Bonjour, je suis intéressé(e) par l'offre grossiste (MOQ 20).",
       },
@@ -51,6 +59,15 @@ export const config = {
 
 export function formatXaf(amount: number) {
   return `${amount.toLocaleString("fr-FR").replace(/\u202f/g, " ")} F`;
+}
+
+/** Sève Racine's two sizes. Keep in sync with `config.pricing.seveRacineSizes`. */
+export type SeveRacineSize = "100ml" | "50ml";
+
+export const SEVE_RACINE_SIZES: readonly SeveRacineSize[] = ["100ml", "50ml"];
+
+export function getSeveRacinePriceXaf(size: SeveRacineSize = "100ml") {
+  return config.pricing.seveRacineSizes[size];
 }
 
 export function buildWaLink(
@@ -75,7 +92,7 @@ export function buildWaLink(
       message = messages.wholesale;
       break;
     default:
-      message = messages.order;
+      message = messages.order(dynamicText || formatXaf(config.pricing.seveRacineSizes["100ml"]));
   }
 
   const normalized = config.whatsapp.number.replace(/\D/g, "");

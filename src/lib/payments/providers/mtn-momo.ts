@@ -1,9 +1,11 @@
+import { isFapshiConfigured } from "../fapshi-client";
 import type { PaymentProviderDescriptor } from "../types";
 
 /**
- * MTN Mobile Money — reserved for a future hosted-checkout provider.
- * Shown as “Soon” on checkout until `isConfigured` returns true and a
- * `redirectProcessor: "mobile_money"` adapter is wired in the order service.
+ * MTN Mobile Money — routed through Fapshi (see `fapshi-client.ts`), which
+ * fronts both MTN and Orange behind one hosted-checkout API. The network
+ * choice happens on Fapshi's own payment page, not here — this descriptor
+ * exists mainly for the checkout button label / CMS copy.
  */
 export const mtnMomoProvider: PaymentProviderDescriptor = {
   method: "mtn_momo",
@@ -14,7 +16,7 @@ export const mtnMomoProvider: PaymentProviderDescriptor = {
   initialPaymentStatus: "requires_confirmation",
   resolveSettlementCurrency: () => "XAF",
   buildProviderPaymentId: ({ orderId }) => `momo_mtn:${orderId}`,
-  isConfigured: () => false,
+  isConfigured: isFapshiConfigured,
   cmsLabelMatch: "mtn",
   redirectProcessor: "mobile_money",
   momoNetwork: "MTN",

@@ -75,11 +75,14 @@ export const createOneProductOrderSchema = z.object({
   payment_method: oneProductPaymentMethodSchema,
   phone: z.string().min(8).max(24),
   quantity: z.number().int().min(1).max(6).default(1),
+  /** Sève Racine bottle size. Price is always resolved server-side from this — never trust a client-sent price. */
+  size: z.enum(["100ml", "50ml"]).default("100ml"),
   /**
    * Recurring "subscribe & save" purchase. Card-only (Stripe Billing) — MoMo
    * and WhatsApp cannot auto-charge, so the API rejects subscribe=true unless
    * payment_method is "stripe". Also requires a signed-in customer, since a
    * subscription must be tied to an account for later management/cancellation.
+   * Only offered on the 100ml size today (the only size with a Stripe recurring Price configured).
    */
   subscribe: z.boolean().default(false),
   transaction_reference: z.string().min(4).max(120).optional().or(z.literal("")),
