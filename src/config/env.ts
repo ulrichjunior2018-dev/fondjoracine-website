@@ -51,7 +51,7 @@ const envSchema = z.object({
   /** Analytics / observability — optional; empty = disabled. */
   NEXT_PUBLIC_GTM_ID: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional().or(z.literal("")),
-  NEXT_PUBLIC_SENTRY_DSN: z.string().optional().or(z.literal("")),
+  /** Server-only DSN override (optional). Defaults to NEXT_PUBLIC_SENTRY_DSN. */
   SENTRY_DSN: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_ANALYTICS_DEBUG: z.string().optional().or(z.literal("")),
 });

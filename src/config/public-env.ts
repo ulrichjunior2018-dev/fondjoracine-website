@@ -18,7 +18,6 @@ export const publicEnv = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "",
   ga4MeasurementId: process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ?? "",
   gtmContainerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID ?? "",
-  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN ?? "",
   cloudinaryCloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? "",
   /** Identity provider enable flags — read only by `src/lib/identity/providers/*`. */
   authGoogleEnabled: process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true",
