@@ -161,10 +161,10 @@ export function CinematicHero({ consultationHref = "/diagnostic" }: CinematicHer
             <MotionButtonShell>
               <Link
                 className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-sm bg-[#B8935A] px-7 text-sm font-semibold text-[#0B0B0B] shadow-[0_22px_80px_rgb(184_147_90/.24)] sm:min-h-13"
-                href={"/shop" as Route}
+                href={"/products/seve-racine" as Route}
                 prefetch
               >
-                {homeCopy.buy}
+                {heroCopy.secondary}
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </MotionButtonShell>

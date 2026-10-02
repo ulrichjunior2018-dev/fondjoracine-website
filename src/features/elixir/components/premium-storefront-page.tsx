@@ -322,13 +322,16 @@ export function TestimonialsSection({ copy }: { copy: Copy }) {
           </h2>
         </FadeUp>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {t.items.map((item) => (
-            <MotionCard className="border border-[#B8935A]/14 bg-white/[0.025] p-6" key={item.name}>
-              <p className="font-serif text-xl font-light italic leading-8 text-[#F5EFE3]/88">
+        <div className="mt-14 grid gap-x-10 gap-y-12 lg:grid-cols-3">
+          {t.items.map((item, index) => (
+            <MotionCard className="border-t border-[#B8935A]/20 pt-6" key={item.name}>
+              <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-[#B8935A]/70">
+                {t.eyebrow} / {String(index + 1).padStart(3, "0")}
+              </p>
+              <p className="mt-5 font-serif text-xl font-light italic leading-8 text-[#F5EFE3]/88">
                 &ldquo;{item.quote}&rdquo;
               </p>
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-[#F5EFE3]/70">
                 {item.name}
               </p>
             </MotionCard>

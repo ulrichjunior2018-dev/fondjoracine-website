@@ -896,15 +896,15 @@ const homeFr = {
   hero: {
     backgroundAlt: "Atmosphère botanique Maison Fondjo à Buea, près du Mont Cameroun",
     bottleAlt: "Flacon Sève Racine, huile capillaire botanique Maison Fondjo",
-    eyebrow: "MAISON FONDJO. BUEA, CAMEROUN",
+    eyebrow: "Traitement botanique cuir chevelu et cheveux",
     primary: "Commencer mon diagnostic",
     secondary: "Découvrir Sève Racine",
-    story: "Avant le flacon, nous commençons par vous écouter.",
+    story: "Origine camerounaise · Formulation botanique · Livraison nationale",
     subtitle:
-      "Découvrez des soins capillaires botaniques premium conçus pour nourrir le cuir chevelu, renforcer les cheveux et soutenir une apparence plus saine grâce à un soin régulier.",
+      "Un traitement botanique pour le cuir chevelu et les cheveux. Né à Buea, au Cameroun.",
     pending: "Photographie produit réelle en attente",
-    titleFirst: "Racines fortes.",
-    titleSecond: "Cheveux forts.",
+    titleFirst: "Sève",
+    titleSecond: "Racine",
     titleThird: "",
     trustLabel: "Repères du coffret Maison Fondjo",
     trustItems: [
@@ -964,15 +964,14 @@ const homeEn = {
   hero: {
     backgroundAlt: "Maison Fondjo botanical atmosphere in Buea, near Mount Cameroon",
     bottleAlt: "Sève Racine bottle, Maison Fondjo botanical hair oil",
-    eyebrow: "MAISON FONDJO. BUEA, CAMEROON",
+    eyebrow: "Botanical scalp & hair treatment",
     primary: "Start my diagnostic",
     secondary: "Discover Sève Racine",
-    story: "Before the bottle, we begin by listening.",
-    subtitle:
-      "Discover premium botanical hair care designed to nourish the scalp, strengthen hair, and support healthier-looking hair through consistent care.",
+    story: "Cameroonian origin · Botanical formulation · Nationwide delivery",
+    subtitle: "A botanical treatment for scalp and hair. Born in Buea, Cameroon.",
     pending: "Real product photography pending",
-    titleFirst: "Strong roots.",
-    titleSecond: "Strong hair.",
+    titleFirst: "Sève",
+    titleSecond: "Racine",
     titleThird: "",
     trustLabel: "Maison Fondjo box trust signals",
     trustItems: [

@@ -5,6 +5,8 @@ import { AdvisorShell } from "@/components/AdvisorShell";
 import { CatalogProductSection } from "@/components/CatalogProductSection";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getCatalogProduct, listCatalogProductSlugs } from "@/content/products";
+import { getElixirContent } from "@/features/elixir/lib/cms";
+import { t } from "@/features/elixir/data/content";
 import { buildCatalogProductJsonLd } from "@/lib/seo/catalog-json-ld";
 import { buildAdvisorRouteMetadata } from "@/lib/seo/advisor-route-metadata";
 import { resolveAdvisorCopy } from "@/lib/seo/public-route-metadata";
@@ -53,6 +55,17 @@ export default async function ProductSlugPage({ params }: ProductPageProps) {
 
   const { locale } = await resolveAdvisorCopy();
 
+  // Only the flagship, purchasable SKU gets the full editorial PDP (incl. real
+  // FAQ content). Coming-soon stub products keep the minimal teaser layout.
+  let faqItems: Array<{ question: string; answer: string }> | undefined;
+  if (product.status === "available") {
+    const content = await getElixirContent();
+    faqItems = content.faq.items.map((item) => ({
+      question: t(item.question, locale),
+      answer: t(item.answer, locale),
+    }));
+  }
+
   return (
     <>
       <JsonLd
@@ -60,7 +73,7 @@ export default async function ProductSlugPage({ params }: ProductPageProps) {
         id={`product-${product.slug}-jsonld`}
       />
       <AdvisorShell>
-        <CatalogProductSection product={product} />
+        <CatalogProductSection faqItems={faqItems} product={product} />
       </AdvisorShell>
     </>
   );
