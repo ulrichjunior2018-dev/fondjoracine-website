@@ -60,12 +60,12 @@ const CHECKOUT_METHODS: OneProductPaymentMethod[] = ["stripe", "mtn_momo", "oran
 
 function methodHint(
   method: OneProductPaymentMethod,
-  _kind: PaymentMethodOption["kind"],
+  configured: boolean,
   copy: ReturnType<typeof getDictionary>["checkoutPage"],
 ) {
   if (method === "stripe") return copy.cardSecureHint;
-  if (method === "mtn_momo") return copy.mtnHint;
-  return copy.orangeHint;
+  if (method === "mtn_momo") return configured ? copy.mtnConfiguredHint : copy.mtnHint;
+  return configured ? copy.orangeConfiguredHint : copy.orangeHint;
 }
 
 function methodLabel(
@@ -392,7 +392,11 @@ export function CheckoutShell({
 
               {selected ? (
                 <p className="mt-3 text-xs leading-5 text-[#0B0B0B]/62 sm:text-sm sm:leading-6">
-                  {methodHint(selected.method as OneProductPaymentMethod, selected.kind, copy)}
+                  {methodHint(
+                    selected.method as OneProductPaymentMethod,
+                    selected.configured === true,
+                    copy,
+                  )}
                 </p>
               ) : null}
 

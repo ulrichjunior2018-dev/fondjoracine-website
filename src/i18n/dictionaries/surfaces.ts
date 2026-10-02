@@ -51,8 +51,7 @@ export const surfacesEn = {
     taxesIncluded: "Included",
     total: "Total",
     paymentMethodsHeading: "Payment method",
-    paymentMethodsIntro:
-      "Pay securely by card (Visa, Mastercard). MTN MoMo and Orange Money are coming soon.",
+    paymentMethodsIntro: "Pay securely by card, MTN MoMo, or Orange Money.",
     paymentDetails: "Your details",
     tabCard: "Card",
     tabMtn: "MTN MoMo",
@@ -62,6 +61,10 @@ export const surfacesEn = {
       "Pay securely with Visa or Mastercard. You will finish on a secure payment page. We never store your card number.",
     mtnHint: "MTN Mobile Money is coming soon. For now, please pay by card.",
     orangeHint: "Orange Money is coming soon. For now, please pay by card.",
+    mtnConfiguredHint:
+      "Pay with MTN Mobile Money. You will finish on a secure payment page and confirm on your phone.",
+    orangeConfiguredHint:
+      "Pay with Orange Money. You will finish on a secure payment page and confirm on your phone.",
     manualHint: "Mobile money checkout is coming soon. For now, please pay by card.",
     agreePrefix: "I agree to the",
     agreeLink: "Terms of purchase",
@@ -516,8 +519,7 @@ export const surfacesFr = {
     taxesIncluded: "Incluses",
     total: "Total",
     paymentMethodsHeading: "Moyen de paiement",
-    paymentMethodsIntro:
-      "Payez en toute sécurité par carte (Visa, Mastercard). MTN MoMo et Orange Money arrivent bientôt.",
+    paymentMethodsIntro: "Payez en toute sécurité par carte, MTN MoMo ou Orange Money.",
     paymentDetails: "Vos informations",
     tabCard: "Carte",
     tabMtn: "MTN MoMo",
@@ -527,6 +529,10 @@ export const surfacesFr = {
       "Payez en toute sécurité par Visa ou Mastercard. Vous terminez sur une page de paiement sécurisée. Nous ne stockons jamais votre numéro de carte.",
     mtnHint: "MTN Mobile Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
     orangeHint: "Orange Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
+    mtnConfiguredHint:
+      "Payez avec MTN Mobile Money. Vous terminez sur une page de paiement sécurisée et confirmez sur votre téléphone.",
+    orangeConfiguredHint:
+      "Payez avec Orange Money. Vous terminez sur une page de paiement sécurisée et confirmez sur votre téléphone.",
     manualHint:
       "Le paiement Mobile Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
     agreePrefix: "J'accepte les",
