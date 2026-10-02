@@ -15,6 +15,16 @@ import { buildShareMetadata } from "@/lib/seo/share-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCheckoutAccountPrefill } from "@/services/customer/customer-service";
 
+/**
+ * Force per-request rendering. `listCheckoutPaymentMethods()` reads Fapshi's
+ * env vars (Vercel "Secret" type, only available at runtime — NOT during
+ * `next build`), so if this page were ever statically prerendered, the
+ * build-time render would see empty credentials and permanently bake in
+ * "MTN/Orange coming soon" until the next deploy, even with live keys set.
+ * Checkout must always reflect current config.
+ */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerLocale();
   const title = locale === "fr" ? "Paiement | Maison Fondjo" : "Checkout | Maison Fondjo";
