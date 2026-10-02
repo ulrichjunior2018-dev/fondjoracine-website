@@ -1,0 +1,798 @@
+diff --git a/.env.example b/.env.example
+index 42e1d53..3dd9765 100644
+--- a/.env.example
++++ b/.env.example
+@@ -72,6 +72,8 @@ STRIPE_SECRET_KEY=""
+ # Preferred: create a Price in Stripe Dashboard and paste the price_… id here.
+ # If empty, checkout falls back to EUR inline pricing (XAF→EUR via CFA peg).
+ STRIPE_HAIR_ELIXIR_PRICE_ID=""
++# Optional: recurring monthly "subscribe & save" Price ID. Leave blank to hide the subscribe option.
++STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID=""
+ STRIPE_WEBHOOK_SECRET=""
+ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=""
+ NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED="false"
+diff --git a/src/app/api/webhooks/stripe/route.ts b/src/app/api/webhooks/stripe/route.ts
+index cb43061..19cf4e0 100644
+--- a/src/app/api/webhooks/stripe/route.ts
++++ b/src/app/api/webhooks/stripe/route.ts
+@@ -5,7 +5,11 @@ import { fail, ok } from "@/lib/api/responses";
+ import { getSupabaseAdminClient } from "@/lib/database/admin";
+ import { AppError } from "@/lib/errors/app-error";
+ import { getStripeClient } from "@/lib/payments/stripe";
+-import { fulfillStripeOrder } from "@/services/commerce/one-product-order-service";
++import {
++  createSubscriptionRenewalOrder,
++  fulfillStripeOrder,
++  syncSubscriptionStatus,
++} from "@/services/commerce/one-product-order-service";
+ 
+ export const dynamic = "force-dynamic";
+ 
+@@ -39,6 +43,22 @@ export async function POST(request: Request) {
+       await fulfillStripeOrder(supabase, session);
+     }
+ 
++    if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
++      const subscription = event.data.object as Stripe.Subscription;
++      const supabase = getSupabaseAdminClient();
++      await syncSubscriptionStatus(supabase, subscription);
++    }
++
++    if (event.type === "invoice.paid") {
++      const invoice = event.data.object as Stripe.Invoice;
++      // The first cycle is already fulfilled by checkout.session.completed —
++      // only "subscription_cycle" invoices are true renewals.
++      if (invoice.billing_reason === "subscription_cycle") {
++        const supabase = getSupabaseAdminClient();
++        await createSubscriptionRenewalOrder(supabase, invoice);
++      }
++    }
++
+     return ok({ received: true });
+   } catch (error) {
+     return fail(error);
+diff --git a/src/app/checkout/page.tsx b/src/app/checkout/page.tsx
+index 890aa30..e90b070 100644
+--- a/src/app/checkout/page.tsx
++++ b/src/app/checkout/page.tsx
+@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth/session";
+ import { config } from "@/lib/config";
+ import { getServerLocale } from "@/lib/locale-server";
+ import { listCheckoutPaymentMethods } from "@/lib/payments/registry";
++import { isElixirSubscriptionConfigured } from "@/lib/payments/stripe";
+ import { buildShareMetadata } from "@/lib/seo/share-metadata";
+ import { createSupabaseServerClient } from "@/lib/supabase/server";
+ import { getCheckoutAccountPrefill } from "@/services/customer/customer-service";
+@@ -39,6 +40,7 @@ export default async function CheckoutPage() {
+ 
+   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
+   const user = await getCurrentUser();
++  const subscriptionAvailable = isElixirSubscriptionConfigured();
+   if (user) {
+     try {
+       const supabase = await createSupabaseServerClient();
+@@ -59,12 +61,14 @@ export default async function CheckoutPage() {
+     >
+       <CheckoutShell
+         accountPrefill={accountPrefill}
++        isSignedIn={Boolean(user)}
+         locale={locale}
+         paymentMethods={paymentMethods}
+         productImageAlt={t(image.alt, locale)}
+         productImageSrc={image.src.startsWith("/images/") ? image.src : "/images/studio.png"}
+         productName={t(content.product.name, locale)}
+         productPriceXaf={priceXaf}
++        subscriptionAvailable={subscriptionAvailable}
+       />
+     </Suspense>
+   );
+diff --git a/src/config/env.ts b/src/config/env.ts
+index 8a8ec3f..a8ffe06 100644
+--- a/src/config/env.ts
++++ b/src/config/env.ts
+@@ -11,6 +11,8 @@ const envSchema = z.object({
+   RESEND_FROM_EMAIL: z.string().email().optional().or(z.literal("")),
+   STRIPE_SECRET_KEY: z.string().optional().or(z.literal("")),
+   STRIPE_HAIR_ELIXIR_PRICE_ID: z.string().optional().or(z.literal("")),
++  /** Recurring monthly "subscribe & save" Price ID (mode: "subscription"). Optional — subscribe option is hidden until set. */
++  STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID: z.string().optional().or(z.literal("")),
+   STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal("")),
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
+   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),
+diff --git a/src/domain/commerce/schemas.ts b/src/domain/commerce/schemas.ts
+index 9ac176f..b0c48c8 100644
+--- a/src/domain/commerce/schemas.ts
++++ b/src/domain/commerce/schemas.ts
+@@ -75,6 +75,13 @@ export const createOneProductOrderSchema = z.object({
+   payment_method: oneProductPaymentMethodSchema,
+   phone: z.string().min(8).max(24),
+   quantity: z.number().int().min(1).max(6).default(1),
++  /**
++   * Recurring "subscribe & save" purchase. Card-only (Stripe Billing) — MoMo
++   * and WhatsApp cannot auto-charge, so the API rejects subscribe=true unless
++   * payment_method is "stripe". Also requires a signed-in customer, since a
++   * subscription must be tied to an account for later management/cancellation.
++   */
++  subscribe: z.boolean().default(false),
+   transaction_reference: z.string().min(4).max(120).optional().or(z.literal("")),
+ });
+ 
+diff --git a/src/features/commerce/components/checkout-shell.tsx b/src/features/commerce/components/checkout-shell.tsx
+index a60bcd9..3168346 100644
+--- a/src/features/commerce/components/checkout-shell.tsx
++++ b/src/features/commerce/components/checkout-shell.tsx
+@@ -36,6 +36,10 @@ type CheckoutShellProps = {
+     name: string;
+     phone: string;
+   } | null;
++  /** Subscriptions require an account so they can be managed/cancelled later. */
++  isSignedIn: boolean;
++  /** True once STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID is set — hides the toggle otherwise. */
++  subscriptionAvailable: boolean;
+ };
+ 
+ type OrderFormValues = z.input<typeof createOneProductOrderSchema>;
+@@ -115,6 +119,8 @@ export function CheckoutShell({
+   productImageSrc,
+   productImageAlt,
+   accountPrefill = null,
++  isSignedIn,
++  subscriptionAvailable,
+ }: CheckoutShellProps) {
+   const router = useRouter();
+   const searchParams = useSearchParams();
+@@ -150,6 +156,7 @@ export function CheckoutShell({
+       payment_method: defaultMethod,
+       phone: accountPrefill?.phone ?? "",
+       quantity: 1,
++      subscribe: false,
+       transaction_reference: "",
+     },
+     resolver: zodResolver(createOneProductOrderSchema),
+@@ -157,6 +164,8 @@ export function CheckoutShell({
+ 
+   const quantity = useWatch({ control: form.control, name: "quantity" }) || 1;
+   const paymentMethod = useWatch({ control: form.control, name: "payment_method" });
++  const subscribe = useWatch({ control: form.control, name: "subscribe" });
++  const canOfferSubscription = subscriptionAvailable && paymentMethod === "stripe";
+   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
+   const subtotal = productPriceXaf * quantity;
+   const whatsappUrl = buildWaLink("order", "", locale);
+@@ -345,12 +354,15 @@ export function CheckoutShell({
+                         soon && "opacity-50",
+                       )}
+                       key={method.method}
+-                      onClick={() =>
++                      onClick={() => {
+                         form.setValue("payment_method", method.method, {
+                           shouldDirty: true,
+                           shouldValidate: true,
+-                        })
+-                      }
++                        });
++                        if (method.method !== "stripe") {
++                          form.setValue("subscribe", false, { shouldValidate: true });
++                        }
++                      }}
+                       role="tab"
+                       type="button"
+                     >
+@@ -380,6 +392,28 @@ export function CheckoutShell({
+               {!anyConfigured ? (
+                 <p className="mt-2 text-xs leading-5 text-[#0B0B0B]/55">{copy.previewNotice}</p>
+               ) : null}
++
++              {canOfferSubscription ? (
++                <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
++                  <input
++                    checked={subscribe}
++                    className="mt-0.5 size-4 accent-[#B8935A]"
++                    disabled={!isSignedIn}
++                    onChange={(event) =>
++                      form.setValue("subscribe", event.target.checked, { shouldValidate: true })
++                    }
++                    type="checkbox"
++                  />
++                  <span>
++                    <span className="block text-sm font-semibold text-[#0B0B0B]">
++                      {copy.subscribeToggleLabel}
++                    </span>
++                    <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
++                      {isSignedIn ? copy.subscribeToggleHint : copy.subscribeSignInRequired}
++                    </span>
++                  </span>
++                </label>
++              ) : null}
+             </div>
+ 
+             <div className="border-t border-[#0B0B0B]/10 pt-4">
+diff --git a/src/i18n/dictionaries/surfaces.ts b/src/i18n/dictionaries/surfaces.ts
+index 4c41576..22e831a 100644
+--- a/src/i18n/dictionaries/surfaces.ts
++++ b/src/i18n/dictionaries/surfaces.ts
+@@ -77,6 +77,10 @@ export const surfacesEn = {
+     previewNotice:
+       "Online payment will open soon. For now, place your order on WhatsApp and our team will guide you.",
+     methodNotReady: "This payment option is coming soon. Please pay by card.",
++    subscribeToggleLabel: "Subscribe & save — ships monthly",
++    subscribeToggleHint:
++      "Card billed monthly by Stripe. Manage or cancel anytime from My Account.",
++    subscribeSignInRequired: "Sign in to your account to subscribe.",
+   },
+   errors: {
+     title: "Something went wrong",
+@@ -456,6 +460,10 @@ export const surfacesFr = {
+     previewNotice:
+       "Le paiement en ligne ouvrira bientôt. Pour l'instant, commandez sur WhatsApp. Notre équipe vous guide.",
+     methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez payer par carte.",
++    subscribeToggleLabel: "Abonnez-vous et économisez — expédié chaque mois",
++    subscribeToggleHint:
++      "Carte débitée chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
++    subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
+   },
+   errors: {
+     title: "Un incident est survenu",
+diff --git a/src/lib/payments/stripe.ts b/src/lib/payments/stripe.ts
+index a24db4f..f5720bb 100644
+--- a/src/lib/payments/stripe.ts
++++ b/src/lib/payments/stripe.ts
+@@ -21,3 +21,25 @@ export function getStripeClient() {
+ 
+   return stripe;
+ }
++
++/**
++ * Guards against the classic Stripe config mistake: pasting a Product ID
++ * (`prod_...`) where a Price ID (`price_...`) is required. `line_items[].price`
++ * silently rejects anything else at request time with an opaque "No such
++ * price" error — this fails fast with an actionable message instead, scoped
++ * to the checkout call path only (does not block app boot / unrelated routes).
++ */
++/** Client-safe flag — never exposes the price ID itself, only whether one is set. */
++export function isElixirSubscriptionConfigured(): boolean {
++  return Boolean(env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID);
++}
++
++export function assertStripePriceId(value: string, envVarName: string): void {
++  if (value && !value.startsWith("price_")) {
++    throw new AppError(
++      "BAD_REQUEST",
++      `${envVarName} is set to "${value}", which looks like a Stripe Product ID, not a Price ID. ` +
++        `Use the Price ID (starts with "price_") from that product's pricing table in Vercel ${envVarName}, then redeploy.`,
++    );
++  }
++}
+diff --git a/src/services/commerce/one-product-order-service.ts b/src/services/commerce/one-product-order-service.ts
+index dc19bc9..8190478 100644
+--- a/src/services/commerce/one-product-order-service.ts
++++ b/src/services/commerce/one-product-order-service.ts
+@@ -11,16 +11,19 @@ import type { ElixirContent, Locale } from "@/features/elixir/data/content";
+ import { t } from "@/features/elixir/data/content";
+ import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
+ import { buildWaLink } from "@/lib/config";
++import type { Enums } from "@/lib/database/schema";
+ import { AppError } from "@/lib/errors/app-error";
+ import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
+ import { logger } from "@/lib/logger/logger";
+ import { getPaymentProvider } from "@/lib/payments/registry";
+-import { getStripeClient } from "@/lib/payments/stripe";
++import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
+ import type { PaymentProviderDescriptor } from "@/lib/payments/types";
+ import { writeAuditLog } from "@/lib/security/audit-log";
+ import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
+ import type { SupabaseClient } from "@supabase/supabase-js";
+ 
++type SubscriptionStatus = Enums<"subscription_status">;
++
+ type CreatedOrderRow = {
+   confirmation_token: string;
+   id: string;
+@@ -180,44 +183,95 @@ async function createStripeCheckoutSession(
+ 
+   const inlinePrice = resolveStripeInlinePrice(content);
+   const priceId = env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
++  const subscriptionPriceId = env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
++  const isSubscription = input.subscribe === true;
+ 
+-  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+-    allow_promotion_codes: true,
+-    billing_address_collection: "auto",
+-    cancel_url: cancelUrl,
+-    line_items: [
+-      priceId
+-        ? {
+-            price: priceId,
+-            quantity: input.quantity,
+-          }
+-        : {
+-            price_data: {
+-              currency: inlinePrice.currency,
+-              product_data: productData,
+-              unit_amount: inlinePrice.unit_amount,
+-            },
+-            quantity: input.quantity,
+-          },
+-    ],
+-    locale: input.locale.startsWith("fr") ? "fr" : "en",
+-    metadata: {
+-      order_id: order.id,
+-      order_number: order.order_number,
+-      product: content.id,
+-      storefront_currency: content.currency,
+-      storefront_total_xaf: String(content.priceCents * input.quantity),
+-    },
+-    mode: "payment",
+-    phone_number_collection: {
+-      enabled: true,
+-    },
+-    shipping_address_collection: {
+-      allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
+-    },
+-    success_url: successUrl,
++  if (priceId) {
++    assertStripePriceId(priceId, "STRIPE_HAIR_ELIXIR_PRICE_ID");
++  }
++
++  const sharedMetadata = {
++    order_id: order.id,
++    order_number: order.order_number,
++    product: content.id,
++    storefront_currency: content.currency,
++    storefront_total_xaf: String(content.priceCents * input.quantity),
+   };
+ 
++  let sessionParams: Stripe.Checkout.SessionCreateParams;
++
++  if (isSubscription) {
++    // Subscriptions require a real Stripe Dashboard Price (recurring price_data
++    // is not offered here — keeps this path simple and matches the one price
++    // Maison Fondjo actually sells today).
++    if (!subscriptionPriceId) {
++      throw new AppError(
++        "BAD_REQUEST",
++        "Subscriptions are not configured yet. Set STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID in Vercel and redeploy.",
++      );
++    }
++
++    assertStripePriceId(subscriptionPriceId, "STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID");
++
++    sessionParams = {
++      allow_promotion_codes: true,
++      billing_address_collection: "auto",
++      cancel_url: cancelUrl,
++      line_items: [
++        {
++          price: subscriptionPriceId,
++          quantity: input.quantity,
++        },
++      ],
++      locale: input.locale.startsWith("fr") ? "fr" : "en",
++      metadata: sharedMetadata,
++      mode: "subscription",
++      // Session-level metadata does not carry onto the Subscription object —
++      // set it again here so webhook handlers can look up the order by id.
++      subscription_data: {
++        metadata: sharedMetadata,
++      },
++      phone_number_collection: {
++        enabled: true,
++      },
++      shipping_address_collection: {
++        allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
++      },
++      success_url: successUrl,
++    };
++  } else {
++    sessionParams = {
++      allow_promotion_codes: true,
++      billing_address_collection: "auto",
++      cancel_url: cancelUrl,
++      line_items: [
++        priceId
++          ? {
++              price: priceId,
++              quantity: input.quantity,
++            }
++          : {
++              price_data: {
++                currency: inlinePrice.currency,
++                product_data: productData,
++                unit_amount: inlinePrice.unit_amount,
++              },
++              quantity: input.quantity,
++            },
++      ],
++      locale: input.locale.startsWith("fr") ? "fr" : "en",
++      metadata: sharedMetadata,
++      mode: "payment",
++      phone_number_collection: {
++        enabled: true,
++      },
++      shipping_address_collection: {
++        allowed_countries: ["CM", "US", "CA", "FR", "GB", "BE", "DE", "NG", "GH"],
++      },
++      success_url: successUrl,
++    };
++  }
++
+   if (input.email) {
+     sessionParams.customer_email = input.email;
+   }
+@@ -345,6 +399,19 @@ export async function createOneProductOrder(
+     );
+   }
+ 
++  if (input.subscribe) {
++    if (provider.redirectProcessor !== "stripe") {
++      throw new AppError(
++        "BAD_REQUEST",
++        "Subscriptions are only available with card payment. Choose Card to subscribe.",
++      );
++    }
++
++    if (!customerId) {
++      throw new AppError("UNAUTHORIZED", "Sign in to your Maison Fondjo account to start a subscription.");
++    }
++  }
++
+   if (provider.redirectProcessor === "stripe") {
+     getStripeClient();
+   }
+@@ -378,6 +445,7 @@ export async function createOneProductOrder(
+         product_id: content.id,
+         product_name: t(content.product.name, locale),
+         quantity: input.quantity,
++        ...(input.subscribe ? { is_subscription: true } : {}),
+         ...(customerId ? { linked_customer_id: customerId } : {}),
+       },
+       order_number: createOrderNumber(),
+@@ -658,10 +726,11 @@ export async function fulfillStripeOrder(
+ 
+   const { data: order, error: loadError } = await supabase
+     .from("orders")
+-    .select("id, order_number, status, currency, total_cents")
++    .select("id, order_number, status, currency, total_cents, customer_id")
+     .eq("id", orderId)
+     .maybeSingle<{
+       currency: string;
++      customer_id: string | null;
+       id: string;
+       order_number: string;
+       status: string;
+@@ -727,4 +796,300 @@ export async function fulfillStripeOrder(
+   });
+ 
+   await notifyOrderConfirmed(supabase, orderId);
++
++  if (session.mode === "subscription" && typeof session.subscription === "string") {
++    await syncSubscriptionFromStripe(supabase, session.subscription, {
++      customerId: order.customer_id,
++      orderId,
++    });
++  }
++}
++
++/**
++ * Maps Stripe's subscription lifecycle onto the narrower DB enum
++ * (`active | paused | cancelled | past_due`). This checkout flow never
++ * configures a trial, so in practice we only ever persist "active" here —
++ * `incomplete`/`unpaid` fold into "past_due" (needs attention) rather than a
++ * silent default, and `customer.subscription.updated` keeps status current
++ * afterwards.
++ */
++function mapStripeSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
++  switch (status) {
++    case "active":
++    case "trialing":
++      return "active";
++    case "paused":
++      return "paused";
++    case "canceled":
++      return "cancelled";
++    case "past_due":
++    case "incomplete":
++    case "incomplete_expired":
++    case "unpaid":
++    default:
++      return "past_due";
++  }
++}
++
++/**
++ * Upserts the local `subscriptions` row from the source-of-truth Stripe
++ * object. Called right after `checkout.session.completed` (first billing
++ * cycle) and again from `customer.subscription.updated` /
++ * `customer.subscription.deleted` webhooks.
++ */
++async function syncSubscriptionFromStripe(
++  supabase: SupabaseClient,
++  stripeSubscriptionId: string,
++  context: { customerId: string | null; orderId: string },
++) {
++  if (!context.customerId) {
++    // `subscriptions.customer_id` is NOT NULL — a subscription must belong to
++    // a signed-in account. createOneProductOrder() already rejects
++    // subscribe=true for guests, so reaching this means something upstream
++    // changed; log loudly instead of failing the webhook (order is still valid).
++    logger.error("Stripe subscription confirmed without a linked customer_id — cannot persist.", {
++      orderId: context.orderId,
++      stripeSubscriptionId,
++    });
++    return;
++  }
++
++  const stripe = getStripeClient();
++  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
++  const item = subscription.items.data[0];
++  const interval = item?.price.recurring?.interval;
++
++  const { error } = await supabase.from("subscriptions").upsert(
++    {
++      amount_cents: item?.price.unit_amount ?? null,
++      billing_interval: interval === "year" ? "year" : interval === "week" ? "month" : "month",
++      cancelled_at: subscription.canceled_at
++        ? new Date(subscription.canceled_at * 1000).toISOString()
++        : null,
++      currency: subscription.currency.toUpperCase(),
++      current_period_end: item?.current_period_end
++        ? new Date(item.current_period_end * 1000).toISOString()
++        : null,
++      customer_id: context.customerId,
++      metadata: subscription.metadata ?? {},
++      order_id: context.orderId,
++      price_id: item?.price.id ?? null,
++      quantity: item?.quantity ?? 1,
++      status: mapStripeSubscriptionStatus(subscription.status),
++      stripe_customer_id:
++        typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id,
++      stripe_subscription_id: subscription.id,
++    },
++    { onConflict: "stripe_subscription_id" },
++  );
++
++  if (error) {
++    throw new AppError("BAD_REQUEST", error.message);
++  }
++
++  await writeAuditLog(supabase, {
++    action: "subscription.synced",
++    afterData: { status: subscription.status, stripe_subscription_id: subscription.id },
++    entityId: context.orderId,
++    entityTable: "subscriptions",
++  });
++}
++
++/**
++ * Handles `customer.subscription.updated` / `customer.subscription.deleted`.
++ * The order this subscription originated from may not be known to this event
++ * (Stripe does not echo session-level metadata onto later subscription
++ * events), so this updates by `stripe_subscription_id` alone and is a no-op
++ * if we have never seen this subscription (keeps webhook idempotent/safe).
++ */
++export async function syncSubscriptionStatus(supabase: SupabaseClient, subscription: Stripe.Subscription) {
++  const item = subscription.items.data[0];
++
++  const { data: existing, error: lookupError } = await supabase
++    .from("subscriptions")
++    .select("id")
++    .eq("stripe_subscription_id", subscription.id)
++    .maybeSingle<{ id: string }>();
++
++  if (lookupError) {
++    throw new AppError("BAD_REQUEST", lookupError.message);
++  }
++
++  if (!existing) {
++    // Nothing local to update yet (e.g. event arrived before checkout.session.completed
++    // finished processing) — safe to ignore, syncSubscriptionFromStripe will catch up.
++    return;
++  }
++
++  const { error } = await supabase
++    .from("subscriptions")
++    .update({
++      cancelled_at: subscription.canceled_at
++        ? new Date(subscription.canceled_at * 1000).toISOString()
++        : null,
++      current_period_end: item?.current_period_end
++        ? new Date(item.current_period_end * 1000).toISOString()
++        : null,
++      paused_at: subscription.status === "paused" ? new Date().toISOString() : null,
++      status: mapStripeSubscriptionStatus(subscription.status),
++    })
++    .eq("stripe_subscription_id", subscription.id);
++
++  if (error) {
++    throw new AppError("BAD_REQUEST", error.message);
++  }
++
++  await writeAuditLog(supabase, {
++    action: "subscription.status_updated",
++    afterData: { status: subscription.status, stripe_subscription_id: subscription.id },
++    entityId: existing.id,
++    entityTable: "subscriptions",
++  });
++}
++
++/**
++ * Handles `invoice.paid` for `billing_reason === "subscription_cycle"`
++ * (renewals only — the first cycle is already fulfilled by
++ * `checkout.session.completed`). Creates a new order/payment pair from the
++ * subscription's originating order so each shipment shows in Account →
++ * Orders and triggers the same admin/customer notification pipeline.
++ */
++export async function createSubscriptionRenewalOrder(supabase: SupabaseClient, invoice: Stripe.Invoice) {
++  const subscriptionRef = invoice.parent?.subscription_details?.subscription;
++  const stripeSubscriptionId =
++    typeof subscriptionRef === "string" ? subscriptionRef : subscriptionRef?.id;
++
++  if (!stripeSubscriptionId) {
++    return;
++  }
++
++  const { data: subscriptionRow, error: subError } = await supabase
++    .from("subscriptions")
++    .select("order_id")
++    .eq("stripe_subscription_id", stripeSubscriptionId)
++    .maybeSingle<{ order_id: string | null }>();
++
++  if (subError) {
++    throw new AppError("BAD_REQUEST", subError.message);
++  }
++
++  if (!subscriptionRow?.order_id) {
++    logger.error("Subscription renewal invoice has no matching local subscription/order.", {
++      stripeSubscriptionId,
++    });
++    return;
++  }
++
++  const { data: sourceOrder, error: orderError } = await supabase
++    .from("orders")
++    .select(
++      "billing_address, currency, customer_id, customer_name, customer_phone, delivery_address, delivery_city, email, metadata, shipping_address",
++    )
++    .eq("id", subscriptionRow.order_id)
++    .maybeSingle();
++
++  if (orderError) {
++    throw new AppError("BAD_REQUEST", orderError.message);
++  }
++
++  if (!sourceOrder) {
++    logger.error("Source order for subscription renewal no longer exists.", {
++      orderId: subscriptionRow.order_id,
++      stripeSubscriptionId,
++    });
++    return;
++  }
++
++  const sourceMetadata: Record<string, unknown> =
++    sourceOrder.metadata && typeof sourceOrder.metadata === "object"
++      ? (sourceOrder.metadata as Record<string, unknown>)
++      : {};
++  const amountCents = invoice.amount_paid ?? 0;
++  const quantity = Number(sourceMetadata.quantity) || 1;
++  const productName =
++    typeof sourceMetadata.product_name === "string" ? sourceMetadata.product_name : "Sève Racine";
++
++  const { data: newOrder, error: insertError } = await supabase
++    .from("orders")
++    .insert({
++      billing_address: sourceOrder.billing_address,
++      currency: sourceOrder.currency,
++      customer_id: sourceOrder.customer_id,
++      customer_name: sourceOrder.customer_name,
++      customer_phone: sourceOrder.customer_phone,
++      delivery_address: sourceOrder.delivery_address,
++      delivery_city: sourceOrder.delivery_city,
++      email: sourceOrder.email,
++      metadata: {
++        ...sourceMetadata,
++        order_channel: "subscription_renewal",
++        stripe_invoice_id: invoice.id,
++        stripe_subscription_id: stripeSubscriptionId,
++      },
++      order_number: createOrderNumber(),
++      payment_method: "stripe",
++      placed_at: new Date().toISOString(),
++      shipping_address: sourceOrder.shipping_address,
++      status: "confirmed",
++      subtotal_cents: amountCents,
++      total_cents: amountCents,
++    })
++    .select("id, order_number, total_cents, confirmation_token")
++    .single<CreatedOrderRow>();
++
++  if (insertError || !newOrder) {
++    throw new AppError(
++      "BAD_REQUEST",
++      insertError?.message ?? "Failed to record subscription renewal order.",
++    );
++  }
++
++  const { error: itemError } = await supabase.from("order_items").insert({
++    metadata: { source: "subscription_renewal" },
++    order_id: newOrder.id,
++    quantity,
++    title: productName,
++    total_cents: amountCents,
++    unit_price_cents: Math.round(amountCents / quantity),
++    variant_title: "100ml",
++  });
++
++  if (itemError) {
++    throw new AppError("BAD_REQUEST", itemError.message);
++  }
++
++  const { error: paymentError } = await supabase.from("payments").insert({
++    amount_cents: amountCents,
++    captured_at: new Date().toISOString(),
++    currency: (invoice.currency ?? sourceOrder.currency).toUpperCase(),
++    metadata: { stripe_invoice_id: invoice.id },
++    order_id: newOrder.id,
++    provider: "stripe",
++    provider_payment_id: invoice.id ?? `invoice_${stripeSubscriptionId}_${invoice.period_end}`,
++    status: "succeeded",
++  });
++
++  if (paymentError) {
++    throw new AppError("BAD_REQUEST", paymentError.message);
++  }
++
++  await supabase
++    .from("subscriptions")
++    .update({
++      current_period_end: invoice.period_end
++        ? new Date(invoice.period_end * 1000).toISOString()
++        : null,
++      order_id: newOrder.id,
++      status: "active",
++    })
++    .eq("stripe_subscription_id", stripeSubscriptionId);
++
++  await writeAuditLog(supabase, {
++    action: "subscription.renewed",
++    afterData: { amount_cents: amountCents, order_number: newOrder.order_number },
++    entityId: newOrder.id,
++    entityTable: "orders",
++  });
++
++  await notifyOrderConfirmed(supabase, newOrder.id);
+ }
+diff --git a/supabase/migrations/000014_elixir_subscriptions.sql b/supabase/migrations/000014_elixir_subscriptions.sql
+new file mode 100644
+index 0000000..5fa5c28
+--- /dev/null
++++ b/supabase/migrations/000014_elixir_subscriptions.sql
+@@ -0,0 +1,30 @@
++-- Wire the pre-existing `subscriptions` table (from 000002_ecommerce_backend)
++-- up to the one-product Elixir checkout flow. Sève Racine has no product_variants
++-- row under the current CMS-driven, one-product model, so this intentionally
++-- does NOT touch subscription_items (which FKs to product_variants) — a
++-- single-product store only ever needs one subscription row per customer, so
++-- price/quantity/amount live directly on `subscriptions`, the same way
++-- `orders.metadata` already carries product info instead of joining catalog
++-- tables (see 000007_one_product_order_flow).
++--
++-- All changes are additive (ADD COLUMN IF NOT EXISTS) against a table with
++-- zero rows today — safe to run with no downtime and no backfill required.
++
++alter table public.subscriptions
++  add column if not exists order_id uuid references public.orders(id) on delete set null,
++  add column if not exists stripe_customer_id text,
++  add column if not exists price_id text,
++  add column if not exists quantity integer not null default 1 check (quantity > 0),
++  add column if not exists currency char(3) not null default 'USD',
++  add column if not exists amount_cents integer check (amount_cents is null or amount_cents >= 0),
++  add column if not exists current_period_end timestamptz;
++
++create index if not exists subscriptions_order_id_idx on public.subscriptions(order_id);
++create index if not exists subscriptions_stripe_customer_id_idx on public.subscriptions(stripe_customer_id);
++
++comment on column public.subscriptions.order_id is
++  'Most recent order (initial or renewal) this subscription produced. Updated on every invoice.paid renewal.';
++comment on column public.subscriptions.price_id is
++  'Stripe Price ID (price_...) backing this subscription. Sourced from the Stripe subscription object, never hand-entered.';
++comment on column public.subscriptions.amount_cents is
++  'Per-cycle amount actually charged, from Stripe — not recomputed locally, so it stays correct through Stripe-side price changes.';

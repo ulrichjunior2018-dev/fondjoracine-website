@@ -15,8 +15,7 @@ import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
-import { mtnRequestToPay } from "@/lib/payments/mtn-momo-client";
-import { createOrangeWebPayment } from "@/lib/payments/orange-money-client";
+import { initiatePay } from "@/lib/payments/fapshi-client";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
@@ -321,83 +320,36 @@ async function createStripeCheckoutSession(
 }
 
 /**
- * MTN's sandbox target only accepts EUR (a fixed MTN testing constraint, not
- * a Maison Fondjo choice). Production (`MTN_MOMO_TARGET_ENVIRONMENT` set to
- * MTN's assigned Cameroon target) bills the real XAF amount. Same CFA franc
- * peg as `resolveStripeInlinePrice` so sandbox totals stay consistent.
+ * Both `mtn_momo` and `orange_money` checkout buttons resolve here. Fapshi
+ * fronts both networks behind one hosted payment link — the customer picks
+ * MTN or Orange on Fapshi's own page, so there is nothing network-specific
+ * left to branch on at this layer (unlike the direct MTN/Orange APIs, which
+ * needed separate push-payment vs. hosted-redirect handling).
  */
-function resolveMtnAmount(xafTotal: number): { amount: string; currency: string } {
-  if (getMtnTargetEnvironment() === "sandbox") {
-    const eur = Math.max(1, Math.round((xafTotal / 655.957) * 100) / 100);
-    return { amount: eur.toFixed(2), currency: "EUR" };
-  }
-  return { amount: String(xafTotal), currency: "XAF" };
-}
-
-function getMtnTargetEnvironment(): string {
-  return env.MTN_MOMO_TARGET_ENVIRONMENT || "sandbox";
-}
-
 async function createMobileMoneyCheckout(
   supabase: SupabaseClient,
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
-  provider: PaymentProviderDescriptor,
   content: ElixirContent,
   returnBaseUrl: string,
 ): Promise<string> {
   const xafTotal = content.priceCents * input.quantity;
-  const payerPhone = normalizePhone(input.phone).replace(/^\+/, "");
 
-  if (provider.momoNetwork === "MTN") {
-    const referenceId = crypto.randomUUID();
-    const { amount, currency } = resolveMtnAmount(xafTotal);
+  const { link, transId } = await initiatePay({
+    amount: xafTotal,
+    externalId: order.order_number,
+    message: `Maison Fondjo order ${order.order_number}`,
+    redirectUrl: getConfirmationUrl(order.confirmation_token, returnBaseUrl),
+    ...(input.email ? { email: input.email } : {}),
+  });
 
-    await mtnRequestToPay({
-      amount,
-      callbackUrl: `${returnBaseUrl.replace(/\/$/, "")}/api/webhooks/mtn-momo`,
-      currency,
-      externalId: order.order_number,
-      payeeNote: `Maison Fondjo order ${order.order_number}`,
-      payerMessage: `Maison Fondjo - ${order.order_number}`,
-      payerPhone,
-      referenceId,
-    });
+  const { error } = await supabase
+    .from("orders")
+    .update({ mobile_money_reference: transId })
+    .eq("id", order.id);
+  if (error) throw new AppError("BAD_REQUEST", error.message);
 
-    const { error } = await supabase
-      .from("orders")
-      .update({ mobile_money_reference: referenceId })
-      .eq("id", order.id);
-    if (error) throw new AppError("BAD_REQUEST", error.message);
-
-    // No hosted page exists for MTN — send the browser to our own pending/polling
-    // screen, which shows "approve on your phone" and resolves once the push
-    // payment is confirmed (by status poll and/or the webhook above).
-    return `${returnBaseUrl.replace(/\/$/, "")}/checkout/momo-pending?token=${order.confirmation_token}&ref=${referenceId}`;
-  }
-
-  if (provider.momoNetwork === "ORANGE") {
-    const base = returnBaseUrl.replace(/\/$/, "");
-    const { paymentUrl, payToken } = await createOrangeWebPayment({
-      amount: xafTotal,
-      cancelUrl: getCheckoutCancelUrl(order.confirmation_token, returnBaseUrl),
-      currency: "XAF",
-      notifUrl: `${base}/api/webhooks/orange-money`,
-      orderId: order.id,
-      reference: order.order_number,
-      returnUrl: `${getConfirmationUrl(order.confirmation_token, returnBaseUrl)}&provider=orange_money`,
-    });
-
-    const { error } = await supabase
-      .from("orders")
-      .update({ mobile_money_reference: payToken })
-      .eq("id", order.id);
-    if (error) throw new AppError("BAD_REQUEST", error.message);
-
-    return paymentUrl;
-  }
-
-  throw new AppError("INTERNAL", "Unknown mobile money network.", { expose: false });
+  return link;
 }
 
 async function createProviderCheckout(
@@ -418,7 +370,7 @@ async function createProviderCheckout(
   }
 
   if (provider.redirectProcessor === "mobile_money") {
-    return createMobileMoneyCheckout(supabase, order, input, provider, content, returnBaseUrl);
+    return createMobileMoneyCheckout(supabase, order, input, content, returnBaseUrl);
   }
 
   throw new AppError("INTERNAL", "Payment redirect is not configured for this method.", {
@@ -1051,24 +1003,29 @@ export async function fulfillStripeOrder(
 }
 
 /**
- * Confirms an MTN MoMo / Orange Money order once the provider reports a
- * successful payment. Called from both the provider webhook (fast path,
- * best-effort delivery) and the status-polling endpoint (reliable fallback —
- * sandbox callback delivery in particular cannot be relied on). Idempotent:
- * safe to call more than once for the same order.
+ * Confirms a Mobile Money (Fapshi) order once the provider reports a
+ * successful payment. Called from both the webhook (fast path, best-effort
+ * delivery) and a status re-check (reliable fallback). Idempotent: safe to
+ * call more than once for the same order.
+ *
+ * `payment_method` (mtn_momo vs. orange_money) is read back off the order
+ * row rather than passed in — the webhook only knows the Fapshi `transId`,
+ * never which button the customer originally clicked, so the order itself
+ * is the only source of truth for which `payments` row to update.
  */
 export async function fulfillMobileMoneyOrder(
   supabase: SupabaseClient,
-  args: { mobileMoneyReference: string; providerPaymentId: string; provider: "mtn_momo" | "orange_money" },
+  args: { mobileMoneyReference: string; providerPaymentId: string },
 ) {
   const { data: order, error: loadError } = await supabase
     .from("orders")
-    .select("id, order_number, status, customer_id")
+    .select("id, order_number, status, customer_id, payment_method")
     .eq("mobile_money_reference", args.mobileMoneyReference)
     .maybeSingle<{
       customer_id: string | null;
       id: string;
       order_number: string;
+      payment_method: string | null;
       status: string;
     }>();
 
@@ -1078,6 +1035,8 @@ export async function fulfillMobileMoneyOrder(
       loadError?.message ?? `No order found for mobile money reference ${args.mobileMoneyReference}.`,
     );
   }
+
+  const provider = order.payment_method ?? "mtn_momo";
 
   if (
     order.status === "confirmed" ||
@@ -1119,10 +1078,10 @@ export async function fulfillMobileMoneyOrder(
       status: "succeeded",
     })
     .eq("order_id", order.id)
-    .eq("provider", args.provider);
+    .eq("provider", provider);
 
   await writeAuditLog(supabase, {
-    action: `payment.confirmed.${args.provider}`,
+    action: `payment.confirmed.${provider}`,
     afterData: {
       mobile_money_reference: args.mobileMoneyReference,
       order_number: order.order_number,
@@ -1137,29 +1096,32 @@ export async function fulfillMobileMoneyOrder(
 }
 
 /**
- * Marks an MTN MoMo / Orange Money order as failed (customer declined,
- * timed out, or insufficient funds). Idempotent.
+ * Marks a Mobile Money (Fapshi) order as failed (customer declined, timed
+ * out, or insufficient funds). Idempotent. See `fulfillMobileMoneyOrder` for
+ * why `payment_method` is read off the order instead of passed in.
  */
 export async function failMobileMoneyOrder(
   supabase: SupabaseClient,
-  args: { mobileMoneyReference: string; reason?: string; provider: "mtn_momo" | "orange_money" },
+  args: { mobileMoneyReference: string; reason?: string },
 ) {
   const { data: order } = await supabase
     .from("orders")
-    .select("id, status")
+    .select("id, status, payment_method")
     .eq("mobile_money_reference", args.mobileMoneyReference)
-    .maybeSingle<{ id: string; status: string }>();
+    .maybeSingle<{ id: string; status: string; payment_method: string | null }>();
 
   if (!order || order.status === "confirmed") return;
+
+  const provider = order.payment_method ?? "mtn_momo";
 
   await supabase
     .from("payments")
     .update({ status: "failed" })
     .eq("order_id", order.id)
-    .eq("provider", args.provider);
+    .eq("provider", provider);
 
   await writeAuditLog(supabase, {
-    action: `payment.failed.${args.provider}`,
+    action: `payment.failed.${provider}`,
     afterData: { mobile_money_reference: args.mobileMoneyReference, reason: args.reason ?? null },
     beforeData: { status: order.status },
     entityId: order.id,

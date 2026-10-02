@@ -21,28 +21,17 @@ const envSchema = z.object({
   MTN_MOMO_NUMBER: z.string().optional().or(z.literal("")),
   ORANGE_MONEY_NUMBER: z.string().optional().or(z.literal("")),
   /**
-   * MTN MoMo Collection API (push "Request to Pay"). From the MTN MoMo
-   * Developer Portal (momodeveloper.mtn.com): Subscription Key is the
-   * Collection product's Ocp-Apim-Subscription-Key; API User / API Key are
-   * created once against that subscription key (see src/lib/payments/README.md).
+   * Fapshi (fapshi.com) — Cameroon payment aggregator fronting both MTN MoMo
+   * and Orange Money behind one API + one hosted checkout link. From your
+   * Fapshi dashboard: apiuser / apikey — check whether your dashboard issues
+   * one pair shared across sandbox/live or a separate pair per environment,
+   * and set FAPSHI_API_USER/KEY to the one matching FAPSHI_ENV below.
    */
-  MTN_MOMO_SUBSCRIPTION_KEY: z.string().optional().or(z.literal("")),
-  MTN_MOMO_API_USER: z.string().optional().or(z.literal("")),
-  MTN_MOMO_API_KEY: z.string().optional().or(z.literal("")),
-  /** "sandbox" in test, the MTN-assigned production target (e.g. "mtncameroon") once live. */
-  MTN_MOMO_TARGET_ENVIRONMENT: z.string().optional().or(z.literal("")),
-  /** Defaults to the sandbox host in the client if unset. */
-  MTN_MOMO_BASE_URL: z.string().url().optional().or(z.literal("")),
-  /**
-   * Orange Money Web Payment API. From the Orange Developer Center
-   * (developer.orange.com): OAuth client credentials + the merchant key
-   * issued for the Orange Money merchant account.
-   */
-  ORANGE_MONEY_CLIENT_ID: z.string().optional().or(z.literal("")),
-  ORANGE_MONEY_CLIENT_SECRET: z.string().optional().or(z.literal("")),
-  ORANGE_MONEY_MERCHANT_KEY: z.string().optional().or(z.literal("")),
-  /** Defaults to https://api.orange.com in the client if unset. */
-  ORANGE_MONEY_API_BASE_URL: z.string().url().optional().or(z.literal("")),
+  FAPSHI_API_USER: z.string().optional().or(z.literal("")),
+  FAPSHI_API_KEY: z.string().optional().or(z.literal("")),
+  FAPSHI_ENV: z.string().optional().or(z.literal("")),
+  /** Defaults to the sandbox/live host (by FAPSHI_ENV) in the client if unset. */
+  FAPSHI_BASE_URL: z.string().url().optional().or(z.literal("")),
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
