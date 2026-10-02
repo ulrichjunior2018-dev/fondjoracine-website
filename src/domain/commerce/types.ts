@@ -6,11 +6,17 @@ export type OrderStatus =
   | "pending_payment"
   | "payment_submitted"
   | "confirmed"
+  | "order_received"
+  | "preparing"
+  | "processing"
   | "packed"
   | "shipped"
+  | "out_for_delivery"
   | "delivered"
   | "cancelled"
-  | "refunded";
+  | "refunded"
+  | "failed"
+  | "returned";
 export type ReviewStatus = "pending" | "approved" | "rejected";
 export type TicketStatus = "open" | "pending" | "resolved" | "closed";
 

@@ -10,6 +10,7 @@ import { siteImages } from "@/lib/site-images";
  * 2. Prefer `href: "/products/<slug>"` so the shared product template picks it up.
  * 3. Put images under `public/images/` (or reuse an existing asset).
  * 4. When ready to sell online, set `status: "available"` and optionally `orderHref`.
+ * 5. Fill `seoTitle` + `description` for unique PDP metadata (EN/FR).
  *
  * Multi-SKU cart is scaffolded in `cart-service` / DB. wire when checkout outgrows one SKU.
  */
@@ -30,7 +31,12 @@ export type CatalogProduct = {
   readonly eyebrow: CatalogLocalized;
   /** Longer product intro on the detail page. */
   readonly intro: CatalogLocalized;
-  /** SEO / meta description. */
+  /**
+   * SEO title segment (no brand suffix — layout template adds "| Maison Fondjo").
+   * Target one primary intent per product URL.
+   */
+  readonly seoTitle: CatalogLocalized;
+  /** SEO / meta description (~140–160 chars). */
   readonly description: CatalogLocalized;
   /** Preformatted price (e.g. "15 000 F"). Empty for coming-soon items. */
   readonly priceXaf: string;
@@ -58,44 +64,84 @@ export const catalogProducts: readonly CatalogProduct[] = [
       en: "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
       fr: "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",
     },
+    seoTitle: {
+      en: "Sève Racine Botanical Hair Oil",
+      fr: "Huile capillaire botanique Sève Racine",
+    },
     description: {
-      en: "Sève Racine by Maison Fondjo: botanical hair oil, 100 ml.",
-      fr: "Sève Racine par Maison Fondjo : huile capillaire botanique, 100 ml.",
+      en: "Sève Racine is Maison Fondjo's 100 ml botanical hair oil for scalp comfort and soft lengths. Pressed in Buea, Cameroon, with free delivery guidance nationwide.",
+      fr: "Sève Racine est l'huile capillaire botanique 100 ml de Maison Fondjo pour le confort du cuir chevelu et des longueurs souples. Pressee a Buea, Cameroun.",
     },
     priceXaf: formatXaf(config.pricing.seveRacine),
     image: advisorImages.product,
     imageAlt: {
-      en: "Sève Racine bottle in a reflective black studio",
-      fr: "Flacon Sève Racine en studio noir réfléchissant",
+      en: "Maison Fondjo Sève Racine bottle on stone in natural light",
+      fr: "Flacon Maison Fondjo Sève Racine sur pierre en lumière naturelle",
     },
     status: "available",
     orderHref: "/checkout",
   },
   {
-    slug: "elixir-nuit",
-    href: "/products/elixir-nuit",
-    name: { en: "Élixir Nuit", fr: "Élixir Nuit" },
+    slug: "shampoo",
+    href: "/products/shampoo",
+    name: { en: "Shampoo", fr: "Shampoing" },
     tagline: {
-      en: "Night scalp serum, launching with the next Maison Fondjo drop.",
-      fr: "Sérum de nuit pour le cuir chevelu, prochain lancement Maison Fondjo.",
+      en: "A botanical cleanse for the scalp. Bottle reveal coming soon.",
+      fr: "Un nettoyage botanique pour le cuir chevelu. Flacon bientôt dévoilé.",
     },
     eyebrow: {
       en: "Coming soon",
       fr: "Bientôt",
     },
     intro: {
-      en: "A night ritual for the scalp is in development. Join the newsletter to hear when it launches.",
-      fr: "Un rituel de nuit pour le cuir chevelu est en préparation. Rejoignez la newsletter pour être prévenu du lancement.",
+      en: "The Maison Fondjo shampoo is in development. The name is here. The bottle will be revealed when the formula is ready.",
+      fr: "Le shampoing Maison Fondjo est en préparation. Le nom est là. Le flacon sera dévoilé quand la formule sera prête.",
+    },
+    seoTitle: {
+      en: "Botanical Hair Shampoo (Coming Soon)",
+      fr: "Shampoing capillaire botanique (bientôt)",
     },
     description: {
-      en: "Élixir Nuit by Maison Fondjo, night scalp serum, coming soon.",
-      fr: "Élixir Nuit par Maison Fondjo, sérum de nuit pour le cuir chevelu, bientôt.",
+      en: "Upcoming Maison Fondjo botanical shampoo for a clean scalp. Join the newsletter for the bottle reveal and Cameroon launch timing.",
+      fr: "Prochain shampoing botanique Maison Fondjo pour un cuir chevelu propre. Inscrivez-vous pour le dévoilement du flacon et le lancement au Cameroun.",
     },
     priceXaf: "",
-    image: siteImages.productMacro,
+    image: siteImages.studioBottle,
     imageAlt: {
-      en: "Maison Fondjo night elixir preview",
-      fr: "Aperçu Élixir Nuit Maison Fondjo",
+      en: "Maison Fondjo shampoo, coming soon",
+      fr: "Shampoing Maison Fondjo, bientôt",
+    },
+    status: "coming-soon",
+  },
+  {
+    slug: "conditioner",
+    href: "/products/conditioner",
+    name: { en: "Conditioner", fr: "Après-shampoing" },
+    tagline: {
+      en: "Softness and slip for the lengths. Bottle reveal coming soon.",
+      fr: "Douceur et glisse pour les longueurs. Flacon bientôt dévoilé.",
+    },
+    eyebrow: {
+      en: "Coming soon",
+      fr: "Bientôt",
+    },
+    intro: {
+      en: "The Maison Fondjo conditioner is in development. Stay curious. The bottle arrives with the finished formula.",
+      fr: "L'après-shampoing Maison Fondjo est en préparation. Restez curieux. Le flacon arrivera avec la formule terminée.",
+    },
+    seoTitle: {
+      en: "Botanical Hair Conditioner (Coming Soon)",
+      fr: "Après-shampoing botanique (bientôt)",
+    },
+    description: {
+      en: "Upcoming Maison Fondjo conditioner for soft, manageable lengths. Botanical line expanding — subscribe for the reveal.",
+      fr: "Prochain après-shampoing Maison Fondjo pour des longueurs souples et faciles à coiffer. Abonnez-vous pour le dévoilement.",
+    },
+    priceXaf: "",
+    image: siteImages.productOutdoorAlt,
+    imageAlt: {
+      en: "Maison Fondjo conditioner, coming soon",
+      fr: "Après-shampoing Maison Fondjo, bientôt",
     },
     status: "coming-soon",
   },

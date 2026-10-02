@@ -11,6 +11,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/components/ui/toast";
 import { loginSchema, type LoginInput } from "@/domain/customer/schemas";
 import { signInWithPassword } from "@/features/account/lib/auth-client";
+import { trackLogin } from "@/lib/analytics/events";
 import { getDictionary } from "@/i18n/dictionaries";
 import { useI18n } from "@/lib/i18n-context";
 
@@ -36,6 +37,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
     try {
       await signInWithPassword(values);
+      trackLogin("password");
       router.push(redirectTo as never);
       router.refresh();
     } catch (error) {

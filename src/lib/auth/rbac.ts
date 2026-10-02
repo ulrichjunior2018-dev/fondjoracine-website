@@ -25,3 +25,22 @@ export async function requireAdminPermission(permission: string) {
 
   return { supabase, user };
 }
+
+/** True when the signed-in user has any admin permission (same email/password as customers). */
+export async function getCurrentUserIsAdmin(): Promise<boolean> {
+  try {
+    const { supabase } = await requireApiUser();
+    const { data, error } = await supabase.rpc("has_admin_permission", {
+      permission: "orders.read",
+    });
+    if (error || data !== true) {
+      const analytics = await supabase.rpc("has_admin_permission", {
+        permission: "analytics.read",
+      });
+      return analytics.data === true;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}

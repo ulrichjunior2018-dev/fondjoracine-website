@@ -1,3 +1,5 @@
+import { reportMessage } from "@/lib/analytics/sentry-report";
+
 type LogContext = Record<string, unknown>;
 
 function write(level: "info" | "warn" | "error", message: string, context?: LogContext) {
@@ -7,6 +9,7 @@ function write(level: "info" | "warn" | "error", message: string, context?: LogC
 
   if (level === "error") {
     console.error(line);
+    void reportMessage(message, context);
     return;
   }
 

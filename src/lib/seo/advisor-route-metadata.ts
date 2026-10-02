@@ -19,10 +19,11 @@ export function buildAdvisorRouteMetadata({
   title,
 }: AdvisorRouteMetadataInput): Metadata {
   const url = `${siteConfig.url}${path}`;
-  const pageTitle = `${title} | ${siteConfig.name}`;
+  // Absolute avoids Next title template doubling ("X | Brand | Brand").
+  const pageTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
 
   return {
-    title: pageTitle,
+    title: { absolute: pageTitle },
     description,
     ...buildShareMetadata({
       description,

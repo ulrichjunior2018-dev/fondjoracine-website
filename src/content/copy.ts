@@ -23,7 +23,7 @@ const publicFr = {
     },
     faq: {
       description:
-        "Réponses sur Sève Racine, la livraison au Cameroun, la sécurité produit et l'assistance WhatsApp.",
+        "Réponses sur les soins capillaires botaniques Maison Fondjo, la livraison au Cameroun, la sécurité produit et l'assistance WhatsApp.",
       title: "FAQ | Maison Fondjo",
     },
     howToUse: {
@@ -285,7 +285,7 @@ const publicFr = {
     kicker: "FAQ",
     title: "Questions fréquentes",
     intro:
-      "Réponses sur Sève Racine, la livraison au Cameroun, le paiement et l'assistance WhatsApp.",
+      "Réponses sur les soins Maison Fondjo, la livraison au Cameroun, le paiement et l'assistance WhatsApp.",
     items: [
       {
         question: "Quand verrai-je des résultats ?",
@@ -356,7 +356,7 @@ const publicEn = {
     },
     faq: {
       description:
-        "Answers about Sève Racine, Cameroon delivery, product safety and WhatsApp assistance.",
+        "Answers about Maison Fondjo botanical hair care, Cameroon delivery, product safety and WhatsApp assistance.",
       title: "FAQ | Maison Fondjo",
     },
     howToUse: {
@@ -615,7 +615,8 @@ const publicEn = {
   faqPage: {
     kicker: "FAQ",
     title: "Frequently Asked Questions",
-    intro: "Answers about Sève Racine, Cameroon delivery, payment, and WhatsApp assistance.",
+    intro:
+      "Answers about Maison Fondjo hair care, Cameroon delivery, payment, and WhatsApp assistance.",
     items: [
       {
         question: "How fast will I see results?",
@@ -683,12 +684,14 @@ const advisorEn = {
     description:
       "Maison Fondjo herbarium: Sève Racine ingredients, Latin names and botanical role.",
     eyebrow: "Digital herbarium",
+    indexLabel: "Index",
     title: "A botanical blend. One precise language.",
   },
   diagnostic: {
     ...advisorFr.diagnostic,
     autreBack: "← Back",
     autrePrompt: "Describe what you're experiencing",
+    back: "Previous question",
     notesContinue: "Continue",
     notesPlaceholder: "Optional",
     notesPrompt: "Anything else you'd like us to know?",

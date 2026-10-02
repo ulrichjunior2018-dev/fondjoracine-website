@@ -18,7 +18,24 @@ function isFrench(locale: OrderPlacedNotification["locale"]) {
   return locale === "fr";
 }
 
-function copyFor(kind: OrderNotificationKind, fr: boolean) {
+function copyFor(kind: OrderNotificationKind, fr: boolean, statusLabel?: string) {
+  if (kind === "status_updated") {
+    const label = statusLabel || (fr ? "mise a jour" : "updated");
+    return fr
+      ? {
+          headline: "Mise a jour de commande",
+          intro: `Votre commande est maintenant : ${label}.`,
+          subject: (orderNumber: string) => `Commande ${orderNumber} : ${label}`,
+          cta: "Suivre ma commande",
+        }
+      : {
+          headline: "Order update",
+          intro: `Your order is now: ${label}.`,
+          subject: (orderNumber: string) => `Order ${orderNumber}: ${label}`,
+          cta: "Track your order",
+        };
+  }
+
   if (kind === "confirmed") {
     return fr
       ? {
@@ -75,7 +92,7 @@ function copyFor(kind: OrderNotificationKind, fr: boolean) {
 
 function buildCustomerHtml(payload: OrderPlacedNotification, kind: OrderNotificationKind): string {
   const fr = isFrench(payload.locale);
-  const text = copyFor(kind, fr);
+  const text = copyFor(kind, fr, payload.statusLabel);
   const safe = {
     city: escapeHtml(payload.city),
     confirmationUrl: escapeHtml(payload.confirmationUrl),
@@ -197,18 +214,43 @@ async function shouldSendOrderUpdates(customerId: string | null | undefined): Pr
 
 /**
  * Emails the buyer when an order is placed, a MoMo reference is submitted,
- * or payment is confirmed. Skips quietly when email/Resend/prefs block send.
+ * or payment is confirmed. Also writes an in-app notification when profileId is set.
+ * Skips quietly when email/Resend/prefs block send — never throws.
  */
 export const customerEmailChannel: NotificationChannel = {
   key: "customer_email",
-  isConfigured: () => Boolean(env.RESEND_API_KEY),
+  isConfigured: () => true,
   async notifyOrderPlaced(event) {
-    const email = event.customerEmail?.trim();
-    if (!email) return;
-    if (!env.RESEND_API_KEY) return;
-
     const kind: OrderNotificationKind = event.kind ?? "placed";
+    const fr = isFrench(event.locale);
+    const text = copyFor(kind, fr, event.statusLabel);
     const allowed = await shouldSendOrderUpdates(event.customerId);
+
+    if (event.profileId && allowed) {
+      try {
+        const supabase = getSupabaseAdminClient();
+        await supabase.from("notifications").insert({
+          profile_id: event.profileId,
+          channel: "in_app",
+          subject: text.subject(event.orderNumber),
+          body: text.intro,
+          data: {
+            kind,
+            orderNumber: event.orderNumber,
+            statusId: event.statusId ?? null,
+            confirmationUrl: event.confirmationUrl,
+          },
+        });
+      } catch (err) {
+        logger.error("Failed to save customer in-app notification.", {
+          error: err instanceof Error ? err.message : String(err),
+          orderNumber: event.orderNumber,
+        });
+      }
+    }
+
+    const email = event.customerEmail?.trim();
+    if (!email || !env.RESEND_API_KEY) return;
     if (!allowed) {
       logger.info("Customer order email skipped. order updates disabled.", {
         orderNumber: event.orderNumber,
@@ -217,8 +259,6 @@ export const customerEmailChannel: NotificationChannel = {
       return;
     }
 
-    const fr = isFrench(event.locale);
-    const text = copyFor(kind, fr);
     const fromEmail = env.RESEND_FROM_EMAIL || "care@maisonfondjo.com";
 
     try {

@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces } from "next/font/google";
 
+import { AnalyticsShell } from "@/components/analytics/analytics-shell";
+import { GoogleTagManager } from "@/components/analytics/google-tag-manager";
 import { AppProviders } from "@/providers/app-providers";
-import { siteConfig } from "@/config/site";
+import { env } from "@/config/env";
 import { JsonLd } from "@/components/seo/json-ld";
-import { GoogleMarketingTags } from "@/components/analytics/google-marketing-tags";
 import { buildOrganizationJsonLd, defaultMetadata } from "@/lib/seo/metadata";
 import { getServerLocale } from "@/lib/locale-server";
 
@@ -48,9 +49,12 @@ export default async function RootLayout({
       translate="no"
     >
       <body className="flex min-h-full flex-col overflow-x-clip bg-background text-foreground">
-        <GoogleMarketingTags />
-        <JsonLd data={buildOrganizationJsonLd(siteConfig.url)} id="organization-jsonld" />
-        <AppProviders initialLocale={locale}>{children}</AppProviders>
+        <GoogleTagManager />
+        <JsonLd data={buildOrganizationJsonLd(env.NEXT_PUBLIC_SITE_URL)} id="organization-jsonld" />
+        <AppProviders initialLocale={locale}>
+          <AnalyticsShell />
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

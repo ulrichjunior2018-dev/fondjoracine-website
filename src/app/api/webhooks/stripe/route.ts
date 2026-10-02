@@ -5,7 +5,11 @@ import { fail, ok } from "@/lib/api/responses";
 import { getSupabaseAdminClient } from "@/lib/database/admin";
 import { AppError } from "@/lib/errors/app-error";
 import { getStripeClient } from "@/lib/payments/stripe";
-import { fulfillStripeOrder } from "@/services/commerce/one-product-order-service";
+import {
+  createSubscriptionRenewalOrder,
+  fulfillStripeOrder,
+  syncSubscriptionStatus,
+} from "@/services/commerce/one-product-order-service";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +41,25 @@ export async function POST(request: Request) {
       const session = event.data.object as Stripe.Checkout.Session;
       const supabase = getSupabaseAdminClient();
       await fulfillStripeOrder(supabase, session);
+    }
+
+    if (
+      event.type === "customer.subscription.updated" ||
+      event.type === "customer.subscription.deleted"
+    ) {
+      const subscription = event.data.object as Stripe.Subscription;
+      const supabase = getSupabaseAdminClient();
+      await syncSubscriptionStatus(supabase, subscription);
+    }
+
+    if (event.type === "invoice.paid") {
+      const invoice = event.data.object as Stripe.Invoice;
+      // The first cycle is already fulfilled by checkout.session.completed —
+      // only "subscription_cycle" invoices are true renewals.
+      if (invoice.billing_reason === "subscription_cycle") {
+        const supabase = getSupabaseAdminClient();
+        await createSubscriptionRenewalOrder(supabase, invoice);
+      }
     }
 
     return ok({ received: true });

@@ -18,6 +18,7 @@ type AccountProfileMenuProps = {
   activeAppearance: string;
   onAppearanceChange: (theme: "light" | "dark" | "system") => void;
   resolvedAppearance: "light" | "dark";
+  isAdmin?: boolean;
 };
 
 const itemClass =
@@ -33,6 +34,7 @@ export function AccountProfileMenu({
   activeAppearance,
   onAppearanceChange,
   resolvedAppearance,
+  isAdmin = false,
 }: AccountProfileMenuProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -102,6 +104,13 @@ export function AccountProfileMenu({
 
   return (
     <div className="grid gap-0.5">
+      {isAdmin ? (
+        <Link className={itemClass} href="/admin" onClick={onClose}>
+          <Icons.grid aria-hidden="true" className="h-4 w-4 shrink-0" />
+          <span className="flex-1 truncate">{nav.adminDashboard}</span>
+        </Link>
+      ) : null}
+
       <Link className={itemClass} href="/" onClick={onClose}>
         <Icons.shoppingBag aria-hidden="true" className="h-4 w-4 shrink-0" />
         <span className="flex-1 truncate">{nav.backToWebsite}</span>

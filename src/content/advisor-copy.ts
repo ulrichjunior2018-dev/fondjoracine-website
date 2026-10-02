@@ -12,16 +12,18 @@ export const advisorCopy = {
   ],
   nav: buildMarketingNav("fr"),
   botanique: {
-    body: "Cette page sert de destination QR : un mélange riche d'huiles et d'herbes botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
+    body: "Cette page sert de destination QR. Un mélange riche d'huiles et d'herbes botaniques, noms latins, origine végétale et raison de présence dans Sève Racine.",
     chosenFor: "Choisi pour",
     description:
       "Herbier Maison Fondjo : les ingrédients de Sève Racine, noms latins et rôle botanique.",
     eyebrow: "Herbier digital",
+    indexLabel: "Sommaire",
     title: "Un langage botanique précis.",
   },
   diagnostic: {
     autreBack: "← Autre choix",
     autrePrompt: "Décrivez ce que vous ressentez",
+    back: "Question précédente",
     notesContinue: "Continuer",
     notesPlaceholder: "Facultatif",
     notesPrompt: "Autre chose à nous dire ?",

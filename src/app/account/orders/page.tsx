@@ -7,6 +7,7 @@ import { Heading, Text } from "@/components/ui/typography";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getServerLocale } from "@/lib/locale-server";
+import { getOrderStatus } from "@/lib/order-status/registry";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/utils/currency";
 import {
@@ -19,8 +20,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: getDictionary(locale).account.orders.metaTitle };
 }
 
-function getStatusTone(status: string) {
-  return status === "confirmed" || status === "delivered" ? "sage" : "accent";
+function formatEta(start: string | null, end: string | null, locale: string, pending: string) {
+  if (!start || !end) return pending;
+  const fmt = (value: string) =>
+    new Date(`${value}T12:00:00`).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  return `${fmt(start)} – ${fmt(end)}`;
 }
 
 export default async function AccountOrdersPage() {
@@ -30,7 +38,7 @@ export default async function AccountOrdersPage() {
   const user = await getCurrentUser();
   const supabase = await createSupabaseServerClient();
   const account = await getOrCreateCustomerAccount(supabase, user!.id);
-  const orders = await listOrdersForCustomer(supabase, account.id);
+  const orders = await listOrdersForCustomer(supabase, account.id, locale);
 
   return (
     <div className="grid gap-6">
@@ -60,28 +68,48 @@ export default async function AccountOrdersPage() {
           {orders.map((order) => (
             <Link href={`/account/orders/${order.id}`} key={order.id}>
               <Card className="transition-colors hover:border-border-strong">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="grid gap-3 p-1 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div>
                     <p className="font-mono text-sm font-semibold">{order.orderNumber}</p>
                     <p className="mt-1 text-xs text-foreground/58">
                       {new Date(order.createdAt).toLocaleDateString(
                         locale === "fr" ? "fr-FR" : "en-US",
-                        {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        },
+                        { year: "numeric", month: "short", day: "numeric" },
                       )}
                       , {order.itemsCount} {order.itemsCount === 1 ? d.itemsOne : d.itemsMany}
                     </p>
+                    <p className="mt-2 text-xs text-foreground/58">
+                      {o.payment}: {order.paymentMethod ?? o.notSet}
+                    </p>
+                    <p className="mt-1 text-xs text-foreground/58">
+                      {o.estimatedDelivery}:{" "}
+                      {formatEta(
+                        order.estimatedDeliveryStart,
+                        order.estimatedDeliveryEnd,
+                        locale,
+                        o.estimatedDeliveryPending,
+                      )}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-start gap-2 sm:items-end">
                     <span className="font-mono text-sm font-semibold">
                       {formatMoney(order.totalCents, order.currency)}
                     </span>
-                    <Badge tone={getStatusTone(order.status)}>
-                      {order.status.replace(/_/g, " ")}
-                    </Badge>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge
+                        tone={
+                          order.paymentStatus === "paid"
+                            ? "sage"
+                            : order.paymentStatus === "pending"
+                              ? "warning"
+                              : "neutral"
+                        }
+                      >
+                        {order.paymentStatusLabel}
+                      </Badge>
+                      <Badge tone={getOrderStatus(order.status).tone}>{order.statusLabel}</Badge>
+                    </div>
+                    <span className="text-xs font-semibold text-accent">{o.viewDetails} →</span>
                   </div>
                 </div>
               </Card>

@@ -1,11 +1,11 @@
 import { siteConfig } from "@/config/site";
 
-/** Default social preview — real Sève Racine studio product shot. */
+/** Default social preview — Maison Fondjo Sève Racine product shot. */
 export const defaultSocialImage = {
-  path: "/images/studio.png",
-  width: 1086,
-  height: 1448,
-  alt: "Sève Racine bottle in a reflective black studio",
+  path: "/images/maison-fondjo-seve-racine.jpg",
+  width: 963,
+  height: 1280,
+  alt: "Maison Fondjo Sève Racine bottle on stone in natural light",
 } as const;
 
 export function absoluteSiteUrl(path: string): string {

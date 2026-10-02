@@ -50,6 +50,7 @@ const SHOP_NAV_HREFS = new Set(["/shop", "/seve-racine", "/products"]);
 /** Mobile under-header strip (Home included; Shop excluded — use the Shop button). */
 export const MARKETING_MOBILE_NAV_HREFS = new Set([
   "/",
+  "/diagnostic",
   "/botanique",
   "/learn",
   "/sur-mesure",

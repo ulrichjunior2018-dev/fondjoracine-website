@@ -4,7 +4,7 @@ import { env } from "@/config/env";
  * Public site origin for absolute links (emails, SEO).
  * Always configure per environment:
  * - local `.env.local` → http://localhost:3000
- * - Vercel Production → https://fondjoracine.com (or maisonfondjo.com)
+ * - Vercel Production → https://maisonfondjo.com
  */
 export function getConfiguredSiteUrl() {
   return env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");

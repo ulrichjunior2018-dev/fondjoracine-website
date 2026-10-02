@@ -93,6 +93,14 @@ export async function startIdentityProvider(providerId: IdentityProviderId, next
   if (error) {
     throwAuthError(error);
   }
+
+  // Success redirects away; fire intent so GTM can attribute OAuth starts.
+  try {
+    const { trackLogin } = await import("@/lib/analytics/events");
+    trackLogin(descriptor.id);
+  } catch {
+    // analytics optional
+  }
 }
 
 /** @deprecated Prefer `startIdentityProvider("google", next)`. */

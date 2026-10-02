@@ -23,7 +23,8 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
 
     const { supabase, user } = await requireApiUser();
     const account = await getOrCreateCustomerAccount(supabase, user.id);
-    const order = await getOrderForCustomer(supabase, account.id, params.data.id);
+    const locale = new URL(_request.url).searchParams.get("locale") ?? "en";
+    const order = await getOrderForCustomer(supabase, account.id, params.data.id, locale);
 
     return ok(order);
   } catch (error) {

@@ -93,7 +93,7 @@ export async function getAdminDashboardData(supabase: SupabaseClient) {
     supabase
       .from("orders")
       .select(
-        "id, order_number, status, currency, total_cents, customer_name, customer_phone, delivery_city, payment_method, manual_payment_reference, created_at, admin_payment_verified_at",
+        "id, order_number, status, currency, total_cents, customer_name, customer_phone, delivery_city, delivery_address, payment_method, manual_payment_reference, created_at, admin_payment_verified_at, admin_notes, estimated_delivery_start, estimated_delivery_end, email",
       )
       .order("created_at", { ascending: false })
       .limit(50),

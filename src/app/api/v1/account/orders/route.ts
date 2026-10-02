@@ -8,11 +8,12 @@ import {
 export const dynamic = "force-dynamic";
 
 /** List the signed-in customer's own orders (see "My Orders"). */
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { supabase, user } = await requireApiUser();
     const account = await getOrCreateCustomerAccount(supabase, user.id);
-    const orders = await listOrdersForCustomer(supabase, account.id);
+    const locale = new URL(request.url).searchParams.get("locale") ?? "en";
+    const orders = await listOrdersForCustomer(supabase, account.id, locale);
 
     return ok(orders);
   } catch (error) {
