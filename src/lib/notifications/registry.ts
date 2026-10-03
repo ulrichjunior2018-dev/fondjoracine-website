@@ -1,13 +1,18 @@
 import { adminEmailChannel } from "./channels/admin-email";
 import { customerEmailChannel } from "./channels/customer-email";
+import { customerSmsChannel } from "./channels/customer-sms";
 import type { NotificationChannel, OrderPlacedNotification } from "./types";
 
 /**
- * Single source of truth for notification channels. To add a channel (SMS,
- * push, Slack, …): create a module implementing `NotificationChannel` and
+ * Single source of truth for notification channels. To add a channel (push,
+ * Slack, …): create a module implementing `NotificationChannel` and
  * register it here — the order flow does not change.
  */
-const channels: readonly NotificationChannel[] = [adminEmailChannel, customerEmailChannel];
+const channels: readonly NotificationChannel[] = [
+  adminEmailChannel,
+  customerEmailChannel,
+  customerSmsChannel,
+];
 
 export function listNotificationChannels(): readonly NotificationChannel[] {
   return channels;

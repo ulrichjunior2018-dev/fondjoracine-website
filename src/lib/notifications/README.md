@@ -14,6 +14,7 @@ A single, extensible home for "tell someone something happened." Order/checkout 
 - **`channels/`** — one channel per delivery mechanism:
   - `admin-email.ts` — Resend back-office email for every order lifecycle event (including card).
   - `customer-email.ts` — buyer confirmation emails (EN/FR); respects Account → Notifications `order_updates` when `customerId` is set.
+  - `customer-sms.ts` — buyer order-status texts via Twilio (EN/FR); same `order_updates` opt-in as email (no separate SMS preference column yet). Assumes a bare local phone (no "+") is Cameroon (+237) — see `toE164` comment. Self-disables when `TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN`/sender aren't set.
 - **`registry.ts`** — `listNotificationChannels()` and `dispatchOrderPlacedNotifications(event)`.
 
 ## How to add a new channel (e.g. SMS, WhatsApp auto-send, push, Slack)

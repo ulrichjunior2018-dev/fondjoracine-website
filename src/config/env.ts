@@ -37,6 +37,17 @@ const envSchema = z.object({
   /** Defaults to the sandbox/live host (by FAPSHI_ENV) in the client if unset. */
   FAPSHI_BASE_URL: z.string().url().optional().or(z.literal("")),
   ADMIN_EMAIL: z.string().email().optional().or(z.literal("")),
+  /**
+   * Twilio — order-status SMS to customers (international, incl. Cameroon).
+   * From the Twilio Console: Account SID + Auth Token (Account dashboard),
+   * plus either a Messaging Service SID (preferred — supports sender pools /
+   * geo-matching) or a single TWILIO_FROM_NUMBER. Leave all blank to disable
+   * the channel; it self-isolates like every other notification channel.
+   */
+  TWILIO_ACCOUNT_SID: z.string().optional().or(z.literal("")),
+  TWILIO_AUTH_TOKEN: z.string().optional().or(z.literal("")),
+  TWILIO_MESSAGING_SERVICE_SID: z.string().optional().or(z.literal("")),
+  TWILIO_FROM_NUMBER: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
   /**
