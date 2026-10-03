@@ -28,6 +28,7 @@ export function NotificationPreferencesForm({
 
   const rows: Array<{ description: string; key: PreferenceKey; label: string }> = [
     { key: "orderUpdates", label: n.orderUpdates, description: n.orderUpdatesDesc },
+    { key: "smsUpdates", label: n.smsUpdates, description: n.smsUpdatesDesc },
     { key: "promotions", label: n.promotions, description: n.promotionsDesc },
     { key: "productLaunches", label: n.productLaunches, description: n.productLaunchesDesc },
     { key: "hairCareTips", label: n.hairCareTips, description: n.hairCareTipsDesc },

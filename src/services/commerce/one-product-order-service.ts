@@ -571,6 +571,7 @@ export async function createOneProductOrder(
     customerName: input.name,
     kind: "placed",
     locale,
+    orderId: order.id,
     orderNumber: order.order_number,
     paymentMethod: instructions.label,
     phone: normalizePhone(input.phone),
@@ -817,6 +818,7 @@ export async function notifyOrderConfirmed(supabase: SupabaseClient, orderId: st
     customerName: order.customer_name ?? "Customer",
     kind: "confirmed",
     locale,
+    orderId,
     orderNumber: order.order_number,
     paymentMethod: paymentLabel,
     phone: order.customer_phone ?? "Unknown",
@@ -877,6 +879,7 @@ export async function notifyOrderStatusUpdated(
     customerName: order.customer_name ?? "Customer",
     kind: "status_updated",
     locale,
+    orderId,
     orderNumber: order.order_number,
     paymentMethod: paymentLabel,
     phone: order.customer_phone ?? "Unknown",
@@ -1032,7 +1035,8 @@ export async function fulfillMobileMoneyOrder(
   if (loadError || !order) {
     throw new AppError(
       "BAD_REQUEST",
-      loadError?.message ?? `No order found for mobile money reference ${args.mobileMoneyReference}.`,
+      loadError?.message ??
+        `No order found for mobile money reference ${args.mobileMoneyReference}.`,
     );
   }
 

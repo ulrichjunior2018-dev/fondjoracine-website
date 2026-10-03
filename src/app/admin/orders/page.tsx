@@ -3,12 +3,14 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Heading, Kicker, Text } from "@/components/ui/typography";
 import { AdminLockedState } from "@/features/admin/components/admin-locked-state";
+import { AdminNotificationFailures } from "@/features/admin/components/admin-notification-failures";
 import { AdminOrdersTable } from "@/features/admin/components/admin-orders-table";
 import { getDictionary } from "@/i18n/dictionaries";
 import { requireAdminPermission } from "@/lib/auth/rbac";
 import { adminPermissions } from "@/lib/database/schema";
 import { getServerLocale } from "@/lib/locale-server";
 import { listAdminOrders } from "@/services/commerce/one-product-order-service";
+import { listRecentNotificationFailures } from "@/services/commerce/notification-log-service";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +31,10 @@ export default async function AdminOrdersPage() {
     return <AdminLockedState message={admin.ordersLocked} />;
   }
 
-  const orders = await listAdminOrders(access.supabase);
+  const [orders, notificationFailures] = await Promise.all([
+    listAdminOrders(access.supabase),
+    listRecentNotificationFailures(access.supabase).catch(() => []),
+  ]);
 
   return (
     <main className="min-h-screen bg-background py-12">
@@ -41,6 +46,9 @@ export default async function AdminOrdersPage() {
         <Text className="mt-4 max-w-3xl" tone="muted">
           {admin.ordersPageSubtitle}
         </Text>
+        <div className="mt-8">
+          <AdminNotificationFailures failures={notificationFailures} />
+        </div>
         <div className="mt-8">
           <AdminOrdersTable orders={orders} />
         </div>

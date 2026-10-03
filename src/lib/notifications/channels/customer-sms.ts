@@ -1,22 +1,26 @@
 import { getSupabaseAdminClient } from "@/lib/database/admin";
 import { logger } from "@/lib/logger/logger";
+import { CAMEROON_MOBILE_LOCAL_PATTERN } from "@/lib/phone/cameroon";
 import { isTwilioConfigured, sendSms } from "@/lib/sms/twilio-client";
 
+import { logNotificationAttempt } from "../log";
 import type { NotificationChannel, OrderNotificationKind, OrderPlacedNotification } from "../types";
 
 /**
  * Normalizes a stored phone (digits + optional leading "+", see
  * `normalizePhone` in one-product-order-service.ts) to E.164 for Twilio.
  * Maison Fondjo's customers are overwhelmingly Cameroonian and the checkout
- * form doesn't collect a country code, so a bare 9-digit local number
- * (e.g. "650000000") is assumed to be Cameroon (+237). Anything already
- * carrying a "+" or a "237" prefix is passed through as-is.
+ * form doesn't collect a country code, so a bare local number matching a
+ * real Cameroon mobile prefix (see `lib/phone/cameroon.ts`) is assumed to be
+ * Cameroon (+237). Anything already carrying a "+" or a "237" prefix is
+ * passed through as-is. A number that doesn't match returns null — we'd
+ * rather skip the text than fire it at a malformed number.
  */
 function toE164(phone: string): string | null {
   const digits = phone.replace(/[^\d+]/g, "");
   if (digits.startsWith("+")) return digits;
   if (digits.startsWith("237")) return `+${digits}`;
-  if (/^6\d{8}$/.test(digits)) return `+237${digits}`;
+  if (CAMEROON_MOBILE_LOCAL_PATTERN.test(digits)) return `+237${digits}`;
   return null;
 }
 
@@ -53,24 +57,23 @@ function smsCopy(
 }
 
 /**
- * Same opt-in this order uses for email (`customer_notification_preferences.order_updates`).
- * SMS doesn't have its own column yet (see 000010_customer_accounts.sql comment) —
- * sharing the one flag is deliberate for now rather than shipping a second
- * preference nobody has a UI for. Guest orders (no customerId) default to allowed.
+ * Own opt-in column, independent of email's `order_updates`
+ * (see 000016_sms_notifications.sql). Guest orders (no customerId) default
+ * to allowed — there's no account to hold a preference against.
  */
-async function shouldSendOrderUpdates(customerId: string | null | undefined): Promise<boolean> {
+async function shouldSendSmsUpdates(customerId: string | null | undefined): Promise<boolean> {
   if (!customerId) return true;
 
   try {
     const supabase = getSupabaseAdminClient();
     const { data } = await supabase
       .from("customer_notification_preferences")
-      .select("order_updates")
+      .select("sms_updates")
       .eq("customer_id", customerId)
-      .maybeSingle<{ order_updates: boolean }>();
+      .maybeSingle<{ sms_updates: boolean }>();
 
     if (!data) return true;
-    return data.order_updates;
+    return data.sms_updates;
   } catch {
     return true;
   }
@@ -96,9 +99,9 @@ export const customerSmsChannel: NotificationChannel = {
       return;
     }
 
-    const allowed = await shouldSendOrderUpdates(event.customerId);
+    const allowed = await shouldSendSmsUpdates(event.customerId);
     if (!allowed) {
-      logger.info("Customer order SMS skipped. order updates disabled.", {
+      logger.info("Customer order SMS skipped. SMS updates disabled.", {
         orderNumber: event.orderNumber,
       });
       return;
@@ -116,11 +119,28 @@ export const customerSmsChannel: NotificationChannel = {
         sid: result.sid,
         status: result.status,
       });
+      await logNotificationAttempt({
+        channel: "customer_sms",
+        kind,
+        orderId: event.orderId,
+        providerId: result.sid,
+        recipient: to,
+        status: "sent",
+      });
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       logger.error("Failed to send customer order SMS. order was still saved.", {
-        error: err instanceof Error ? err.message : String(err),
+        error: message,
         kind,
         orderNumber: event.orderNumber,
+      });
+      await logNotificationAttempt({
+        channel: "customer_sms",
+        error: message,
+        kind,
+        orderId: event.orderId,
+        recipient: to,
+        status: "failed",
       });
     }
   },

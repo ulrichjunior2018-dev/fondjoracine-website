@@ -3,6 +3,7 @@ import { getSupabaseAdminClient } from "@/lib/database/admin";
 import { getResendClient } from "@/lib/email/resend";
 import { logger } from "@/lib/logger/logger";
 
+import { logNotificationAttempt } from "../log";
 import type { NotificationChannel, OrderNotificationKind, OrderPlacedNotification } from "../types";
 
 function escapeHtml(value: string) {
@@ -277,6 +278,14 @@ export const customerEmailChannel: NotificationChannel = {
           orderNumber: event.orderNumber,
           recipient: email,
         });
+        await logNotificationAttempt({
+          channel: "customer_email",
+          error: sendError.message,
+          kind,
+          orderId: event.orderId,
+          recipient: email,
+          status: "failed",
+        });
         return;
       }
 
@@ -285,11 +294,27 @@ export const customerEmailChannel: NotificationChannel = {
         orderNumber: event.orderNumber,
         recipient: email,
       });
+      await logNotificationAttempt({
+        channel: "customer_email",
+        kind,
+        orderId: event.orderId,
+        recipient: email,
+        status: "sent",
+      });
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       logger.error("Failed to send customer order email. order was still saved.", {
-        error: err instanceof Error ? err.message : String(err),
+        error: message,
         kind,
         orderNumber: event.orderNumber,
+      });
+      await logNotificationAttempt({
+        channel: "customer_email",
+        error: message,
+        kind,
+        orderId: event.orderId,
+        recipient: email,
+        status: "failed",
       });
     }
   },

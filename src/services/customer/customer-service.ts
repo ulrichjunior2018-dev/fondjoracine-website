@@ -37,7 +37,7 @@ type OrderRow = Tables<"orders">;
 type OrderItemRow = Tables<"order_items">;
 type NotificationPreferencesRow = Pick<
   Tables<"customer_notification_preferences">,
-  "order_updates" | "promotions" | "product_launches" | "hair_care_tips"
+  "order_updates" | "sms_updates" | "promotions" | "product_launches" | "hair_care_tips"
 >;
 
 function generateReferralCode() {
@@ -431,6 +431,7 @@ export async function getOrderForCustomer(
 
 const defaultNotificationPreferences: NotificationPreferences = {
   orderUpdates: true,
+  smsUpdates: true,
   promotions: true,
   productLaunches: true,
   hairCareTips: true,
@@ -442,7 +443,7 @@ export async function getNotificationPreferences(
 ): Promise<NotificationPreferences> {
   const { data, error } = await supabase
     .from("customer_notification_preferences")
-    .select("order_updates, promotions, product_launches, hair_care_tips")
+    .select("order_updates, sms_updates, promotions, product_launches, hair_care_tips")
     .eq("customer_id", customerId)
     .maybeSingle<NotificationPreferencesRow>();
 
@@ -456,6 +457,7 @@ export async function getNotificationPreferences(
 
   return {
     orderUpdates: data.order_updates,
+    smsUpdates: data.sms_updates,
     promotions: data.promotions,
     productLaunches: data.product_launches,
     hairCareTips: data.hair_care_tips,
@@ -473,13 +475,14 @@ export async function updateNotificationPreferences(
       {
         customer_id: customerId,
         order_updates: input.orderUpdates,
+        sms_updates: input.smsUpdates,
         promotions: input.promotions,
         product_launches: input.productLaunches,
         hair_care_tips: input.hairCareTips,
       },
       { onConflict: "customer_id" },
     )
-    .select("order_updates, promotions, product_launches, hair_care_tips")
+    .select("order_updates, sms_updates, promotions, product_launches, hair_care_tips")
     .single<NotificationPreferencesRow>();
 
   if (error || !data) {
@@ -488,6 +491,7 @@ export async function updateNotificationPreferences(
 
   return {
     orderUpdates: data.order_updates,
+    smsUpdates: data.sms_updates,
     promotions: data.promotions,
     productLaunches: data.product_launches,
     hairCareTips: data.hair_care_tips,

@@ -2,6 +2,7 @@ import { env } from "@/config/env";
 import { getResendClient } from "@/lib/email/resend";
 import { logger } from "@/lib/logger/logger";
 
+import { logNotificationAttempt } from "../log";
 import type { NotificationChannel, OrderNotificationKind, OrderPlacedNotification } from "../types";
 
 const DEFAULT_ADMIN_NOTIFICATION_EMAIL = "hello@maisonfondjo.com";
@@ -195,6 +196,14 @@ export const adminEmailChannel: NotificationChannel = {
           paymentMethod: event.paymentMethod,
           recipient: adminEmail,
         });
+        await logNotificationAttempt({
+          channel: "admin_email",
+          error: sendError.message,
+          kind,
+          orderId: event.orderId,
+          recipient: adminEmail,
+          status: "failed",
+        });
         return;
       }
 
@@ -204,12 +213,28 @@ export const adminEmailChannel: NotificationChannel = {
         paymentMethod: event.paymentMethod,
         recipient: adminEmail,
       });
+      await logNotificationAttempt({
+        channel: "admin_email",
+        kind,
+        orderId: event.orderId,
+        recipient: adminEmail,
+        status: "sent",
+      });
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       logger.error("Failed to send admin order notification. order was still created.", {
-        error: err instanceof Error ? err.message : String(err),
+        error: message,
         kind,
         orderNumber: event.orderNumber,
         paymentMethod: event.paymentMethod,
+      });
+      await logNotificationAttempt({
+        channel: "admin_email",
+        error: message,
+        kind,
+        orderId: event.orderId,
+        recipient: adminEmail,
+        status: "failed",
       });
     }
   },

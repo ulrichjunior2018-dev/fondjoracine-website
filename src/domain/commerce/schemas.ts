@@ -1,5 +1,24 @@
 import { z } from "zod";
 
+import { CAMEROON_MOBILE_LOCAL_PATTERN } from "@/lib/phone/cameroon";
+
+/**
+ * Checkout phone: accepts a bare 9-digit Cameroon mobile (6xxxxxxxx matching
+ * a real carrier prefix), or the same number with a +237/237 prefix. This is
+ * the number delivery and order-status SMS both depend on, so it's tighter
+ * than a generic length check — see `lib/phone/cameroon.ts` for what the
+ * pattern does and doesn't catch.
+ */
+const checkoutPhoneSchema = z
+  .string()
+  .min(8)
+  .max(24)
+  .refine((value) => {
+    const digits = value.replace(/[^\d]/g, "");
+    const local = digits.startsWith("237") ? digits.slice(3) : digits;
+    return CAMEROON_MOBILE_LOCAL_PATTERN.test(local);
+  }, "Enter a valid Cameroon mobile number (e.g. 6XX XXX XXX).");
+
 function isSlug(value: string) {
   const parts = value.split("-");
 
@@ -73,7 +92,7 @@ export const createOneProductOrderSchema = z.object({
   locale: z.enum(["en", "fr"]).default("en"),
   name: z.string().min(2).max(160),
   payment_method: oneProductPaymentMethodSchema,
-  phone: z.string().min(8).max(24),
+  phone: checkoutPhoneSchema,
   quantity: z.number().int().min(1).max(6).default(1),
   /** Sève Racine bottle size. Price is always resolved server-side from this — never trust a client-sent price. */
   size: z.enum(["100ml", "50ml"]).default("100ml"),

@@ -39,6 +39,8 @@ export type Address = {
 
 export type NotificationPreferences = {
   orderUpdates: boolean;
+  /** Order-status SMS opt-in, independent of `orderUpdates` (email). */
+  smsUpdates: boolean;
   promotions: boolean;
   productLaunches: boolean;
   hairCareTips: boolean;

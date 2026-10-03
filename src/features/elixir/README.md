@@ -10,7 +10,7 @@ The premium one-product storefront for Sève Racine — the site's primary conve
 
 ## What lives here
 
-- **`components/`** — `premium-storefront-page.tsx` (main composition), `landing-route-page.tsx`, `product-gallery.tsx`, `product-3d-scene.tsx`, `ingredient-gallery.tsx`, `texture-grid.tsx`, `image-compare-slider.tsx`, `luxury-card.tsx`, `guarantee-section.tsx`, `CheckoutTrustBar.tsx`, `checkout-button.tsx`, `order-flow.tsx`, `inquiry-form.tsx`, `whatsapp-cta.tsx`, `mobile-nav.tsx`, `cms-editable-section.tsx`, `hair-consultation-agent.tsx`.
+- **`components/`** — `premium-storefront-page.tsx` (main composition), `landing-route-page.tsx`, `product-gallery.tsx`, `product-3d-scene.tsx`, `ingredient-gallery.tsx`, `texture-grid.tsx`, `image-compare-slider.tsx`, `luxury-card.tsx`, `guarantee-section.tsx`, `CheckoutTrustBar.tsx`, `checkout-button.tsx`, `order-flow.tsx`, `inquiry-form.tsx`, `mobile-nav.tsx`, `cms-editable-section.tsx`, `hair-consultation-agent.tsx`.
 - **`data/`** — `content.ts` (storefront content + `t()` localization helper) and `content-schema.ts` (its Zod schema).
 - **`lib/`** — `cms.ts` (`getElixirContent`, `getWhatsAppUrl`) bridging content/CMS.
 

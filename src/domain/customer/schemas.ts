@@ -51,6 +51,7 @@ export const updateAddressSchema = addressSchema.partial();
 
 export const notificationPreferencesSchema = z.object({
   orderUpdates: z.boolean(),
+  smsUpdates: z.boolean(),
   promotions: z.boolean(),
   productLaunches: z.boolean(),
   hairCareTips: z.boolean(),

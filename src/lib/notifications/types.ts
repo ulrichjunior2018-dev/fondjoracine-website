@@ -14,6 +14,8 @@ export type OrderPlacedNotification = {
   city: string;
   confirmationUrl: string;
   customerName: string;
+  /** DB order id — used to key `notification_log` rows. Omit if unavailable; logging just skips. */
+  orderId?: string;
   orderNumber: string;
   paymentMethod: string;
   phone: string;

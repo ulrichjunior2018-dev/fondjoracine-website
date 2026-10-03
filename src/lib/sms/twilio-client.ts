@@ -1,3 +1,5 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 import { env } from "@/config/env";
 import { AppError } from "@/lib/errors/app-error";
 
@@ -78,6 +80,12 @@ export async function sendSms(args: SendSmsArgs): Promise<SendSmsResult> {
   } else if (fromNumber) {
     body.set("From", fromNumber);
   }
+  // Twilio posts delivery/failure updates here once the message leaves
+  // "queued" — see src/app/api/webhooks/twilio/status/route.ts.
+  body.set(
+    "StatusCallback",
+    `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/api/webhooks/twilio/status`,
+  );
 
   const response = await fetch(`${API_BASE}/Accounts/${accountSid}/Messages.json`, {
     body,
@@ -104,4 +112,38 @@ export async function sendSms(args: SendSmsArgs): Promise<SendSmsResult> {
   }
 
   return { sid: json?.sid ?? "", status: json?.status ?? "unknown" };
+}
+
+/**
+ * Verifies Twilio's `X-Twilio-Signature` header on an inbound webhook
+ * (status callbacks, incoming messages, etc). Per Twilio's algorithm: sort
+ * the POST params by key, append each `key+value` directly to the full
+ * request URL, HMAC-SHA1 that string with the Auth Token, base64-encode,
+ * and compare. `url` must be the *exact* URL Twilio was configured with
+ * (scheme + host + path, no trailing slash mismatch) or every signature
+ * will fail to verify even for a legitimate request.
+ *
+ * Docs: https://www.twilio.com/docs/usage/webhooks/webhooks-security
+ */
+export function verifyTwilioSignature(
+  url: string,
+  params: Record<string, string>,
+  signature: string,
+): boolean {
+  if (!env.TWILIO_AUTH_TOKEN) return false;
+
+  const data =
+    url +
+    Object.entries(params)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, value]) => key + value)
+      .join("");
+
+  const expected = createHmac("sha1", env.TWILIO_AUTH_TOKEN).update(data, "utf8").digest("base64");
+
+  const expectedBuf = Buffer.from(expected);
+  const actualBuf = Buffer.from(signature);
+  if (expectedBuf.length !== actualBuf.length) return false;
+
+  return timingSafeEqual(expectedBuf, actualBuf);
 }

@@ -682,6 +682,7 @@ export type Database = {
         Row: {
           customer_id: string;
           order_updates: boolean;
+          sms_updates: boolean;
           promotions: boolean;
           product_launches: boolean;
           hair_care_tips: boolean;
@@ -691,6 +692,7 @@ export type Database = {
         Insert: {
           customer_id: string;
           order_updates?: boolean;
+          sms_updates?: boolean;
           promotions?: boolean;
           product_launches?: boolean;
           hair_care_tips?: boolean;
@@ -700,6 +702,7 @@ export type Database = {
         Update: {
           customer_id?: string;
           order_updates?: boolean;
+          sms_updates?: boolean;
           promotions?: boolean;
           product_launches?: boolean;
           hair_care_tips?: boolean;
@@ -707,6 +710,53 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      notification_log: {
+        Row: {
+          id: string;
+          order_id: string | null;
+          channel: string;
+          kind: string;
+          status: string;
+          recipient: string | null;
+          provider_id: string | null;
+          error: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id?: string | null;
+          channel: string;
+          kind: string;
+          status?: string;
+          recipient?: string | null;
+          provider_id?: string | null;
+          error?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string | null;
+          channel?: string;
+          kind?: string;
+          status?: string;
+          recipient?: string | null;
+          provider_id?: string | null;
+          error?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "notification_log_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       payments: {
         Row: {
