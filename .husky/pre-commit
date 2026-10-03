@@ -8,8 +8,15 @@
 # syntax below (arrays, process substitution) fails immediately with a
 # syntax error and the hook never runs. Re-exec into real bash once, then
 # continue as bash for the rest of this script.
-if [ -z "${BASH_VERSION:-}" ]; then
-  exec bash "$0" "$@"
+#
+# NOTE: checking `BASH_VERSION` alone is not enough — on macOS, /bin/sh is
+# bash itself running in POSIX-compatibility mode (invoked with argv[0]
+# "sh"). It still sets BASH_VERSION, so that check thinks it's "already
+# bash" and skips the re-exec, but POSIX mode disables process substitution
+# (`<(...)`), so the script still fails. Use our own marker instead so we
+# always re-exec into a real, non-POSIX-mode bash exactly once.
+if [ -z "${HUSKY_PRE_COMMIT_REEXEC:-}" ]; then
+  HUSKY_PRE_COMMIT_REEXEC=1 exec bash "$0" "$@"
 fi
 set -e
 cd "$(git rev-parse --show-toplevel)"

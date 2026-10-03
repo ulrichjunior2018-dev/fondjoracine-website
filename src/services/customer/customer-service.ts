@@ -131,21 +131,72 @@ export async function getOrCreateCustomerAccount(
     throw new AppError("INTERNAL", "Unable to load customer account.", { expose: false });
   }
 
-  if (existingCustomer) {
-    return toCustomerAccount(existingCustomer, profile);
+  let customer = existingCustomer;
+
+  if (!customer) {
+    const { data: createdCustomer, error: createError } = await supabase
+      .from("customers")
+      .insert({ profile_id: userId, referral_code: generateReferralCode() })
+      .select("*")
+      .single<CustomerRow>();
+
+    if (createError || !createdCustomer) {
+      throw new AppError("INTERNAL", "Unable to create customer account.", { expose: false });
+    }
+
+    customer = createdCustomer;
   }
 
-  const { data: createdCustomer, error: createError } = await supabase
-    .from("customers")
-    .insert({ profile_id: userId, referral_code: generateReferralCode() })
-    .select("*")
-    .single<CustomerRow>();
-
-  if (createError || !createdCustomer) {
-    throw new AppError("INTERNAL", "Unable to create customer account.", { expose: false });
+  // Best-effort: attach any orders this person placed as a guest (same email
+  // or phone) before they had an account. Runs on every resolve, not just
+  // first creation, so it still catches up if Supabase's email-confirmation
+  // step delayed the session past the order that originally prompted signup.
+  // Never blocks — orders stay reachable via their confirmation link either way.
+  try {
+    await claimGuestOrdersForCustomer(supabase, customer.id, {
+      email: profile.email,
+      phone: profile.phone,
+    });
+  } catch {
+    // ignore
   }
 
-  return toCustomerAccount(createdCustomer, profile);
+  return toCustomerAccount(customer, profile);
+}
+
+/**
+ * Attaches past guest orders (placed with no account, `customer_id` null) to
+ * a newly created customer when the order's email or phone matches this
+ * customer's profile. Matching is `OR` — either signal is enough — and only
+ * ever touches orders that are still unclaimed, so it is safe to call
+ * repeatedly and can never steal an order already linked to someone else.
+ */
+export async function claimGuestOrdersForCustomer(
+  supabase: SupabaseClient,
+  customerId: string,
+  match: { email?: string | null; phone?: string | null },
+): Promise<number> {
+  const normalizedEmail = match.email?.trim().toLowerCase() || null;
+  const normalizedPhone = match.phone ? match.phone.replace(/[^\d+]/g, "") : null;
+
+  const filters: string[] = [];
+  if (normalizedEmail) filters.push(`email.ilike.${normalizedEmail}`);
+  if (normalizedPhone) filters.push(`customer_phone.eq.${normalizedPhone}`);
+
+  if (filters.length === 0) return 0;
+
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ customer_id: customerId })
+    .is("customer_id", null)
+    .or(filters.join(","))
+    .select("id");
+
+  if (error) {
+    throw new AppError("INTERNAL", "Unable to link previous orders.", { expose: false });
+  }
+
+  return data?.length ?? 0;
 }
 
 export async function updateProfile(

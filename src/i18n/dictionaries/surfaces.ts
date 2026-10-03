@@ -83,6 +83,16 @@ export const surfacesEn = {
     subscribeToggleLabel: "Subscribe & save — ships monthly",
     subscribeToggleHint: "Card billed monthly by Stripe. Manage or cancel anytime from My Account.",
     subscribeSignInRequired: "Sign in to your account to subscribe.",
+    createAccountLabel: "Create an account to track this order",
+    createAccountHint: "See live status updates and reorder faster next time.",
+    passwordLabel: "Password",
+    passwordPlaceholder: "At least 8 characters",
+    createAccountEmailRequired: "Add your email above to create an account.",
+    createAccountPasswordRequired: "Choose a password with at least 8 characters.",
+    createAccountExists:
+      "An account with this email already exists. Sign in first, or continue without an account.",
+    createAccountFailed:
+      "We couldn't create your account, but your order will still go through as a guest.",
   },
   errors: {
     title: "Something went wrong",
@@ -553,6 +563,16 @@ export const surfacesFr = {
     subscribeToggleHint:
       "Carte débitée chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
+    createAccountLabel: "Créer un compte pour suivre cette commande",
+    createAccountHint: "Suivez le statut en direct et recommandez plus vite la prochaine fois.",
+    passwordLabel: "Mot de passe",
+    passwordPlaceholder: "8 caractères minimum",
+    createAccountEmailRequired: "Ajoutez votre email ci-dessus pour créer un compte.",
+    createAccountPasswordRequired: "Choisissez un mot de passe d'au moins 8 caractères.",
+    createAccountExists:
+      "Un compte existe déjà avec cet email. Connectez-vous d'abord, ou continuez sans compte.",
+    createAccountFailed:
+      "Nous n'avons pas pu créer votre compte, mais votre commande sera tout de même traitée en tant qu'invité.",
   },
   errors: {
     title: "Un incident est survenu",

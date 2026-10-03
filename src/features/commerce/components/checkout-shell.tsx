@@ -14,6 +14,7 @@ import {
   createOneProductOrderSchema,
   type OneProductPaymentMethod,
 } from "@/domain/commerce/schemas";
+import { signUpWithPassword } from "@/features/account/lib/auth-client";
 import type { Locale } from "@/features/elixir/data/content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { buildWaLink, formatXaf, type SeveRacineSize as OneProductSize } from "@/lib/config";
@@ -150,6 +151,8 @@ export function CheckoutShell({
   const [agreed, setAgreed] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createAccount, setCreateAccount] = useState(false);
+  const [accountPassword, setAccountPassword] = useState("");
 
   const form = useForm<OrderFormValues>({
     defaultValues: {
@@ -201,8 +204,41 @@ export function CheckoutShell({
       return;
     }
 
+    if (createAccount && !isSignedIn) {
+      if (!values.email) {
+        setServerError(copy.createAccountEmailRequired);
+        return;
+      }
+      if (accountPassword.length < 8) {
+        setServerError(copy.createAccountPasswordRequired);
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     setServerError(null);
+
+    if (createAccount && !isSignedIn && values.email) {
+      try {
+        const nameParts = values.name.trim().split(/\s+/);
+        await signUpWithPassword({
+          email: values.email,
+          firstName: nameParts[0] ?? values.name,
+          lastName: nameParts.slice(1).join(" "),
+          password: accountPassword,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "";
+        setIsSubmitting(false);
+        setServerError(
+          /registered|exists/i.test(message) ? copy.createAccountExists : copy.createAccountFailed,
+        );
+        // Account creation failing should never block placing the order —
+        // but surface the error and let the shopper decide (retry sign-in,
+        // or uncheck "create an account") rather than silently continuing.
+        return;
+      }
+    }
 
     try {
       const response = await fetch("/api/elixir/orders", {
@@ -484,6 +520,42 @@ export function CheckoutShell({
                 />
               </Field>
             </div>
+
+            {!isSignedIn ? (
+              <div className="rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <input
+                    checked={createAccount}
+                    className="mt-0.5 size-4 shrink-0 accent-[#B8935A]"
+                    onChange={(event) => setCreateAccount(event.target.checked)}
+                    type="checkbox"
+                  />
+                  <span>
+                    <span className="block text-sm font-semibold text-[#0B0B0B]">
+                      {copy.createAccountLabel}
+                    </span>
+                    <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
+                      {copy.createAccountHint}
+                    </span>
+                  </span>
+                </label>
+                {createAccount ? (
+                  <div className="mt-3">
+                    <Field className={labelClass} label={copy.passwordLabel} required>
+                      <Input
+                        autoComplete="new-password"
+                        className={fieldClass}
+                        minLength={8}
+                        onChange={(event) => setAccountPassword(event.target.value)}
+                        placeholder={copy.passwordPlaceholder}
+                        type="password"
+                        value={accountPassword}
+                      />
+                    </Field>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
 
             <Field
               className={labelClass}

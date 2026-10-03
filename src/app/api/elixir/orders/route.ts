@@ -59,13 +59,22 @@ export async function POST(request: Request) {
     const returnBaseUrl = resolveAppBaseUrl(headersList, request.url);
     const result = await createOneProductOrder(supabase, input, { customerId, returnBaseUrl });
 
-    if (customerId) {
+    if (customerId && user) {
       await saveCheckoutDeliveryAddress(supabase, customerId, {
         city: input.city,
         deliveryAddress: input.delivery_address,
         name: input.name,
         phone: input.phone,
       });
+
+      // Best-effort: keep the account profile's phone in sync so future
+      // guest orders placed with this phone can be auto-claimed on signup.
+      // Never overwrite a phone the customer already set deliberately.
+      await supabase
+        .from("profiles")
+        .update({ phone: input.phone.replace(/[^\d+]/g, "") })
+        .eq("id", user.id)
+        .is("phone", null);
     }
 
     return ok(result, { status: 201 });
