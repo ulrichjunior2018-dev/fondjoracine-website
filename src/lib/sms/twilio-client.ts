@@ -114,6 +114,63 @@ export async function sendSms(args: SendSmsArgs): Promise<SendSmsResult> {
   return { sid: json?.sid ?? "", status: json?.status ?? "unknown" };
 }
 
+export function isWhatsAppConfigured(): boolean {
+  return Boolean(
+    env.TWILIO_ACCOUNT_SID &&
+    env.TWILIO_AUTH_TOKEN &&
+    env.TWILIO_WHATSAPP_FROM &&
+    env.TWILIO_WHATSAPP_TO,
+  );
+}
+
+/**
+ * Sends a WhatsApp message via Twilio's Messages API (same endpoint as SMS —
+ * WhatsApp just uses `whatsapp:+E164` addresses for To/From instead of bare
+ * E.164). No `StatusCallback`: the Sandbox doesn't reliably post delivery
+ * status, and this is an admin-alert stopgap, not something worth tracking
+ * in `notification_log` the way customer SMS is.
+ */
+export async function sendWhatsApp(body: string): Promise<SendSmsResult> {
+  const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_FROM, TWILIO_WHATSAPP_TO } = env;
+
+  if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_FROM || !TWILIO_WHATSAPP_TO) {
+    throw new AppError("BAD_REQUEST", "Twilio WhatsApp admin alerts are not configured.", {
+      expose: false,
+    });
+  }
+
+  const params = new URLSearchParams({
+    Body: body,
+    From: TWILIO_WHATSAPP_FROM,
+    To: TWILIO_WHATSAPP_TO,
+  });
+
+  const response = await fetch(`${API_BASE}/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, {
+    body: params,
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString("base64")}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
+
+  const json = (await response.json().catch(() => null)) as {
+    sid?: string;
+    status?: string;
+    message?: string;
+  } | null;
+
+  if (!response.ok) {
+    throw new AppError(
+      "INTERNAL",
+      `Twilio rejected the WhatsApp message (${response.status}): ${json?.message || "unknown error"}`,
+      { expose: false },
+    );
+  }
+
+  return { sid: json?.sid ?? "", status: json?.status ?? "unknown" };
+}
+
 /**
  * Verifies Twilio's `X-Twilio-Signature` header on an inbound webhook
  * (status callbacks, incoming messages, etc). Per Twilio's algorithm: sort

@@ -1,4 +1,5 @@
 import { adminEmailChannel } from "./channels/admin-email";
+import { adminWhatsAppChannel } from "./channels/admin-whatsapp";
 import { customerEmailChannel } from "./channels/customer-email";
 import { customerSmsChannel } from "./channels/customer-sms";
 import type { NotificationChannel, OrderPlacedNotification } from "./types";
@@ -10,6 +11,7 @@ import type { NotificationChannel, OrderPlacedNotification } from "./types";
  */
 const channels: readonly NotificationChannel[] = [
   adminEmailChannel,
+  adminWhatsAppChannel,
   customerEmailChannel,
   customerSmsChannel,
 ];

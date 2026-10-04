@@ -48,6 +48,17 @@ const envSchema = z.object({
   TWILIO_AUTH_TOKEN: z.string().optional().or(z.literal("")),
   TWILIO_MESSAGING_SERVICE_SID: z.string().optional().or(z.literal("")),
   TWILIO_FROM_NUMBER: z.string().optional().or(z.literal("")),
+  /**
+   * Admin-only WhatsApp order alerts — a stopgap for "notify me the moment
+   * an order lands" while the SMS compliance profile is pending. Uses
+   * Twilio's WhatsApp Sandbox (no compliance review needed, but shared
+   * number + session expires ~24h after the admin last messaged it — not a
+   * production channel). TWILIO_WHATSAPP_FROM is the sandbox number in
+   * `whatsapp:+1...` form; TWILIO_WHATSAPP_TO is the admin's own WhatsApp
+   * number in the same form, after they've joined the sandbox.
+   */
+  TWILIO_WHATSAPP_FROM: z.string().optional().or(z.literal("")),
+  TWILIO_WHATSAPP_TO: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
   /**
