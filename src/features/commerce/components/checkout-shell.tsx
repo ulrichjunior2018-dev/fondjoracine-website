@@ -367,8 +367,97 @@ export function CheckoutShell({
             id="maison-fondjo-checkout"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            {/* Payment methods FIRST in the cream panel — easy to find on mobile */}
+            {/* Identity + delivery FIRST — who, where, how to reach them, before any payment decision */}
             <div>
+              <div className="mb-4">
+                <h2 className="font-serif text-2xl font-light tracking-tight text-[#0B0B0B] sm:text-[1.75rem]">
+                  {copy.paymentDetails}
+                </h2>
+                <p className="mt-2 max-w-prose text-sm leading-6 text-[#0B0B0B]/65">
+                  {copy.deliveryDetailsIntro}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+              <Field
+                className={labelClass}
+                error={form.formState.errors.name?.message}
+                label={orderCopy.fullName}
+                required
+              >
+                <Input autoComplete="name" className={fieldClass} {...form.register("name")} />
+              </Field>
+              <Field
+                className={labelClass}
+                error={form.formState.errors.phone?.message}
+                label={orderCopy.phone}
+                required
+              >
+                <Input
+                  autoComplete="tel"
+                  className={fieldClass}
+                  inputMode="tel"
+                  {...form.register("phone")}
+                />
+              </Field>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+              <Field
+                className={labelClass}
+                error={form.formState.errors.city?.message}
+                label={orderCopy.city}
+                required
+              >
+                <Input
+                  autoComplete="address-level2"
+                  className={fieldClass}
+                  {...form.register("city")}
+                />
+              </Field>
+              <Field
+                className={labelClass}
+                error={form.formState.errors.email?.message}
+                label="Email"
+              >
+                <Input
+                  autoComplete="email"
+                  className={fieldClass}
+                  inputMode="email"
+                  type="email"
+                  {...form.register("email")}
+                />
+              </Field>
+            </div>
+
+            <Field
+              className={labelClass}
+              error={form.formState.errors.delivery_address?.message}
+              label={orderCopy.shortAddress}
+              required
+            >
+              <Textarea
+                autoComplete="street-address"
+                className={cn(areaClass, "min-h-[4.25rem] sm:min-h-[5rem]")}
+                placeholder={orderCopy.addressPlaceholder}
+                {...form.register("delivery_address")}
+              />
+            </Field>
+
+            <Field className={labelClass} label={copy.deliveryNotes}>
+              <Textarea
+                className={cn(areaClass, "min-h-14")}
+                name="delivery_notes"
+                placeholder={copy.deliveryNotesPlaceholder}
+                rows={2}
+              />
+            </Field>
+
+            <input className="hidden" tabIndex={-1} {...form.register("company")} />
+
+            {/* Payment method SECOND — only once the shopper knows we have their order details right */}
+            <div className="border-t border-[#0B0B0B]/10 pt-4">
               <div className="mb-4">
                 <h2 className="font-serif text-2xl font-light tracking-tight text-[#0B0B0B] sm:text-[1.75rem]">
                   {copy.paymentMethodsHeading}
@@ -462,89 +551,6 @@ export function CheckoutShell({
                 </label>
               ) : null}
             </div>
-
-            <div className="border-t border-[#0B0B0B]/10 pt-4">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[#7b622d]">
-                {copy.paymentDetails}
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-              <Field
-                className={labelClass}
-                error={form.formState.errors.name?.message}
-                label={orderCopy.fullName}
-                required
-              >
-                <Input autoComplete="name" className={fieldClass} {...form.register("name")} />
-              </Field>
-              <Field
-                className={labelClass}
-                error={form.formState.errors.phone?.message}
-                label={orderCopy.phone}
-                required
-              >
-                <Input
-                  autoComplete="tel"
-                  className={fieldClass}
-                  inputMode="tel"
-                  {...form.register("phone")}
-                />
-              </Field>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-              <Field
-                className={labelClass}
-                error={form.formState.errors.city?.message}
-                label={orderCopy.city}
-                required
-              >
-                <Input
-                  autoComplete="address-level2"
-                  className={fieldClass}
-                  {...form.register("city")}
-                />
-              </Field>
-              <Field
-                className={labelClass}
-                error={form.formState.errors.email?.message}
-                label="Email"
-              >
-                <Input
-                  autoComplete="email"
-                  className={fieldClass}
-                  inputMode="email"
-                  type="email"
-                  {...form.register("email")}
-                />
-              </Field>
-            </div>
-
-            <Field
-              className={labelClass}
-              error={form.formState.errors.delivery_address?.message}
-              label={orderCopy.shortAddress}
-              required
-            >
-              <Textarea
-                autoComplete="street-address"
-                className={cn(areaClass, "min-h-[4.25rem] sm:min-h-[5rem]")}
-                placeholder={orderCopy.addressPlaceholder}
-                {...form.register("delivery_address")}
-              />
-            </Field>
-
-            <Field className={labelClass} label={copy.deliveryNotes}>
-              <Textarea
-                className={cn(areaClass, "min-h-14")}
-                name="delivery_notes"
-                placeholder={copy.deliveryNotesPlaceholder}
-                rows={2}
-              />
-            </Field>
-
-            <input className="hidden" tabIndex={-1} {...form.register("company")} />
 
             {/* Optional, secondary to the order itself — kept out of the required
                 name/phone/city/email/address flow so it never reads as a login wall. */}
