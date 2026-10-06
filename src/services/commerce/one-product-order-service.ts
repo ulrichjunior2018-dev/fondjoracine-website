@@ -17,7 +17,11 @@ import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
 import { initiatePay } from "@/lib/payments/fapshi-client";
 import { getPaymentProvider } from "@/lib/payments/registry";
-import { assertStripePriceId, getStripeClient } from "@/lib/payments/stripe";
+import {
+  assertStripePriceId,
+  getStripeClient,
+  isElixirSubscriptionConfigured,
+} from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
 import { writeAuditLog } from "@/lib/security/audit-log";
 import { defaultEstimatedDeliveryWindow, getOrderStatusLabel } from "@/lib/order-status/registry";
@@ -193,12 +197,14 @@ async function createStripeCheckoutSession(
   }
 
   const inlinePrice = resolveStripeInlinePrice(content);
-  // STRIPE_HAIR_ELIXIR_PRICE_ID is a fixed Dashboard Price configured for the
-  // 100ml bottle. Only use it for that size — any other size always prices
-  // itself from `inlinePrice` (computed from `content`, which is already
-  // resolved for `input.size`) so a 50ml order can never be charged the
-  // 100ml Dashboard price.
-  const priceId = input.size === "100ml" ? env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim() : undefined;
+  // Each bottle size has its own one-time Dashboard Price — never fall back
+  // across sizes, or a 50ml order could be charged the 100ml rate. If a
+  // size's Price ID isn't set, that size's checkout prices itself from
+  // `inlinePrice` (computed from `content`, already resolved for `input.size`).
+  const priceId =
+    input.size === "50ml"
+      ? env.STRIPE_HAIR_ELIXIR_PRICE_ID_50ML?.trim()
+      : env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim();
   // Each bottle size has its own subscription Price (10% off that size's
   // one-time price) — never fall back across sizes, or a 50ml subscriber
   // would silently be billed the 100ml rate.
@@ -209,7 +215,10 @@ async function createStripeCheckoutSession(
   const isSubscription = input.subscribe === true;
 
   if (priceId) {
-    assertStripePriceId(priceId, "STRIPE_HAIR_ELIXIR_PRICE_ID");
+    assertStripePriceId(
+      priceId,
+      input.size === "50ml" ? "STRIPE_HAIR_ELIXIR_PRICE_ID_50ML" : "STRIPE_HAIR_ELIXIR_PRICE_ID",
+    );
   }
 
   const sharedMetadata = {
@@ -458,10 +467,14 @@ export async function createOneProductOrder(
   }
 
   if (input.subscribe) {
-    if (input.size !== "100ml") {
+    // Each bottle size needs its own recurring Dashboard Price configured —
+    // check per size rather than hard-coding "100ml" so a size gets the
+    // subscribe option the moment its Price is configured (and never offers
+    // it, or silently falls back to another size's rate, before then).
+    if (!isElixirSubscriptionConfigured(input.size)) {
       throw new AppError(
         "BAD_REQUEST",
-        "Subscribe & save is only available on the 100ml size right now.",
+        `Subscribe & save is not available for the ${input.size} size yet.`,
       );
     }
 

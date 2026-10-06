@@ -15,6 +15,8 @@ const envSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional().or(z.literal("")),
   STRIPE_SECRET_KEY: z.string().optional().or(z.literal("")),
   STRIPE_HAIR_ELIXIR_PRICE_ID: z.string().optional().or(z.literal("")),
+  /** One-time Dashboard Price ID for the 50ml bottle. Optional — if unset, 50ml one-time checkout falls back to inline USD pricing (same as 100ml's fallback), just without a Dashboard Price to point to for reporting/receipts. */
+  STRIPE_HAIR_ELIXIR_PRICE_ID_50ML: z.string().optional().or(z.literal("")),
   /** Recurring monthly "subscribe & save" Price ID for the 100ml bottle (mode: "subscription"). Optional — subscribe option is hidden until set. */
   STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID: z.string().optional().or(z.literal("")),
   /** Recurring monthly "subscribe & save" Price ID for the 50ml bottle. Required for 50ml subscriptions — intentionally does NOT fall back to the 100ml price (a 50ml buyer must never be billed the 100ml rate). Subscribe is hidden on the 50ml checkout until this is set. */
