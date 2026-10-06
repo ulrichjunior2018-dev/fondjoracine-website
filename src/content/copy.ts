@@ -224,6 +224,7 @@ const publicFr = {
           heading: "À propos de ces conditions",
           paragraphs: [
             "Ces Conditions régissent votre utilisation de maisonfondjo.com et tout achat effectué auprès de Maison Fondjo. En passant commande, vous acceptez ces Conditions.",
+            "Maison Fondjo est une marque exploitée par Ulrich Enterprise LLC, une entreprise enregistrée aux États-Unis.",
           ],
         },
         {
@@ -555,6 +556,7 @@ const publicEn = {
           heading: "About These Terms",
           paragraphs: [
             "These Terms govern your use of maisonfondjo.com and any purchase made from Maison Fondjo. By placing an order, you agree to these Terms.",
+            "Maison Fondjo is a brand operated by Ulrich Enterprise LLC, a registered U.S. business.",
           ],
         },
         {
@@ -923,7 +925,7 @@ const homeFr = {
     brandBlurb:
       "Soins capillaires botaniques naturels, conçus au Cameroun pour des cheveux d’apparence plus saine.",
     brandLocation: "Buea, Cameroun",
-    brandRights: "Tous droits réservés.",
+    brandRights: "Tous droits réservés. Maison Fondjo est une marque de Ulrich Enterprise LLC.",
     companyTitle: "Entreprise",
     companyLinks: [
       ["À propos", "/histoire"],
@@ -991,7 +993,7 @@ const homeEn = {
     brandBlurb:
       "Natural botanical hair care, crafted in Cameroon to support healthier-looking hair.",
     brandLocation: "Buea, Cameroon",
-    brandRights: "All rights reserved.",
+    brandRights: "All rights reserved. Maison Fondjo is a brand of Ulrich Enterprise LLC.",
     companyTitle: "Company",
     companyLinks: [
       ["About Us", "/histoire"],

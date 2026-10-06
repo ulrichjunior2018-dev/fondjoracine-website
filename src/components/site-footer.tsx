@@ -302,7 +302,7 @@ export function SiteFooter() {
 
         {/* Bottom bar */}
         <div className="mt-10 flex flex-col gap-4 border-t border-[#B8935A]/14 pt-6 text-[0.72rem] text-[#F5EFE3]/48 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Maison Fondjo</p>
+          <p>© {year} Maison Fondjo · Ulrich Enterprise LLC</p>
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <Link className="transition-colors hover:text-[#B8935A]" href="/policies/privacy">
               {copy.privacy}
