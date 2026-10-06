@@ -521,6 +521,33 @@ export function CheckoutShell({
               </Field>
             </div>
 
+            <Field
+              className={labelClass}
+              error={form.formState.errors.delivery_address?.message}
+              label={orderCopy.shortAddress}
+              required
+            >
+              <Textarea
+                autoComplete="street-address"
+                className={cn(areaClass, "min-h-[4.25rem] sm:min-h-[5rem]")}
+                placeholder={orderCopy.addressPlaceholder}
+                {...form.register("delivery_address")}
+              />
+            </Field>
+
+            <Field className={labelClass} label={copy.deliveryNotes}>
+              <Textarea
+                className={cn(areaClass, "min-h-14")}
+                name="delivery_notes"
+                placeholder={copy.deliveryNotesPlaceholder}
+                rows={2}
+              />
+            </Field>
+
+            <input className="hidden" tabIndex={-1} {...form.register("company")} />
+
+            {/* Optional, secondary to the order itself — kept out of the required
+                name/phone/city/email/address flow so it never reads as a login wall. */}
             {!isSignedIn ? (
               <div className="rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
                 <label className="flex cursor-pointer items-start gap-3">
@@ -556,31 +583,6 @@ export function CheckoutShell({
                 ) : null}
               </div>
             ) : null}
-
-            <Field
-              className={labelClass}
-              error={form.formState.errors.delivery_address?.message}
-              label={orderCopy.shortAddress}
-              required
-            >
-              <Textarea
-                autoComplete="street-address"
-                className={cn(areaClass, "min-h-[4.25rem] sm:min-h-[5rem]")}
-                placeholder={orderCopy.addressPlaceholder}
-                {...form.register("delivery_address")}
-              />
-            </Field>
-
-            <Field className={labelClass} label={copy.deliveryNotes}>
-              <Textarea
-                className={cn(areaClass, "min-h-14")}
-                name="delivery_notes"
-                placeholder={copy.deliveryNotesPlaceholder}
-                rows={2}
-              />
-            </Field>
-
-            <input className="hidden" tabIndex={-1} {...form.register("company")} />
 
             <label className="flex items-start gap-2.5 text-xs leading-5 text-[#0B0B0B]/75 sm:text-sm sm:leading-6">
               <input
