@@ -79,6 +79,7 @@ export const en = {
   packingTitle: "Prepared in Buea",
   productEyebrow: "One formula. Nº01.",
   productPrice: "12 500 F",
+  productSpecFour: ["Delivery", "Free, nationwide"],
   productSpecOne: ["Format", "100 ml"],
   productSpecThree: ["Origin", "Buea, Cameroon"],
   productSpecTwo: ["Use", "Scalp, then lengths"],

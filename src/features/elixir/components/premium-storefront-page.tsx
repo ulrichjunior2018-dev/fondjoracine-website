@@ -133,16 +133,19 @@ export function ProductShowcase({ copy }: { copy: Copy }) {
           <MotionDiamond className="mt-7" />
           <p className="mt-6 max-w-xl text-sm leading-8 text-[#F5EFE3]/68">{copy.productText}</p>
           <dl className="mt-9 grid gap-4 border-y border-[#B8935A]/16 py-6 text-sm text-[#F5EFE3]/72">
-            {[copy.productSpecOne, copy.productSpecTwo, copy.productSpecThree].map(
-              ([label, value]) => (
-                <div className="grid grid-cols-[8rem_1fr] gap-4" key={label}>
-                  <dt className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
-                    {label}
-                  </dt>
-                  <dd className="font-mono text-[#F5EFE3]">{value}</dd>
-                </div>
-              ),
-            )}
+            {[
+              copy.productSpecOne,
+              copy.productSpecTwo,
+              copy.productSpecThree,
+              copy.productSpecFour,
+            ].map(([label, value]) => (
+              <div className="grid grid-cols-[8rem_1fr] gap-4" key={label}>
+                <dt className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#B8935A]">
+                  {label}
+                </dt>
+                <dd className="font-mono text-[#F5EFE3]">{value}</dd>
+              </div>
+            ))}
           </dl>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <MotionButtonShell>

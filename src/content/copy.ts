@@ -899,7 +899,8 @@ const homeFr = {
     eyebrow: "Traitement botanique cuir chevelu et cheveux",
     primary: "Commencer mon diagnostic",
     secondary: "Découvrir Sève Racine",
-    story: "Origine camerounaise · Formulation botanique · Livraison nationale",
+    story:
+      "Huile capillaire botanique 100 ml · 12 500 F · Livraison gratuite · WhatsApp / MoMo / Orange Money / Carte",
     subtitle:
       "Un traitement botanique pour le cuir chevelu et les cheveux. Né à Buea, au Cameroun.",
     pending: "Photographie produit réelle en attente",
@@ -967,7 +968,8 @@ const homeEn = {
     eyebrow: "Botanical scalp & hair treatment",
     primary: "Start my diagnostic",
     secondary: "Discover Sève Racine",
-    story: "Cameroonian origin · Botanical formulation · Nationwide delivery",
+    story:
+      "100ml botanical hair oil · 12 500 F · Free delivery · WhatsApp / MoMo / Orange Money / Card",
     subtitle: "A botanical treatment for scalp and hair. Born in Buea, Cameroon.",
     pending: "Real product photography pending",
     titleFirst: "Sève",

@@ -88,6 +88,7 @@ export const fr = {
   packingTitle: "Préparé à Buea",
   productEyebrow: "Une formule. Nº01.",
   productPrice: "12 500 F",
+  productSpecFour: ["Livraison", "Gratuite, partout au Cameroun"],
   productSpecOne: ["Format", "100 ml"],
   productSpecThree: ["Origine", "Buea, Cameroun"],
   productSpecTwo: ["Usage", "Cuir chevelu, puis longueurs"],
