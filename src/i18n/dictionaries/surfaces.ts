@@ -81,11 +81,12 @@ export const surfacesEn = {
     previewNotice:
       "Online payment will open soon. For now, place your order on WhatsApp and our team will guide you.",
     methodNotReady: "This payment option is coming soon. Please pay by card.",
-    subscribeToggleLabel: "Subscribe & save — ships monthly",
-    subscribeToggleHint: "Card billed monthly by Stripe. Manage or cancel anytime from My Account.",
+    subscribeToggleLabel: "Subscribe & save 10% — ships monthly",
+    subscribeToggleHint:
+      "10% off every shipment, billed monthly by Stripe. Manage or cancel anytime from My Account.",
     subscribeSignInRequired: "Sign in to your account to subscribe.",
     subscribeGuestHint:
-      "We'll set up a free account with this order so you can manage or cancel the subscription anytime.",
+      "10% off every shipment. We'll set up a free account with this order so you can manage or cancel anytime.",
     subscribeAccountRequired:
       'Subscriptions need a free account to manage — keep "Create an account" checked, or add a password below.',
     createAccountLabel: "Create an account to track this order",
@@ -567,13 +568,13 @@ export const surfacesFr = {
     previewNotice:
       "Le paiement en ligne ouvrira bientôt. Pour l'instant, commandez sur WhatsApp. Notre équipe vous guide.",
     methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez payer par carte.",
-    subscribeToggleLabel: "Abonnez-vous et économisez — expédié chaque mois",
+    subscribeToggleLabel: "Abonnez-vous et économisez 10 % — expédié chaque mois",
     subscribeGuestHint:
-      "Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler l'abonnement à tout moment.",
+      "10 % de réduction sur chaque envoi. Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler à tout moment.",
     subscribeAccountRequired:
       "Un compte gratuit est nécessaire pour gérer l'abonnement — laissez « Créer un compte » coché, ou ajoutez un mot de passe ci-dessous.",
     subscribeToggleHint:
-      "Carte débitée chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
+      "10 % de réduction sur chaque envoi, facturé chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
     createAccountLabel: "Créer un compte pour suivre cette commande",
     createAccountHint: "Suivez le statut en direct et recommandez plus vite la prochaine fois.",
