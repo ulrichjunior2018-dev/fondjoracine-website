@@ -204,6 +204,15 @@ export function CheckoutShell({
       return;
     }
 
+    // Subscriptions are managed from the account dashboard — a guest who
+    // checks "Subscribe & save" but then unchecks "Create an account"
+    // would otherwise hit a confusing Stripe-side error instead of a
+    // clear, fixable message here.
+    if (values.subscribe && !isSignedIn && !createAccount) {
+      setServerError(copy.subscribeAccountRequired);
+      return;
+    }
+
     if (createAccount && !isSignedIn) {
       if (!values.email) {
         setServerError(copy.createAccountEmailRequired);
@@ -534,10 +543,16 @@ export function CheckoutShell({
                   <input
                     checked={subscribe}
                     className="mt-0.5 size-4 accent-[#B8935A]"
-                    disabled={!isSignedIn}
-                    onChange={(event) =>
-                      form.setValue("subscribe", event.target.checked, { shouldValidate: true })
-                    }
+                    onChange={(event) => {
+                      const nextSubscribe = event.target.checked;
+                      form.setValue("subscribe", nextSubscribe, { shouldValidate: true });
+                      // Subscriptions are managed from the account dashboard, so a guest
+                      // who opts in needs an account too — set that up for them instead
+                      // of silently disabling the toggle (which read as "broken").
+                      if (nextSubscribe && !isSignedIn) {
+                        setCreateAccount(true);
+                      }
+                    }}
                     type="checkbox"
                   />
                   <span>
@@ -545,7 +560,7 @@ export function CheckoutShell({
                       {copy.subscribeToggleLabel}
                     </span>
                     <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
-                      {isSignedIn ? copy.subscribeToggleHint : copy.subscribeSignInRequired}
+                      {isSignedIn ? copy.subscribeToggleHint : copy.subscribeGuestHint}
                     </span>
                   </span>
                 </label>

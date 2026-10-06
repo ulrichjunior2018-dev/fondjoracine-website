@@ -84,6 +84,10 @@ export const surfacesEn = {
     subscribeToggleLabel: "Subscribe & save — ships monthly",
     subscribeToggleHint: "Card billed monthly by Stripe. Manage or cancel anytime from My Account.",
     subscribeSignInRequired: "Sign in to your account to subscribe.",
+    subscribeGuestHint:
+      "We'll set up a free account with this order so you can manage or cancel the subscription anytime.",
+    subscribeAccountRequired:
+      'Subscriptions need a free account to manage — keep "Create an account" checked, or add a password below.',
     createAccountLabel: "Create an account to track this order",
     createAccountHint: "See live status updates and reorder faster next time.",
     passwordLabel: "Password",
@@ -564,6 +568,10 @@ export const surfacesFr = {
       "Le paiement en ligne ouvrira bientôt. Pour l'instant, commandez sur WhatsApp. Notre équipe vous guide.",
     methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez payer par carte.",
     subscribeToggleLabel: "Abonnez-vous et économisez — expédié chaque mois",
+    subscribeGuestHint:
+      "Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler l'abonnement à tout moment.",
+    subscribeAccountRequired:
+      "Un compte gratuit est nécessaire pour gérer l'abonnement — laissez « Créer un compte » coché, ou ajoutez un mot de passe ci-dessous.",
     subscribeToggleHint:
       "Carte débitée chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
