@@ -94,14 +94,23 @@ function getAssetUrl(path: string, baseUrl = getConfiguredSiteUrl()) {
 /**
  * Card checkout currency for Stripe. Storefront displays XAF, but many Stripe
  * accounts reject ad-hoc XAF `price_data`. Prefer a Dashboard Price ID; otherwise
- * settle in EUR using the CFA franc peg (655.957 XAF = 1 EUR).
+ * settle in USD.
+ *
+ * Unlike EUR, the US dollar has no fixed peg to the CFA franc -- XAF_USD_RATE
+ * below is a manually set snapshot (574.71 XAF = 1 USD, as of 6 Oct 2026), not
+ * a live lookup. It WILL drift from the real market rate over time and needs
+ * a human to check and update it periodically (check e.g. https://wise.com/us/currency-converter/xaf-to-usd-rate).
+ * A rate that's drifted too far either overcharges or undercharges every card
+ * order, so don't let this go stale for long.
  */
+const XAF_USD_RATE = 574.71;
+
 function resolveStripeInlinePrice(content: ElixirContent) {
   const storeCurrency = content.currency.toUpperCase();
   if (storeCurrency === "XAF") {
     return {
-      currency: "eur",
-      unit_amount: Math.max(50, Math.round((content.priceCents / 655.957) * 100)),
+      currency: "usd",
+      unit_amount: Math.max(50, Math.round((content.priceCents / XAF_USD_RATE) * 100)),
     };
   }
 
