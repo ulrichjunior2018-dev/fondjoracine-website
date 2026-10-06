@@ -14,7 +14,7 @@ export const fr = {
       "Consultation cheveux",
       "Répondez à quelques questions avant de choisir comment le soin botanique entre dans votre routine.",
     ],
-    ["Livraison", "Livraison partout au Cameroun depuis Buea, à partir de 1 000 FCFA."],
+    ["Livraison", "Livraison gratuite partout au Cameroun depuis Buea."],
     [
       "Assistance directe",
       "Echangez avec l'equipe de Buea pour les delais, tarifs et conseils produit.",
@@ -33,12 +33,12 @@ export const fr = {
   ctaDiscover: "Decouvrir SEVE",
   ctaShipping: "Livraison",
   delivery: {
-    body: "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
+    body: "Nous livrons dans tout le Cameroun, gratuitement, quelle que soit votre distance de Buea.",
     cards: [
       ["Livraison nationale au Cameroun", "Assistance livraison partout au Cameroun."],
       [
         "Frais de livraison",
-        "Les frais commencent à 1 000 FCFA et augmentent selon la distance depuis Buea.",
+        "Gratuite partout au Cameroun — aucun frais, quelle que soit la distance depuis Buea.",
       ],
       ["Assistance WhatsApp", "Aide directe pour delais, tarifs et commandes."],
       ["Futurs revendeurs", "Les points de vente seront annonces avec l'expansion."],

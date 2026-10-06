@@ -15,7 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { fondjoProductPricing } from "@/config/product-pricing";
 import { getDictionary } from "@/i18n/dictionaries";
-import { config, formatXaf } from "@/lib/config";
+import { config } from "@/lib/config";
 import { useI18n } from "@/lib/i18n-context";
 import { resolveShippingZone } from "@/lib/shipping/registry";
 import { cn } from "@/lib/utils/cn";
@@ -38,7 +38,6 @@ const stripePromise =
   stripePublishableKey && walletPaymentsEnabled ? loadStripe(stripePublishableKey) : null;
 
 function getShippingEstimate(countryCode: string | null, locale: "en" | "fr", feesNotice: string) {
-  const deliveryStart = formatXaf(config.delivery.min).replace("F", "FCFA");
   const zone = resolveShippingZone(countryCode);
   const policy = locale === "fr" ? config.delivery.policy.fr : config.delivery.policy.en;
 
@@ -46,8 +45,8 @@ function getShippingEstimate(countryCode: string | null, locale: "en" | "fr", fe
     return {
       estimate:
         locale === "fr"
-          ? `Livraison partout au Cameroun depuis Buea, à partir de ${deliveryStart}.`
-          : `Nationwide delivery across Cameroon from Buea, from ${deliveryStart}.`,
+          ? "Livraison gratuite partout au Cameroun depuis Buea."
+          : "Free nationwide delivery across Cameroon from Buea.",
       isCameroon: true,
       notice: `${policy}. ${feesNotice}`,
     };

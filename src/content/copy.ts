@@ -192,7 +192,7 @@ const publicFr = {
         {
           heading: "Frais de livraison",
           paragraphs: [
-            "Les frais de livraison commencent à 1 000 FCFA et augmentent selon votre distance de Buea. Votre tarif exact sera confirmé par notre équipe lorsque vous passez commande.",
+            "La livraison est gratuite partout au Cameroun, quelle que soit votre distance de Buea.",
           ],
         },
         {
@@ -524,7 +524,7 @@ const publicEn = {
         {
           heading: "Delivery Fees",
           paragraphs: [
-            "Delivery fees start at 1,000 FCFA and increase depending on your distance from Buea. Your exact fee will be confirmed by our team when you place your order.",
+            "Delivery is free anywhere in Cameroon, regardless of your distance from Buea.",
           ],
         },
         {
@@ -799,7 +799,7 @@ const advisorEn = {
     shippingCards: [
       {
         label: "Cameroon delivery",
-        text: "Nationwide delivery from 1,000 FCFA. Payment before delivery.",
+        text: "Free nationwide delivery. Payment before delivery.",
       },
       {
         label: "Refund",

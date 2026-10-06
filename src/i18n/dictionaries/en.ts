@@ -14,7 +14,7 @@ export const en = {
       "Hair consultation",
       "Answer a few questions before choosing how botanical care enters your routine.",
     ],
-    ["Delivery", "Nationwide delivery across Cameroon from Buea, starting at 1,000 FCFA."],
+    ["Delivery", "Free nationwide delivery across Cameroon from Buea."],
     ["Direct assistance", "Speak with the Buea team about timing, fees and product guidance."],
   ],
   closingEyebrow: "Next step",
@@ -30,10 +30,10 @@ export const en = {
   ctaDiscover: "Discover SÈVE",
   ctaShipping: "Delivery",
   delivery: {
-    body: "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
+    body: "We deliver nationwide across Cameroon, free of charge, regardless of distance from Buea.",
     cards: [
       ["National delivery in Cameroon", "Delivery assistance across Cameroon."],
-      ["Delivery fees", "Fees start at 1,000 FCFA and increase with distance from Buea."],
+      ["Delivery fees", "Free nationwide — no charge, any distance from Buea."],
       ["WhatsApp assistance", "Direct help for timelines, fees and orders."],
       ["Future retailers", "Points of sale will be announced as the brand expands."],
     ],

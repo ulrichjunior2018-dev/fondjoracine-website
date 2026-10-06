@@ -5,7 +5,9 @@ export const config = {
   batch: { name: "Lot Fondateur 2026", size: 150 },
   contact_secondary: "",
   delivery: {
-    min: 1_000,
+    /** Delivery is free nationwide — kept at 0 rather than removed so any
+     * call site still computing a shipping line total stays correct. */
+    min: 0,
     policy: {
       en: "Payment before delivery",
       fr: "Paiement avant livraison",
@@ -15,8 +17,8 @@ export const config = {
       fr: "Dommage vérifié à la livraison uniquement",
     },
     text: {
-      en: "We deliver nationwide across Cameroon. Delivery fees start at 1,000 FCFA and increase with distance from Buea.",
-      fr: "Nous livrons dans tout le Cameroun. Frais de livraison à partir de 1 000 FCFA, selon votre distance de Buea.",
+      en: "We deliver nationwide across Cameroon, free of charge, regardless of distance from Buea.",
+      fr: "Nous livrons dans tout le Cameroun, gratuitement, quelle que soit votre distance de Buea.",
     },
   },
   env: process.env.NEXT_PUBLIC_ENV ?? "staging",
