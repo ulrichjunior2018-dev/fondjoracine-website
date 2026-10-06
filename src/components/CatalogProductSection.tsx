@@ -59,6 +59,12 @@ export function CatalogProductSection({ faqItems, product }: CatalogProductSecti
     locale === "fr"
       ? "Livraison nationale au Cameroun · Paiement Mobile Money · Assistance WhatsApp"
       : "Nationwide Cameroon delivery · Mobile Money payment · WhatsApp assistance";
+  // One-line answer to "what is it, how much, how do I buy" for anyone
+  // landing here cold from an ad — shown right under the price, above the fold.
+  const clarityLine =
+    locale === "fr"
+      ? "Livraison gratuite · Diagnostic capillaire gratuit · Commande par WhatsApp, MoMo, Orange Money ou carte"
+      : "Free delivery · Free hair diagnostic · Order by WhatsApp, MoMo, Orange Money or card";
   const priceAmount = Number.parseInt(product.priceXaf.replace(/[^\d]/g, ""), 10);
 
   return (
@@ -125,6 +131,12 @@ export function CatalogProductSection({ faqItems, product }: CatalogProductSecti
                 {home.shop.soon}
               </p>
             )}
+
+            {available ? (
+              <p className="mt-3 max-w-xl text-sm font-medium leading-6 text-[#F5EFE3]/80">
+                {clarityLine}
+              </p>
+            ) : null}
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               {available && product.orderHref ? (
