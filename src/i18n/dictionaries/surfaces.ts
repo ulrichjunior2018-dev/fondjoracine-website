@@ -89,6 +89,7 @@ export const surfacesEn = {
       "10% off every shipment. We'll set up a free account with this order so you can manage or cancel anytime.",
     subscribeAccountRequired:
       'Subscriptions need a free account to manage — keep "Create an account" checked, or add a password below.',
+    subscribeCardOnlyNote: "Subscribe & save is available with Card payment only.",
     createAccountLabel: "Create an account to track this order",
     createAccountHint: "See live status updates and reorder faster next time.",
     passwordLabel: "Password",
@@ -573,6 +574,8 @@ export const surfacesFr = {
       "10 % de réduction sur chaque envoi. Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler à tout moment.",
     subscribeAccountRequired:
       "Un compte gratuit est nécessaire pour gérer l'abonnement — laissez « Créer un compte » coché, ou ajoutez un mot de passe ci-dessous.",
+    subscribeCardOnlyNote:
+      "L'abonnement avec 10 % de réduction est disponible uniquement par carte.",
     subscribeToggleHint:
       "10 % de réduction sur chaque envoi, facturé chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",

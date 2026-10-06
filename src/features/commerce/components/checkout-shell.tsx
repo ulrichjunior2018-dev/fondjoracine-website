@@ -538,6 +538,15 @@ export function CheckoutShell({
                 <p className="mt-2 text-xs leading-5 text-[#0B0B0B]/55">{copy.previewNotice}</p>
               ) : null}
 
+              {/* MTN MoMo / Orange Money can't auto-charge on a schedule, so Subscribe &
+                  save only works with Card. Rather than letting the toggle silently
+                  disappear when a shopper switches tabs, say so explicitly. */}
+              {subscriptionAvailable && paymentMethod !== "stripe" ? (
+                <p className="mt-3 text-xs leading-5 text-[#0B0B0B]/55">
+                  {copy.subscribeCardOnlyNote}
+                </p>
+              ) : null}
+
               {canOfferSubscription ? (
                 <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
                   <input
