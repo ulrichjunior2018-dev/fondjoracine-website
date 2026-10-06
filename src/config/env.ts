@@ -15,8 +15,10 @@ const envSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional().or(z.literal("")),
   STRIPE_SECRET_KEY: z.string().optional().or(z.literal("")),
   STRIPE_HAIR_ELIXIR_PRICE_ID: z.string().optional().or(z.literal("")),
-  /** Recurring monthly "subscribe & save" Price ID (mode: "subscription"). Optional — subscribe option is hidden until set. */
+  /** Recurring monthly "subscribe & save" Price ID for the 100ml bottle (mode: "subscription"). Optional — subscribe option is hidden until set. */
   STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID: z.string().optional().or(z.literal("")),
+  /** Recurring monthly "subscribe & save" Price ID for the 50ml bottle. Required for 50ml subscriptions — intentionally does NOT fall back to the 100ml price (a 50ml buyer must never be billed the 100ml rate). Subscribe is hidden on the 50ml checkout until this is set. */
+  STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID_50ML: z.string().optional().or(z.literal("")),
   STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().or(z.literal("")),
   NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED: z.string().optional().or(z.literal("")),

@@ -29,9 +29,19 @@ export function getStripeClient() {
  * price" error — this fails fast with an actionable message instead, scoped
  * to the checkout call path only (does not block app boot / unrelated routes).
  */
-/** Client-safe flag — never exposes the price ID itself, only whether one is set. */
-export function isElixirSubscriptionConfigured(): boolean {
-  return Boolean(env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID);
+/**
+ * Client-safe flag — never exposes the price ID itself, only whether one is
+ * set for the given bottle size. Each size has its own subscription Price,
+ * so this must be checked per size rather than once globally — otherwise the
+ * "Subscribe & save" toggle could appear on a size with no price configured
+ * for it.
+ */
+export function isElixirSubscriptionConfigured(size: "100ml" | "50ml" = "100ml"): boolean {
+  return Boolean(
+    size === "50ml"
+      ? env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID_50ML
+      : env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID,
+  );
 }
 
 export function assertStripePriceId(value: string, envVarName: string): void {

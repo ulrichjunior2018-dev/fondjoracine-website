@@ -64,8 +64,9 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
 
   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
   const user = await getCurrentUser();
-  // Subscribe & save only exists for the 100ml Stripe Price today.
-  const subscriptionAvailable = isElixirSubscriptionConfigured() && size === "100ml";
+  // Each bottle size has its own subscription Price — only offer the toggle
+  // once that size's Price is actually configured.
+  const subscriptionAvailable = isElixirSubscriptionConfigured(size);
   if (user) {
     try {
       const supabase = await createSupabaseServerClient();

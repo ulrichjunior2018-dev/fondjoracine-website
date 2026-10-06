@@ -199,7 +199,13 @@ async function createStripeCheckoutSession(
   // resolved for `input.size`) so a 50ml order can never be charged the
   // 100ml Dashboard price.
   const priceId = input.size === "100ml" ? env.STRIPE_HAIR_ELIXIR_PRICE_ID?.trim() : undefined;
-  const subscriptionPriceId = env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
+  // Each bottle size has its own subscription Price (10% off that size's
+  // one-time price) — never fall back across sizes, or a 50ml subscriber
+  // would silently be billed the 100ml rate.
+  const subscriptionPriceId =
+    input.size === "50ml"
+      ? env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID_50ML?.trim()
+      : env.STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID?.trim();
   const isSubscription = input.subscribe === true;
 
   if (priceId) {
