@@ -7,7 +7,15 @@
  * change to the order flow.
  */
 
-export type OrderNotificationKind = "placed" | "payment_submitted" | "confirmed" | "status_updated";
+export type OrderNotificationKind =
+  | "placed"
+  | "payment_submitted"
+  | "confirmed"
+  | "status_updated"
+  /** Mobile money "Subscribe & save" renewal reminder — see one-product-order-service.ts. */
+  | "subscription_renewal_due"
+  /** Mobile money subscription paused after a missed renewal grace period. */
+  | "subscription_past_due";
 
 /** Payload for order lifecycle notification events. Framework-free. */
 export type OrderPlacedNotification = {

@@ -15,7 +15,7 @@ import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
 import { logger } from "@/lib/logger/logger";
-import { initiatePay } from "@/lib/payments/fapshi-client";
+import { initiatePay, isFapshiConfigured } from "@/lib/payments/fapshi-client";
 import { getPaymentProvider } from "@/lib/payments/registry";
 import {
   assertStripePriceId,
@@ -23,8 +23,11 @@ import {
   isElixirSubscriptionConfigured,
 } from "@/lib/payments/stripe";
 import type { PaymentProviderDescriptor } from "@/lib/payments/types";
+import { CAMEROON_MOBILE_LOCAL_PATTERN } from "@/lib/phone/cameroon";
 import { writeAuditLog } from "@/lib/security/audit-log";
 import { defaultEstimatedDeliveryWindow, getOrderStatusLabel } from "@/lib/order-status/registry";
+import { logNotificationAttempt } from "@/lib/notifications/log";
+import { isTwilioConfigured, sendSms } from "@/lib/sms/twilio-client";
 import { queueOrderNotifications } from "@/services/commerce/order-notification-service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -52,6 +55,35 @@ function createOrderNumber() {
 
 function normalizePhone(phone: string) {
   return phone.replace(/[^\d+]/g, "");
+}
+
+/**
+ * Same Cameroon-assumption E.164 normalization as
+ * `lib/notifications/channels/customer-sms.ts` (not exported from there —
+ * duplicated here rather than introducing a cross-module dependency for one
+ * five-line helper). Keep both in sync if the assumption ever changes.
+ */
+function toReminderE164(phone: string): string | null {
+  const digits = phone.replace(/[^\d+]/g, "");
+  if (digits.startsWith("+")) return digits;
+  if (digits.startsWith("237")) return `+${digits}`;
+  if (CAMEROON_MOBILE_LOCAL_PATTERN.test(digits)) return `+237${digits}`;
+  return null;
+}
+
+/**
+ * 10% "Subscribe & save" discount for mobile money subscriptions — the same
+ * saving card subscribers get, just computed here instead of read off a
+ * separate Stripe Price (Fapshi has no Price-object concept).
+ */
+function applySubscriberDiscount(amountCents: number): number {
+  return Math.max(0, Math.round(amountCents * 0.9));
+}
+
+function addOneMonth(date: Date): Date {
+  const next = new Date(date);
+  next.setMonth(next.getMonth() + 1);
+  return next;
 }
 
 function parseXafAmount(price: string) {
@@ -354,10 +386,12 @@ async function createMobileMoneyCheckout(
   supabase: SupabaseClient,
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
-  content: ElixirContent,
   returnBaseUrl: string,
 ): Promise<string> {
-  const xafTotal = content.priceCents * input.quantity;
+  // Charge exactly what the order row says (already subscriber-discounted
+  // when input.subscribe is set) — recomputing from content.priceCents here
+  // would silently ignore that discount and overcharge a MoMo/Orange subscriber.
+  const xafTotal = order.total_cents;
 
   const { link, transId } = await initiatePay({
     amount: xafTotal,
@@ -381,7 +415,6 @@ async function createProviderCheckout(
   order: CreatedOrderRow,
   input: CreateOneProductOrderInput,
   provider: PaymentProviderDescriptor,
-  content: ElixirContent,
   returnBaseUrl: string,
 ) {
   if (provider.redirectProcessor === "stripe") {
@@ -394,7 +427,7 @@ async function createProviderCheckout(
   }
 
   if (provider.redirectProcessor === "mobile_money") {
-    return createMobileMoneyCheckout(supabase, order, input, content, returnBaseUrl);
+    return createMobileMoneyCheckout(supabase, order, input, returnBaseUrl);
   }
 
   throw new AppError("INTERNAL", "Payment redirect is not configured for this method.", {
@@ -466,22 +499,24 @@ export async function createOneProductOrder(
     );
   }
 
+  // Subscribe & save has two independent billing paths: Stripe auto-charges
+  // from a recurring Dashboard Price; MTN MoMo / Orange Money have no
+  // stored-card concept, so they're "manual-renewal" — see
+  // activateMobileMoneySubscription() / the cron job in
+  // api/cron/mobile-money-renewals. Each path is gated on its own
+  // configuration rather than hard-coding "card only".
   if (input.subscribe) {
-    // Each bottle size needs its own recurring Dashboard Price configured —
-    // check per size rather than hard-coding "100ml" so a size gets the
-    // subscribe option the moment its Price is configured (and never offers
-    // it, or silently falls back to another size's rate, before then).
-    if (!isElixirSubscriptionConfigured(input.size)) {
-      throw new AppError(
-        "BAD_REQUEST",
-        `Subscribe & save is not available for the ${input.size} size yet.`,
-      );
-    }
+    const subscriptionSupported =
+      provider.redirectProcessor === "stripe"
+        ? isElixirSubscriptionConfigured(input.size)
+        : provider.redirectProcessor === "mobile_money"
+          ? isFapshiConfigured()
+          : false;
 
-    if (provider.redirectProcessor !== "stripe") {
+    if (!subscriptionSupported) {
       throw new AppError(
         "BAD_REQUEST",
-        "Subscriptions are only available with card payment. Choose Card to subscribe.",
+        `Subscribe & save is not available for ${provider.defaultLabel} yet.`,
       );
     }
 
@@ -497,7 +532,16 @@ export async function createOneProductOrder(
     getStripeClient();
   }
 
-  const unitCents = parseXafAmount(content.product.priceXaf);
+  const baseUnitCents = parseXafAmount(content.product.priceXaf);
+  // Stripe's 10% subscriber discount lives in its own recurring Price object
+  // (configured in the Dashboard), so the local order row keeps the catalog
+  // price for card orders. Mobile money has no such object — the discount is
+  // applied here so the order, the Fapshi charge, and the SMS reminder all
+  // agree on one number.
+  const unitCents =
+    input.subscribe && provider.redirectProcessor === "mobile_money"
+      ? applySubscriberDiscount(baseUnitCents)
+      : baseUnitCents;
   const subtotalCents = unitCents * input.quantity;
 
   const { data: order, error } = await supabase
@@ -526,6 +570,7 @@ export async function createOneProductOrder(
         product_id: content.id,
         product_name: t(content.product.name, locale),
         quantity: input.quantity,
+        size: input.size,
         ...(input.subscribe ? { is_subscription: true } : {}),
         ...(customerId ? { linked_customer_id: customerId } : {}),
       },
@@ -619,7 +664,6 @@ export async function createOneProductOrder(
       order,
       input,
       provider,
-      content,
       returnBaseUrl,
     );
 
@@ -1050,14 +1094,19 @@ export async function fulfillMobileMoneyOrder(
 ) {
   const { data: order, error: loadError } = await supabase
     .from("orders")
-    .select("id, order_number, status, customer_id, payment_method")
+    .select(
+      "id, order_number, status, customer_id, payment_method, metadata, currency, total_cents",
+    )
     .eq("mobile_money_reference", args.mobileMoneyReference)
     .maybeSingle<{
+      currency: string;
       customer_id: string | null;
       id: string;
+      metadata: Record<string, unknown> | null;
       order_number: string;
       payment_method: string | null;
       status: string;
+      total_cents: number;
     }>();
 
   if (loadError || !order) {
@@ -1125,6 +1174,123 @@ export async function fulfillMobileMoneyOrder(
   });
 
   await notifyOrderConfirmed(supabase, order.id);
+
+  // First payment of a new mobile-money subscription, or a renewal payment
+  // for an existing one — either way, this is the moment the subscription's
+  // billing clock should (re)start. Never on a plain one-time order.
+  const metadata = order.metadata ?? {};
+  if (metadata.is_subscription === true && order.customer_id) {
+    if (metadata.order_channel === "subscription_renewal" && metadata.subscription_id) {
+      await advanceMobileMoneySubscription(supabase, {
+        orderId: order.id,
+        subscriptionId: String(metadata.subscription_id),
+      });
+    } else if (metadata.order_channel === "one_product_storefront") {
+      await activateMobileMoneySubscription(supabase, {
+        currency: order.currency,
+        customerId: order.customer_id,
+        orderId: order.id,
+        paymentMethod: order.payment_method,
+        quantity: Number(metadata.quantity) || 1,
+        totalCents: order.total_cents,
+      });
+    }
+  }
+}
+
+/**
+ * Creates the local `subscriptions` row the first time a MTN MoMo / Orange
+ * Money subscribe order is actually paid (never at checkout time — a
+ * subscription should never show "active" before money has changed hands).
+ * Mirrors what `syncSubscriptionFromStripe` does for card subscriptions,
+ * minus everything Stripe-specific.
+ */
+async function activateMobileMoneySubscription(
+  supabase: SupabaseClient,
+  args: {
+    currency: string;
+    customerId: string;
+    orderId: string;
+    paymentMethod: string | null;
+    quantity: number;
+    totalCents: number;
+  },
+) {
+  const nextBillingAt = addOneMonth(new Date());
+
+  const { error } = await supabase.from("subscriptions").insert({
+    amount_cents: args.totalCents,
+    billing_interval: "month",
+    billing_provider: "mobile_money",
+    currency: args.currency,
+    customer_id: args.customerId,
+    next_billing_at: nextBillingAt.toISOString(),
+    order_id: args.orderId,
+    payment_method: args.paymentMethod === "orange_money" ? "orange_money" : "mtn_momo",
+    quantity: args.quantity,
+    status: "active",
+  });
+
+  if (error) {
+    throw new AppError("BAD_REQUEST", error.message);
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.mobile_money.activated",
+    afterData: { next_billing_at: nextBillingAt.toISOString(), order_id: args.orderId },
+    entityId: args.orderId,
+    entityTable: "subscriptions",
+  });
+}
+
+/**
+ * Confirms a renewal payment: pushes `next_billing_at` another month out
+ * from its previous value (keeping the original anchor date stable cycle
+ * over cycle, rather than drifting off of "whenever they happened to pay"),
+ * clears the pending-renewal bookkeeping so the cron job will consider this
+ * subscription again next cycle, and reactivates it if a missed payment had
+ * previously pushed it to `past_due`.
+ */
+async function advanceMobileMoneySubscription(
+  supabase: SupabaseClient,
+  args: { orderId: string; subscriptionId: string },
+) {
+  const { data: subscription, error: lookupError } = await supabase
+    .from("subscriptions")
+    .select("next_billing_at")
+    .eq("id", args.subscriptionId)
+    .maybeSingle<{ next_billing_at: string | null }>();
+
+  if (lookupError) {
+    throw new AppError("BAD_REQUEST", lookupError.message);
+  }
+
+  const anchor = subscription?.next_billing_at
+    ? new Date(subscription.next_billing_at)
+    : new Date();
+  const nextBillingAt = addOneMonth(anchor);
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({
+      last_reminder_sent_at: null,
+      next_billing_at: nextBillingAt.toISOString(),
+      order_id: args.orderId,
+      pending_renewal_order_id: null,
+      status: "active",
+    })
+    .eq("id", args.subscriptionId);
+
+  if (error) {
+    throw new AppError("BAD_REQUEST", error.message);
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.mobile_money.renewed",
+    afterData: { next_billing_at: nextBillingAt.toISOString(), order_id: args.orderId },
+    entityId: args.subscriptionId,
+    entityTable: "subscriptions",
+  });
 }
 
 /**
@@ -1456,4 +1622,291 @@ export async function createSubscriptionRenewalOrder(
   });
 
   await notifyOrderConfirmed(supabase, newOrder.id);
+}
+
+type MobileMoneyRenewalResult = {
+  locale: Locale;
+  order: CreatedOrderRow;
+  payLink: string;
+  phone: string;
+};
+
+/**
+ * Mobile money's analog to `createSubscriptionRenewalOrder` above — same
+ * shape (clone the originating order's shipping/billing/metadata into a
+ * fresh order), but driven by the daily cron job instead of a Stripe
+ * `invoice.paid` webhook, and the order starts `pending_payment` (not
+ * `confirmed`) since nobody has paid yet — that only happens once the
+ * customer approves the Fapshi link this returns, via the normal
+ * `fulfillMobileMoneyOrder` webhook path. Returns `null` if the subscription
+ * or its source order has gone missing (logged, never thrown — one bad
+ * subscription shouldn't crash the whole cron run).
+ */
+export async function createMobileMoneyRenewalOrder(
+  supabase: SupabaseClient,
+  subscriptionId: string,
+  returnBaseUrl = getConfiguredSiteUrl(),
+): Promise<MobileMoneyRenewalResult | null> {
+  const { data: subscription, error: subError } = await supabase
+    .from("subscriptions")
+    .select("id, order_id, payment_method")
+    .eq("id", subscriptionId)
+    .maybeSingle<{ id: string; order_id: string | null; payment_method: string | null }>();
+
+  if (subError) {
+    throw new AppError("BAD_REQUEST", subError.message);
+  }
+
+  if (!subscription?.order_id) {
+    logger.error("Mobile money renewal: subscription has no source order.", { subscriptionId });
+    return null;
+  }
+
+  const { data: sourceOrder, error: orderError } = await supabase
+    .from("orders")
+    .select(
+      "billing_address, currency, customer_id, customer_name, customer_phone, delivery_address, delivery_city, email, metadata, shipping_address",
+    )
+    .eq("id", subscription.order_id)
+    .maybeSingle();
+
+  if (orderError) {
+    throw new AppError("BAD_REQUEST", orderError.message);
+  }
+
+  if (!sourceOrder) {
+    logger.error("Mobile money renewal: source order no longer exists.", {
+      orderId: subscription.order_id,
+      subscriptionId,
+    });
+    return null;
+  }
+
+  const sourceMetadata: Record<string, unknown> =
+    sourceOrder.metadata && typeof sourceOrder.metadata === "object"
+      ? (sourceOrder.metadata as Record<string, unknown>)
+      : {};
+  const size: "100ml" | "50ml" = sourceMetadata.size === "50ml" ? "50ml" : "100ml";
+  const quantity = Number(sourceMetadata.quantity) || 1;
+  const locale: Locale = sourceMetadata.locale === "fr" ? "fr" : "en";
+  const paymentMethod: OneProductPaymentMethod =
+    subscription.payment_method === "orange_money" ? "orange_money" : "mtn_momo";
+  const provider = getPaymentProvider(paymentMethod);
+
+  const content = await getElixirContent(size);
+  const unitCents = applySubscriberDiscount(parseXafAmount(content.product.priceXaf));
+  const totalCents = unitCents * quantity;
+
+  const { data: newOrder, error: insertError } = await supabase
+    .from("orders")
+    .insert({
+      billing_address: sourceOrder.billing_address,
+      currency: sourceOrder.currency,
+      customer_id: sourceOrder.customer_id,
+      customer_name: sourceOrder.customer_name,
+      customer_phone: sourceOrder.customer_phone,
+      delivery_address: sourceOrder.delivery_address,
+      delivery_city: sourceOrder.delivery_city,
+      email: sourceOrder.email,
+      metadata: {
+        ...sourceMetadata,
+        order_channel: "subscription_renewal",
+        subscription_id: subscription.id,
+      },
+      order_number: createOrderNumber(),
+      payment_method: paymentMethod,
+      placed_at: new Date().toISOString(),
+      shipping_address: sourceOrder.shipping_address,
+      status: "pending_payment",
+      subtotal_cents: totalCents,
+      total_cents: totalCents,
+    })
+    .select("id, order_number, status, total_cents, confirmation_token")
+    .single<CreatedOrderRow>();
+
+  if (insertError || !newOrder) {
+    throw new AppError(
+      "BAD_REQUEST",
+      insertError?.message ?? "Failed to create mobile money renewal order.",
+    );
+  }
+
+  const { error: itemError } = await supabase.from("order_items").insert({
+    metadata: { source: "subscription_renewal" },
+    order_id: newOrder.id,
+    quantity,
+    title: t(content.product.name, locale),
+    total_cents: totalCents,
+    unit_price_cents: unitCents,
+    variant_title: t(content.product.size, locale),
+  });
+
+  if (itemError) {
+    throw new AppError("BAD_REQUEST", itemError.message);
+  }
+
+  const { link, transId } = await initiatePay({
+    amount: totalCents,
+    externalId: newOrder.order_number,
+    message: `Maison Fondjo subscription renewal ${newOrder.order_number}`,
+    redirectUrl: getConfirmationUrl(newOrder.confirmation_token, returnBaseUrl),
+    ...(sourceOrder.email ? { email: sourceOrder.email } : {}),
+  });
+
+  const { error: refError } = await supabase
+    .from("orders")
+    .update({ mobile_money_reference: transId })
+    .eq("id", newOrder.id);
+
+  if (refError) {
+    throw new AppError("BAD_REQUEST", refError.message);
+  }
+
+  const { error: paymentError } = await supabase.from("payments").insert({
+    amount_cents: totalCents,
+    currency: provider.resolveSettlementCurrency(content.currency),
+    metadata: {
+      customer_phone: sourceOrder.customer_phone,
+      payment_method: paymentMethod,
+      source: "subscription_renewal",
+    },
+    order_id: newOrder.id,
+    provider: paymentMethod,
+    provider_payment_id: provider.buildProviderPaymentId({ orderId: newOrder.id }),
+    status: provider.initialPaymentStatus,
+  });
+
+  if (paymentError) {
+    throw new AppError("BAD_REQUEST", paymentError.message);
+  }
+
+  const { error: markReminderError } = await supabase
+    .from("subscriptions")
+    .update({
+      last_reminder_sent_at: new Date().toISOString(),
+      pending_renewal_order_id: newOrder.id,
+    })
+    .eq("id", subscription.id);
+
+  if (markReminderError) {
+    throw new AppError("BAD_REQUEST", markReminderError.message);
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.mobile_money.renewal_reminder_sent",
+    afterData: { amount_cents: totalCents, order_number: newOrder.order_number },
+    entityId: newOrder.id,
+    entityTable: "orders",
+  });
+
+  return { locale, order: newOrder, payLink: link, phone: sourceOrder.customer_phone };
+}
+
+/**
+ * Texts the renewal payment link from `createMobileMoneyRenewalOrder` to the
+ * customer. Best-effort like every other notification channel in this
+ * codebase — a failed text never fails the cron run; the subscription just
+ * gets picked up again (or eventually marked `past_due`) next time.
+ */
+export async function sendMobileMoneyRenewalReminder(result: MobileMoneyRenewalResult) {
+  if (!isTwilioConfigured()) {
+    logger.warn("Mobile money renewal reminder skipped. Twilio not configured.", {
+      orderNumber: result.order.order_number,
+    });
+    return;
+  }
+
+  const to = toReminderE164(result.phone);
+  if (!to) {
+    logger.warn("Mobile money renewal reminder skipped. phone could not be resolved to E.164.", {
+      orderNumber: result.order.order_number,
+    });
+    return;
+  }
+
+  const fr = result.locale === "fr";
+  const amountLabel = `${result.order.total_cents} XAF`;
+  const body = fr
+    ? `Maison Fondjo: votre abonnement Sève Racine (${amountLabel}) est a renouveler. Payez ici pour continuer votre livraison: ${result.payLink}`
+    : `Maison Fondjo: your Seve Racine subscription (${amountLabel}) is due for renewal. Pay here to continue your delivery: ${result.payLink}`;
+
+  try {
+    const sendResult = await sendSms({ body, to });
+    logger.info("Mobile money renewal reminder sent.", {
+      orderNumber: result.order.order_number,
+      sid: sendResult.sid,
+    });
+    await logNotificationAttempt({
+      channel: "customer_sms",
+      kind: "subscription_renewal_due",
+      orderId: result.order.id,
+      providerId: sendResult.sid,
+      recipient: to,
+      status: "sent",
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    logger.error("Failed to send mobile money renewal reminder.", {
+      error: message,
+      orderNumber: result.order.order_number,
+    });
+    await logNotificationAttempt({
+      channel: "customer_sms",
+      error: message,
+      kind: "subscription_renewal_due",
+      orderId: result.order.id,
+      status: "failed",
+    });
+  }
+}
+
+/**
+ * Daily grace-period sweep: a mobile-money subscription that's had an unpaid
+ * renewal reminder outstanding for more than 7 days gets paused
+ * (`status: "past_due"`) rather than reminded indefinitely. Nothing was ever
+ * auto-charged, so this is purely "stop texting them" — the customer can
+ * start a fresh subscription anytime from checkout. Returns the count paused,
+ * for the cron route's response/logging.
+ */
+export async function markOverdueMobileMoneySubscriptions(
+  supabase: SupabaseClient,
+): Promise<number> {
+  const graceCutoff = new Date();
+  graceCutoff.setDate(graceCutoff.getDate() - 7);
+
+  const { data: overdue, error } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("billing_provider", "mobile_money")
+    .eq("status", "active")
+    .not("pending_renewal_order_id", "is", null)
+    .lte("last_reminder_sent_at", graceCutoff.toISOString());
+
+  if (error) {
+    throw new AppError("BAD_REQUEST", error.message);
+  }
+
+  for (const row of overdue ?? []) {
+    const { error: updateError } = await supabase
+      .from("subscriptions")
+      .update({ pending_renewal_order_id: null, status: "past_due" })
+      .eq("id", row.id);
+
+    if (updateError) {
+      logger.error("Failed to mark overdue mobile money subscription past_due.", {
+        message: updateError.message,
+        subscriptionId: row.id,
+      });
+      continue;
+    }
+
+    await writeAuditLog(supabase, {
+      action: "subscription.mobile_money.past_due",
+      afterData: { subscription_id: row.id },
+      entityId: row.id,
+      entityTable: "subscriptions",
+    });
+  }
+
+  return overdue?.length ?? 0;
 }

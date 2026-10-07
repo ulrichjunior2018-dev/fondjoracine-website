@@ -63,6 +63,14 @@ const envSchema = z.object({
    */
   TWILIO_WHATSAPP_FROM: z.string().optional().or(z.literal("")),
   TWILIO_WHATSAPP_TO: z.string().optional().or(z.literal("")),
+  /**
+   * Shared secret for Vercel Cron → `/api/cron/mobile-money-renewals`.
+   * Vercel sends it as `Authorization: Bearer <value>` (configure under
+   * Project Settings → Environment Variables, then reference it from
+   * `vercel.json`'s `crons` entry). Without it set, the route always
+   * rejects requests — the job simply stays dormant until set.
+   */
+  CRON_SECRET: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_KEY: z.string().optional().or(z.literal("")),
   CLOUDINARY_API_SECRET: z.string().optional().or(z.literal("")),
   /**

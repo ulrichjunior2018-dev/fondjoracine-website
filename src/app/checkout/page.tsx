@@ -9,6 +9,7 @@ import { getElixirContent } from "@/features/elixir/lib/cms";
 import { getCurrentUser } from "@/lib/auth/session";
 import { config, SEVE_RACINE_SIZES, type SeveRacineSize } from "@/lib/config";
 import { getServerLocale } from "@/lib/locale-server";
+import { isFapshiConfigured } from "@/lib/payments/fapshi-client";
 import { listCheckoutPaymentMethods } from "@/lib/payments/registry";
 import { isElixirSubscriptionConfigured } from "@/lib/payments/stripe";
 import { buildShareMetadata } from "@/lib/seo/share-metadata";
@@ -64,9 +65,14 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
 
   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
   const user = await getCurrentUser();
-  // Each bottle size has its own subscription Price — only offer the toggle
-  // once that size's Price is actually configured.
-  const subscriptionAvailable = isElixirSubscriptionConfigured(size);
+  // Card and mobile money gate the subscribe toggle on different things:
+  // card needs that size's recurring Stripe Price configured, mobile money
+  // (manual-renewal — see one-product-order-service.ts) just needs Fapshi
+  // configured at all, since there's no per-size Price object to check.
+  const subscriptionAvailable = {
+    card: isElixirSubscriptionConfigured(size),
+    mobileMoney: isFapshiConfigured(),
+  };
   if (user) {
     try {
       const supabase = await createSupabaseServerClient();

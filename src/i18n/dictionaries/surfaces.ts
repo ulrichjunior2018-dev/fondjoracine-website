@@ -84,12 +84,14 @@ export const surfacesEn = {
     subscribeToggleLabel: "Subscribe & save 10% — ships monthly",
     subscribeToggleHint:
       "10% off every shipment, billed monthly by Stripe. Manage or cancel anytime from My Account.",
+    subscribeToggleHintMobileMoney:
+      "10% off every shipment. We'll text you a payment link once a month — approve it in your MTN/Orange app to keep your subscription going.",
     subscribeSignInRequired: "Sign in to your account to subscribe.",
     subscribeGuestHint:
       "10% off every shipment. We'll set up a free account with this order so you can manage or cancel anytime.",
     subscribeAccountRequired:
       'Subscriptions need a free account to manage — keep "Create an account" checked, or add a password below.',
-    subscribeCardOnlyNote: "Subscribe & save is available with Card payment only.",
+    subscribeNotAvailableNote: "Subscribe & save isn't available for this payment method yet.",
     createAccountLabel: "Create an account to track this order",
     createAccountHint: "See live status updates and reorder faster next time.",
     passwordLabel: "Password",
@@ -574,10 +576,12 @@ export const surfacesFr = {
       "10 % de réduction sur chaque envoi. Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler à tout moment.",
     subscribeAccountRequired:
       "Un compte gratuit est nécessaire pour gérer l'abonnement — laissez « Créer un compte » coché, ou ajoutez un mot de passe ci-dessous.",
-    subscribeCardOnlyNote:
-      "L'abonnement avec 10 % de réduction est disponible uniquement par carte.",
+    subscribeNotAvailableNote:
+      "L'abonnement avec 10 % de réduction n'est pas encore disponible pour ce moyen de paiement.",
     subscribeToggleHint:
       "10 % de réduction sur chaque envoi, facturé chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
+    subscribeToggleHintMobileMoney:
+      "10 % de réduction sur chaque envoi. Nous vous enverrons un lien de paiement par SMS chaque mois — approuvez-le dans votre application MTN/Orange pour continuer votre abonnement.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
     createAccountLabel: "Créer un compte pour suivre cette commande",
     createAccountHint: "Suivez le statut en direct et recommandez plus vite la prochaine fois.",

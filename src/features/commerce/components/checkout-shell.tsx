@@ -43,8 +43,15 @@ type CheckoutShellProps = {
   } | null;
   /** Subscriptions require an account so they can be managed/cancelled later. */
   isSignedIn: boolean;
-  /** True once STRIPE_HAIR_ELIXIR_SUBSCRIPTION_PRICE_ID is set — hides the toggle otherwise. */
-  subscriptionAvailable: boolean;
+  /**
+   * Per-method subscribe availability. `card` needs that size's recurring
+   * Stripe Price configured; `mobileMoney` (manual-renewal — a monthly
+   * payment-link reminder, not an auto-charge) just needs Fapshi configured.
+   */
+  subscriptionAvailable: {
+    card: boolean;
+    mobileMoney: boolean;
+  };
 };
 
 type OrderFormValues = z.input<typeof createOneProductOrderSchema>;
@@ -175,7 +182,14 @@ export function CheckoutShell({
   const quantity = useWatch({ control: form.control, name: "quantity" }) || 1;
   const paymentMethod = useWatch({ control: form.control, name: "payment_method" });
   const subscribe = useWatch({ control: form.control, name: "subscribe" });
-  const canOfferSubscription = subscriptionAvailable && paymentMethod === "stripe";
+  const canOfferSubscription =
+    paymentMethod === "stripe"
+      ? subscriptionAvailable.card
+      : paymentMethod === "mtn_momo" || paymentMethod === "orange_money"
+        ? subscriptionAvailable.mobileMoney
+        : false;
+  const subscriptionOfferedAnywhere =
+    subscriptionAvailable.card || subscriptionAvailable.mobileMoney;
   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
   const subtotal = productPriceXaf * quantity;
   const whatsappUrl = buildWaLink("order", formatXaf(productPriceXaf), locale);
@@ -500,7 +514,13 @@ export function CheckoutShell({
                           shouldDirty: true,
                           shouldValidate: true,
                         });
-                        if (method.method !== "stripe") {
+                        const stillOffered =
+                          method.method === "stripe"
+                            ? subscriptionAvailable.card
+                            : method.method === "mtn_momo" || method.method === "orange_money"
+                              ? subscriptionAvailable.mobileMoney
+                              : false;
+                        if (!stillOffered) {
                           form.setValue("subscribe", false, { shouldValidate: true });
                         }
                       }}
@@ -538,12 +558,14 @@ export function CheckoutShell({
                 <p className="mt-2 text-xs leading-5 text-[#0B0B0B]/55">{copy.previewNotice}</p>
               ) : null}
 
-              {/* MTN MoMo / Orange Money can't auto-charge on a schedule, so Subscribe &
-                  save only works with Card. Rather than letting the toggle silently
-                  disappear when a shopper switches tabs, say so explicitly. */}
-              {subscriptionAvailable && paymentMethod !== "stripe" ? (
+              {/* Subscribe & save is offered on every method today, but stays
+                  conditional per-method (card needs a Stripe Price configured,
+                  mobile money needs Fapshi configured) — if it's on for one method
+                  but not the currently selected one, say so explicitly rather than
+                  letting the toggle silently disappear when a shopper switches tabs. */}
+              {subscriptionOfferedAnywhere && !canOfferSubscription ? (
                 <p className="mt-3 text-xs leading-5 text-[#0B0B0B]/55">
-                  {copy.subscribeCardOnlyNote}
+                  {copy.subscribeNotAvailableNote}
                 </p>
               ) : null}
 
@@ -569,7 +591,11 @@ export function CheckoutShell({
                       {copy.subscribeToggleLabel}
                     </span>
                     <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
-                      {isSignedIn ? copy.subscribeToggleHint : copy.subscribeGuestHint}
+                      {!isSignedIn
+                        ? copy.subscribeGuestHint
+                        : paymentMethod === "stripe"
+                          ? copy.subscribeToggleHint
+                          : copy.subscribeToggleHintMobileMoney}
                     </span>
                   </span>
                 </label>
