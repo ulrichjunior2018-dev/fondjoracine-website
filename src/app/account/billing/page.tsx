@@ -7,11 +7,13 @@ import { Heading, Text } from "@/components/ui/typography";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getServerLocale } from "@/lib/locale-server";
+import { SubscriptionCard } from "@/features/account/components/subscription-card";
 import { canDownloadAccountReceipt } from "@/lib/order-status/account-facets";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/utils/currency";
 import {
   getOrCreateCustomerAccount,
+  getSubscriptionForCustomer,
   listOrdersForCustomer,
 } from "@/services/customer/customer-service";
 
@@ -28,6 +30,7 @@ export default async function AccountBillingPage() {
   const account = await getOrCreateCustomerAccount(supabase, user!.id);
   const orders = await listOrdersForCustomer(supabase, account.id, locale);
   const paidOrders = orders.filter((order) => canDownloadAccountReceipt(order.status));
+  const subscription = await getSubscriptionForCustomer(supabase, account.id);
 
   return (
     <div className="grid gap-6">
@@ -39,6 +42,8 @@ export default async function AccountBillingPage() {
           {b.subtitle}
         </Text>
       </div>
+
+      <SubscriptionCard initialSubscription={subscription} />
 
       {paidOrders.length === 0 ? (
         <Card>

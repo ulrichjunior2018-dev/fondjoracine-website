@@ -11,6 +11,7 @@ import type {
   Address,
   CustomerAccount,
   NotificationPreferences,
+  SubscriptionSummary,
 } from "@/domain/customer/types";
 
 import type { ApiClient } from "../client";
@@ -22,6 +23,7 @@ export type {
   Address,
   CustomerAccount,
   NotificationPreferences,
+  SubscriptionSummary,
 } from "@/domain/customer/types";
 
 /** Dashboard "Home" summary for the signed-in customer. */
@@ -90,4 +92,22 @@ export function updateAccountNotificationPreferences(
   input: NotificationPreferencesInput,
 ): Promise<NotificationPreferences> {
   return client.patch<NotificationPreferences>("/account/notifications", input);
+}
+
+/** The signed-in customer's current subscription, or `null` if they've never subscribed. */
+export function getAccountSubscription(client: ApiClient): Promise<SubscriptionSummary | null> {
+  return client
+    .get<{ subscription: SubscriptionSummary | null }>("/account/subscription")
+    .then((payload) => payload.subscription);
+}
+
+export function cancelAccountSubscription(
+  client: ApiClient,
+  subscriptionId: string,
+): Promise<SubscriptionSummary> {
+  return client
+    .delete<{ subscription: SubscriptionSummary }>(
+      `/account/subscription/${encodeURIComponent(subscriptionId)}`,
+    )
+    .then((payload) => payload.subscription);
 }

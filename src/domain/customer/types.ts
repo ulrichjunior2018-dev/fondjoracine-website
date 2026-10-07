@@ -109,6 +109,29 @@ export type AccountOverview = {
   recentNotifications: AccountInboxNotification[];
 };
 
+/**
+ * Customer-facing view of a `subscriptions` row (see supabase/migrations/
+ * 000002 + 000017). Covers both billing providers — Stripe (card, auto-charge)
+ * and mobile money (manual-renewal via payment-link reminders) — behind one
+ * shape so the account UI doesn't need to branch on provider except for the
+ * cancel button's label/confirmation copy.
+ */
+export type SubscriptionSummary = {
+  id: string;
+  status: "active" | "paused" | "past_due" | "cancelled";
+  billingProvider: "stripe" | "mobile_money";
+  paymentMethod: "card" | "mtn_momo" | "orange_money" | null;
+  quantity: number;
+  amountCents: number | null;
+  currency: string | null;
+  /** Card subscriptions only — Stripe's own billing-cycle end. */
+  currentPeriodEnd: string | null;
+  /** Mobile money subscriptions only — when the next renewal reminder is due. */
+  nextBillingAt: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
+};
+
 // Reserved for future account sections (see supabase/migrations/000010 for the
 // matching DB rationale) — intentionally not modeled yet:
 //   HairProfile, ConsultationHistoryEntry, LoyaltyAccount, ReferralSummary,

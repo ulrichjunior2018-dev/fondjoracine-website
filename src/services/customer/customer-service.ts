@@ -14,6 +14,7 @@ import type {
   Address,
   CustomerAccount,
   NotificationPreferences,
+  SubscriptionSummary,
 } from "@/domain/customer/types";
 import { AppError } from "@/lib/errors/app-error";
 import type { Tables } from "@/lib/database/schema";
@@ -23,6 +24,8 @@ import {
   isActiveAccountOrder,
 } from "@/lib/order-status/account-facets";
 import { buildOrderTimeline, getOrderStatusLabel } from "@/lib/order-status/registry";
+import { getStripeClient } from "@/lib/payments/stripe";
+import { writeAuditLog } from "@/lib/security/audit-log";
 
 /**
  * Business logic for the customer account surface (signed-in "My Account").
@@ -39,6 +42,44 @@ type NotificationPreferencesRow = Pick<
   Tables<"customer_notification_preferences">,
   "order_updates" | "sms_updates" | "promotions" | "product_launches" | "hair_care_tips"
 >;
+
+/**
+ * `subscriptions` has no generated `Tables<...>` entry (the schema.ts
+ * codegen hasn't been run since migrations 000002/000017 added/extended this
+ * table) — inline-typed here, matching the pattern already used throughout
+ * `one-product-order-service.ts` for the same table.
+ */
+type SubscriptionRow = {
+  id: string;
+  customer_id: string;
+  status: "active" | "paused" | "cancelled" | "past_due";
+  billing_provider: "stripe" | "mobile_money";
+  payment_method: "mtn_momo" | "orange_money" | null;
+  stripe_subscription_id: string | null;
+  quantity: number;
+  amount_cents: number | null;
+  currency: string | null;
+  current_period_end: string | null;
+  next_billing_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+};
+
+function toSubscriptionSummary(row: SubscriptionRow): SubscriptionSummary {
+  return {
+    id: row.id,
+    status: row.status,
+    billingProvider: row.billing_provider,
+    paymentMethod: row.billing_provider === "stripe" ? "card" : row.payment_method,
+    quantity: row.quantity,
+    amountCents: row.amount_cents,
+    currency: row.currency,
+    currentPeriodEnd: row.current_period_end,
+    nextBillingAt: row.next_billing_at,
+    cancelledAt: row.cancelled_at,
+    createdAt: row.created_at,
+  };
+}
 
 function generateReferralCode() {
   return Math.random().toString(36).slice(2, 10).toUpperCase();
@@ -496,6 +537,133 @@ export async function updateNotificationPreferences(
     productLaunches: data.product_launches,
     hairCareTips: data.hair_care_tips,
   };
+}
+
+/**
+ * Returns the customer's most recent subscription (there is at most one
+ * active one in practice, since checkout only lets you start a new
+ * subscription when you don't already have one) regardless of billing
+ * provider. `null` when they've never subscribed.
+ */
+export async function getSubscriptionForCustomer(
+  supabase: SupabaseClient,
+  customerId: string,
+): Promise<SubscriptionSummary | null> {
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select(
+      "id, customer_id, status, billing_provider, payment_method, stripe_subscription_id, quantity, amount_cents, currency, current_period_end, next_billing_at, cancelled_at, created_at",
+    )
+    .eq("customer_id", customerId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle<SubscriptionRow>();
+
+  if (error) {
+    throw new AppError("INTERNAL", "Unable to load subscription.", { expose: false });
+  }
+
+  return data ? toSubscriptionSummary(data) : null;
+}
+
+/**
+ * Cancels the customer's subscription. Branches by `billing_provider`:
+ * - `stripe`: cancels at Stripe (source of truth) — the `subscriptions` row
+ *   itself is updated by the `customer.subscription.deleted` webhook
+ *   (`syncSubscriptionStatus`), not here, so this stays correct even if the
+ *   webhook is delayed or this call is retried.
+ * - `mobile_money`: nothing external is charging the customer in the first
+ *   place (manual-renewal via payment-link reminders), so cancelling is just
+ *   a local status update and clearing any pending renewal order so the cron
+ *   job stops sending reminders.
+ */
+export async function cancelSubscriptionForCustomer(
+  supabase: SupabaseClient,
+  customerId: string,
+  subscriptionId: string,
+): Promise<SubscriptionSummary> {
+  const { data: subscription, error: lookupError } = await supabase
+    .from("subscriptions")
+    .select(
+      "id, customer_id, status, billing_provider, payment_method, stripe_subscription_id, quantity, amount_cents, currency, current_period_end, next_billing_at, cancelled_at, created_at",
+    )
+    .eq("id", subscriptionId)
+    .eq("customer_id", customerId)
+    .maybeSingle<SubscriptionRow>();
+
+  if (lookupError) {
+    throw new AppError("INTERNAL", "Unable to load subscription.", { expose: false });
+  }
+
+  if (!subscription) {
+    throw new AppError("NOT_FOUND", "Subscription not found.");
+  }
+
+  if (subscription.status === "cancelled") {
+    return toSubscriptionSummary(subscription);
+  }
+
+  if (subscription.billing_provider === "stripe") {
+    if (!subscription.stripe_subscription_id) {
+      throw new AppError("INTERNAL", "Subscription is missing its Stripe reference.", {
+        expose: false,
+      });
+    }
+
+    const stripe = getStripeClient();
+    await stripe.subscriptions.cancel(subscription.stripe_subscription_id);
+
+    // Reflect immediately rather than waiting for the webhook round-trip, so
+    // the account UI updates right away; the webhook will arrive shortly
+    // after and upsert the same (idempotent) end state.
+    const { data: updated, error: updateError } = await supabase
+      .from("subscriptions")
+      .update({ cancelled_at: new Date().toISOString(), status: "cancelled" })
+      .eq("id", subscriptionId)
+      .select(
+        "id, customer_id, status, billing_provider, payment_method, stripe_subscription_id, quantity, amount_cents, currency, current_period_end, next_billing_at, cancelled_at, created_at",
+      )
+      .single<SubscriptionRow>();
+
+    if (updateError || !updated) {
+      throw new AppError("BAD_REQUEST", updateError?.message ?? "Unable to cancel subscription.");
+    }
+
+    await writeAuditLog(supabase, {
+      action: "subscription.cancelled",
+      afterData: { billing_provider: "stripe" },
+      entityId: subscriptionId,
+      entityTable: "subscriptions",
+    });
+
+    return toSubscriptionSummary(updated);
+  }
+
+  const { data: updated, error: updateError } = await supabase
+    .from("subscriptions")
+    .update({
+      cancelled_at: new Date().toISOString(),
+      pending_renewal_order_id: null,
+      status: "cancelled",
+    })
+    .eq("id", subscriptionId)
+    .select(
+      "id, customer_id, status, billing_provider, payment_method, stripe_subscription_id, quantity, amount_cents, currency, current_period_end, next_billing_at, cancelled_at, created_at",
+    )
+    .single<SubscriptionRow>();
+
+  if (updateError || !updated) {
+    throw new AppError("BAD_REQUEST", updateError?.message ?? "Unable to cancel subscription.");
+  }
+
+  await writeAuditLog(supabase, {
+    action: "subscription.cancelled",
+    afterData: { billing_provider: "mobile_money" },
+    entityId: subscriptionId,
+    entityTable: "subscriptions",
+  });
+
+  return toSubscriptionSummary(updated);
 }
 
 export async function listInboxNotifications(
