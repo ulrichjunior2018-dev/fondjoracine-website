@@ -192,7 +192,7 @@ const publicFr = {
         {
           heading: "Frais de livraison",
           paragraphs: [
-            "La livraison est gratuite partout au Cameroun, quelle que soit votre distance de Buea.",
+            "La livraison locale est à 1 000 F. Pour les autres régions, nous confirmons le coût sur WhatsApp avant l’envoi.",
           ],
         },
         {
@@ -525,7 +525,7 @@ const publicEn = {
         {
           heading: "Delivery Fees",
           paragraphs: [
-            "Delivery is free anywhere in Cameroon, regardless of your distance from Buea.",
+            "Local delivery is 1,000 FCFA. For other regions, we confirm the cost on WhatsApp before dispatch.",
           ],
         },
         {
@@ -794,14 +794,14 @@ const advisorEn = {
     alt: "Sève Racine bottle photographed in a reflective black studio",
     batchLine: "Botanical hair oil, 100 ml",
     cta: "Order now",
-    description: "Sève Racine by Maison Fondjo: botanical hair oil, 100 ml, 15 000 F.",
+    description: "Sève Racine by Maison Fondjo: botanical hair oil, 100 ml, 8 000 F.",
     intro:
       "One bottle, one box, one simple recommendation: place the oil where the fibre and scalp actually need it.",
     payment: ["MTN Mobile Money", "Orange Money"],
     shippingCards: [
       {
         label: "Cameroon delivery",
-        text: "Free nationwide delivery. Payment before delivery.",
+        text: "Local delivery 1,000 FCFA. Payment before delivery.",
       },
       {
         label: "Refund",
@@ -902,7 +902,7 @@ const homeFr = {
     primary: "Commencer mon diagnostic",
     secondary: "Découvrir Sève Racine",
     story:
-      "Huile capillaire botanique 100 ml · 12 500 F · Livraison gratuite · WhatsApp / MoMo / Orange Money / Carte",
+      "Huile capillaire botanique 100 ml · 8 000 F · Livraison locale 1 000 F · WhatsApp / MoMo / Orange Money",
     subtitle:
       "Un traitement botanique pour le cuir chevelu et les cheveux. Né à Buea, au Cameroun.",
     pending: "Photographie produit réelle en attente",
@@ -971,7 +971,7 @@ const homeEn = {
     primary: "Start my diagnostic",
     secondary: "Discover Sève Racine",
     story:
-      "100ml botanical hair oil · 12 500 F · Free delivery · WhatsApp / MoMo / Orange Money / Card",
+      "100ml botanical hair oil · 8 000 F · Local delivery 1 000 F · WhatsApp / MoMo / Orange Money",
     subtitle: "A botanical treatment for scalp and hair. Born in Buea, Cameroon.",
     pending: "Real product photography pending",
     titleFirst: "Sève",

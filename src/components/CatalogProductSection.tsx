@@ -63,8 +63,8 @@ export function CatalogProductSection({ faqItems, product }: CatalogProductSecti
   // landing here cold from an ad — shown right under the price, above the fold.
   const clarityLine =
     locale === "fr"
-      ? "Livraison gratuite · Diagnostic capillaire gratuit · Commande par WhatsApp, MoMo, Orange Money ou carte"
-      : "Free delivery · Free hair diagnostic · Order by WhatsApp, MoMo, Orange Money or card";
+      ? "Livraison locale 1 000 F · Diagnostic capillaire gratuit · Commande par WhatsApp, MoMo ou Orange Money"
+      : "Local delivery 1,000 FCFA · Free hair diagnostic · Order by WhatsApp, MoMo or Orange Money";
   const priceAmount = Number.parseInt(product.priceXaf.replace(/[^\d]/g, ""), 10);
 
   return (

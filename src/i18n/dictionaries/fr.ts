@@ -14,7 +14,7 @@ export const fr = {
       "Consultation cheveux",
       "Répondez à quelques questions avant de choisir comment le soin botanique entre dans votre routine.",
     ],
-    ["Livraison", "Livraison gratuite partout au Cameroun depuis Buea."],
+    ["Livraison", "Livraison locale : 1 000 F. Autres régions confirmées sur WhatsApp."],
     [
       "Assistance directe",
       "Echangez avec l'equipe de Buea pour les delais, tarifs et conseils produit.",
@@ -33,12 +33,12 @@ export const fr = {
   ctaDiscover: "Decouvrir SEVE",
   ctaShipping: "Livraison",
   delivery: {
-    body: "Nous livrons dans tout le Cameroun, gratuitement, quelle que soit votre distance de Buea.",
+    body: "La livraison locale est à 1 000 F. Pour les autres régions, nous confirmons le coût sur WhatsApp avant l’envoi.",
     cards: [
       ["Livraison nationale au Cameroun", "Assistance livraison partout au Cameroun."],
       [
         "Frais de livraison",
-        "Gratuite partout au Cameroun — aucun frais, quelle que soit la distance depuis Buea.",
+        "Livraison locale : 1 000 F. Autres régions confirmées sur WhatsApp avant l’envoi.",
       ],
       ["Assistance WhatsApp", "Aide directe pour delais, tarifs et commandes."],
       ["Futurs revendeurs", "Les points de vente seront annonces avec l'expansion."],
@@ -87,8 +87,8 @@ export const fr = {
     "Coffret numerote, Lot Fondateur 2026, 150 exemplaires : le soin se poursuit apres le depart du produit.",
   packingTitle: "Préparé à Buea",
   productEyebrow: "Une formule. Nº01.",
-  productPrice: "12 500 F",
-  productSpecFour: ["Livraison", "Gratuite, partout au Cameroun"],
+  productPrice: "8 000 F",
+  productSpecFour: ["Livraison", "1 000 F, locale"],
   productSpecOne: ["Format", "100 ml"],
   productSpecThree: ["Origine", "Buea, Cameroun"],
   productSpecTwo: ["Usage", "Cuir chevelu, puis longueurs"],

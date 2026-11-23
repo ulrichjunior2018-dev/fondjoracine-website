@@ -10,7 +10,7 @@ import type {
 import type { ElixirContent, Locale } from "@/features/elixir/data/content";
 import { t } from "@/features/elixir/data/content";
 import { getElixirContent, getWhatsAppUrl } from "@/features/elixir/lib/cms";
-import { buildWaLink } from "@/lib/config";
+import { buildWaLink, config } from "@/lib/config";
 import type { Enums } from "@/lib/database/schema";
 import { AppError } from "@/lib/errors/app-error";
 import { getConfiguredSiteUrl } from "@/lib/http/app-base-url";
@@ -451,10 +451,8 @@ async function recordPayment(
     return;
   }
 
-  const amountCents =
-    provider.kind === "redirect"
-      ? content.priceCents * input.quantity
-      : parseXafAmount(content.product.priceXaf) * input.quantity;
+  // Charge exactly what the order row says (items + delivery).
+  const amountCents = order.total_cents;
 
   const { error } = await supabase.from("payments").insert({
     amount_cents: amountCents,
@@ -543,6 +541,8 @@ export async function createOneProductOrder(
       ? applySubscriberDiscount(baseUnitCents)
       : baseUnitCents;
   const subtotalCents = unitCents * input.quantity;
+  const shippingCents = config.delivery.min;
+  const orderTotalCents = subtotalCents + shippingCents;
 
   const { data: order, error } = await supabase
     .from("orders")
@@ -587,8 +587,9 @@ export async function createOneProductOrder(
       },
       status:
         isManualPayment && input.transaction_reference ? "payment_submitted" : "pending_payment",
+      shipping_cents: shippingCents,
       subtotal_cents: subtotalCents,
-      total_cents: subtotalCents,
+      total_cents: orderTotalCents,
     })
     .select("id, order_number, status, total_cents, confirmation_token")
     .single<CreatedOrderRow>();
@@ -635,7 +636,7 @@ export async function createOneProductOrder(
   });
 
   const confirmationUrl = getConfirmationUrl(order.confirmation_token, returnBaseUrl);
-  const totalLabel = `${parseXafAmount(content.product.priceXaf) * input.quantity} XAF`;
+  const totalLabel = `${order.total_cents} XAF`;
   const profileId = await resolveProfileIdForCustomer(supabase, customerId);
 
   await queueOrderNotifications({

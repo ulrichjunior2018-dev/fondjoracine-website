@@ -45,8 +45,8 @@ function getShippingEstimate(countryCode: string | null, locale: "en" | "fr", fe
     return {
       estimate:
         locale === "fr"
-          ? "Livraison gratuite partout au Cameroun depuis Buea."
-          : "Free nationwide delivery across Cameroon from Buea.",
+          ? "Livraison locale : 1 000 F depuis Buea. Autres régions confirmées sur WhatsApp."
+          : "Local delivery: 1,000 FCFA from Buea. Other regions confirmed on WhatsApp.",
       isCameroon: true,
       notice: `${policy}. ${feesNotice}`,
     };

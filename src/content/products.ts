@@ -69,7 +69,7 @@ export const catalogProducts: readonly CatalogProduct[] = [
       fr: "Huile capillaire botanique Sève Racine",
     },
     description: {
-      en: "Sève Racine is Maison Fondjo's 100 ml botanical hair oil for scalp comfort and soft lengths. Pressed in Buea, Cameroon, with free delivery guidance nationwide.",
+      en: "Sève Racine is Maison Fondjo's 100 ml botanical hair oil for scalp comfort and soft lengths. Pressed in Buea, Cameroon. Local delivery in Cameroon is 1,000 FCFA.",
       fr: "Sève Racine est l'huile capillaire botanique 100 ml de Maison Fondjo pour le confort du cuir chevelu et des longueurs souples. Pressee a Buea, Cameroun.",
     },
     priceXaf: formatXaf(config.pricing.seveRacine),

@@ -123,7 +123,7 @@ export const advisorCopy = {
     alt: "Flacon Sève Racine photographié en studio noir réfléchissant",
     batchLine: "Huile capillaire botanique, 100 ml",
     cta: "Commander maintenant",
-    description: "Sève Racine par Maison Fondjo : huile capillaire botanique, 100 ml, 15 000 F.",
+    description: "Sève Racine par Maison Fondjo : huile capillaire botanique, 100 ml, 8 000 F.",
     intro:
       "Un flacon, un coffret, une recommandation simple : placer l'huile là où la fibre et le cuir chevelu en ont réellement besoin.",
     payment: ["MTN Mobile Money", "Orange Money"],

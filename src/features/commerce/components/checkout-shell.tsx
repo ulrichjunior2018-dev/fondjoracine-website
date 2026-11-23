@@ -17,7 +17,12 @@ import {
 import { signUpWithPassword } from "@/features/account/lib/auth-client";
 import type { Locale } from "@/features/elixir/data/content";
 import { getDictionary } from "@/i18n/dictionaries";
-import { buildWaLink, formatXaf, type SeveRacineSize as OneProductSize } from "@/lib/config";
+import {
+  buildWaLink,
+  config,
+  formatXaf,
+  type SeveRacineSize as OneProductSize,
+} from "@/lib/config";
 import type { PaymentMethodOption } from "@/lib/payments/types";
 import { siteImages } from "@/lib/site-images";
 import { cn } from "@/lib/utils/cn";
@@ -192,6 +197,8 @@ export function CheckoutShell({
     subscriptionAvailable.card || subscriptionAvailable.mobileMoney;
   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
   const subtotal = productPriceXaf * quantity;
+  const deliveryFee = config.delivery.min;
+  const total = subtotal + deliveryFee;
   const whatsappUrl = buildWaLink("order", formatXaf(productPriceXaf), locale);
   const anyConfigured = available.some((method) => method.configured);
   const submitLabel =
@@ -373,11 +380,11 @@ export function CheckoutShell({
           </div>
           <div className="flex justify-between text-[#F5EFE3]/70">
             <dt>{copy.shipping}</dt>
-            <dd className="max-w-[60%] truncate text-right">{copy.shippingNote}</dd>
+            <dd className="font-mono text-[#F5EFE3]">{formatXaf(deliveryFee)}</dd>
           </div>
           <div className="flex justify-between border-t border-white/10 pt-3 text-sm sm:text-base">
             <dt className="font-medium">{copy.total}</dt>
-            <dd className="font-mono text-lg text-[#B8935A]">{formatXaf(subtotal)}</dd>
+            <dd className="font-mono text-lg text-[#B8935A]">{formatXaf(total)}</dd>
           </div>
         </dl>
       </section>
@@ -704,7 +711,7 @@ export function CheckoutShell({
                 {copy.total}
               </p>
               <p className="font-mono text-base font-semibold leading-none text-[#7b622d]">
-                {formatXaf(subtotal)}
+                {formatXaf(total)}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">

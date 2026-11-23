@@ -5,9 +5,9 @@ export const config = {
   batch: { name: "Lot Fondateur 2026", size: 150 },
   contact_secondary: "",
   delivery: {
-    /** Delivery is free nationwide — kept at 0 rather than removed so any
-     * call site still computing a shipping line total stays correct. */
-    min: 0,
+    /** Flat local delivery fee in XAF, added to every order total and stored
+     * as `shipping_cents`. Other regions are confirmed on WhatsApp. */
+    min: 1_000,
     policy: {
       en: "Payment before delivery",
       fr: "Paiement avant livraison",
@@ -17,8 +17,8 @@ export const config = {
       fr: "Dommage vérifié à la livraison uniquement",
     },
     text: {
-      en: "We deliver nationwide across Cameroon, free of charge, regardless of distance from Buea.",
-      fr: "Nous livrons dans tout le Cameroun, gratuitement, quelle que soit votre distance de Buea.",
+      en: "Local delivery is 1,000 FCFA. For other regions, we confirm the delivery cost on WhatsApp before dispatch.",
+      fr: "La livraison locale est à 1 000 FCFA. Pour les autres régions, nous confirmons le coût de livraison sur WhatsApp avant l’envoi.",
     },
   },
   env: process.env.NEXT_PUBLIC_ENV ?? "staging",
@@ -27,10 +27,10 @@ export const config = {
     // Sève Racine ships in two sizes. `seveRacine` is kept as the 100ml
     // price for existing call sites that only need one number; anything
     // size-aware should use `seveRacineSizes` / `getSeveRacinePriceXaf`.
-    seveRacine: 12_500,
+    seveRacine: 8_000,
     seveRacineSizes: {
-      "100ml": 12_500,
-      "50ml": 10_000,
+      "100ml": 8_000,
+      "50ml": 5_000,
     },
     surMesure: 25_000,
     wholesale: 9_000,
