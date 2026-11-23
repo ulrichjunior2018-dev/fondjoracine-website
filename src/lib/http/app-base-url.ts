@@ -11,7 +11,7 @@ export function getConfiguredSiteUrl() {
 }
 
 /**
- * Prefer the browser Origin (or forwarded host) so Stripe (and future MoMo)
+ * Prefer the browser Origin (or forwarded host) so MoMo
  * return URLs match the environment the shopper is actually using — localhost
  * in dev, preview URL on Vercel previews, live domain in production.
  */
@@ -57,8 +57,6 @@ function isSafeAppOrigin(origin: string) {
   try {
     const url = new URL(origin);
     if (url.protocol !== "http:" && url.protocol !== "https:") return false;
-    // Block obvious non-app origins
-    if (url.hostname === "checkout.stripe.com") return false;
     return true;
   } catch {
     return false;

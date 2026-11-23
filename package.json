@@ -36,8 +36,6 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@sentry/nextjs": "^10.69.0",
-    "@stripe/react-stripe-js": "^6.6.0",
-    "@stripe/stripe-js": "^9.8.0",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
@@ -57,7 +55,6 @@
     "react-hook-form": "^7.80.0",
     "resend": "^6.16.0",
     "sharp": "^0.35.2",
-    "stripe": "^22.3.0",
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.0",
     "zod": "^4.4.3"

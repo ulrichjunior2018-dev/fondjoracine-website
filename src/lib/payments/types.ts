@@ -42,7 +42,7 @@ export type BuildProviderPaymentIdArgs = {
 };
 
 /** Who hosts the redirect checkout when `kind === "redirect"`. */
-export type RedirectProcessor = "stripe" | "mobile_money";
+export type RedirectProcessor = "mobile_money";
 
 export interface PaymentProviderDescriptor {
   method: PaymentMethod;

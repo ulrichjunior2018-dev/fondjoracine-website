@@ -6,13 +6,6 @@ import { cn } from "@/lib/utils/cn";
 /** Checkout payment marks — brand logos from `public/images/payments/`. */
 
 const PAYMENT_LOGOS = {
-  stripe: {
-    src: "/images/payments/card-visa-mastercard.jpg",
-    alt: "Visa and Mastercard",
-    width: 120,
-    height: 40,
-    className: "h-7 w-auto sm:h-8",
-  },
   mtn_momo: {
     src: "/images/payments/mtn-momo.jpg",
     alt: "MTN Mobile Money",
@@ -47,10 +40,6 @@ function PaymentLogoMark({ method, className }: { method: PaymentLogoMethod; cla
   );
 }
 
-export function CardBrandsMark({ className }: { className?: string }) {
-  return <PaymentLogoMark method="stripe" {...(className ? { className } : {})} />;
-}
-
 export function MtnMoMoMark({ className }: { className?: string }) {
   return <PaymentLogoMark method="mtn_momo" {...(className ? { className } : {})} />;
 }
@@ -67,8 +56,6 @@ export function PaymentMethodMark({
   className?: string;
 }) {
   switch (method) {
-    case "stripe":
-      return <CardBrandsMark {...(className ? { className } : {})} />;
     case "mtn_momo":
       return <MtnMoMoMark {...(className ? { className } : {})} />;
     case "orange_money":

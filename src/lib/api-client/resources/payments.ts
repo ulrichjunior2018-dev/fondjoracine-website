@@ -1,7 +1,7 @@
 import type { ApiClient } from "../client";
 
 export type PaymentMethodOption = {
-  method: "whatsapp" | "mtn_momo" | "orange_money" | "stripe";
+  method: "whatsapp" | "mtn_momo" | "orange_money";
   kind: "external_handoff" | "manual_reference" | "redirect";
   label: string;
   requiresTransactionReference: boolean;

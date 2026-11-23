@@ -49,12 +49,10 @@ type CheckoutShellProps = {
   /** Subscriptions require an account so they can be managed/cancelled later. */
   isSignedIn: boolean;
   /**
-   * Per-method subscribe availability. `card` needs that size's recurring
-   * Stripe Price configured; `mobileMoney` (manual-renewal — a monthly
+   * Subscribe availability. `mobileMoney` (manual-renewal — a monthly
    * payment-link reminder, not an auto-charge) just needs Fapshi configured.
    */
   subscriptionAvailable: {
-    card: boolean;
     mobileMoney: boolean;
   };
 };
@@ -69,14 +67,13 @@ type ApiOrderResponse = {
   error?: { message: string };
 };
 
-const CHECKOUT_METHODS: OneProductPaymentMethod[] = ["stripe", "mtn_momo", "orange_money"];
+const CHECKOUT_METHODS: OneProductPaymentMethod[] = ["mtn_momo", "orange_money"];
 
 function methodHint(
   method: OneProductPaymentMethod,
   configured: boolean,
   copy: ReturnType<typeof getDictionary>["checkoutPage"],
 ) {
-  if (method === "stripe") return copy.cardSecureHint;
   if (method === "mtn_momo") return configured ? copy.mtnConfiguredHint : copy.mtnHint;
   return configured ? copy.orangeConfiguredHint : copy.orangeHint;
 }
@@ -85,7 +82,6 @@ function methodLabel(
   method: OneProductPaymentMethod,
   copy: ReturnType<typeof getDictionary>["checkoutPage"],
 ) {
-  if (method === "stripe") return copy.tabCard;
   if (method === "mtn_momo") return copy.tabMtn;
   return copy.tabOrange;
 }
@@ -156,10 +152,7 @@ export function CheckoutShell({
   );
 
   const defaultMethod =
-    available.find((method) => method.method === "stripe" && method.configured)?.method ??
-    available.find((method) => method.configured)?.method ??
-    available[0]?.method ??
-    "stripe";
+    available.find((method) => method.configured)?.method ?? available[0]?.method ?? "mtn_momo";
   const [agreed, setAgreed] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -188,13 +181,9 @@ export function CheckoutShell({
   const paymentMethod = useWatch({ control: form.control, name: "payment_method" });
   const subscribe = useWatch({ control: form.control, name: "subscribe" });
   const canOfferSubscription =
-    paymentMethod === "stripe"
-      ? subscriptionAvailable.card
-      : paymentMethod === "mtn_momo" || paymentMethod === "orange_money"
-        ? subscriptionAvailable.mobileMoney
-        : false;
-  const subscriptionOfferedAnywhere =
-    subscriptionAvailable.card || subscriptionAvailable.mobileMoney;
+    paymentMethod === "mtn_momo" || paymentMethod === "orange_money"
+      ? subscriptionAvailable.mobileMoney
+      : false;
   const selected = available.find((method) => method.method === paymentMethod) ?? available[0];
   const subtotal = productPriceXaf * quantity;
   const deliveryFee = config.delivery.min;
@@ -227,7 +216,7 @@ export function CheckoutShell({
 
     // Subscriptions are managed from the account dashboard — a guest who
     // checks "Subscribe & save" but then unchecks "Create an account"
-    // would otherwise hit a confusing Stripe-side error instead of a
+    // would otherwise hit a confusing server error instead of a
     // clear, fixable message here.
     if (values.subscribe && !isSignedIn && !createAccount) {
       setServerError(copy.subscribeAccountRequired);
@@ -522,11 +511,9 @@ export function CheckoutShell({
                           shouldValidate: true,
                         });
                         const stillOffered =
-                          method.method === "stripe"
-                            ? subscriptionAvailable.card
-                            : method.method === "mtn_momo" || method.method === "orange_money"
-                              ? subscriptionAvailable.mobileMoney
-                              : false;
+                          method.method === "mtn_momo" || method.method === "orange_money"
+                            ? subscriptionAvailable.mobileMoney
+                            : false;
                         if (!stillOffered) {
                           form.setValue("subscribe", false, { shouldValidate: true });
                         }
@@ -565,17 +552,8 @@ export function CheckoutShell({
                 <p className="mt-2 text-xs leading-5 text-[#0B0B0B]/55">{copy.previewNotice}</p>
               ) : null}
 
-              {/* Subscribe & save is offered on every method today, but stays
-                  conditional per-method (card needs a Stripe Price configured,
-                  mobile money needs Fapshi configured) — if it's on for one method
-                  but not the currently selected one, say so explicitly rather than
-                  letting the toggle silently disappear when a shopper switches tabs. */}
-              {subscriptionOfferedAnywhere && !canOfferSubscription ? (
-                <p className="mt-3 text-xs leading-5 text-[#0B0B0B]/55">
-                  {copy.subscribeNotAvailableNote}
-                </p>
-              ) : null}
-
+              {/* Subscribe & save (manual-renewal) is offered on MTN MoMo and
+                  Orange Money whenever Fapshi is configured. */}
               {canOfferSubscription ? (
                 <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-[#B8935A]/35 bg-[#B8935A]/[0.06] p-3">
                   <input
@@ -598,11 +576,7 @@ export function CheckoutShell({
                       {copy.subscribeToggleLabel}
                     </span>
                     <span className="mt-0.5 block text-xs leading-5 text-[#0B0B0B]/62">
-                      {!isSignedIn
-                        ? copy.subscribeGuestHint
-                        : paymentMethod === "stripe"
-                          ? copy.subscribeToggleHint
-                          : copy.subscribeToggleHintMobileMoney}
+                      {!isSignedIn ? copy.subscribeGuestHint : copy.subscribeToggleHintMobileMoney}
                     </span>
                   </span>
                 </label>

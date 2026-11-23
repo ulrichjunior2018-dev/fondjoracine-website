@@ -2,7 +2,6 @@ import { AppError } from "@/lib/errors/app-error";
 
 import { mtnMomoProvider } from "./providers/mtn-momo";
 import { orangeMoneyProvider } from "./providers/orange-money";
-import { stripeProvider } from "./providers/stripe-provider";
 import { whatsappProvider } from "./providers/whatsapp";
 import type { PaymentMethod, PaymentMethodOption, PaymentProviderDescriptor } from "./types";
 
@@ -15,7 +14,6 @@ const providers: readonly PaymentProviderDescriptor[] = [
   whatsappProvider,
   mtnMomoProvider,
   orangeMoneyProvider,
-  stripeProvider,
 ];
 
 export function getPaymentProvider(method: PaymentMethod): PaymentProviderDescriptor {
@@ -45,10 +43,10 @@ export function listAvailablePaymentMethods(): PaymentMethodOption[] {
     }));
 }
 
-const checkoutPreviewMethods: PaymentMethod[] = ["stripe", "mtn_momo", "orange_money"];
+const checkoutPreviewMethods: PaymentMethod[] = ["mtn_momo", "orange_money"];
 
 /**
- * Checkout UI methods — always returns Card + MTN + Orange so the page is
+ * Checkout UI methods — always returns MTN + Orange so the page is
  * viewable before env keys are set. MTN/Orange stay `configured: false`
  * (Soon) until a Mobile Money adapter sets `isConfigured` to true.
  */

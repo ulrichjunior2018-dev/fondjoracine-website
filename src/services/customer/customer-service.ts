@@ -24,7 +24,6 @@ import {
   isActiveAccountOrder,
 } from "@/lib/order-status/account-facets";
 import { buildOrderTimeline, getOrderStatusLabel } from "@/lib/order-status/registry";
-import { getStripeClient } from "@/lib/payments/stripe";
 import { writeAuditLog } from "@/lib/security/audit-log";
 
 /**
@@ -568,10 +567,8 @@ export async function getSubscriptionForCustomer(
 
 /**
  * Cancels the customer's subscription. Branches by `billing_provider`:
- * - `stripe`: cancels at Stripe (source of truth) — the `subscriptions` row
- *   itself is updated by the `customer.subscription.deleted` webhook
- *   (`syncSubscriptionStatus`), not here, so this stays correct even if the
- *   webhook is delayed or this call is retried.
+ * - `stripe` (legacy card): no longer supported — refuses and points the
+ *   customer to support so a charge is never left running after a "cancel".
  * - `mobile_money`: nothing external is charging the customer in the first
  *   place (manual-renewal via payment-link reminders), so cancelling is just
  *   a local status update and clearing any pending renewal order so the cron
@@ -604,39 +601,13 @@ export async function cancelSubscriptionForCustomer(
   }
 
   if (subscription.billing_provider === "stripe") {
-    if (!subscription.stripe_subscription_id) {
-      throw new AppError("INTERNAL", "Subscription is missing its Stripe reference.", {
-        expose: false,
-      });
-    }
-
-    const stripe = getStripeClient();
-    await stripe.subscriptions.cancel(subscription.stripe_subscription_id);
-
-    // Reflect immediately rather than waiting for the webhook round-trip, so
-    // the account UI updates right away; the webhook will arrive shortly
-    // after and upsert the same (idempotent) end state.
-    const { data: updated, error: updateError } = await supabase
-      .from("subscriptions")
-      .update({ cancelled_at: new Date().toISOString(), status: "cancelled" })
-      .eq("id", subscriptionId)
-      .select(
-        "id, customer_id, status, billing_provider, payment_method, stripe_subscription_id, quantity, amount_cents, currency, current_period_end, next_billing_at, cancelled_at, created_at",
-      )
-      .single<SubscriptionRow>();
-
-    if (updateError || !updated) {
-      throw new AppError("BAD_REQUEST", updateError?.message ?? "Unable to cancel subscription.");
-    }
-
-    await writeAuditLog(supabase, {
-      action: "subscription.cancelled",
-      afterData: { billing_provider: "stripe" },
-      entityId: subscriptionId,
-      entityTable: "subscriptions",
-    });
-
-    return toSubscriptionSummary(updated);
+    // Card billing has been retired (Cameroon-only, Mobile Money). A legacy card
+    // subscription must be cancelled at the provider, so never mark it cancelled
+    // here without actually stopping the charge — hand the customer to support.
+    throw new AppError(
+      "BAD_REQUEST",
+      "Card subscriptions are no longer supported. Please contact Maison Fondjo on WhatsApp and we will cancel it for you.",
+    );
   }
 
   const { data: updated, error: updateError } = await supabase

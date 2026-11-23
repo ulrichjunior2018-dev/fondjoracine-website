@@ -11,7 +11,6 @@ import { config, SEVE_RACINE_SIZES, type SeveRacineSize } from "@/lib/config";
 import { getServerLocale } from "@/lib/locale-server";
 import { isFapshiConfigured } from "@/lib/payments/fapshi-client";
 import { listCheckoutPaymentMethods } from "@/lib/payments/registry";
-import { isElixirSubscriptionConfigured } from "@/lib/payments/stripe";
 import { buildShareMetadata } from "@/lib/seo/share-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getCheckoutAccountPrefill } from "@/services/customer/customer-service";
@@ -65,12 +64,9 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
 
   let accountPrefill: Awaited<ReturnType<typeof getCheckoutAccountPrefill>> = null;
   const user = await getCurrentUser();
-  // Card and mobile money gate the subscribe toggle on different things:
-  // card needs that size's recurring Stripe Price configured, mobile money
-  // (manual-renewal — see one-product-order-service.ts) just needs Fapshi
-  // configured at all, since there's no per-size Price object to check.
+  // Subscribe & save is Mobile Money only (manual-renewal — see
+  // one-product-order-service.ts) and just needs Fapshi configured.
   const subscriptionAvailable = {
-    card: isElixirSubscriptionConfigured(size),
     mobileMoney: isFapshiConfigured(),
   };
   if (user) {

@@ -1,19 +1,8 @@
 "use client";
 
-import { Elements, PaymentRequestButtonElement, useStripe } from "@stripe/react-stripe-js";
-import type { PaymentRequest } from "@stripe/stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  BadgeCheck,
-  CreditCard,
-  LockKeyhole,
-  MessageCircle,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { BadgeCheck, LockKeyhole, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import { fondjoProductPricing } from "@/config/product-pricing";
 import { getDictionary } from "@/i18n/dictionaries";
 import { config } from "@/lib/config";
 import { useI18n } from "@/lib/i18n-context";
@@ -31,11 +20,6 @@ type CheckoutTrustBarProps = {
   compact?: boolean;
   whatsappUrl: string;
 };
-
-const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
-const walletPaymentsEnabled = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_REQUEST_ENABLED === "true";
-const stripePromise =
-  stripePublishableKey && walletPaymentsEnabled ? loadStripe(stripePublishableKey) : null;
 
 function getShippingEstimate(countryCode: string | null, locale: "en" | "fr", feesNotice: string) {
   const zone = resolveShippingZone(countryCode);
@@ -112,71 +96,6 @@ function useGeoLocation(yourZone: string): GeoState {
   return geo;
 }
 
-function WalletPaymentRequestButton() {
-  const stripe = useStripe();
-  const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(null);
-  const [walletStatus, setWalletStatus] = useState<"checking" | "available" | "unavailable">(
-    "checking",
-  );
-
-  useEffect(() => {
-    if (!stripe) {
-      return;
-    }
-
-    const request = stripe.paymentRequest({
-      country: "US",
-      currency: "usd",
-      requestPayerEmail: true,
-      requestPayerName: true,
-      total: {
-        amount: fondjoProductPricing.usdCents,
-        label: "Sève Racine",
-      },
-    });
-
-    request.on("paymentmethod", (event) => {
-      event.complete("fail");
-      window.location.hash = "checkout";
-    });
-
-    request
-      .canMakePayment()
-      .then((result) => {
-        if (result) {
-          setPaymentRequest(request);
-          setWalletStatus("available");
-          return;
-        }
-
-        setWalletStatus("unavailable");
-      })
-      .catch(() => setWalletStatus("unavailable"));
-  }, [stripe]);
-
-  if (walletStatus !== "available" || !paymentRequest) {
-    return null;
-  }
-
-  return (
-    <div className="overflow-hidden rounded-sm">
-      <PaymentRequestButtonElement options={{ paymentRequest }} />
-    </div>
-  );
-}
-
-function PaymentRequestSlot() {
-  if (!stripePromise) {
-    return null;
-  }
-
-  return (
-    <Elements stripe={stripePromise}>
-      <WalletPaymentRequestButton />
-    </Elements>
-  );
-}
-
 export function CheckoutTrustBar({
   className,
   compact = false,
@@ -229,11 +148,6 @@ export function CheckoutTrustBar({
 
         <div className="grid gap-3">
           <div className="grid gap-2">
-            <PaymentRequestSlot />
-            <p className="text-sm leading-6 text-[#F5EFE3]/74">
-              {stripePromise ? c.appleGooglePay : ""}
-              {c.orCard}
-            </p>
             {shipping.isCameroon ? (
               <p className="text-sm leading-6 text-[#F5EFE3]/74">{c.momoAvailable}</p>
             ) : null}
@@ -242,7 +156,6 @@ export function CheckoutTrustBar({
           <div className="grid grid-cols-2 gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#F5EFE3]/68 sm:grid-cols-4 md:grid-cols-2">
             {[
               { icon: LockKeyhole, label: c.badgeSsl },
-              { icon: CreditCard, label: c.badgeCard },
               { icon: ShieldCheck, label: c.badgeEncrypted },
               { icon: BadgeCheck, label: c.badgeSupport },
             ].map((badge) => (

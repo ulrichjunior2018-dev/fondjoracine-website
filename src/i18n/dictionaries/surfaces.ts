@@ -20,7 +20,6 @@ export const surfacesEn = {
     choosePayment: "Choose payment",
     manualPayTip: "Complete payment on your phone. Confirmation is automatic.",
     back: "Back",
-    continueStripe: "Continue to card payment",
     createOrder: "Create order",
     mobileMoneyNumber: "You will confirm payment on your phone. No reference to send.",
     orderCreated: "Order created",
@@ -51,23 +50,21 @@ export const surfacesEn = {
     taxesIncluded: "Included",
     total: "Total",
     paymentMethodsHeading: "Payment method",
-    paymentMethodsIntro: "Pay securely by card, MTN MoMo, or Orange Money.",
+    paymentMethodsIntro: "Pay securely with MTN MoMo or Orange Money.",
     paymentDetails: "Your details",
     deliveryDetailsIntro:
       "Who we're delivering to, and where to find you — local delivery is 1,000 FCFA.",
-    tabCard: "Card",
     tabMtn: "MTN MoMo",
     tabOrange: "Orange Money",
     soonBadge: "Soon",
-    cardSecureHint:
-      "Pay securely with Visa or Mastercard. You will finish on a secure payment page. We never store your card number.",
-    mtnHint: "MTN Mobile Money is coming soon. For now, please pay by card.",
-    orangeHint: "Orange Money is coming soon. For now, please pay by card.",
+    mtnHint: "MTN Mobile Money is coming soon. Please order on WhatsApp and we'll help you pay.",
+    orangeHint: "Orange Money is coming soon. Please order on WhatsApp and we'll help you pay.",
     mtnConfiguredHint:
       "Pay with MTN Mobile Money. You will finish on a secure payment page and confirm on your phone.",
     orangeConfiguredHint:
       "Pay with Orange Money. You will finish on a secure payment page and confirm on your phone.",
-    manualHint: "Mobile money checkout is coming soon. For now, please pay by card.",
+    manualHint:
+      "Mobile money checkout is coming soon. Please order on WhatsApp and we'll help you pay.",
     agreePrefix: "I agree to the",
     agreeLink: "Terms of purchase",
     agreeSuffix: "and understand Sève Racine is for external cosmetic use.",
@@ -81,10 +78,8 @@ export const surfacesEn = {
     whatsappFallback: "Order on WhatsApp",
     previewNotice:
       "Online payment will open soon. For now, place your order on WhatsApp and our team will guide you.",
-    methodNotReady: "This payment option is coming soon. Please pay by card.",
+    methodNotReady: "This payment option is coming soon. Please order on WhatsApp.",
     subscribeToggleLabel: "Subscribe & save 10% — ships monthly",
-    subscribeToggleHint:
-      "10% off every shipment, billed monthly by Stripe. Manage or cancel anytime from My Account.",
     subscribeToggleHintMobileMoney:
       "10% off every shipment. We'll text you a payment link once a month — approve it in your MTN/Orange app to keep your subscription going.",
     subscribeSignInRequired: "Sign in to your account to subscribe.",
@@ -92,7 +87,6 @@ export const surfacesEn = {
       "10% off every shipment. We'll set up a free account with this order so you can manage or cancel anytime.",
     subscribeAccountRequired:
       'Subscriptions need a free account to manage — keep "Create an account" checked, or add a password below.',
-    subscribeNotAvailableNote: "Subscribe & save isn't available for this payment method yet.",
     createAccountLabel: "Create an account to track this order",
     createAccountHint: "See live status updates and reorder faster next time.",
     passwordLabel: "Password",
@@ -119,11 +113,8 @@ export const surfacesEn = {
     verifyingZone: "Checking your delivery zone...",
     feesNotice: "Local delivery is 1,000 FCFA. Other regions are confirmed on WhatsApp.",
     whatsappHelp: "WhatsApp assistance",
-    appleGooglePay: "Apple Pay / Google Pay appears here when available, ",
-    orCard: "or pay by card.",
     momoAvailable: "MTN Mobile Money and Orange Money are coming soon in Cameroon.",
     badgeSsl: "Secure",
-    badgeCard: "Card",
     badgeEncrypted: "Protected",
     badgeSupport: "Support",
     yourZone: "your area",
@@ -527,7 +518,6 @@ export const surfacesFr = {
     choosePayment: "Choisir le paiement",
     manualPayTip: "Finalisez le paiement sur votre téléphone. La confirmation est automatique.",
     back: "Retour",
-    continueStripe: "Continuer vers le paiement par carte",
     createOrder: "Créer la commande",
     mobileMoneyNumber:
       "Vous confirmez le paiement sur votre téléphone. Aucune référence à envoyer.",
@@ -560,23 +550,22 @@ export const surfacesFr = {
     taxesIncluded: "Incluses",
     total: "Total",
     paymentMethodsHeading: "Moyen de paiement",
-    paymentMethodsIntro: "Payez en toute sécurité par carte, MTN MoMo ou Orange Money.",
+    paymentMethodsIntro: "Payez en toute sécurité par MTN MoMo ou Orange Money.",
     paymentDetails: "Vos informations",
     deliveryDetailsIntro: "À qui nous livrons, et où vous trouver — livraison locale à 1 000 F.",
-    tabCard: "Carte",
     tabMtn: "MTN MoMo",
     tabOrange: "Orange Money",
     soonBadge: "Bientôt",
-    cardSecureHint:
-      "Payez en toute sécurité par Visa ou Mastercard. Vous terminez sur une page de paiement sécurisée. Nous ne stockons jamais votre numéro de carte.",
-    mtnHint: "MTN Mobile Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
-    orangeHint: "Orange Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
+    mtnHint:
+      "MTN Mobile Money arrive bientôt. Commandez sur WhatsApp et nous vous aiderons à payer.",
+    orangeHint:
+      "Orange Money arrive bientôt. Commandez sur WhatsApp et nous vous aiderons à payer.",
     mtnConfiguredHint:
       "Payez avec MTN Mobile Money. Vous terminez sur une page de paiement sécurisée et confirmez sur votre téléphone.",
     orangeConfiguredHint:
       "Payez avec Orange Money. Vous terminez sur une page de paiement sécurisée et confirmez sur votre téléphone.",
     manualHint:
-      "Le paiement Mobile Money arrive bientôt. Pour l'instant, veuillez payer par carte.",
+      "Le paiement Mobile Money arrive bientôt. Commandez sur WhatsApp et nous vous aiderons à payer.",
     agreePrefix: "J'accepte les",
     agreeLink: "conditions d'achat",
     agreeSuffix: "et comprends que Sève Racine est un soin cosmétique à usage externe.",
@@ -590,16 +579,12 @@ export const surfacesFr = {
     whatsappFallback: "Commander sur WhatsApp",
     previewNotice:
       "Le paiement en ligne ouvrira bientôt. Pour l'instant, commandez sur WhatsApp. Notre équipe vous guide.",
-    methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez payer par carte.",
+    methodNotReady: "Ce moyen de paiement arrive bientôt. Veuillez commander sur WhatsApp.",
     subscribeToggleLabel: "Abonnez-vous et économisez 10 % — expédié chaque mois",
     subscribeGuestHint:
       "10 % de réduction sur chaque envoi. Nous créerons un compte gratuit avec cette commande afin que vous puissiez gérer ou annuler à tout moment.",
     subscribeAccountRequired:
       "Un compte gratuit est nécessaire pour gérer l'abonnement — laissez « Créer un compte » coché, ou ajoutez un mot de passe ci-dessous.",
-    subscribeNotAvailableNote:
-      "L'abonnement avec 10 % de réduction n'est pas encore disponible pour ce moyen de paiement.",
-    subscribeToggleHint:
-      "10 % de réduction sur chaque envoi, facturé chaque mois par Stripe. Gérez ou annulez à tout moment depuis Mon compte.",
     subscribeToggleHintMobileMoney:
       "10 % de réduction sur chaque envoi. Nous vous enverrons un lien de paiement par SMS chaque mois — approuvez-le dans votre application MTN/Orange pour continuer votre abonnement.",
     subscribeSignInRequired: "Connectez-vous à votre compte pour vous abonner.",
@@ -629,11 +614,8 @@ export const surfacesFr = {
     verifyingZone: "Vérification de votre zone de livraison...",
     feesNotice: "Livraison locale : 1 000 F. Autres régions confirmées sur WhatsApp.",
     whatsappHelp: "Assistance WhatsApp",
-    appleGooglePay: "Apple Pay / Google Pay apparaît ici si disponible, ",
-    orCard: "ou paiement par carte.",
     momoAvailable: "MTN Mobile Money et Orange Money arrivent bientôt au Cameroun.",
     badgeSsl: "Sécurisé",
-    badgeCard: "Carte",
     badgeEncrypted: "Protégé",
     badgeSupport: "Assistance",
     yourZone: "votre zone",

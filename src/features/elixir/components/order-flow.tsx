@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, CheckCircle2, CreditCard, MessageCircle, Smartphone } from "lucide-react";
+import { ArrowRight, CheckCircle2, MessageCircle, Smartphone } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
@@ -56,7 +56,7 @@ function localized(english: string, french: string): Record<Locale, string> {
 
 const paymentKindCopy: Record<
   PaymentMethodOption["kind"],
-  { description: Record<Locale, string>; icon: "whatsapp" | "mobile" | "stripe" }
+  { description: Record<Locale, string>; icon: "whatsapp" | "mobile" }
 > = {
   external_handoff: {
     description: localized(
@@ -74,19 +74,17 @@ const paymentKindCopy: Record<
   },
   redirect: {
     description: localized(
-      "Pay securely online. Card or mobile money confirmation is automatic.",
-      "Payez en ligne en securite. La confirmation carte ou mobile money est automatique.",
+      "Pay by mobile money (MTN MoMo or Orange Money) on a secure page. Confirmation is automatic.",
+      "Payez par mobile money (MTN MoMo ou Orange Money) sur une page securisee. La confirmation est automatique.",
     ),
-    icon: "stripe",
+    icon: "mobile",
   },
 };
 
-function getPaymentIcon(icon: "whatsapp" | "mobile" | "stripe") {
+function getPaymentIcon(icon: "whatsapp" | "mobile") {
   switch (icon) {
     case "mobile":
       return <Smartphone className="h-4 w-4 text-accent" aria-hidden="true" />;
-    case "stripe":
-      return <CreditCard className="h-4 w-4 text-accent" aria-hidden="true" />;
     case "whatsapp":
       return <MessageCircle className="h-4 w-4 text-accent" aria-hidden="true" />;
   }
@@ -341,7 +339,7 @@ export function OrderFlow({ content, locale, paymentMethods }: OrderFlowProps) {
                 trailingIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
                 type="submit"
               >
-                {paymentMethod === "stripe" ? o.continueStripe : o.createOrder}
+                {o.createOrder}
               </Button>
             </div>
           </div>

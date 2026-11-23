@@ -77,12 +77,7 @@ export const createOrderSchema = z.object({
   billing_address: z.record(z.string(), z.unknown()),
 });
 
-export const oneProductPaymentMethodSchema = z.enum([
-  "whatsapp",
-  "mtn_momo",
-  "orange_money",
-  "stripe",
-]);
+export const oneProductPaymentMethodSchema = z.enum(["whatsapp", "mtn_momo", "orange_money"]);
 
 export const createOneProductOrderSchema = z.object({
   company: z.string().max(0, "Invalid submission.").optional().or(z.literal("")),
@@ -97,12 +92,10 @@ export const createOneProductOrderSchema = z.object({
   /** Sève Racine bottle size. Price is always resolved server-side from this — never trust a client-sent price. */
   size: z.enum(["100ml", "50ml"]).default("100ml"),
   /**
-   * Recurring "subscribe & save" purchase. Card-only (Stripe Billing) — MoMo
-   * and WhatsApp cannot auto-charge, so the API rejects subscribe=true unless
-   * payment_method is "stripe". Also requires a signed-in customer, since a
-   * subscription must be tied to an account for later management/cancellation.
-   * Only offered for a size once that size has a Stripe recurring Price
-   * configured — see isElixirSubscriptionConfigured(size).
+   * Recurring "subscribe & save" purchase. Mobile Money only (MTN MoMo / Orange
+   * Money, manual renewal) — WhatsApp cannot be billed on a schedule. Also
+   * requires a signed-in customer, since a subscription must be tied to an
+   * account for later management/cancellation.
    */
   subscribe: z.boolean().default(false),
   transaction_reference: z.string().min(4).max(120).optional().or(z.literal("")),
