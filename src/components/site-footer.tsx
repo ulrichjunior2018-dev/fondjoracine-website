@@ -180,7 +180,7 @@ export function SiteFooter() {
               {copy.shopTitle}
             </h2>
             <div className="mt-4">
-              <FooterLinkList links={copy.shopLinks} soon={copy.shopSoon} />
+              <FooterLinkList links={copy.shopLinks} />
             </div>
             {/* Later products: Conditioner, Shampoo, Hair Cream — add rows in copy.shopLinks. */}
           </div>
@@ -200,7 +200,7 @@ export function SiteFooter() {
               {copy.supportTitle}
             </h2>
             <div className="mt-4">
-              <FooterLinkList links={copy.supportLinks} soon={copy.supportSoon} />
+              <FooterLinkList links={copy.supportLinks} />
             </div>
             <div className="mt-5 rounded-lg border border-[#B8935A]/18 bg-[#0B0B0B]/60 p-4">
               <p className="text-sm font-medium text-[#F5EFE3]/78">{copy.supportHelp}</p>
@@ -242,7 +242,7 @@ export function SiteFooter() {
                 {copy.shopTitle}
               </AccordionTrigger>
               <AccordionContent>
-                <FooterLinkList links={copy.shopLinks} soon={copy.shopSoon} />
+                <FooterLinkList links={copy.shopLinks} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem className="border-[#B8935A]/14" value="company">
@@ -258,7 +258,7 @@ export function SiteFooter() {
                 {copy.supportTitle}
               </AccordionTrigger>
               <AccordionContent>
-                <FooterLinkList links={copy.supportLinks} soon={copy.supportSoon} />
+                <FooterLinkList links={copy.supportLinks} />
                 <div className="mt-4 rounded-lg border border-[#B8935A]/18 bg-[#0B0B0B]/60 p-4">
                   <p className="text-sm font-medium text-[#F5EFE3]/78">{copy.supportHelp}</p>
                   <a

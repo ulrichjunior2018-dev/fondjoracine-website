@@ -72,8 +72,12 @@ function SectionLabel({
   );
 }
 
-function sizeName(size: SeveRacineSize, tr: Translate) {
-  return size === "100ml" ? "100 ml" : tr("50 ml · Travel size", "50 ml · Format voyage");
+function sizeName(size: SeveRacineSize) {
+  return size === "100ml" ? "100 ml" : "50 ml";
+}
+
+function sizeNote(size: SeveRacineSize, tr: Translate) {
+  return size === "100ml" ? tr("Full size", "Format standard") : tr("Travel size", "Format voyage");
 }
 
 function MinimalHeader({ locale }: { locale: Locale }) {
@@ -90,7 +94,7 @@ function MinimalHeader({ locale }: { locale: Locale }) {
     >
       <Container className="flex h-14 items-center justify-between gap-4 sm:h-16">
         <Link aria-label="Maison Fondjo home" href="/">
-          <span className="font-serif text-[0.8rem] uppercase tracking-[0.34em] sm:text-sm">
+          <span className="whitespace-nowrap font-serif text-[0.72rem] uppercase tracking-[0.26em] sm:text-sm sm:tracking-[0.34em]">
             Maison Fondjo
           </span>
         </Link>
@@ -120,12 +124,12 @@ function MinimalHeader({ locale }: { locale: Locale }) {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            className="inline-flex h-9 items-center justify-center rounded-sm bg-[#F5EFE3] px-4 text-xs font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.97]"
+            className="inline-flex h-9 items-center justify-center rounded-sm bg-[#F5EFE3] px-4 max-sm:hidden text-xs font-semibold text-[#0B0B0B] transition-transform duration-100 active:scale-[0.97]"
             href={"/shop" as Route}
           >
             {copy.buy}
           </Link>
-          <NavAuthButton />
+          <NavAuthButton className="whitespace-nowrap" />
           <MarketingMobileMenu
             closeLabel={copy.navigationClose}
             links={mobileNav}
@@ -361,10 +365,11 @@ function Product({
                     onClick={() => setSize(option)}
                     type="button"
                   >
-                    <span className="block text-xs uppercase tracking-[0.16em] opacity-70">
-                      {sizeName(option, tr)}
+                    <span className="block font-mono text-sm">{sizeName(option)}</span>
+                    <span className="mt-1 block text-[0.66rem] uppercase tracking-[0.16em] opacity-65">
+                      {sizeNote(option, tr)}
                     </span>
-                    <span className="mt-2 block font-mono text-lg">
+                    <span className="mt-3 block font-mono text-lg">
                       {formatXaf(getSeveRacinePriceXaf(option))}
                     </span>
                   </button>
