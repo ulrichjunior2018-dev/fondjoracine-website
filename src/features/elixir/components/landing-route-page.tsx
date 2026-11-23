@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
+import { MinimalStorefrontPage } from "@/features/elixir/components/minimal-storefront-page";
 import type { Locale } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 
@@ -23,5 +23,5 @@ export function buildRouteMetadata(title: string, description: string): Metadata
 export async function LandingRoutePage({ locale = "fr" }: LandingRoutePageProps) {
   const content = await getElixirContent();
 
-  return <PremiumStorefrontPage content={content} locale={locale} />;
+  return <MinimalStorefrontPage content={content} locale={locale} />;
 }

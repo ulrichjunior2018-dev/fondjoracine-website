@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/config/site";
-import { PremiumStorefrontPage } from "@/features/elixir/components/premium-storefront-page";
+import { MinimalStorefrontPage } from "@/features/elixir/components/minimal-storefront-page";
 import { getPrimaryElixirImage, t } from "@/features/elixir/data/content";
 import { getElixirContent } from "@/features/elixir/lib/cms";
 import { config } from "@/lib/config";
@@ -74,7 +74,7 @@ export default async function HomePage() {
         id="home-catalog-itemlist-jsonld"
       />
       <JsonLd data={faqJsonLd} id="home-faq-jsonld" />
-      <PremiumStorefrontPage content={content} locale="en" />
+      <MinimalStorefrontPage content={content} locale="en" />
     </>
   );
 }
